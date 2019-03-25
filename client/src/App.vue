@@ -18,7 +18,8 @@ export default {
     };
   },
   created() {
-    this.$http.get("/entries").then(result => {
+    const url = `${process.env.VUE_APP_BACKEND_URL}/entries`;
+    this.$http.get(url).then(result => {
       this.journalEntries = result.data;
     });
   }

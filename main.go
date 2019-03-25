@@ -43,6 +43,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 }
 
 func entriesHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	entries := []JournalEntry{
 		JournalEntry{Id: 0, Date: "2019-03-25", Markdown: "Ate some crackers"},
 		JournalEntry{Id: 1, Date: "2019-03-24", Markdown: "Took a nap"},
@@ -52,6 +53,10 @@ func entriesHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(entries); err != nil {
 		panic(err)
 	}
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
 func main() {
