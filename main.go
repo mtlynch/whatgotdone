@@ -14,15 +14,14 @@ type Page struct {
 func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
 	p := &Page{
 		Title: "What Got Done",
-		Body:  "Welcome to What Got Done",
 	}
 	renderTemplate(w, "index.html", p)
 }
 
 var templates = template.Must(
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
-	template.New("client/index.html").Delims("[[", "]]").ParseFiles(
-		"client/index.html"))
+	template.New("client/dist/index.html").Delims("[[", "]]").ParseFiles(
+		"client/dist/index.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl, p)
@@ -38,6 +37,9 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 }
 
 func main() {
+	fs := http.FileServer(http.Dir("client/dist"))
+	http.Handle("/css/", fs)
+	http.Handle("/js/", fs)
 	http.HandleFunc("/", makeHandler(indexHandler))
 	log.Fatal(http.ListenAndServe(":3001", nil))
 }
