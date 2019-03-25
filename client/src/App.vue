@@ -14,12 +14,13 @@ export default {
   },
   data() {
     return {
-      journalEntries: [
-        { id: 0, date: "2019-03-25", markdown: "Ate some crackers" },
-        { id: 1, date: "2019-03-24", markdown: "Took a nap" },
-        { id: 2, date: "2019-03-23", markdown: "Watched a movie" }
-      ]
+      journalEntries: []
     };
+  },
+  created() {
+    this.$http.get("/entries").then(result => {
+      this.journalEntries = result.data;
+    });
   }
 };
 </script>
