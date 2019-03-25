@@ -1,13 +1,38 @@
 <html>
 
 <head>
-  <title>{{.Title}}</title>
+  <title>[[.Title]]</title>
 </head>
 
 <body>
-  <h1>{{.Title}}</h1>
+  <h1>[[.Title]]</h1>
 
-  <div>{{.Body}}</div>
+  <div>[[.Body]]</div>
+
+  <div>Here's what got done!</div>
+
+  <div id="journal">
+    <journal-item v-for="item in journalEntries" v-bind:entry="item" v-bind:key="item.id"></journal-item>
+  </div>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+  Vue.component('journal-item', {
+    props: ['entry'],
+    template: '<div class="journalEntry"><div class="date">{{ entry.date }}</div><div class="journalBody">{{ entry.markdown }}</div></div>'
+  })
+
+  var app7 = new Vue({
+    el: '#journal',
+    data: {
+      journalEntries: [
+        { id: 0, date: '2019-03-25', markdown: 'Ate some crackers' },
+        { id: 1, date: '2019-03-24', markdown: 'Took a nap' },
+        { id: 2, date: '2019-03-23', markdown: 'Watched a movie' }
+      ]
+    }
+  })
+</script>
 
 </html>

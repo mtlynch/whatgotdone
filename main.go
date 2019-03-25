@@ -19,7 +19,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
 	renderTemplate(w, "index.html", p)
 }
 
-var templates = template.Must(template.ParseFiles("client/index.html"))
+var templates = template.Must(
+	// Use custom delimiters so Go's delimiters don't clash with Vue's.
+	template.New("client/index.html").Delims("[[", "]]").ParseFiles(
+		"client/index.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl, p)
