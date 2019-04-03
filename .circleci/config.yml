@@ -1,0 +1,25 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:9.11.2-stretch
+    steps:
+      - checkout
+      - run:
+          name: Download npm packages
+          command: npm install
+      - run:
+          name: Lint client
+          command: npm run lint
+      - run:
+          name: Build production frontend
+          command: npm run build
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - client/dist
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - build
