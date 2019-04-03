@@ -7,13 +7,13 @@ jobs:
       - checkout
       - run:
           name: Download npm packages
-          command: npm install
+          command: npm --prefix ./client install
       - run:
           name: Lint client
-          command: npm run lint
+          command: npm --prefix ./client run lint
       - run:
           name: Build production frontend
-          command: npm run build
+          command: npm --prefix ./client run build
       - persist_to_workspace:
           root: ./
           paths:
