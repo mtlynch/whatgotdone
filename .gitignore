@@ -1,1 +1,4 @@
 gin-bin
+
+*.swp
+*.swo

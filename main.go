@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"html/template"
-	"log"
 	"net/http"
+
+	"google.golang.org/appengine"
 )
 
 type Page struct {
@@ -70,5 +71,5 @@ func main() {
 	http.Handle("/js/", fs)
 	http.HandleFunc("/entries", entriesHandler)
 	http.HandleFunc("/", makeHandler(indexHandler))
-	log.Fatal(http.ListenAndServe(":3001", nil))
+	appengine.Main()
 }
