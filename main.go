@@ -18,6 +18,7 @@ type JournalEntry struct {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
+	enableCsp(&w)
 	p := &Page{
 		Title: "What Got Done",
 	}
@@ -57,6 +58,10 @@ func entriesHandler(w http.ResponseWriter, r *http.Request) {
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
+func enableCsp(w *http.ResponseWriter) {
+	(*w).Header().Set("Content-Security-Policy", "default-src 'self'")
 }
 
 func main() {
