@@ -1,0 +1,9 @@
+.circleci/
+.git/
+.gitignore
+client/node_modules/
+client/public/
+client/src/
+docker-compose.yml
+Dockerfile
+README.md
