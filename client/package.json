@@ -9,8 +9,11 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-runtime": "^6.26.0",
+    "core-js": "^2.6.5",
     "vue": "^2.6.6",
-    "vue-axios": "^2.1.4"
+    "vue-axios": "^2.1.4",
+    "vue-markdown": "^2.2.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

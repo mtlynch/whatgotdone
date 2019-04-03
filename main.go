@@ -50,7 +50,7 @@ func entriesHandler(w http.ResponseWriter, r *http.Request) {
 	entries := []JournalEntry{
 		JournalEntry{Id: 0, Date: "2019-03-25", Markdown: "Ate some crackers"},
 		JournalEntry{Id: 1, Date: "2019-03-24", Markdown: "Took a nap"},
-		JournalEntry{Id: 2, Date: "2019-03-23", Markdown: "Watched a movie!"},
+		JournalEntry{Id: 2, Date: "2019-03-23", Markdown: "Watched the movie *The Royal Tenenbaums*."},
 	}
 
 	if err := json.NewEncoder(w).Encode(entries); err != nil {
