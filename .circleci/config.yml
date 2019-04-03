@@ -20,7 +20,7 @@ jobs:
             - client/dist
   deploy:
     docker:
-      - image: google/cloud-sdk:240.0.0-slim
+      - image: google/cloud-sdk:240.0.0
     environment:
       GCLOUD_PROJECT: whatgotdone
     steps:
