@@ -2,10 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
+	"log"
 	"net/http"
-
-	"google.golang.org/appengine"
+	"os"
 )
 
 type Page struct {
@@ -71,5 +72,10 @@ func main() {
 	http.Handle("/js/", fs)
 	http.HandleFunc("/entries", entriesHandler)
 	http.HandleFunc("/", makeHandler(indexHandler))
-	appengine.Main()
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
