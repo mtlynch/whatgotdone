@@ -13,6 +13,7 @@
     "core-js": "^2.6.5",
     "vue": "^2.6.6",
     "vue-axios": "^2.1.4",
+    "vue-filter-date-format": "^1.2.2",
     "vue-markdown": "^2.2.4"
   },
   "devDependencies": {

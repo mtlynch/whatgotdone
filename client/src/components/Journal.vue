@@ -1,7 +1,7 @@
 <template>
   <div class="journal">
     <div class="journalEntry">
-      <div class="date">{{ entry.date }}</div>
+      <div class="date">{{ entry.date | dateFormat('YYYY-MM-DD') }}</div>
       <div class="journalBody">
         <vue-markdown>{{ entry.markdown }}</vue-markdown>
       </div>
@@ -11,9 +11,11 @@
 
 <script>
 import Vue from "vue";
+import VueFilterDateFormat from "vue-filter-date-format";
 import VueMarkdown from "vue-markdown";
 
 Vue.use(VueMarkdown);
+Vue.use(VueFilterDateFormat);
 
 export default {
   name: "Journal",

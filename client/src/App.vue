@@ -20,7 +20,14 @@ export default {
   created() {
     const url = `${process.env.VUE_APP_BACKEND_URL}/entries`;
     this.$http.get(url).then(result => {
-      this.journalEntries = result.data;
+      this.journalEntries = [];
+      for (const entry of result.data) {
+        this.journalEntries.push({
+          id: entry.id,
+          date: new Date(entry.date),
+          markdown: entry.markdown
+        });
+      }
     });
   }
 };
