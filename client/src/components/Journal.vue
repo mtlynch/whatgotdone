@@ -1,10 +1,10 @@
 <template>
   <div class="journal">
     <div class="journalEntry">
-      <div class="date">{{ entry.date | dateFormat('YYYY-MM-DD') }}</div>
       <div class="journalBody">
         <vue-markdown>{{ entry.markdown }}</vue-markdown>
       </div>
+      <div class="date">Last modified at {{ entry.lastModified | dateFormat('h:mm a MM/D/YYYY') }}</div>
     </div>
   </div>
 </template>
@@ -42,5 +42,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.date {
+  font-style: italic;
 }
 </style>

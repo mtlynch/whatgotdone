@@ -103,6 +103,7 @@ export default {
           this.journalEntries.push({
             key: entry.date,
             date: new Date(entry.date),
+            lastModified: new Date(entry.lastModified),
             markdown: entry.markdown
           });
         }
