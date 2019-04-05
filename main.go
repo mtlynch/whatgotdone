@@ -14,8 +14,9 @@ type Page struct {
 }
 
 type JournalEntry struct {
-	Date     string `json:"date"`
-	Markdown string `json:"markdown"`
+	Date         string `json:"date"`
+	LastModified string `json:"lastModified"`
+	Markdown     string `json:"markdown"`
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
@@ -47,9 +48,21 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 func entriesHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	entries := []JournalEntry{
-		JournalEntry{Date: "2019-03-22", Markdown: "Ate some crackers"},
-		JournalEntry{Date: "2019-03-15", Markdown: "Took a nap"},
-		JournalEntry{Date: "2019-03-08", Markdown: "Watched the movie *The Royal Tenenbaums*."},
+		JournalEntry{
+			Date:         "2019-03-22",
+			LastModified: "2019-03-22T08:15:22.382Z",
+			Markdown:     "Ate some crackers",
+		},
+		JournalEntry{
+			Date:         "2019-03-15",
+			LastModified: "2019-03-15T22:06:45.196Z",
+			Markdown:     "Took a nap",
+		},
+		JournalEntry{
+			Date:         "2019-03-08",
+			LastModified: "2019-03-22T14:59:16.010Z",
+			Markdown:     "Watched the movie *The Royal Tenenbaums*.",
+		},
 	}
 
 	if err := json.NewEncoder(w).Encode(entries); err != nil {
