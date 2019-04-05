@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Page struct {
@@ -100,38 +101,74 @@ var realEntry = `
   * [Adding Cypress artifacts folders to .gitignore](https://github.com/cypress-io/cypress-example-docker-compose/pull/4)
 `
 
+var entries = []JournalEntry{
+	JournalEntry{
+		Date:         "2019-03-29",
+		LastModified: "2019-03-29T23:34:02.111Z",
+		Markdown:     realEntry,
+	},
+	JournalEntry{
+		Date:         "2019-03-22",
+		LastModified: "2019-03-22T08:15:22.382Z",
+		Markdown:     "Ate some crackers",
+	},
+	JournalEntry{
+		Date:         "2019-03-15",
+		LastModified: "2019-03-15T22:06:45.196Z",
+		Markdown:     "Took a nap",
+	},
+	JournalEntry{
+		Date:         "2019-03-08",
+		LastModified: "2019-03-22T14:59:16.010Z",
+		Markdown:     "Watched the movie *The Royal Tenenbaums*.",
+	},
+}
+
 func entriesHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	entries := []JournalEntry{
-		JournalEntry{
-			Date:         "2019-03-29",
-			LastModified: "2019-03-29T23:34:02.111Z",
-			Markdown:     realEntry,
-		},
-		JournalEntry{
-			Date:         "2019-03-22",
-			LastModified: "2019-03-22T08:15:22.382Z",
-			Markdown:     "Ate some crackers",
-		},
-		JournalEntry{
-			Date:         "2019-03-15",
-			LastModified: "2019-03-15T22:06:45.196Z",
-			Markdown:     "Took a nap",
-		},
-		JournalEntry{
-			Date:         "2019-03-08",
-			LastModified: "2019-03-22T14:59:16.010Z",
-			Markdown:     "Watched the movie *The Royal Tenenbaums*.",
-		},
+	if err := json.NewEncoder(w).Encode(entries); err != nil {
+		panic(err)
+	}
+}
+
+type SubmitRequest struct {
+	Date         string `json:"date"`
+	EntryContent string `json:"entryContent"`
+}
+
+type SubmitResponse struct {
+	Ok bool `json:"ok"`
+}
+
+func submitHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+	decoder := json.NewDecoder(r.Body)
+	var t SubmitRequest
+	err := decoder.Decode(&t)
+	if err != nil {
+		log.Printf("Failed to decode request: %s\n", r.Body)
+	}
+	entries = append(entries, JournalEntry{
+		Date:         t.Date,
+		LastModified: time.Now().Format(time.RFC3339),
+		Markdown:     t.EntryContent,
+	})
+	resp := SubmitResponse{
+		Ok: true,
 	}
 
-	if err := json.NewEncoder(w).Encode(entries); err != nil {
+	log.Printf("Logged a new entry. Current length: %d\n", len(entries))
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		panic(err)
 	}
 }
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
 func enableCsp(w *http.ResponseWriter) {
@@ -143,6 +180,7 @@ func main() {
 	http.Handle("/css/", fs)
 	http.Handle("/js/", fs)
 	http.HandleFunc("/entries", entriesHandler)
+	http.HandleFunc("/api/submit", submitHandler)
 	http.HandleFunc("/", makeHandler(indexHandler))
 
 	port := os.Getenv("PORT")
