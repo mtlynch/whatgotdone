@@ -48,9 +48,9 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 func entriesHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	entries := []JournalEntry{
-		JournalEntry{Id: 0, Date: "2019-03-22", Markdown: "Ate some crackers"},
-		JournalEntry{Id: 1, Date: "2019-03-15", Markdown: "Took a nap"},
-		JournalEntry{Id: 2, Date: "2019-03-08", Markdown: "Watched the movie *The Royal Tenenbaums*."},
+		JournalEntry{Date: "2019-03-22", Markdown: "Ate some crackers"},
+		JournalEntry{Date: "2019-03-15", Markdown: "Took a nap"},
+		JournalEntry{Date: "2019-03-08", Markdown: "Watched the movie *The Royal Tenenbaums*."},
 	}
 
 	if err := json.NewEncoder(w).Encode(entries); err != nil {

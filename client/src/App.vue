@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Journal v-for="item in journalEntries" v-bind:entry="item" v-bind:key="item.id"/>
+    <Journal v-for="item in journalEntries" v-bind:entry="item" v-bind:key="item.date"/>
   </div>
 </template>
 
@@ -23,7 +23,6 @@ export default {
       this.journalEntries = [];
       for (const entry of result.data) {
         this.journalEntries.push({
-          id: entry.id,
           date: new Date(entry.date),
           markdown: entry.markdown
         });
