@@ -2,7 +2,11 @@
   <div class="journal">
     <div class="journalEntry">
       <div class="journalBody">
-        <vue-markdown>{{ entry.markdown }}</vue-markdown>
+        <vue-markdown
+          :linkify="false"
+          :html="false"
+          :anchorAttributes="{rel: 'nofollow' }"
+        >{{ entry.markdown }}</vue-markdown>
       </div>
       <div class="date">Last modified at {{ entry.lastModified | dateFormat('h:mm a MM/D/YYYY') }}</div>
     </div>
@@ -29,19 +33,8 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.journalBody {
+  text-align: left;
 }
 .date {
   font-style: italic;
