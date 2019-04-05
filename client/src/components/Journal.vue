@@ -6,7 +6,8 @@
           :linkify="false"
           :html="false"
           :anchorAttributes="{rel: 'nofollow' }"
-        >{{ entry.markdown }}</vue-markdown>
+          :source="entry.markdown"
+        ></vue-markdown>
       </div>
       <div class="date">Last modified at {{ entry.lastModified | dateFormat('h:mm a MM/D/YYYY') }}</div>
     </div>
