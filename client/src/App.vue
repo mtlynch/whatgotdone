@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="container">
     <p>
       Journal entry for
       <b>{{ username }}</b> on
