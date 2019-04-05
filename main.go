@@ -14,7 +14,6 @@ type Page struct {
 }
 
 type JournalEntry struct {
-	Id       int    `json:"name"`
 	Date     string `json:"date"`
 	Markdown string `json:"markdown"`
 }
