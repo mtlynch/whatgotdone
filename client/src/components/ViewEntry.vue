@@ -1,11 +1,15 @@
 <template>
   <div class="view-entry container">
-    <p v-if="previousPath">
-      <router-link v-bind:to="previousPath">Previous</router-link>
-    </p>
-    <p v-if="nextPath">
-      <router-link v-bind:to="nextPath">Next</router-link>
-    </p>
+    <div class="overflow-auto">
+      <b-pagination-nav
+        :link-gen="linkGen"
+        :page-gen="pageGen"
+        :number-of-pages="links.length"
+        v-if="links.length > 0"
+        align="center"
+        use-router
+      ></b-pagination-nav>
+    </div>
 
     <p>
       Journal entry for
@@ -18,18 +22,16 @@
       <b>{{ $route.params.date }}</b>
     </p>
 
-    <p v-if="previousPath">
-      <router-link v-bind:to="previousPath">Previous</router-link>
-    </p>
-    <p v-if="nextPath">
-      <router-link v-bind:to="nextPath">Next</router-link>
-    </p>
     <p v-if="backendError" class="error">Failed to connect to backend: {{ backendError }}</p>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
 import Journal from "./Journal.vue";
+import Pagination from "bootstrap-vue/es/components/pagination";
+
+Vue.use(Pagination);
 
 export default {
   name: "ViewEntry",
@@ -42,50 +44,34 @@ export default {
       backendError: null
     };
   },
+  methods: {
+    linkGen(pageNum) {
+      return this.links[pageNum - 1];
+    },
+    pageGen(pageNum) {
+      const date = new Date(this.links[pageNum - 1].split("/")[2]);
+      const month = date.toLocaleString("en-us", { month: "short" });
+      return `${month}. ${date.getDate()}`;
+    }
+  },
   computed: {
-    currentEntryIndex: function() {
-      if (!this.journalEntries || !this.$route.params.date) {
+    links: function() {
+      let links = [];
+      for (const entry of this.journalEntries) {
+        links.push(`/${this.$route.params.username}/${entry.key}`);
+      }
+      return links;
+    },
+    currentEntry: function() {
+      if (!this.$route.params.date) {
         return null;
       }
-      for (const [index, entry] of this.journalEntries.entries()) {
+      for (const entry of this.journalEntries) {
         if (this.$route.params.date === entry.key) {
-          return index;
+          return entry;
         }
       }
       return null;
-    },
-    currentEntry: function() {
-      if (this.currentEntryIndex === null) {
-        return null;
-      }
-      return this.journalEntries[this.currentEntryIndex];
-    },
-    nextEntryKey: function() {
-      if (
-        this.currentEntryIndex === null ||
-        this.currentEntryIndex === this.journalEntries.length - 1
-      ) {
-        return null;
-      }
-      return this.journalEntries[this.currentEntryIndex + 1].key;
-    },
-    nextPath: function() {
-      if (!this.nextEntryKey) {
-        return null;
-      }
-      return `/${this.$route.params.username}/${this.nextEntryKey}`;
-    },
-    previousEntryKey: function() {
-      if (this.currentEntryIndex === null || this.currentEntryIndex === 0) {
-        return null;
-      }
-      return this.journalEntries[this.currentEntryIndex - 1].key;
-    },
-    previousPath: function() {
-      if (!this.previousEntryKey) {
-        return null;
-      }
-      return `/${this.$route.params.username}/${this.previousEntryKey}`;
     }
   },
   created() {
