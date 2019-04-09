@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/mtlynch/whatgotdone/backend/datastore"
-	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/datastore"
+	"github.com/mtlynch/whatgotdone/types"
 )
 
 type Page struct {

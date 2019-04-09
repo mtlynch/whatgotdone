@@ -9,7 +9,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 
-	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/types"
 )
 
 type Datastore interface {
