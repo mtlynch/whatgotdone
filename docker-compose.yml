@@ -4,7 +4,9 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    environment:
+      - PORT=3000
     ports:
       - 3000:3000
     volumes:
-      - ./:/go/src/github.com/mtlynch/whatgotdone/
+      - ./:/app

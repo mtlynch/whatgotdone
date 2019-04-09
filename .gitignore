@@ -1,5 +1,7 @@
 gin-bin
 
+*.exe
+
 *.swp
 *.swo
 

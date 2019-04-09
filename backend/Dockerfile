@@ -1,10 +1,6 @@
-FROM golang:1.11
+FROM golang:1.11.8
 
-WORKDIR /go/src/github.com/mtlynch/whatgotdone/backend/web
+WORKDIR /app/backend/web
 
-RUN go get github.com/codegangsta/gin && \
-  go get cloud.google.com/go/firestore
-
-EXPOSE 3000
-
-ENTRYPOINT gin --port 3000 --appPort 3001 run main.go
+EXPOSE $PORT
+ENTRYPOINT go run main.go
