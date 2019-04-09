@@ -42,7 +42,7 @@ jobs:
           command: gcloud config set project "${GCLOUD_PROJECT}"
       - run:
           name: Deploy to AppEngine
-          command: gcloud --quiet app deploy app.yaml --promote
+          command: gcloud --quiet app deploy backend/web/app.yaml --promote
 workflows:
   version: 2
   test-deploy:
