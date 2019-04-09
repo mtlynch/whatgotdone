@@ -28,7 +28,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
 var templates = template.Must(
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
 	template.New("index.html").Delims("[[", "]]").ParseFiles(
-		"./frontend/dist/index.html"))
+		"./web/frontend/dist/index.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl, p)
@@ -108,7 +108,7 @@ func enableCsp(w *http.ResponseWriter) {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("./frontend/client/dist"))
+	fs := http.FileServer(http.Dir("./web/frontend/dist"))
 	http.Handle("/css/", fs)
 	http.Handle("/js/", fs)
 	http.HandleFunc("/entries", entriesHandler)
