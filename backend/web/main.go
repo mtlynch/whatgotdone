@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/mtlynch/whatgotdone/datastore"
-	"github.com/mtlynch/whatgotdone/types"
+	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type Page struct {
@@ -27,8 +27,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
 
 var templates = template.Must(
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
-	template.New("client/dist/index.html").Delims("[[", "]]").ParseFiles(
-		"client/dist/index.html"))
+	template.New("index.html").Delims("[[", "]]").ParseFiles(
+		"/whatgotdone-frontend/index.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl, p)
@@ -108,7 +108,7 @@ func enableCsp(w *http.ResponseWriter) {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("client/dist"))
+	fs := http.FileServer(http.Dir("/whatgotdone-frontend"))
 	http.Handle("/css/", fs)
 	http.Handle("/js/", fs)
 	http.HandleFunc("/entries", entriesHandler)

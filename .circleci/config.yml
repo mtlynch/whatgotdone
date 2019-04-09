@@ -14,10 +14,13 @@ jobs:
       - run:
           name: Build production frontend
           command: npm --prefix ./client run build
+      - run:
+          name: Move dist files
+          command: mv ./client/dist /whatgotdone-frontend
       - persist_to_workspace:
           root: ./
           paths:
-            - client/dist
+            - /whatgotdone-frontend
   deploy:
     docker:
       - image: google/cloud-sdk:240.0.0

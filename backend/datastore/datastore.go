@@ -9,7 +9,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 
-	"github.com/mtlynch/whatgotdone/types"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type Datastore interface {
@@ -23,13 +23,18 @@ type defaultClient struct {
 	ctx             context.Context
 }
 
+const devServiceAccount = "service-account-creds.json"
+
 func New() Datastore {
 	ctx := context.Background()
-	var opt option.ClientOption
-	if _, err := os.Stat("/path/to/whatever"); !os.IsNotExist(err) {
-		opt = option.WithCredentialsFile("service-account-creds.json")
+	var client *firestore.Client
+	var err error
+	if _, err := os.Stat(devServiceAccount); !os.IsNotExist(err) {
+		opt := option.WithCredentialsFile(devServiceAccount)
+		client, err = firestore.NewClient(ctx, "whatgotdone", opt)
+	} else {
+		client, err = firestore.NewClient(ctx, "whatgotdone")
 	}
-	client, err := firestore.NewClient(ctx, "whatgotdone", opt)
 	if err != nil {
 		log.Fatalln(err)
 	}
