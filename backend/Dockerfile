@@ -1,6 +1,6 @@
 FROM golang:1.11
 
-WORKDIR /go/src/github.com/mtlynch/whatgotdone
+WORKDIR /go/src/github.com/mtlynch/whatgotdone/backend/web
 
 RUN go get github.com/codegangsta/gin && \
   go get cloud.google.com/go/firestore

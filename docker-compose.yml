@@ -2,9 +2,9 @@ version: '3.6'
 services:
   app:
     build:
-      context: ./
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - 3000:3000
     volumes:
-      - ./:/go/src/github.com/mtlynch/whatgotdone
+      - ./:/go/src/github.com/mtlynch/whatgotdone/
