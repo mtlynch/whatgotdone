@@ -19,7 +19,6 @@ jobs:
           paths:
             - client/dist
   deploy:
-    working_directory: /root/go/src/github.com/mtlynch/whatgotdone
     docker:
       - image: google/cloud-sdk:240.0.0
     environment:
@@ -41,9 +40,6 @@ jobs:
       - run:
           name: Configure gcloud project
           command: gcloud config set project "${GCLOUD_PROJECT}"
-      - run:
-          name: Get Go packages
-          command: go get cloud.google.com/go/firestore
       - run:
           name: Deploy to AppEngine
           command: gcloud --quiet app deploy backend/web/app.yaml --promote
