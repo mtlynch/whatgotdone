@@ -7,5 +7,4 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./backend:/go/src/github.com/mtlynch/whatgotdone/backend
-      - ./client/dist:/whatgotdone-frontend
+      - ./:/go/src/github.com/mtlynch/whatgotdone/
