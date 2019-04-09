@@ -2,3 +2,5 @@ gin-bin
 
 *.swp
 *.swo
+
+service-account-creds.json

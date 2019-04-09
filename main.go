@@ -4,21 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/mtlynch/whatgotdone/datastore"
+	"github.com/mtlynch/whatgotdone/types"
 )
 
 type Page struct {
 	Title string
-}
-
-type JournalEntry struct {
-	Date         string `json:"date"`
-	LastModified string `json:"lastModified"`
-	Markdown     string `json:"markdown"`
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
@@ -47,26 +43,16 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 	}
 }
 
-var entries = []JournalEntry{
-	JournalEntry{
-		Date:         "2019-03-22",
-		LastModified: "2019-03-22T08:15:22.382Z",
-		Markdown:     "Ate some crackers",
-	},
-	JournalEntry{
-		Date:         "2019-03-15",
-		LastModified: "2019-03-15T22:06:45.196Z",
-		Markdown:     "Took a nap",
-	},
-	JournalEntry{
-		Date:         "2019-03-08",
-		LastModified: "2019-03-22T14:59:16.010Z",
-		Markdown:     "Watched the movie *The Royal Tenenbaums*.",
-	},
-}
-
 func entriesHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
+
+	ds := datastore.New()
+	defer ds.Close()
+	entries, err := ds.All()
+	if err != nil {
+		log.Printf("Failed to retrieve entries: %s", err)
+		return
+	}
 
 	if err := json.NewEncoder(w).Encode(entries); err != nil {
 		panic(err)
@@ -93,16 +79,20 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Failed to decode request: %s\n", r.Body)
 	}
-	entries = append(entries, JournalEntry{
+	j := types.JournalEntry{
 		Date:         t.Date,
 		LastModified: time.Now().Format(time.RFC3339),
 		Markdown:     t.EntryContent,
-	})
+	}
+	ds := datastore.New()
+	defer ds.Close()
+	err = ds.InsertJournalEntry(j)
+	if err != nil {
+		log.Printf("Failed to insert journal entry: %s", err)
+	}
 	resp := SubmitResponse{
 		Ok: true,
 	}
-
-	log.Printf("Logged a new entry. Current length: %d\n", len(entries))
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		panic(err)
 	}
@@ -117,31 +107,7 @@ func enableCsp(w *http.ResponseWriter) {
 	(*w).Header().Set("Content-Security-Policy", "default-src 'self'")
 }
 
-func addTextEntries() {
-	a, err := ioutil.ReadFile("2019-03-29.md")
-	if err != nil {
-		panic(err)
-	}
-	b, err := ioutil.ReadFile("2019-04-05.md")
-	if err != nil {
-		panic(err)
-	}
-	entries = append(entries,
-		JournalEntry{
-			Date:         "2019-04-05",
-			LastModified: "2019-04-05T21:36:05.333Z",
-			Markdown:     string(b),
-		})
-	entries = append(entries,
-		JournalEntry{
-			Date:         "2019-03-29",
-			LastModified: "2019-03-29T23:34:02.111Z",
-			Markdown:     string(a),
-		})
-}
-
 func main() {
-	addTextEntries()
 	fs := http.FileServer(http.Dir("client/dist"))
 	http.Handle("/css/", fs)
 	http.Handle("/js/", fs)
