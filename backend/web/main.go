@@ -28,7 +28,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request, title string) {
 var templates = template.Must(
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
 	template.New("index.html").Delims("[[", "]]").ParseFiles(
-		"../../client/dist/index.html"))
+		"./frontend/dist/index.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl, p)
@@ -77,7 +77,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	var t SubmitRequest
 	err := decoder.Decode(&t)
 	if err != nil {
-		log.Printf("Failed to decode request: %s\n", r.Body)
+		log.Printf("Failed to decode request: %s", r.Body)
 	}
 	j := types.JournalEntry{
 		Date:         t.Date,
@@ -108,7 +108,7 @@ func enableCsp(w *http.ResponseWriter) {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("../../client/dist"))
+	fs := http.FileServer(http.Dir("./frontend/client/dist"))
 	http.Handle("/css/", fs)
 	http.Handle("/js/", fs)
 	http.HandleFunc("/entries", entriesHandler)
@@ -117,8 +117,8 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "3000"
 	}
-	log.Printf("Listening on %s\n", port)
+	log.Printf("Listening on %s", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
