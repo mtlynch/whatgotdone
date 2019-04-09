@@ -18,9 +18,9 @@ jobs:
           name: Move dist files
           command: mv ./client/dist /whatgotdone-frontend
       - persist_to_workspace:
-          root: ./
+          root: /whatgotdone-frontend
           paths:
-            - /whatgotdone-frontend
+            - ./*
   deploy:
     docker:
       - image: google/cloud-sdk:240.0.0
