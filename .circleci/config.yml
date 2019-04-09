@@ -1,6 +1,9 @@
 version: 2.1
+defaults: &defaults
+  working_directory: ~/src/github.com/mtlynch/whatgotdone
 jobs:
   build:
+    <<: *defaults
     docker:
       - image: circleci/node:9.11.2-stretch
     steps:
@@ -19,6 +22,7 @@ jobs:
           paths:
             - client/dist
   deploy:
+    <<: *defaults
     docker:
       - image: google/cloud-sdk:240.0.0
     environment:
