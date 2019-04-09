@@ -1,4 +1,4 @@
-module github.com/mtlynch/whatgotdone/backend
+module github.com/mtlynch/whatgotdone
 
 go 1.11
 

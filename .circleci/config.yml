@@ -7,17 +7,17 @@ jobs:
       - checkout
       - run:
           name: Download npm packages
-          command: npm --prefix ./backend/web/frontend install
+          command: npm --prefix ./web/frontend install
       - run:
           name: Lint client
-          command: npm --prefix ./backend/web/frontend run lint
+          command: npm --prefix ./web/frontend run lint
       - run:
           name: Build production frontend
-          command: npm --prefix ./backend/web/frontend run build
+          command: npm --prefix ./web/frontend run build
       - persist_to_workspace:
           root: ./
           paths:
-            - ./backend/web/frontend/dist
+            - ./web/frontend/dist
   deploy:
     docker:
       - image: google/cloud-sdk:240.0.0
@@ -42,7 +42,7 @@ jobs:
           command: gcloud config set project "${GCLOUD_PROJECT}"
       - run:
           name: Deploy to AppEngine
-          command: gcloud --quiet app deploy backend/web/app.yaml --promote
+          command: gcloud --quiet app deploy web/app.yaml --promote
 workflows:
   version: 2
   test-deploy:
