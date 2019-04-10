@@ -2,11 +2,11 @@ version: '3.6'
 services:
   app:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
     environment:
       - PORT=3000
     ports:
       - 3000:3000
     volumes:
       - ./:/app
+    working_dir: /app
