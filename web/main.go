@@ -112,8 +112,8 @@ func enableCsp(w *http.ResponseWriter) {
 func main() {
 	fs := http.FileServer(http.Dir("./web/frontend/dist"))
 	r := mux.NewRouter()
-	r.Handle("/css/", fs)
-	r.Handle("/js/", fs)
+	r.PathPrefix("/js").Handler(fs)
+	r.PathPrefix("/css").Handler(fs)
 	r.HandleFunc("/entries", entriesHandler)
 	r.HandleFunc("/api/submit", submitHandler)
 	r.PathPrefix("/").HandlerFunc(makeHandler(indexHandler))
