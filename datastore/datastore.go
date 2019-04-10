@@ -24,6 +24,7 @@ type defaultClient struct {
 }
 
 const devServiceAccount = "service-account-creds.json"
+const firestoreProjectId = "whatgotdone"
 
 func New() Datastore {
 	ctx := context.Background()
@@ -31,9 +32,9 @@ func New() Datastore {
 	var err error
 	if _, err := os.Stat(devServiceAccount); !os.IsNotExist(err) {
 		opt := option.WithCredentialsFile(devServiceAccount)
-		client, err = firestore.NewClient(ctx, "whatgotdone", opt)
+		client, err = firestore.NewClient(ctx, firestoreProjectId, opt)
 	} else {
-		client, err = firestore.NewClient(ctx, "whatgotdone")
+		client, err = firestore.NewClient(ctx, firestoreProjectId)
 	}
 	if err != nil {
 		log.Fatalln(err)
