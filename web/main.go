@@ -9,6 +9,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/gorilla/mux"
+
 	"github.com/mtlynch/whatgotdone/datastore"
 	"github.com/mtlynch/whatgotdone/types"
 )
@@ -109,11 +111,13 @@ func enableCsp(w *http.ResponseWriter) {
 
 func main() {
 	fs := http.FileServer(http.Dir("./web/frontend/dist"))
-	http.Handle("/css/", fs)
-	http.Handle("/js/", fs)
-	http.HandleFunc("/entries", entriesHandler)
-	http.HandleFunc("/api/submit", submitHandler)
-	http.HandleFunc("/", makeHandler(indexHandler))
+	r := mux.NewRouter()
+	r.Handle("/css/", fs)
+	r.Handle("/js/", fs)
+	r.HandleFunc("/entries", entriesHandler)
+	r.HandleFunc("/api/submit", submitHandler)
+	r.PathPrefix("/").HandlerFunc(makeHandler(indexHandler))
+	http.Handle("/", r)
 
 	port := os.Getenv("PORT")
 	if port == "" {
