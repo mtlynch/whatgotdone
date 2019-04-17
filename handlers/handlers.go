@@ -10,80 +10,81 @@ import (
 	"github.com/mtlynch/whatgotdone/types"
 )
 
-type page struct {
-	Title string
-}
+func (s *defaultServer) indexHandler() http.HandlerFunc {
+	var templates = template.Must(
+		// Use custom delimiters so Go's delimiters don't clash with Vue's.
+		template.New("index.html").Delims("[[", "]]").ParseFiles(
+			"./web/frontend/dist/index.html"))
 
-var templates = template.Must(
-	// Use custom delimiters so Go's delimiters don't clash with Vue's.
-	template.New("index.html").Delims("[[", "]]").ParseFiles(
-		"./web/frontend/dist/index.html"))
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCsp(&w)
 
-func (s *defaultServer) indexHandler(w http.ResponseWriter, r *http.Request) {
-	enableCsp(&w)
-
-	p := &page{
-		Title: "What Got Done",
-	}
-	renderTemplate(w, "index.html", p)
-}
-
-func (s *defaultServer) entriesHandler(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
-
-	entries, err := s.datastore.All()
-	if err != nil {
-		log.Printf("Failed to retrieve entries: %s", err)
-		return
-	}
-
-	if err := json.NewEncoder(w).Encode(entries); err != nil {
-		panic(err)
+		type page struct {
+			Title string
+		}
+		p := &page{
+			Title: "What Got Done",
+		}
+		err := templates.ExecuteTemplate(w, "index.html", p)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
-func (s *defaultServer) submitHandler(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
-	if r.Method == "OPTIONS" {
-		return
-	}
-	decoder := json.NewDecoder(r.Body)
+func (s *defaultServer) entriesHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
 
-	type submitRequest struct {
-		Date         string `json:"date"`
-		EntryContent string `json:"entryContent"`
-	}
+		entries, err := s.datastore.All()
+		if err != nil {
+			log.Printf("Failed to retrieve entries: %s", err)
+			return
+		}
 
-	type submitResponse struct {
-		Ok bool `json:"ok"`
-	}
-
-	var t submitRequest
-	err := decoder.Decode(&t)
-	if err != nil {
-		log.Printf("Failed to decode request: %s", r.Body)
-	}
-	j := types.JournalEntry{
-		Date:         t.Date,
-		LastModified: time.Now().Format(time.RFC3339),
-		Markdown:     t.EntryContent,
-	}
-	err = s.datastore.InsertJournalEntry(j)
-	if err != nil {
-		log.Printf("Failed to insert journal entry: %s", err)
-	}
-	resp := submitResponse{
-		Ok: true,
-	}
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		panic(err)
+		if err := json.NewEncoder(w).Encode(entries); err != nil {
+			panic(err)
+		}
 	}
 }
 
-func renderTemplate(w http.ResponseWriter, tmpl string, p *page) {
-	err := templates.ExecuteTemplate(w, tmpl, p)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+func (s *defaultServer) submitHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
+		if r.Method == "OPTIONS" {
+			return
+		}
+		decoder := json.NewDecoder(r.Body)
+
+		type submitRequest struct {
+			Date         string `json:"date"`
+			EntryContent string `json:"entryContent"`
+		}
+
+		type submitResponse struct {
+			Ok bool `json:"ok"`
+		}
+
+		var t submitRequest
+		err := decoder.Decode(&t)
+		if err != nil {
+			log.Printf("Failed to decode request: %s", r.Body)
+		}
+		j := types.JournalEntry{
+			Date:         t.Date,
+			LastModified: time.Now().Format(time.RFC3339),
+			Markdown:     t.EntryContent,
+		}
+		err = s.datastore.InsertJournalEntry(j)
+		if err != nil {
+			log.Printf("Failed to insert journal entry: %s", err)
+		}
+		resp := submitResponse{
+			Ok: true,
+		}
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			panic(err)
+		}
 	}
 }
 
