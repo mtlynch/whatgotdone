@@ -10,6 +10,7 @@ func (s *defaultServer) routes() {
 	s.router.PathPrefix("/css").Handler(fs)
 
 	s.router.HandleFunc("/api/entries", s.entriesHandler())
+	s.router.HandleFunc("/api/entry/{username}/{date}", s.entryHandler())
 	s.router.HandleFunc("/api/submit", s.submitHandler())
 	s.router.PathPrefix("/").HandlerFunc(s.indexHandler())
 }

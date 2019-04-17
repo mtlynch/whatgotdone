@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -14,8 +15,18 @@ import (
 
 type Datastore interface {
 	All() ([]types.JournalEntry, error)
+	Get(username string, date string) (types.JournalEntry, error)
 	Insert(types.JournalEntry) error
 	Close() error
+}
+
+type EntryNotFoundError struct {
+	Username string
+	Date     string
+}
+
+func (f EntryNotFoundError) Error() string {
+	return fmt.Sprintf("Could not find journal entry for user %s on date %s", f.Username, f.Date)
 }
 
 type defaultClient struct {
@@ -61,6 +72,28 @@ func (c defaultClient) All() (entries []types.JournalEntry, err error) {
 		entries = append(entries, j)
 	}
 	return entries, nil
+}
+
+func (c defaultClient) Get(username string, date string) (types.JournalEntry, error) {
+	iter := c.firestoreClient.Collection("journalEntries").Documents(c.ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return types.JournalEntry{}, err
+		}
+		var j types.JournalEntry
+		doc.DataTo(&j)
+		if j.Date == date {
+			return j, nil
+		}
+	}
+	return types.JournalEntry{}, EntryNotFoundError{
+		Username: username,
+		Date:     date,
+	}
 }
 
 func (c defaultClient) Insert(j types.JournalEntry) error {
