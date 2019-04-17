@@ -20,7 +20,7 @@ func (ds mockDatastore) All() ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }
 
-func (ds mockDatastore) InsertJournalEntry(types.JournalEntry) error {
+func (ds mockDatastore) Insert(types.JournalEntry) error {
 	return nil
 }
 
