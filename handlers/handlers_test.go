@@ -52,7 +52,7 @@ func TestEntriesHandler(t *testing.T) {
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/entries", nil)
+	req, err := http.NewRequest("GET", "/api/entries", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
