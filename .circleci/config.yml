@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  build-frontend:
     docker:
       - image: circleci/node:9.11.2-stretch
     steps:
@@ -18,6 +18,16 @@ jobs:
           root: ./
           paths:
             - ./web/frontend/dist
+  test-backend:
+    docker:
+      - image: circleci/golang:1.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Test go packages
+          command: go test -v ./...
   deploy:
     docker:
       - image: google/cloud-sdk:240.0.0
@@ -47,10 +57,14 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      - build
+      - build-frontend
+      - test-backend:
+          requires:
+            - build-frontend
       - deploy:
           requires:
-            - build
+            - build-frontend
+            - test-backend
           filters:
             branches:
               only: master
