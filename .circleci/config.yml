@@ -58,7 +58,7 @@ workflows:
   test-deploy:
     jobs:
       - build-frontend
-      - test-backend
+      - test-backend:
           requires:
             - build-frontend
       - deploy:
