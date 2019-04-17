@@ -75,7 +75,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			LastModified: time.Now().Format(time.RFC3339),
 			Markdown:     t.EntryContent,
 		}
-		err = s.datastore.InsertJournalEntry(j)
+		err = s.datastore.Insert(j)
 		if err != nil {
 			log.Printf("Failed to insert journal entry: %s", err)
 		}

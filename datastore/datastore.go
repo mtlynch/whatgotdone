@@ -14,7 +14,7 @@ import (
 
 type Datastore interface {
 	All() ([]types.JournalEntry, error)
-	InsertJournalEntry(types.JournalEntry) error
+	Insert(types.JournalEntry) error
 	Close() error
 }
 
@@ -63,7 +63,7 @@ func (c defaultClient) All() (entries []types.JournalEntry, err error) {
 	return entries, nil
 }
 
-func (c defaultClient) InsertJournalEntry(j types.JournalEntry) error {
+func (c defaultClient) Insert(j types.JournalEntry) error {
 	_, err := c.firestoreClient.Collection("journalEntries").Doc(j.Date).Set(c.ctx, j)
 	return err
 }
