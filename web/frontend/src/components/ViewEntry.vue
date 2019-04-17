@@ -49,9 +49,14 @@ export default {
       return this.links[pageNum - 1];
     },
     pageGen(pageNum) {
-      const date = new Date(this.links[pageNum - 1].split("/")[2]);
-      const month = date.toLocaleString("en-us", { month: "short" });
-      return `${month}. ${date.getDate()}`;
+      const dateRaw = this.links[pageNum - 1].split("/")[2];
+      const dateUtc = new Date(`${dateRaw}T00:00:00Z`);
+      const userTimezoneOffset = dateUtc.getTimezoneOffset() * 60000;
+      const date = new Date(dateUtc.getTime() + userTimezoneOffset);
+      const friendlyMonth = date.toLocaleString("en-us", {
+        month: "short"
+      });
+      return `${friendlyMonth}. ${date.getDate()}`;
     }
   },
   computed: {
