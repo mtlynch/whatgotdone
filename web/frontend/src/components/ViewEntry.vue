@@ -75,7 +75,7 @@ export default {
     }
   },
   created() {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/entries`;
+    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries`;
     this.$http
       .get(url)
       .then(result => {
