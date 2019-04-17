@@ -23,6 +23,8 @@ jobs:
       - image: circleci/golang:1.11
     steps:
       - checkout
+      - attach_workspace:
+          at: ./
       - run:
           name: Test go packages
           command: go test -v ./...
@@ -57,6 +59,8 @@ workflows:
     jobs:
       - build-frontend
       - test-backend
+          requires:
+            - build-frontend
       - deploy:
           requires:
             - build-frontend
