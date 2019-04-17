@@ -7,44 +7,31 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mtlynch/whatgotdone/datastore"
 	"github.com/mtlynch/whatgotdone/types"
 )
 
-type (
-	page struct {
-		Title string
-	}
-
-	submitRequest struct {
-		Date         string `json:"date"`
-		EntryContent string `json:"entryContent"`
-	}
-
-	submitResponse struct {
-		Ok bool `json:"ok"`
-	}
-)
+type page struct {
+	Title string
+}
 
 var templates = template.Must(
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
 	template.New("index.html").Delims("[[", "]]").ParseFiles(
 		"./web/frontend/dist/index.html"))
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
+func (s *defaultServer) indexHandler(w http.ResponseWriter, r *http.Request) {
 	enableCsp(&w)
+
 	p := &page{
 		Title: "What Got Done",
 	}
 	renderTemplate(w, "index.html", p)
 }
 
-func EntriesHandler(w http.ResponseWriter, r *http.Request) {
+func (s *defaultServer) entriesHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
-	ds := datastore.New()
-	defer ds.Close()
-	entries, err := ds.All()
+	entries, err := s.datastore.All()
 	if err != nil {
 		log.Printf("Failed to retrieve entries: %s", err)
 		return
@@ -55,12 +42,22 @@ func EntriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SubmitHandler(w http.ResponseWriter, r *http.Request) {
+func (s *defaultServer) submitHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	if r.Method == "OPTIONS" {
 		return
 	}
 	decoder := json.NewDecoder(r.Body)
+
+	type submitRequest struct {
+		Date         string `json:"date"`
+		EntryContent string `json:"entryContent"`
+	}
+
+	type submitResponse struct {
+		Ok bool `json:"ok"`
+	}
+
 	var t submitRequest
 	err := decoder.Decode(&t)
 	if err != nil {
@@ -71,9 +68,7 @@ func SubmitHandler(w http.ResponseWriter, r *http.Request) {
 		LastModified: time.Now().Format(time.RFC3339),
 		Markdown:     t.EntryContent,
 	}
-	ds := datastore.New()
-	defer ds.Close()
-	err = ds.InsertJournalEntry(j)
+	err = s.datastore.InsertJournalEntry(j)
 	if err != nil {
 		log.Printf("Failed to insert journal entry: %s", err)
 	}
