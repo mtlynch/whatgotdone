@@ -25,7 +25,7 @@ jobs:
       - checkout
       - run:
           name: Test go packages
-          command: go -v ./...
+          command: go test -v ./...
   deploy:
     docker:
       - image: google/cloud-sdk:240.0.0
