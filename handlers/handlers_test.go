@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/datastore"
 	"github.com/mtlynch/whatgotdone/types"
 )
 
@@ -18,6 +19,16 @@ type mockDatastore struct {
 
 func (ds mockDatastore) All() ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
+}
+
+func (ds mockDatastore) Get(username string, date string) (types.JournalEntry, error) {
+	if len(ds.journalEntries) > 0 {
+		return ds.journalEntries[0], nil
+	}
+	return types.JournalEntry{}, datastore.EntryNotFoundError{
+		Username: username,
+		Date:     date,
+	}
 }
 
 func (ds mockDatastore) Insert(types.JournalEntry) error {
@@ -61,16 +72,79 @@ func TestEntriesHandler(t *testing.T) {
 	s.router.ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
+		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
 	var response []types.JournalEntry
 	err = json.Unmarshal(w.Body.Bytes(), &response)
 	if err != nil {
-		t.Errorf("Response is not valid JSON: %v", w.Body.String())
+		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
 
 	if !reflect.DeepEqual(response, entries) {
 		t.Fatalf("Unexpected response: got %v want %v", response, entries)
+	}
+}
+
+func TestEntryHandlerWhenDateMatches(t *testing.T) {
+	entries := []types.JournalEntry{
+		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+	}
+	ds := mockDatastore{
+		journalEntries: entries,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/entry/dummyUser/2019-04-19", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+	var response types.JournalEntry
+	err = json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
+	}
+
+	if !reflect.DeepEqual(response, entries[0]) {
+		t.Fatalf("Unexpected response: got %v want %v", response, entries[0])
+	}
+}
+
+func TestEntryHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing.T) {
+	entries := []types.JournalEntry{}
+	ds := mockDatastore{
+		journalEntries: entries,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/entry/dummyUser/2019-04-19", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusNotFound {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusNotFound)
 	}
 }

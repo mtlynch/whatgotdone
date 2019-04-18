@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
+
+	"github.com/mtlynch/whatgotdone/datastore"
 	"github.com/mtlynch/whatgotdone/types"
 )
 
@@ -43,6 +46,28 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 		}
 
 		if err := json.NewEncoder(w).Encode(entries); err != nil {
+			panic(err)
+		}
+	}
+}
+
+func (s *defaultServer) entryHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
+		vars := mux.Vars(r)
+
+		j, err := s.datastore.Get(vars["username"], vars["date"])
+		if err != nil {
+			if _, ok := err.(datastore.EntryNotFoundError); ok {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+			log.Printf("Failed to retrieve entry: %s", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		if err := json.NewEncoder(w).Encode(j); err != nil {
 			panic(err)
 		}
 	}
