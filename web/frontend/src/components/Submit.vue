@@ -30,6 +30,21 @@ export default {
       submitSucceeded: null
     };
   },
+  watch: {
+    date: function(newDate) {
+      if (newDate.length != 10) {
+        return;
+      }
+      // Hard-code the username until we support real accounts.
+      const username = "michael";
+      const url = `${
+        process.env.VUE_APP_BACKEND_URL
+      }/api/entry/${username}/${newDate}`;
+      this.$http.get(url).then(result => {
+        this.entryContent = result.data.markdown;
+      });
+    }
+  },
   methods: {
     handleSubmit() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/submit`;
