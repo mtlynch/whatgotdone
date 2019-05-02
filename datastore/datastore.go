@@ -29,10 +29,23 @@ func (f EntryNotFoundError) Error() string {
 	return fmt.Sprintf("Could not find journal entry for user %s on date %s", f.Username, f.Date)
 }
 
-type defaultClient struct {
-	firestoreClient *firestore.Client
-	ctx             context.Context
-}
+type (
+	defaultClient struct {
+		firestoreClient *firestore.Client
+		ctx             context.Context
+	}
+
+	JournalEntry struct {
+		Date         string `json:"date" firestore:"date,omitempty"`
+		LastModified string `json:"lastModified" firestore:"lastModified,omitempty"`
+		Markdown     string `json:"markdown" firestore:"markdown,omitempty"`
+	}
+
+	userDocument struct {
+		Username     string `firestore:"username,omitempty"`
+		LastModified string `firestore:"lastModified,omitempty"`
+	}
+)
 
 const devServiceAccount = "service-account-creds.json"
 const firestoreProjectId = "whatgotdone"
@@ -97,6 +110,11 @@ func (c defaultClient) Get(username string, date string) (types.JournalEntry, er
 }
 
 func (c defaultClient) Insert(username string, j types.JournalEntry) error {
+	// Create a User document so that its children appear in Firestore console.
+	c.firestoreClient.Collection("journalEntries").Doc(username).Set(c.ctx, userDocument{
+		Username:     username,
+		LastModified: j.LastModified,
+	})
 	_, err := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Doc(j.Date).Set(c.ctx, j)
 	return err
 }
