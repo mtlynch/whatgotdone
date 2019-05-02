@@ -103,9 +103,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.view-entry {
-  color: #2c3e50;
-}
-</style>

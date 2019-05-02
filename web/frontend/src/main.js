@@ -9,7 +9,7 @@ import Submit from "./components/Submit.vue";
 import ViewEntry from "./components/ViewEntry.vue";
 import MissingPage from "./components/404.vue";
 
-import 'bootstrap/dist/css/bootstrap.css'
+import 'bootswatch/dist/superhero/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false
