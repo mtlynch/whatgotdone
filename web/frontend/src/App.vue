@@ -25,4 +25,8 @@ export default {
 #app a.page-link {
   color: white;
 }
+
+#app .page-link {
+  border: 1px solid rgb(124, 133, 145);
+}
 </style>
