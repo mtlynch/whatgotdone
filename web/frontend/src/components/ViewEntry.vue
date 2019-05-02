@@ -80,7 +80,9 @@ export default {
     }
   },
   created() {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries`;
+    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${
+      this.$route.params.username
+    }`;
     this.$http
       .get(url)
       .then(result => {

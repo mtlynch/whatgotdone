@@ -14,9 +14,9 @@ import (
 )
 
 type Datastore interface {
-	All() ([]types.JournalEntry, error)
+	All(username string) ([]types.JournalEntry, error)
 	Get(username string, date string) (types.JournalEntry, error)
-	Insert(types.JournalEntry) error
+	Insert(username string, j types.JournalEntry) error
 	Close() error
 }
 
@@ -29,10 +29,23 @@ func (f EntryNotFoundError) Error() string {
 	return fmt.Sprintf("Could not find journal entry for user %s on date %s", f.Username, f.Date)
 }
 
-type defaultClient struct {
-	firestoreClient *firestore.Client
-	ctx             context.Context
-}
+type (
+	defaultClient struct {
+		firestoreClient *firestore.Client
+		ctx             context.Context
+	}
+
+	JournalEntry struct {
+		Date         string `json:"date" firestore:"date,omitempty"`
+		LastModified string `json:"lastModified" firestore:"lastModified,omitempty"`
+		Markdown     string `json:"markdown" firestore:"markdown,omitempty"`
+	}
+
+	userDocument struct {
+		Username     string `firestore:"username,omitempty"`
+		LastModified string `firestore:"lastModified,omitempty"`
+	}
+)
 
 const devServiceAccount = "service-account-creds.json"
 const firestoreProjectId = "whatgotdone"
@@ -57,8 +70,8 @@ func New() Datastore {
 	}
 }
 
-func (c defaultClient) All() (entries []types.JournalEntry, err error) {
-	iter := c.firestoreClient.Collection("journalEntries").Documents(c.ctx)
+func (c defaultClient) All(username string) (entries []types.JournalEntry, err error) {
+	iter := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -75,7 +88,7 @@ func (c defaultClient) All() (entries []types.JournalEntry, err error) {
 }
 
 func (c defaultClient) Get(username string, date string) (types.JournalEntry, error) {
-	iter := c.firestoreClient.Collection("journalEntries").Documents(c.ctx)
+	iter := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -96,8 +109,13 @@ func (c defaultClient) Get(username string, date string) (types.JournalEntry, er
 	}
 }
 
-func (c defaultClient) Insert(j types.JournalEntry) error {
-	_, err := c.firestoreClient.Collection("journalEntries").Doc(j.Date).Set(c.ctx, j)
+func (c defaultClient) Insert(username string, j types.JournalEntry) error {
+	// Create a User document so that its children appear in Firestore console.
+	c.firestoreClient.Collection("journalEntries").Doc(username).Set(c.ctx, userDocument{
+		Username:     username,
+		LastModified: j.LastModified,
+	})
+	_, err := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Doc(j.Date).Set(c.ctx, j)
 	return err
 }
 

@@ -9,8 +9,12 @@ func (s *defaultServer) routes() {
 	s.router.PathPrefix("/js").Handler(fs)
 	s.router.PathPrefix("/css").Handler(fs)
 
-	s.router.HandleFunc("/api/entries", s.entriesHandler())
+	s.router.HandleFunc("/api/entries/{username}", s.entriesHandler())
 	s.router.HandleFunc("/api/entry/{username}/{date}", s.entryHandler())
 	s.router.HandleFunc("/api/submit", s.submitHandler())
+	s.router.HandleFunc("/api/logout", s.logoutHandler())
+	s.router.PathPrefix("/api").HandlerFunc(s.apiRootHandler())
+
+	s.router.HandleFunc("/submit", s.submitPageHandler())
 	s.router.PathPrefix("/").HandlerFunc(s.indexHandler())
 }

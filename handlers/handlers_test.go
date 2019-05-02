@@ -17,7 +17,7 @@ type mockDatastore struct {
 	journalEntries []types.JournalEntry
 }
 
-func (ds mockDatastore) All() ([]types.JournalEntry, error) {
+func (ds mockDatastore) All(username string) ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }
 
@@ -31,7 +31,7 @@ func (ds mockDatastore) Get(username string, date string) (types.JournalEntry, e
 	}
 }
 
-func (ds mockDatastore) Insert(types.JournalEntry) error {
+func (ds mockDatastore) Insert(username string, j types.JournalEntry) error {
 	return nil
 }
 
@@ -63,7 +63,7 @@ func TestEntriesHandler(t *testing.T) {
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/entries", nil)
+	req, err := http.NewRequest("GET", "/api/entries/dummyUser", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -146,5 +146,57 @@ func TestEntryHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing
 	if status := w.Code; status != http.StatusNotFound {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusNotFound)
+	}
+}
+
+func TestEntryHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
+	entries := []types.JournalEntry{}
+	ds := mockDatastore{
+		journalEntries: entries,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/entry/dummyUser/201904-19", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusBadRequest {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
+func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
+	entries := []types.JournalEntry{}
+	ds := mockDatastore{
+		journalEntries: entries,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/entries", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusBadRequest {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
 	}
 }
