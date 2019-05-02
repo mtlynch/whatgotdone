@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"html/template"
 	"log"
 	"net/http"
@@ -39,7 +40,7 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
 
-		entries, err := s.datastore.All()
+		entries, err := s.datastore.All(usernameFromRequestPath(r))
 		if err != nil {
 			log.Printf("Failed to retrieve entries: %s", err)
 			return
@@ -54,16 +55,20 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 func (s *defaultServer) entryHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
-		vars := mux.Vars(r)
 
-		j, err := s.datastore.Get(vars["username"], vars["date"])
+		date, err := dateFromRequestPath(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		j, err := s.datastore.Get(usernameFromRequestPath(r), date)
 		if err != nil {
 			if _, ok := err.(datastore.EntryNotFoundError); ok {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
 			log.Printf("Failed to retrieve entry: %s", err)
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, "Failed to retrieve entry", http.StatusInternalServerError)
 			return
 		}
 
@@ -94,15 +99,19 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 		err := decoder.Decode(&t)
 		if err != nil {
 			log.Printf("Failed to decode request: %s", r.Body)
+			http.Error(w, "Failed to decode request", http.StatusBadRequest)
 		}
 		j := types.JournalEntry{
 			Date:         t.Date,
 			LastModified: time.Now().Format(time.RFC3339),
 			Markdown:     t.EntryContent,
 		}
-		err = s.datastore.Insert(j)
+		// TODO: Replace based on the logged-in user.
+		const username string = "michael"
+		err = s.datastore.Insert(username, j)
 		if err != nil {
 			log.Printf("Failed to insert journal entry: %s", err)
+			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
 		}
 		resp := submitResponse{
 			Ok: true,
@@ -113,6 +122,14 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 	}
 }
 
+// Catchall for when no API route matches.
+func (s *defaultServer) apiRootHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
+		http.Error(w, "Invalid API path", http.StatusBadRequest)
+	}
+}
+
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
@@ -120,4 +137,18 @@ func enableCors(w *http.ResponseWriter) {
 
 func enableCsp(w *http.ResponseWriter) {
 	(*w).Header().Set("Content-Security-Policy", "default-src 'self'")
+}
+
+func usernameFromRequestPath(r *http.Request) string {
+	return mux.Vars(r)["username"]
+}
+
+func dateFromRequestPath(r *http.Request) (string, error) {
+	date := mux.Vars(r)["date"]
+	dateFormat := "2006-01-02"
+	_, err := time.Parse(dateFormat, date)
+	if err != nil {
+		return "", errors.New("Invalid date format: must be YYYY-MM-DD")
+	}
+	return date, nil
 }

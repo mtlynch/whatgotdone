@@ -14,9 +14,9 @@ import (
 )
 
 type Datastore interface {
-	All() ([]types.JournalEntry, error)
+	All(username string) ([]types.JournalEntry, error)
 	Get(username string, date string) (types.JournalEntry, error)
-	Insert(types.JournalEntry) error
+	Insert(username string, j types.JournalEntry) error
 	Close() error
 }
 
@@ -57,8 +57,8 @@ func New() Datastore {
 	}
 }
 
-func (c defaultClient) All() (entries []types.JournalEntry, err error) {
-	iter := c.firestoreClient.Collection("journalEntries").Documents(c.ctx)
+func (c defaultClient) All(username string) (entries []types.JournalEntry, err error) {
+	iter := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -75,7 +75,7 @@ func (c defaultClient) All() (entries []types.JournalEntry, err error) {
 }
 
 func (c defaultClient) Get(username string, date string) (types.JournalEntry, error) {
-	iter := c.firestoreClient.Collection("journalEntries").Documents(c.ctx)
+	iter := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -96,8 +96,8 @@ func (c defaultClient) Get(username string, date string) (types.JournalEntry, er
 	}
 }
 
-func (c defaultClient) Insert(j types.JournalEntry) error {
-	_, err := c.firestoreClient.Collection("journalEntries").Doc(j.Date).Set(c.ctx, j)
+func (c defaultClient) Insert(username string, j types.JournalEntry) error {
+	_, err := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Doc(j.Date).Set(c.ctx, j)
 	return err
 }
 
