@@ -19,7 +19,7 @@ export default {
 }
 
 #app a {
-  color: #4b7ccc;
+  color: rgb(101, 168, 255);
 }
 
 #app a.page-link {
