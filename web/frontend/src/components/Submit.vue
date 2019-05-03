@@ -54,11 +54,8 @@ export default {
   },
   computed: {
     thisFriday: function() {
-      const daysInWeek = 7;
-      const daysToAdd =
-        (moment().isoWeekday("Friday") - moment().isoWeekday()) % daysInWeek;
       return moment()
-        .add(daysToAdd, "days")
+        .isoWeekday("Friday")
         .format("YYYY-MM-DD");
     },
     lastFriday: function() {
