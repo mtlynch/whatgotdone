@@ -4,8 +4,8 @@
     <template v-if="!submitSucceeded">
       <form @submit.prevent="handleSubmit">
         <b-form-select v-model="date" class="mb-3">
-          <option :value="lastFriday">Week ending {{ lastFriday }}</option>
-          <option :value="thisFriday" selected>Week ending {{ thisFriday }}</option>
+          <option :value="lastFriday">Week ending {{ lastFriday | moment("dddd, LL") }}</option>
+          <option :value="thisFriday" selected>Week ending {{ thisFriday | moment("dddd, LL") }}</option>
         </b-form-select>
         <textarea class="form-control" v-model="entryContent" name="markdown" rows="5"></textarea>
         <button type="submit" class="btn btn-primary">Submit</button>
