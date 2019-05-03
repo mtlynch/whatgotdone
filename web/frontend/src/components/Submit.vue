@@ -3,16 +3,10 @@
     <p>What did you do this week?</p>
     <template v-if="!submitSucceeded">
       <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="date">Date</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="date"
-            name="date"
-            placeholder="2019-01-11"
-          >
-        </div>
+        <b-form-select v-model="date" class="mb-3">
+          <option :value="lastFriday">Week ending {{ lastFriday }}</option>
+          <option :value="thisFriday" selected>Week ending {{ thisFriday }}</option>
+        </b-form-select>
         <textarea class="form-control" v-model="entryContent" name="markdown" rows="5"></textarea>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
@@ -21,6 +15,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   name: "Submit",
   data() {
@@ -36,10 +32,12 @@ export default {
     this.$http.get(url).then(result => {
       this.username = result.data.username;
     });
+    this.date = this.thisFriday;
   },
   watch: {
     date: function(newDate) {
       if (
+        !newDate ||
         newDate.length != 10 ||
         this.username.length == 0 ||
         this.entryContent.length > 0
@@ -52,6 +50,22 @@ export default {
       this.$http.get(url).then(result => {
         this.entryContent = result.data.markdown;
       });
+    }
+  },
+  computed: {
+    thisFriday: function() {
+      const daysInWeek = 7;
+      const daysToAdd =
+        (moment().isoWeekday("Friday") - moment().isoWeekday()) % daysInWeek;
+      return moment()
+        .add(daysToAdd, "days")
+        .format("YYYY-MM-DD");
+    },
+    lastFriday: function() {
+      const daysInWeek = 7;
+      return moment(this.thisFriday)
+        .subtract(daysInWeek, "days")
+        .format("YYYY-MM-DD");
     }
   },
   methods: {
