@@ -107,6 +107,30 @@ func (s *defaultServer) entryHandler() http.HandlerFunc {
 	}
 }
 
+func (s defaultServer) userMeHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
+
+		user, err := s.loggedInUser(r)
+		if err != nil {
+			http.Error(w, "You must be logged in to retrieve information about your account", http.StatusForbidden)
+			return
+		}
+
+		type userMeResponse struct {
+			Username string `json:"username"`
+		}
+
+		resp := userMeResponse{
+			Username: user.Username,
+		}
+
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			panic(err)
+		}
+	}
+}
+
 func (s *defaultServer) submitHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
@@ -184,7 +208,7 @@ func enableCors(w *http.ResponseWriter) {
 
 // TODO: Adjust this so it's only the CSP for the /login route.
 func enableCsp(w *http.ResponseWriter) {
-	(*w).Header().Set("Content-Security-Policy", "default-src 'self' https://widget.userkit.io https://api.userkit.io https://www.google.com/recaptcha/api.js https://www.gstatic.com/recaptcha/api2/")
+	(*w).Header().Set("Content-Security-Policy", "default-src 'self' https://widget.userkit.io https://api.userkit.io https://www.google.com/recaptcha/api.js https://www.gstatic.com/recaptcha/api2/ https://fonts.googleapis.com")
 }
 
 func (s defaultServer) loggedInUser(r *http.Request) (*userkit.User, error) {

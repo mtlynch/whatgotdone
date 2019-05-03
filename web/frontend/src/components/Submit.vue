@@ -25,21 +25,30 @@ export default {
   name: "Submit",
   data() {
     return {
+      username: "",
       date: "",
       entryContent: "",
       submitSucceeded: null
     };
   },
+  created() {
+    const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
+    this.$http.get(url).then(result => {
+      this.username = result.data.username;
+    });
+  },
   watch: {
     date: function(newDate) {
-      if (newDate.length != 10) {
+      if (
+        newDate.length != 10 ||
+        this.username.length == 0 ||
+        this.entryContent.length > 0
+      ) {
         return;
       }
-      // Hard-code the username until we support real accounts.
-      const username = "michael";
-      const url = `${
-        process.env.VUE_APP_BACKEND_URL
-      }/api/entry/${username}/${newDate}`;
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${
+        this.username
+      }/${newDate}`;
       this.$http.get(url).then(result => {
         this.entryContent = result.data.markdown;
       });
