@@ -5,6 +5,7 @@ import VueMoment from 'vue-moment'
 import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
+import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Submit from "./components/Submit.vue";
 import ViewEntry from "./components/ViewEntry.vue";
@@ -25,6 +26,7 @@ const routes = [
   { path: '/:username/:date', component: ViewEntry },
   { path: '/submit', component: Submit },
   { path: '/login', component: Login },
+  { path: '/', component: Home },
   { path: '*', component: MissingPage },
 ]
 
