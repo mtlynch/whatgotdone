@@ -47,14 +47,16 @@ type (
 	}
 )
 
-const devServiceAccount = "service-account-creds.json"
-const firestoreProjectId = "whatgotdone"
-
 func newFirestoreClient(ctx context.Context) (*firestore.Client, error) {
+
+	const devServiceAccount = "service-account-creds.json"
+
 	if _, err := os.Stat(devServiceAccount); !os.IsNotExist(err) {
-		return firestore.NewClient(ctx, firestoreProjectId, option.WithCredentialsFile(devServiceAccount))
+		const firestoreProjectID = "whatgotdone-dev"
+		return firestore.NewClient(ctx, firestoreProjectID, option.WithCredentialsFile(devServiceAccount))
 	}
-	return firestore.NewClient(ctx, firestoreProjectId)
+	const firestoreProjectID = "whatgotdone"
+	return firestore.NewClient(ctx, firestoreProjectID)
 }
 
 func New() Datastore {

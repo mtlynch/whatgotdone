@@ -5,4 +5,4 @@ gin-bin
 *.swp
 *.swo
 
-service-account-creds.json
+service-account-creds*.json
