@@ -34,7 +34,7 @@ export default {
       this.polling = setInterval(() => {
         const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
         this.$http
-          .get(url)
+          .get(url, { withCredentials: true })
           .then(result => {
             this.$router.push(`/${result.data.username}`);
           })

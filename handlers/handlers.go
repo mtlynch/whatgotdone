@@ -201,11 +201,6 @@ func (s *defaultServer) apiRootHandler() http.HandlerFunc {
 	}
 }
 
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
-}
-
 // TODO: Adjust this so it's only the CSP for the /login route.
 func enableCsp(w *http.ResponseWriter) {
 	(*w).Header().Set("Content-Security-Policy", "default-src 'self' https://widget.userkit.io https://api.userkit.io https://www.google.com/recaptcha/api.js https://www.gstatic.com/recaptcha/api2/ https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com")
