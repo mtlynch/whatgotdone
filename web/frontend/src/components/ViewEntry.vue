@@ -97,7 +97,7 @@ export default {
         }
         this.journalEntries.sort((a, b) => a.date - b.date);
       })
-      .catch(function(error) {
+      .catch(error => {
         this.backendError = error;
       });
   }
