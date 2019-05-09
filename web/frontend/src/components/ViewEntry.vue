@@ -96,6 +96,12 @@ export default {
           });
         }
         this.journalEntries.sort((a, b) => a.date - b.date);
+
+        if (!this.$route.params.date) {
+          const lastEntry = this.journalEntries[this.journalEntries.length - 1];
+          this.$router.push(`/${this.$route.params.username}/${lastEntry.key}`);
+          return;
+        }
       })
       .catch(error => {
         this.backendError = error;
