@@ -38,7 +38,7 @@ export default {
           .then(result => {
             this.$router.push(`/${result.data.username}`);
           })
-          .catch(function(error) {
+          .catch(function() {
             // Do nothing, wait for request to succeed.
           });
       }, 100);
