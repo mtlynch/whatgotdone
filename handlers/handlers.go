@@ -208,7 +208,7 @@ func enableCors(w *http.ResponseWriter) {
 
 // TODO: Adjust this so it's only the CSP for the /login route.
 func enableCsp(w *http.ResponseWriter) {
-	(*w).Header().Set("Content-Security-Policy", "default-src 'self' https://widget.userkit.io https://api.userkit.io https://www.google.com/recaptcha/api.js https://www.gstatic.com/recaptcha/api2/ https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com/analytics.js https://www.googletagmanager.com")
+	(*w).Header().Set("Content-Security-Policy", "default-src 'self' https://widget.userkit.io https://api.userkit.io https://www.google.com/recaptcha/api.js https://www.gstatic.com/recaptcha/api2/ https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com")
 }
 
 func (s defaultServer) loggedInUser(r *http.Request) (*userkit.User, error) {
