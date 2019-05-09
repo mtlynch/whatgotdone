@@ -26,11 +26,12 @@ Vue.use(VueMoment)
 Vue.prototype.moment = VueMoment
 
 const routes = [
-  { path: '/:username/:date', component: ViewEntry },
   { path: '/pro', component: ProUpgrade },
   { path: '/submit', component: Submit },
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
+  { path: '/:username', component: ViewEntry },
+  { path: '/:username/:date', component: ViewEntry },
   { path: '/', component: Home },
   { path: '*', component: MissingPage },
 ]

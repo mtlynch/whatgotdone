@@ -17,5 +17,6 @@ func (s *defaultServer) routes() {
 	s.router.PathPrefix("/api").HandlerFunc(s.apiRootHandler())
 
 	s.router.HandleFunc("/submit", s.submitPageHandler())
+	s.router.HandleFunc("/me", s.meRedirectHandler())
 	s.router.PathPrefix("/").HandlerFunc(s.indexHandler())
 }

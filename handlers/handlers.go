@@ -65,6 +65,19 @@ func (s defaultServer) submitPageHandler() http.HandlerFunc {
 	}
 }
 
+func (s defaultServer) meRedirectHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCsp(&w)
+
+		u, err := s.loggedInUser(r)
+		if err != nil {
+			http.Redirect(w, r, "/login", http.StatusFound)
+			return
+		}
+		http.Redirect(w, r, "/"+u.Username, http.StatusFound)
+	}
+}
+
 func (s *defaultServer) entriesHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
