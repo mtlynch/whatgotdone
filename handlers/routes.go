@@ -11,6 +11,7 @@ func (s *defaultServer) routes() {
 
 	s.router.HandleFunc("/api/entries/{username}", s.entriesHandler())
 	s.router.HandleFunc("/api/entry/{username}/{date}", s.entryHandler())
+	s.router.HandleFunc("/api/recentEntries", s.recentEntriesHandler())
 	s.router.HandleFunc("/api/user/me", s.userMeHandler())
 	s.router.HandleFunc("/api/submit", s.submitHandler())
 	s.router.HandleFunc("/api/logout", s.logoutHandler())

@@ -17,6 +17,10 @@ type mockDatastore struct {
 	journalEntries []types.JournalEntry
 }
 
+func (ds mockDatastore) Users() ([]string, error) {
+	return []string{}, nil
+}
+
 func (ds mockDatastore) All(username string) ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }
@@ -176,6 +180,32 @@ func TestEntryHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 }
 
 func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
+	entries := []types.JournalEntry{}
+	ds := mockDatastore{
+		journalEntries: entries,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/entries", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusBadRequest {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
+func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	entries := []types.JournalEntry{}
 	ds := mockDatastore{
 		journalEntries: entries,

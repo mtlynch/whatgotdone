@@ -10,6 +10,7 @@ import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Logout from "./components/Logout.vue";
 import ProUpgrade from "./components/ProUpgrade.vue";
+import Recent from "./components/Recent.vue";
 import Submit from "./components/Submit.vue";
 import ViewEntry from "./components/ViewEntry.vue";
 import MissingPage from "./components/404.vue";
@@ -26,6 +27,7 @@ Vue.use(VueMoment)
 Vue.prototype.moment = VueMoment
 
 const routes = [
+  { path: '/recent', component: Recent },
   { path: '/pro', component: ProUpgrade },
   { path: '/submit', component: Submit },
   { path: '/login', component: Login },
