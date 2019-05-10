@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -226,7 +227,8 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 		}
 
 		type submitResponse struct {
-			Ok bool `json:"ok"`
+			Ok   bool   `json:"ok"`
+			Path string `json:"path"`
 		}
 
 		var t submitRequest
@@ -246,7 +248,8 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
 		}
 		resp := submitResponse{
-			Ok: true,
+			Ok:   true,
+			Path: fmt.Sprintf("/%s/%s", user.Username, t.Date),
 		}
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
 			panic(err)
