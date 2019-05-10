@@ -46,6 +46,12 @@ export default {
 </script>
 
 <style scoped>
+div.journal {
+  border: 1px solid rgb(26, 0, 68);
+  padding: 15px;
+  margin-bottom: 20px;
+  background: rgb(79, 87, 161);
+}
 .journalBody {
   text-align: left;
 }
