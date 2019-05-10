@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -86,6 +87,66 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Failed to retrieve entries: %s", err)
 			return
+		}
+
+		if err := json.NewEncoder(w).Encode(entries); err != nil {
+			panic(err)
+		}
+	}
+}
+
+func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
+	type recentEntry struct {
+		Author       string `json:"author"`
+		Date         string `json:"date"`
+		lastModified string
+		Markdown     string `json:"markdown"`
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
+
+		users, err := s.datastore.Users()
+		if err != nil {
+			log.Printf("Failed to retrieve users: %s", err)
+			return
+		}
+
+		var entries []recentEntry
+		for _, username := range users {
+			userEntries, err := s.datastore.All(username)
+			if err != nil {
+				log.Printf("Failed to retrieve entries for user %s: %s", username, err)
+				return
+			}
+			for _, entry := range userEntries {
+				entries = append(entries, recentEntry{
+					Author:       username,
+					Date:         entry.Date,
+					lastModified: entry.LastModified,
+					Markdown:     entry.Markdown,
+				})
+			}
+		}
+
+		sort.Slice(entries, func(i, j int) bool {
+			if entries[i].Date < entries[j].Date {
+				return true
+			}
+			if entries[i].Date >= entries[j].Date {
+				return false
+			}
+			return entries[i].lastModified < entries[j].lastModified
+		})
+
+		// Reverse the order of entries.
+		for i := len(entries)/2 - 1; i >= 0; i-- {
+			opp := len(entries) - 1 - i
+			entries[i], entries[opp] = entries[opp], entries[i]
+		}
+
+		const maxEntries = 25
+		if len(entries) > maxEntries {
+			entries = entries[:maxEntries]
 		}
 
 		if err := json.NewEncoder(w).Encode(entries); err != nil {

@@ -14,6 +14,7 @@ import (
 )
 
 type Datastore interface {
+	Users() ([]string, error)
 	All(username string) ([]types.JournalEntry, error)
 	Get(username string, date string) (types.JournalEntry, error)
 	Insert(username string, j types.JournalEntry) error
@@ -70,6 +71,23 @@ func New() Datastore {
 		firestoreClient: client,
 		ctx:             ctx,
 	}
+}
+
+func (c defaultClient) Users() (users []string, err error) {
+	iter := c.firestoreClient.Collection("journalEntries").Documents(c.ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var u userDocument
+		doc.DataTo(&u)
+		users = append(users, u.Username)
+	}
+	return users, nil
 }
 
 func (c defaultClient) All(username string) (entries []types.JournalEntry, err error) {
