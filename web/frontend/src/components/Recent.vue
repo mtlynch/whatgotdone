@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import Vue from "vue";
 import PartialJournal from "./PartialJournal.vue";
 
 export default {
