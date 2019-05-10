@@ -1,16 +1,14 @@
 <template>
   <div class="submit">
     <p>What did you do this week?</p>
-    <template v-if="!submitSucceeded">
-      <form @submit.prevent="handleSubmit">
-        <b-form-select v-model="date" class="mb-3">
-          <option :value="lastFriday">Week ending {{ lastFriday | moment("dddd, LL") }}</option>
-          <option :value="thisFriday" selected>Week ending {{ thisFriday | moment("dddd, LL") }}</option>
-        </b-form-select>
-        <textarea class="form-control" v-model="entryContent" name="markdown" rows="5"></textarea>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </template>
+    <form @submit.prevent="handleSubmit">
+      <b-form-select v-model="date" class="mb-3">
+        <option :value="lastFriday">Week ending {{ lastFriday | moment("dddd, LL") }}</option>
+        <option :value="thisFriday" selected>Week ending {{ thisFriday | moment("dddd, LL") }}</option>
+      </b-form-select>
+      <textarea class="form-control" v-model="entryContent" name="markdown" rows="5"></textarea>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
   </div>
 </template>
 
@@ -23,8 +21,7 @@ export default {
     return {
       username: "",
       date: "",
-      entryContent: "",
-      submitSucceeded: null
+      entryContent: ""
     };
   },
   created() {
@@ -74,8 +71,8 @@ export default {
           entryContent: this.entryContent
         })
         .then(result => {
-          if (result.ok) {
-            this.submitSucceeded = true;
+          if (result.data.ok) {
+            this.$router.push(result.data.path);
           }
         });
     }
