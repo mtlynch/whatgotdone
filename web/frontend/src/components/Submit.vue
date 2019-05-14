@@ -27,9 +27,16 @@ export default {
   methods: {
     loadUsername() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
-      this.$http.get(url, { withCredentials: true }).then(result => {
-        this.username = result.data.username;
-      });
+      this.$http
+        .get(url, { withCredentials: true })
+        .then(result => {
+          this.username = result.data.username;
+        })
+        .catch(error => {
+          if (error.response.status == 403) {
+            this.$router.push("/login");
+          }
+        });
     },
     loadEntryContent() {
       if (this.date.length == 0 || this.username.length == 0) {
