@@ -26,7 +26,7 @@ export default {
   },
   created() {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
-    this.$http.get(url).then(result => {
+    this.$http.get(url, { withCredentials: true }).then(result => {
       this.username = result.data.username;
     });
     this.date = this.thisFriday;
@@ -66,10 +66,14 @@ export default {
     handleSubmit() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/submit`;
       this.$http
-        .post(url, {
-          date: this.date,
-          entryContent: this.entryContent
-        })
+        .post(
+          url,
+          {
+            date: this.date,
+            entryContent: this.entryContent
+          },
+          { withCredentials: true }
+        )
         .then(result => {
           if (result.data.ok) {
             this.$router.push(result.data.path);
