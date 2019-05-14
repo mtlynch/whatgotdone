@@ -35,7 +35,7 @@ export default {
         const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
         this.$http
           .get(url, { withCredentials: true })
-          .then(result => {
+          .then(() => {
             this.$router.push("/submit");
           })
           .catch(() => {
