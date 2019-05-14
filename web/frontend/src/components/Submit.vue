@@ -24,45 +24,24 @@ export default {
       entryContent: ""
     };
   },
-  created() {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
-    this.$http.get(url, { withCredentials: true }).then(result => {
-      this.username = result.data.username;
-    });
-    this.date = this.thisFriday;
-  },
-  watch: {
-    date: function(newDate) {
-      if (
-        !newDate ||
-        newDate.length != 10 ||
-        this.username.length == 0 ||
-        this.entryContent.length > 0
-      ) {
+  methods: {
+    loadUsername() {
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
+      this.$http.get(url, { withCredentials: true }).then(result => {
+        this.username = result.data.username;
+      });
+    },
+    loadEntryContent() {
+      if (this.date.length == 0 || this.username.length == 0) {
         return;
       }
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${
         this.username
-      }/${newDate}`;
+      }/${this.date}`;
       this.$http.get(url).then(result => {
         this.entryContent = result.data.markdown;
       });
-    }
-  },
-  computed: {
-    thisFriday: function() {
-      return moment()
-        .isoWeekday("Friday")
-        .format("YYYY-MM-DD");
     },
-    lastFriday: function() {
-      const daysInWeek = 7;
-      return moment(this.thisFriday)
-        .subtract(daysInWeek, "days")
-        .format("YYYY-MM-DD");
-    }
-  },
-  methods: {
     handleSubmit() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/submit`;
       this.$http
@@ -79,6 +58,31 @@ export default {
             this.$router.push(result.data.path);
           }
         });
+    }
+  },
+  created() {
+    this.loadUsername();
+    this.date = this.thisFriday;
+  },
+  watch: {
+    date: function() {
+      this.loadEntryContent();
+    },
+    username: function() {
+      this.loadEntryContent();
+    }
+  },
+  computed: {
+    thisFriday: function() {
+      return moment()
+        .isoWeekday("Friday")
+        .format("YYYY-MM-DD");
+    },
+    lastFriday: function() {
+      const daysInWeek = 7;
+      return moment(this.thisFriday)
+        .subtract(daysInWeek, "days")
+        .format("YYYY-MM-DD");
     }
   }
 };
