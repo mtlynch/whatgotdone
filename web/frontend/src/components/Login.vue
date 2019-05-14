@@ -36,7 +36,7 @@ export default {
         this.$http
           .get(url, { withCredentials: true })
           .then(result => {
-            this.$router.push(`/${result.data.username}`);
+            this.$router.push("/submit");
           })
           .catch(() => {
             // Do nothing, wait for request to succeed.
