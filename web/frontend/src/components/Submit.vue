@@ -47,7 +47,12 @@ export default {
       }/${this.date}`;
       this.$http.get(url).then(result => {
         this.entryContent = result.data.markdown;
-      });
+      })
+        .catch(error => {
+          if (error.response.status == 404) {
+            this.entryContent = "";
+          }
+        });;
     },
     handleSubmit() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/submit`;
