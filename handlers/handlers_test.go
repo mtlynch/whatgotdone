@@ -89,6 +89,40 @@ func TestEntriesHandler(t *testing.T) {
 		t.Fatalf("Unexpected response: got %v want %v", response, entries)
 	}
 }
+func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
+	ds := mockDatastore{
+		journalEntries: []types.JournalEntry{},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/entries/dummyUser", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+	var response []types.JournalEntry
+	err = json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
+	}
+
+	expected := []types.JournalEntry{}
+	if !reflect.DeepEqual(response, expected) {
+		t.Fatalf("Unexpected response: got %v want %v", response, expected)
+	}
+}
 
 func TestEntryHandlerWhenDateMatches(t *testing.T) {
 	entries := []types.JournalEntry{

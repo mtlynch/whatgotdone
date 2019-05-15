@@ -90,7 +90,8 @@ func (c defaultClient) Users() (users []string, err error) {
 	return users, nil
 }
 
-func (c defaultClient) All(username string) (entries []types.JournalEntry, err error) {
+func (c defaultClient) All(username string) ([]types.JournalEntry, error) {
+	entries := make([]types.JournalEntry, 0)
 	iter := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
