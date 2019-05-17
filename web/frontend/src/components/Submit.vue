@@ -1,19 +1,34 @@
 <template>
   <div class="submit">
-    <p>What did you do this week?</p>
     <form @submit.prevent="handleSubmit">
+      <h2>Select a week</h2>
       <b-form-select v-model="date" class="mb-3">
         <option :value="lastFriday">Week ending {{ lastFriday | moment("dddd, LL") }}</option>
         <option :value="thisFriday" selected>Week ending {{ thisFriday | moment("dddd, LL") }}</option>
       </b-form-select>
-      <textarea class="form-control" v-model="entryContent" name="markdown" rows="5"></textarea>
+      <h2>What did you do this week?</h2>
+      <p>
+        (You can use
+        <a href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)
+      </p>
+      <textarea-autosize
+        class="form-control"
+        v-model="entryContent"
+        name="markdown"
+        :min-height="250"
+        :max-height="650"
+      ></textarea-autosize>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
+import VueTextareaAutosize from "vue-textarea-autosize";
 import moment from "moment";
+
+Vue.use(VueTextareaAutosize);
 
 export default {
   name: "Submit",
@@ -45,14 +60,16 @@ export default {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${
         this.username
       }/${this.date}`;
-      this.$http.get(url).then(result => {
-        this.entryContent = result.data.markdown;
-      })
+      this.$http
+        .get(url)
+        .then(result => {
+          this.entryContent = result.data.markdown;
+        })
         .catch(error => {
           if (error.response.status == 404) {
             this.entryContent = "";
           }
-        });;
+        });
     },
     handleSubmit() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/submit`;
@@ -103,5 +120,9 @@ export default {
 <style scoped>
 .submit {
   font-size: 11pt;
+}
+
+button {
+  margin-top: 25px;
 }
 </style>

@@ -19,7 +19,8 @@
     "vue-filter-date-format": "^1.2.2",
     "vue-markdown": "^2.2.4",
     "vue-moment": "^4.0.0",
-    "vue-router": "^3.0.2"
+    "vue-router": "^3.0.2",
+    "vue-textarea-autosize": "^1.0.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
