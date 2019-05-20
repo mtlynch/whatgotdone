@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -260,6 +261,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 func (s defaultServer) logoutHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
+
 		http.SetCookie(w, &http.Cookie{
 			Name:    "userkit_auth_token",
 			Value:   "",
@@ -279,9 +281,21 @@ func (s *defaultServer) apiRootHandler() http.HandlerFunc {
 	}
 }
 
-// TODO: Adjust this so it's only the CSP for the /login route.
 func enableCsp(w *http.ResponseWriter) {
-	(*w).Header().Set("Content-Security-Policy", "default-src 'self' https://widget.userkit.io https://api.userkit.io https://www.google.com/recaptcha/api.js https://www.gstatic.com/recaptcha/api2/ https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com")
+	urls := []string{
+		// For navbar image
+		"data:image/svg+xml",
+		// URLs for /login route
+		"https://widget.userkit.io",
+		"https://api.userkit.io",
+		"https://www.google.com/recaptcha/api.js",
+		"https://www.gstatic.com/recaptcha/api2/",
+		"https://fonts.googleapis.com",
+		"https://fonts.gstatic.com",
+		"https://www.google-analytics.com",
+		"https://www.googletagmanager.com",
+	}
+	(*w).Header().Set("Content-Security-Policy", fmt.Sprintf("default-src 'self' %s", strings.Join(urls, " ")))
 }
 
 func (s defaultServer) loggedInUser(r *http.Request) (*userkit.User, error) {
