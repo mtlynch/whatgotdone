@@ -259,6 +259,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 
 func (s defaultServer) logoutHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
 		http.SetCookie(w, &http.Cookie{
 			Name:    "userkit_auth_token",
 			Value:   "",
