@@ -1,27 +1,31 @@
 <template>
   <div class="view-entry container">
-    <div class="overflow-auto">
-      <b-pagination-nav
-        :link-gen="linkGen"
-        :page-gen="pageGen"
-        :number-of-pages="links.length"
-        v-if="links.length > 0"
-        align="center"
-        use-router
-      ></b-pagination-nav>
-    </div>
+    <template v-if="journalEntries.length > 0">
+      <div v-if="journalEntries" class="overflow-auto">
+        <b-pagination-nav
+          :link-gen="linkGen"
+          :page-gen="pageGen"
+          :number-of-pages="links.length"
+          v-if="links.length > 0"
+          align="center"
+          use-router
+        ></b-pagination-nav>
+      </div>
 
-    <p>
-      Journal entry for
-      <b>{{ $route.params.username }}</b> on
-      <b>{{ $route.params.date }}</b>
-    </p>
-    <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
-    <p v-else>
-      No journal entry found for
-      <b>{{ $route.params.date }}</b>
-    </p>
-
+      <p>
+        Journal entry for
+        <b>{{ $route.params.username }}</b> on
+        <b>{{ $route.params.date }}</b>
+      </p>
+      <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
+      <p v-else>
+        No journal entry found for
+        <b>{{ $route.params.date }}</b>
+      </p>
+    </template>
+    <template v-else>
+      <p>This user has not posted any What Got Done updates.</p>
+    </template>
     <p v-if="backendError" class="error">Failed to connect to backend: {{ backendError }}</p>
   </div>
 </template>
@@ -94,6 +98,9 @@ export default {
             lastModified: new Date(entry.lastModified),
             markdown: entry.markdown
           });
+        }
+        if (this.journalEntries.length == 0) {
+          return;
         }
         this.journalEntries.sort((a, b) => a.date - b.date);
 
