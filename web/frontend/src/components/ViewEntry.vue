@@ -14,8 +14,8 @@
 
       <p>
         Journal entry for
-        <b>{{ $route.params.username }}</b> on
-        <b>{{ $route.params.date }}</b>
+        <span class="username">{{ $route.params.username }}</span> on
+        <b>{{ $route.params.date | moment("dddd, ll") }}</b>
       </p>
       <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
       <p v-else>
@@ -24,7 +24,9 @@
       </p>
     </template>
     <template v-else>
-      <p>This user has not posted any What Got Done updates.</p>
+      <p>
+        <span class="username">{{ $route.params.username }}</span> has not posted any What Got Done updates.
+      </p>
     </template>
     <p v-if="backendError" class="error">Failed to connect to backend: {{ backendError }}</p>
   </div>
@@ -116,3 +118,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+span.username {
+  color: rgb(255, 208, 56);
+  font-weight: bold;
+}
+</style>
