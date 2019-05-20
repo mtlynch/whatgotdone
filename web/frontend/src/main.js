@@ -9,6 +9,7 @@ import App from './App.vue'
 import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Logout from "./components/Logout.vue";
+import ProPitch from "./components/ProPitch.vue";
 import ProUpgrade from "./components/ProUpgrade.vue";
 import Recent from "./components/Recent.vue";
 import Submit from "./components/Submit.vue";
@@ -28,7 +29,8 @@ Vue.prototype.moment = VueMoment
 
 const routes = [
   { path: '/recent', component: Recent },
-  { path: '/pro', component: ProUpgrade },
+  { path: '/pro', component: ProPitch },
+  { path: '/upgrade', component: ProUpgrade },
   { path: '/submit', component: Submit },
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },

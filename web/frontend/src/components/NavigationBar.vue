@@ -6,8 +6,8 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item to="/recent">Recent</b-nav-item>
         <b-nav-item to="/">About</b-nav-item>
+        <b-nav-item to="/recent">Recent</b-nav-item>
         <b-nav-item to="/pro">Pro</b-nav-item>
       </b-navbar-nav>
 

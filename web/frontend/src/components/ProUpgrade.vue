@@ -1,25 +1,12 @@
 <template>
-  <div class="pro">
-    <p>You should upgrade to Pro!</p>
-    <p>Soon, we'll tell you why.</p>
-
-    <p>Pro accounts will probably have snazzy privileges like:</p>
-
-    <ul>
-      <li>Private entries</li>
-      <li>Automatically send weekly updates to teammates</li>
-    </ul>
+  <div class="signup">
+    <h1>Find out when What Got Done Pro is available</h1>
+    <p>We're still working on What Got Done Pro. Soon this will be a signup link so you can be notified when it's available.</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: "ProUpgrade"
+  name: "ProPitch"
 };
 </script>
-
-<style scoped>
-.pro {
-  text-align: left;
-}
-</style>
