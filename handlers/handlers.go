@@ -282,9 +282,8 @@ func (s *defaultServer) apiRootHandler() http.HandlerFunc {
 }
 
 func enableCsp(w *http.ResponseWriter) {
-	urls := []string{
-		// For navbar image
-		"data:image/svg+xml",
+	defaultSrc := strings.Join([]string{
+		"'self'",
 		// URLs for /login route
 		"https://widget.userkit.io",
 		"https://api.userkit.io",
@@ -294,8 +293,15 @@ func enableCsp(w *http.ResponseWriter) {
 		"https://fonts.gstatic.com",
 		"https://www.google-analytics.com",
 		"https://www.googletagmanager.com",
-	}
-	(*w).Header().Set("Content-Security-Policy", fmt.Sprintf("default-src 'self' %s", strings.Join(urls, " ")))
+	}, " ")
+	imgSrc := strings.Join([]string{
+		"'self'",
+		// For bootstrap navbar images
+		"data:",
+		// For Google Analytics
+		"https://www.google-analytics.com",
+	}, " ")
+	(*w).Header().Set("Content-Security-Policy", fmt.Sprintf("default-src %s; img-src %s;", defaultSrc, imgSrc))
 }
 
 func (s defaultServer) loggedInUser(r *http.Request) (*userkit.User, error) {
