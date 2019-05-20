@@ -1,15 +1,10 @@
 <template>
   <div class="submit">
+    <h1>What got done this week?</h1>
     <form @submit.prevent="handleSubmit">
-      <h2>Select a week</h2>
-      <b-form-select v-model="date" class="mb-3">
-        <option :value="lastFriday">Week ending {{ lastFriday | moment("dddd, LL") }}</option>
-        <option :value="thisFriday" selected>Week ending {{ thisFriday | moment("dddd, LL") }}</option>
-      </b-form-select>
-      <h2>What did you do this week?</h2>
       <p>
-        (You can use
-        <a href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)
+        Enter your update for the week ending
+        <span class="endDate">{{ date | moment("dddd, ll") }}</span>.
       </p>
       <textarea-autosize
         class="form-control"
@@ -18,7 +13,11 @@
         :min-height="250"
         :max-height="650"
       ></textarea-autosize>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <p>
+        (You can use
+        <a href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)
+      </p>
+      <button type="submit" class="btn btn-primary float-right">Submit</button>
     </form>
   </div>
 </template>
@@ -91,7 +90,9 @@ export default {
   },
   created() {
     this.loadUsername();
-    this.date = this.thisFriday;
+    this.date = moment()
+      .isoWeekday("Friday")
+      .format("YYYY-MM-DD");
   },
   watch: {
     date: function() {
@@ -100,29 +101,18 @@ export default {
     username: function() {
       this.loadEntryContent();
     }
-  },
-  computed: {
-    thisFriday: function() {
-      return moment()
-        .isoWeekday("Friday")
-        .format("YYYY-MM-DD");
-    },
-    lastFriday: function() {
-      const daysInWeek = 7;
-      return moment(this.thisFriday)
-        .subtract(daysInWeek, "days")
-        .format("YYYY-MM-DD");
-    }
   }
 };
 </script>
 
 <style scoped>
 .submit {
+  text-align: left;
   font-size: 11pt;
 }
 
-button {
-  margin-top: 25px;
+span.endDate {
+  color: rgb(255, 208, 56);
+  font-weight: bold;
 }
 </style>
