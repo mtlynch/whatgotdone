@@ -1,6 +1,6 @@
 <template>
-  <b-navbar class="navbar navbar-expand-lg navbar-light bg-light">
-    <b-navbar-brand class="navbar-brand" to="/">What Got Done</b-navbar-brand>
+  <b-navbar toggleable="md" class="navbar navbar-expand-lg navbar-light bg-light">
+    <b-navbar-brand v-b-toggle.nav-collapse class="navbar-brand" to="/">What Got Done</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -13,17 +13,12 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-item right to="/submit">
-          <button class="btn btn-success my-2 my-sm-0" type="submit">Post Update</button>
-        </b-nav-item>
-        <b-nav-item-dropdown right>
-          <template slot="button-content">
-            <em>Account</em>
-          </template>
+        <b-nav-item-dropdown text="Account" right>
           <!-- This must be href instead of to so that we get the proper server-side redirect -->
           <b-dropdown-item href="/me">Profile</b-dropdown-item>
           <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
+        <b-button variant="success" v-b-toggle.nav-collapse to="/submit">Post Update</b-button>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -34,3 +29,9 @@ export default {
   name: "NavigationBar"
 };
 </script>
+
+<style scoped>
+.navbar-brand {
+  margin: 10px 20px 10px 0px;
+}
+</style>
