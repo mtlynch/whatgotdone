@@ -9,7 +9,7 @@ export default {
   name: "Logout",
   created() {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/logout`;
-    this.$http.post(url).then(result => {
+    this.$http.post(url).then(() => {
       window.location.href = "/login";
     });
   }
