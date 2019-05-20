@@ -20,8 +20,9 @@
           <template slot="button-content">
             <em>Account</em>
           </template>
+          <!-- This must be href instead of to so that we get the proper server-side redirect -->
           <b-dropdown-item href="/me">Profile</b-dropdown-item>
-          <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
+          <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
