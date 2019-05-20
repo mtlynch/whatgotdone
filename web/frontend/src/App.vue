@@ -29,11 +29,7 @@ export default {
   color: rgb(101, 168, 255);
 }
 
-#app a.page-link {
+#app a.btn {
   color: white;
-}
-
-#app .page-link {
-  border: 1px solid rgb(124, 133, 145);
 }
 </style>
