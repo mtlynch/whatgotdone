@@ -19,23 +19,23 @@
 
     <p>Make What Got Done your weekly ritual to remind yourself of what you accomplished.</p>
 
-    <div class="container">
-      <figure>
+    <figure>
+      <a href="/images/typing-update.gif">
         <img id="typing-update" src="/images/typing-update.gif">
-        <figcaption>Summarize your accomplishments at the end of each week.</figcaption>
-      </figure>
-    </div>
+      </a>
+      <figcaption>Summarize your accomplishments at the end of each week.</figcaption>
+    </figure>
 
     <h2>Share progress with your teammates</h2>
 
     <p>When you're done, share a clean summary of your week of work with your teammates.</p>
 
-    <div class="container">
-      <figure>
+    <figure>
+      <a href="/images/example-rendered.jpg">
         <img id="example-rendered" src="/images/example-rendered.jpg">
-        <figcaption>Share a summary of your work with your teammates.</figcaption>
-      </figure>
-    </div>
+      </a>
+      <figcaption>Share a summary of your work with your teammates.</figcaption>
+    </figure>
 
     <h2>Interested?</h2>
     <p>What Got Done is still a work in progress, and new user registration is not yet open.</p>
@@ -60,7 +60,14 @@ export default {
 }
 
 h1 {
+  font-size: 48px;
   margin-top: 50px;
+}
+
+@media screen and (min-width: 768px) {
+  h1 {
+    font-size: 72px;
+  }
 }
 
 h2 {
@@ -80,6 +87,14 @@ a {
   background: rgb(21, 255, 177);
   color: rgb(5, 70, 9) !important;
   margin-right: 20px;
+  margin-bottom: 30px;
+}
+
+@media screen and (min-width: 768px) {
+  .btn-primary {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
 }
 
 .btn-primary:hover {
@@ -100,11 +115,30 @@ a.btn-secondary:hover {
   color: rgb(41, 2, 49) !important;
 }
 
+figure {
+  margin-top: 60px;
+}
+
+@media screen and (min-width: 768px) {
+  figure {
+    margin-left: 45px;
+  }
+}
+
+figure img {
+  width: 100%;
+}
+
 figcaption {
   font-size: small;
 }
 
+#typing-update {
+  max-width: 685px;
+}
+
 #example-rendered {
+  max-width: 694px;
   border: 1px solid white;
 }
 </style>
