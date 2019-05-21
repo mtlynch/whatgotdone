@@ -48,10 +48,27 @@ a {
 }
 
 .btn-primary {
+  border: 1px solid rgb(8, 24, 8);
+  background: rgb(21, 255, 177);
+  color: rgb(5, 70, 9) !important;
   margin-right: 20px;
 }
 
+.btn-primary:hover {
+  border: 1px solid rgb(4, 61, 23);
+  background: rgb(180, 250, 226);
+  color: rgb(5, 70, 9) !important;
+}
+
 a.btn-secondary {
-  background: rgba(85, 58, 39, 0.685);
+  background: rgb(115, 116, 199);
+  border: 1px solid rgb(0, 0, 0);
+  color: rgb(41, 2, 49) !important;
+}
+
+a.btn-secondary:hover {
+  background: rgb(163, 164, 233);
+  border: 1px solid rgb(0, 0, 0);
+  color: rgb(41, 2, 49) !important;
 }
 </style>
