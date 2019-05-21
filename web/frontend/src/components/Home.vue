@@ -13,6 +13,30 @@
       <p>&nbsp;</p>
     </div>
 
+    <h2>"Where did the whole week go?"</h2>
+
+    <p>Have you ever ended a week wondering where all the time went? Take a step back and remember what got done.</p>
+
+    <p>Make What Got Done your weekly ritual to remind yourself of what you accomplished.</p>
+
+    <div class="container">
+      <figure>
+        <img id="typing-update" src="/images/typing-update.gif">
+        <figcaption>Summarize your accomplishments at the end of each week.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Share progress with your teammates</h2>
+
+    <p>When you're done, share a clean summary of your week of work with your teammates.</p>
+
+    <div class="container">
+      <figure>
+        <img id="example-rendered" src="/images/example-rendered.jpg">
+        <figcaption>Share a summary of your work with your teammates.</figcaption>
+      </figure>
+    </div>
+
     <h2>Interested?</h2>
     <p>What Got Done is still a work in progress, and new user registration is not yet open.</p>
     <p>
@@ -37,6 +61,10 @@ export default {
 
 h1 {
   margin-top: 50px;
+}
+
+h2 {
+  margin-top: 100px;
 }
 
 p {
@@ -70,5 +98,13 @@ a.btn-secondary:hover {
   background: rgb(163, 164, 233);
   border: 1px solid rgb(0, 0, 0);
   color: rgb(41, 2, 49) !important;
+}
+
+figcaption {
+  font-size: small;
+}
+
+#example-rendered {
+  border: 1px solid white;
 }
 </style>
