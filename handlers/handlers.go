@@ -18,6 +18,13 @@ import (
 	"github.com/mtlynch/whatgotdone/types"
 )
 
+type recentEntry struct {
+	Author       string `json:"author"`
+	Date         string `json:"date"`
+	lastModified string
+	Markdown     string `json:"markdown"`
+}
+
 func (s *defaultServer) indexHandler() http.HandlerFunc {
 	var templates = template.Must(
 		// Use custom delimiters so Go's delimiters don't clash with Vue's.
@@ -98,12 +105,6 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 }
 
 func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
-	type recentEntry struct {
-		Author       string `json:"author"`
-		Date         string `json:"date"`
-		lastModified string
-		Markdown     string `json:"markdown"`
-	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
 
@@ -134,7 +135,7 @@ func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 			if entries[i].Date < entries[j].Date {
 				return true
 			}
-			if entries[i].Date >= entries[j].Date {
+			if entries[i].Date > entries[j].Date {
 				return false
 			}
 			return entries[i].lastModified < entries[j].lastModified
