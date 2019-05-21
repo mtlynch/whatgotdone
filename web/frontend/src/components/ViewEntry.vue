@@ -14,7 +14,7 @@
 
       <p>
         Journal entry for
-        <span class="username">{{ $route.params.username }}</span> on
+        <span class="username">{{ $route.params.username }}</span> for the week ending on
         <b>{{ $route.params.date | moment("dddd, ll") }}</b>
       </p>
       <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
