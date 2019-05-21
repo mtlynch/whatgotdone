@@ -6,11 +6,15 @@
       <hr class="my-4">
       <p>End each week by highlighting what you accomplished.</p>
       <p>It's a great way to keep your teammates informed and to strengthen your motivation.</p>
-      <p class="lead float-right">
-        <b-button class="btn btn-primary btn-lg" variant="outline-primary" to="/submit">Start now</b-button>
-        <b-button class="btn btn-lg btn-secondary" to="/recent">View recent entries</b-button>
-      </p>
-      <p>&nbsp;</p>
+
+      <div class="jumbotron-footer">
+        <b-button
+          class="btn btn-primary btn-lg"
+          variant="outline-primary"
+          to="/submit"
+        >Start&nbsp;now</b-button>
+        <b-button class="btn btn-lg btn-secondary" to="/recent">View&nbsp;recent&nbsp;entries</b-button>
+      </div>
     </div>
 
     <h2>"Where did the whole week go?"</h2>
@@ -82,18 +86,40 @@ a {
   color: red;
 }
 
-.btn-primary {
-  border: 1px solid rgb(8, 24, 8);
-  background: rgb(21, 255, 177);
-  color: rgb(5, 70, 9) !important;
-  margin-right: 20px;
-  margin-bottom: 30px;
+.jumbotron {
+  padding-bottom: 40px;
+}
+
+.jumbotron-footer {
+  margin-top: 40px;
+  text-align: center;
 }
 
 @media screen and (min-width: 768px) {
-  .btn-primary {
+  .jumbotron-footer {
+    text-align: right;
+  }
+}
+
+.btn {
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .btn {
     margin-top: 0px;
-    margin-bottom: 0px;
+  }
+}
+
+.btn-primary {
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  background: rgb(21, 255, 177);
+  color: rgb(5, 70, 9) !important;
+}
+
+@media screen and (min-width: 768px) {
+  .btn {
+    margin-right: 20px;
   }
 }
 
@@ -105,8 +131,9 @@ a {
 
 a.btn-secondary {
   background: rgb(115, 116, 199);
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid rgba(0, 0, 0, 0.45);
   color: rgb(41, 2, 49) !important;
+  margin-right: 0px;
 }
 
 a.btn-secondary:hover {
