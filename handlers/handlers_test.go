@@ -266,10 +266,57 @@ func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	}
 }
 
-func TestRecentEntriesHandlerSortsCorrectly(t *testing.T) {
+func TestRecentEntriesHandlerSortsCorrectlyWhenEntriesAreAlreadyInOrder(t *testing.T) {
 	entries := []types.JournalEntry{
+		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-24", Markdown: "Rode the bus"},
 		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-23", Markdown: "Ate some crackers"},
 		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-16", Markdown: "Took a nap"},
+	}
+	ds := mockDatastore{
+		journalEntries: entries,
+		users: []string{
+			"bob",
+		},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/recentEntries", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	var response []recentEntry
+	err = json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
+	}
+
+	expected := []recentEntry{
+		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus"},
+		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers"},
+		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap"},
+	}
+	if !reflect.DeepEqual(response, expected) {
+		t.Fatalf("Unexpected response: got %v want %v", response, expected)
+	}
+}
+func TestRecentEntriesHandlerSortsCorrectlyWhenEntriesAreInReverseOrder(t *testing.T) {
+	entries := []types.JournalEntry{
+		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-16", Markdown: "Took a nap"},
+		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-23", Markdown: "Ate some crackers"},
 		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-24", Markdown: "Rode the bus"},
 	}
 	ds := mockDatastore{
@@ -297,13 +344,7 @@ func TestRecentEntriesHandlerSortsCorrectly(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
-	t.Logf("Response is %v", w.Body.String())
 
-	type recentEntry struct {
-		Author   string `json:"author"`
-		Date     string `json:"date"`
-		Markdown string `json:"markdown"`
-	}
 	var response []recentEntry
 	err = json.Unmarshal(w.Body.Bytes(), &response)
 	if err != nil {
