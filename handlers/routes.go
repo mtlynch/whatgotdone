@@ -8,6 +8,7 @@ func (s *defaultServer) routes() {
 	fs := http.FileServer(http.Dir("./web/frontend/dist"))
 	s.router.PathPrefix("/js").Handler(fs)
 	s.router.PathPrefix("/css").Handler(fs)
+	s.router.PathPrefix("/images").Handler(fs)
 
 	s.router.HandleFunc("/api/entries/{username}", s.entriesHandler())
 	s.router.HandleFunc("/api/entry/{username}/{date}", s.entryHandler())
