@@ -302,7 +302,12 @@ func enableCsp(w *http.ResponseWriter) {
 		// For Google Analytics
 		"https://www.google-analytics.com",
 	}, " ")
-	(*w).Header().Set("Content-Security-Policy", fmt.Sprintf("default-src %s; img-src %s;", defaultSrc, imgSrc))
+	frameSrc := strings.Join([]string{
+		"'self'",
+		// For sendinblue mailing list signup
+		"https://sibforms.com",
+	}, " ")
+	(*w).Header().Set("Content-Security-Policy", fmt.Sprintf("default-src %s; img-src %s; frame-src %s", defaultSrc, imgSrc, frameSrc))
 }
 
 func (s defaultServer) loggedInUser(r *http.Request) (*userkit.User, error) {
