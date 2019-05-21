@@ -25,11 +25,21 @@ export default {
   margin-top: 60px;
 }
 
+/* TODO: Remove the #app part of the selector */
 #app a {
   color: rgb(101, 168, 255);
 }
 
 #app a.btn {
   color: white;
+}
+
+/* TODO: Move these to the view entry component */
+#app a.page-link {
+  color: white;
+}
+
+#app .page-link {
+  border: 1px solid rgb(124, 133, 145);
 }
 </style>
