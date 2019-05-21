@@ -17,7 +17,7 @@
         (You can use
         <a href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)
       </p>
-      <button type="submit" class="btn btn-primary float-right">Submit</button>
+      <button type="submit" class="btn btn-primary float-right">Publish</button>
     </form>
   </div>
 </template>
