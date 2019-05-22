@@ -2,10 +2,14 @@
   <div class="home">
     <div class="jumbotron">
       <h1 class="display-3">What did you get done this week?</h1>
-      <p class="lead">What Got Done is a lightweight, weekly task reflections app.</p>
+      <p class="lead">What Got Done is the simple, easy way to share progress with your teammates.</p>
       <hr class="my-4">
-      <p>End each week by highlighting what you accomplished.</p>
-      <p>It's a great way to keep your teammates informed and to strengthen your motivation.</p>
+      <p>End each week by reflecting on what you accomplished.</p>
+      <ul>
+        <li>Keep your teammates informed</li>
+        <li>Strengthen your motivation</li>
+        <li>Put an end to boring status meetings</li>
+      </ul>
 
       <div class="jumbotron-footer">
         <b-button
@@ -21,7 +25,7 @@
 
     <p>Have you ever ended a week wondering where all the time went? Take a step back and remember what got done.</p>
 
-    <p>Make What Got Done your weekly ritual to remind yourself of what you accomplished.</p>
+    <p>What Got Done is a weekly ritual to remind yourself of your accomplishments.</p>
 
     <figure>
       <a href="/images/typing-update.gif">
@@ -41,13 +45,25 @@
       <figcaption>Share a summary of your work with your teammates.</figcaption>
     </figure>
 
-    <h2>Interested?</h2>
-    <p>What Got Done is still a work in progress, and new user registration is not yet open.</p>
+    <h2>Share Updates Your Way</h2>
+
+    <p>To-do lists are great for managing what you will do, but they do a poor job of communicating what you accomplished.</p>
+
+    <p>What Got Done lets you write updates your way, highlighting what's important instead of forcing your teammates to dig through a list of checkboxes.</p>
+
+    <figure>
+      <a href="/images/example-freeform.jpg">
+        <img id="example-freeform" src="/images/example-freeform.jpg">
+      </a>
+      <figcaption>Write updates any way that you choose.</figcaption>
+    </figure>
+
+    <h2>Contact Us</h2>
     <p>
-      If you're interested in beta testing the site, please send an email to
+      If you have questions or feature requests for What Got Done, we'd love to speak to you. Send an email to
       <a
-        href="mailto:michael@mtlynch.io"
-      >michael@mtlynch.io</a>.
+        href="mailto:contact@whatgotdone.com"
+      >contact@whatgotdone.com</a>.
     </p>
   </div>
 </template>
@@ -167,5 +183,10 @@ figcaption {
 #example-rendered {
   max-width: 694px;
   border: 1px solid white;
+}
+
+#example-freeform {
+  max-width: 470px;
+  border: 1px solid black;
 }
 </style>
