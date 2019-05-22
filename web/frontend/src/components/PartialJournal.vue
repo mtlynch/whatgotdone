@@ -1,11 +1,8 @@
 <template>
   <div class="journal">
-    <div class="header">
-      <router-link :to="entry.author">{{ entry.author }}</router-link>
-      's update for the week of {{ entry.date.toLocaleDateString() }}
-    </div>
-    <div class="journalEntry">
-      <div class="journalBody">
+    <JournalHeader :username="entry.author" :date="entry.date"/>
+    <div class="journal-entry">
+      <div class="journal-body">
         <vue-markdown
           :linkify="false"
           :html="false"
@@ -13,7 +10,7 @@
           :source="entrySnippet"
         ></vue-markdown>
       </div>
-      <router-link :to="entry.key">Read more</router-link>
+      <b-button pill variant="primary" class="read-more" :to="entry.key">More</b-button>
     </div>
   </div>
 </template>
@@ -21,6 +18,7 @@
 <script>
 import Vue from "vue";
 import VueMarkdown from "vue-markdown";
+import JournalHeader from "./JournalHeader.vue";
 
 Vue.use(VueMarkdown);
 
@@ -30,16 +28,17 @@ export default {
     entry: Object
   },
   components: {
-    VueMarkdown
+    VueMarkdown,
+    JournalHeader
   },
   computed: {
     entrySnippet: function() {
-      const maxLines = 15;
+      const maxLines = 12;
       const entryLines = this.entry.markdown.split("\n");
       if (entryLines.length < maxLines) {
         return entryLines.join("\n");
       }
-      return entryLines.slice(0, maxLines).join("\n");
+      return entryLines.slice(0, maxLines).join("\n") + "\n\n...";
     }
   }
 };
@@ -52,10 +51,18 @@ div.journal {
   margin-bottom: 20px;
   background: rgb(79, 87, 161);
 }
-.journalBody {
-  text-align: left;
-}
 .header {
   font-style: italic;
+  margin-bottom: 15px;
+}
+.journal-entry {
+  padding: 20px 20px 0px 20px;
+}
+.journal-body {
+  text-align: left;
+}
+
+.read-more {
+  padding: 8px 25px;
 }
 </style>

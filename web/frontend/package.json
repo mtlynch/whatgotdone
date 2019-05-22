@@ -10,7 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-runtime": "^6.26.0",
-    "bootstrap-vue": "^2.0.0-rc.16",
+    "bootstrap-vue": "^2.0.0-rc.20",
     "bootswatch": "^4.3.1",
     "core-js": "^2.6.5",
     "vue": "^2.6.6",

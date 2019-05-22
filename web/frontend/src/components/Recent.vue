@@ -1,6 +1,7 @@
 <template>
   <div>
-    <p>Here are some recent What Got Done entries:</p>
+    <h1>Recent Entries</h1>
+    <p>Check out what other users got done this week:</p>
     <p v-if="backendError" class="error">Failed to connect to backend: {{ backendError }}</p>
 
     <PartialJournal v-bind:key="item.key" v-bind:entry="item" v-for="item in recentEntries"/>
@@ -32,7 +33,7 @@ export default {
           this.recentEntries.push({
             key: `/${entry.author}/${formattedDate}`,
             author: entry.author,
-            date: new Date(entry.date),
+            date: entry.date,
             markdown: entry.markdown
           });
         }
@@ -43,3 +44,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+h1 {
+  text-align: left;
+}
+
+p {
+  text-align: left;
+}
+</style>

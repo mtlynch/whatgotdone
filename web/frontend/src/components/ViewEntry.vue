@@ -12,11 +12,7 @@
         ></b-pagination-nav>
       </div>
 
-      <p>
-        Journal entry for
-        <span class="username">{{ $route.params.username }}</span> for the week ending on
-        <b>{{ $route.params.date | moment("dddd, ll") }}</b>
-      </p>
+      <JournalHeader :username="$route.params.username" :date="$route.params.date"/>
       <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
       <p v-else>
         No journal entry found for
@@ -35,6 +31,7 @@
 <script>
 import Vue from "vue";
 import Journal from "./Journal.vue";
+import JournalHeader from "./JournalHeader.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
 
 Vue.use(Pagination);
@@ -42,7 +39,8 @@ Vue.use(Pagination);
 export default {
   name: "ViewEntry",
   components: {
-    Journal
+    Journal,
+    JournalHeader
   },
   data() {
     return {
@@ -63,6 +61,10 @@ export default {
         month: "short"
       });
       return `${friendlyMonth}. ${date.getDate()}`;
+    },
+    goToLatestEntry() {
+      const lastEntry = this.journalEntries[this.journalEntries.length - 1];
+      this.$router.replace(`/${this.$route.params.username}/${lastEntry.key}`);
     }
   },
   computed: {
@@ -107,14 +109,20 @@ export default {
         this.journalEntries.sort((a, b) => a.date - b.date);
 
         if (!this.$route.params.date) {
-          const lastEntry = this.journalEntries[this.journalEntries.length - 1];
-          this.$router.push(`/${this.$route.params.username}/${lastEntry.key}`);
+          this.goToLatestEntry();
           return;
         }
       })
       .catch(error => {
         this.backendError = error;
       });
+  },
+  watch: {
+    $route() {
+      if (!this.$route.params.date) {
+        this.goToLatestEntry();
+      }
+    }
   }
 };
 </script>
