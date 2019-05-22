@@ -47,17 +47,33 @@ export default {
 <style scoped>
 div.journal {
   border: 1px solid rgb(26, 0, 68);
-  padding: 15px;
-  margin-bottom: 20px;
+  padding: 10px;
+  margin-bottom: 60px;
   background: rgb(79, 87, 161);
 }
+
+@media screen and (min-width: 768px) {
+  div.journal {
+    padding: 15px;
+    margin-bottom: 40px;
+  }
+}
+
 .header {
   font-style: italic;
   margin-bottom: 15px;
 }
+
 .journal-entry {
-  padding: 20px 20px 0px 20px;
+  padding: 4px 5px;
 }
+
+@media screen and (min-width: 768px) {
+  .journal-entry {
+    padding: 20px 20px 0px 20px;
+  }
+}
+
 .journal-body {
   text-align: left;
 }
