@@ -9,6 +9,7 @@ import App from './App.vue'
 import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Logout from "./components/Logout.vue";
+import PrivacyPolicy from "./components/PrivacyPolicy.vue";
 import ProPitch from "./components/ProPitch.vue";
 import ProUpgrade from "./components/ProUpgrade.vue";
 import Recent from "./components/Recent.vue";
@@ -34,6 +35,7 @@ const routes = [
   { path: '/submit', component: Submit },
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
+  { path: '/privacy-policy', component: PrivacyPolicy },
   { path: '/:username', component: ViewEntry },
   { path: '/:username/:date', component: ViewEntry },
   { path: '/', component: Home },
