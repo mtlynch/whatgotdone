@@ -17,8 +17,7 @@
       <br>
     </p>
     <p>
-      Thank you for choosing to be part of our community at
-      Michael Lynch
+      Thank you for choosing to be part of our community at What Got Done
       (“
       <strong>Company</strong>
       ”, “
