@@ -16,7 +16,6 @@
     "vue": "^2.6.6",
     "vue-analytics": "^5.16.4",
     "vue-axios": "^2.1.4",
-    "vue-filter-date-format": "^1.2.2",
     "vue-markdown": "^2.2.4",
     "vue-moment": "^4.0.0",
     "vue-router": "^3.0.2",

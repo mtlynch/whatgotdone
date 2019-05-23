@@ -9,18 +9,16 @@
           :source="entry.markdown"
         ></vue-markdown>
       </div>
-      <div class="date">Last modified at {{ entry.lastModified | dateFormat('h:mm a MM/D/YYYY') }}</div>
+      <div class="date">Last modified {{ entry.lastModified | moment("lll") }}</div>
     </div>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import VueFilterDateFormat from "vue-filter-date-format";
 import VueMarkdown from "vue-markdown";
 
 Vue.use(VueMarkdown);
-Vue.use(VueFilterDateFormat);
 
 export default {
   name: "Journal",
