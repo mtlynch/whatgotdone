@@ -4,14 +4,17 @@
     <div id="app" class="container">
       <router-view></router-view>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
+import Footer from "./components/Footer";
 import NavigationBar from "./components/NavigationBar";
 export default {
   name: "app",
   components: {
+    Footer,
     NavigationBar
   }
 };
