@@ -23,40 +23,40 @@
 
     <h2>"Where did the whole week go?"</h2>
 
-    <p>Have you ever ended a week wondering where all the time went? Take a step back and remember what got done.</p>
+    <div class="flex-grid">
+      <div class="col">
+        <p>Have you ever ended a week wondering where all the time went? Take a step back and remember what got done.</p>
 
-    <p>What Got Done is a weekly ritual to remind yourself of your accomplishments.</p>
-
-    <figure>
-      <a href="/images/typing-update.gif">
+        <p>What Got Done is a weekly ritual to remind yourself of your accomplishments.</p>
+      </div>
+      <div class="col">
         <img id="typing-update" src="/images/typing-update.gif">
-      </a>
-      <figcaption>Summarize your accomplishments at the end of each week.</figcaption>
-    </figure>
+      </div>
+    </div>
 
     <h2>Share progress with your teammates</h2>
 
-    <p>When you're done, share a clean summary of your week of work with your teammates.</p>
-
-    <figure>
-      <a href="/images/example-rendered.jpg">
+    <div class="flex-grid">
+      <div class="col">
+        <p>When you're done, share a clean summary of your week of work with your teammates.</p>
+      </div>
+      <div class="col">
         <img id="example-rendered" src="/images/example-rendered.jpg">
-      </a>
-      <figcaption>Share a summary of your work with your teammates.</figcaption>
-    </figure>
+      </div>
+    </div>
 
     <h2>Share Updates Your Way</h2>
 
-    <p>To-do lists are great for managing what you will do, but they do a poor job of communicating what you accomplished.</p>
+    <div class="flex-grid">
+      <div class="col">
+        <p>To-do lists are great for managing what you will do, but they do a poor job of communicating what you accomplished.</p>
 
-    <p>What Got Done lets you write updates your way, highlighting what's important instead of forcing your teammates to dig through a list of checkboxes.</p>
-
-    <figure>
-      <a href="/images/example-freeform.jpg">
+        <p>What Got Done lets you write updates your way, highlighting what's important instead of forcing your teammates to dig through a list of checkboxes.</p>
+      </div>
+      <div class="col">
         <img id="example-freeform" src="/images/example-freeform.jpg">
-      </a>
-      <figcaption>Write updates any way that you choose.</figcaption>
-    </figure>
+      </div>
+    </div>
 
     <h2>Contact Us</h2>
     <p>
@@ -91,7 +91,7 @@ h1 {
 }
 
 h2 {
-  margin-top: 100px;
+  margin-top: 80px;
 }
 
 p {
@@ -131,6 +131,7 @@ a {
   border: 1px solid rgba(0, 0, 0, 0.45);
   background: rgb(21, 255, 177);
   color: rgb(5, 70, 9) !important;
+  margin-right: 15px;
 }
 
 @media screen and (min-width: 768px) {
@@ -158,35 +159,30 @@ a.btn-secondary:hover {
   color: rgb(41, 2, 49) !important;
 }
 
-figure {
-  margin-top: 60px;
+.flex-grid {
+  display: flex;
 }
 
-@media screen and (min-width: 768px) {
-  figure {
-    margin-left: 45px;
+@media (max-width: 768px) {
+  .flex-grid {
+    display: block;
   }
 }
 
-figure img {
-  width: 100%;
+.col {
+  flex: 1;
 }
 
-figcaption {
-  font-size: small;
-}
-
-#typing-update {
-  max-width: 685px;
+.col img {
+  margin-top: 28px;
+  max-width: 100%;
 }
 
 #example-rendered {
-  max-width: 694px;
   border: 1px solid white;
 }
 
 #example-freeform {
-  max-width: 470px;
   border: 1px solid black;
 }
 </style>
