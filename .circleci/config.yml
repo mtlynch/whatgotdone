@@ -28,6 +28,24 @@ jobs:
       - run:
           name: Test go packages
           command: go test -v ./...
+  e2e:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Retrieve staging credentials from CircleCI
+          command: |
+            echo "$SERVICE_ACCOUNT_STAGING" | \
+              base64 --decode > service-account-creds-staging.json
+      - run:
+          name: Perform end-to-end tests.
+          command: |
+            cd e2e
+            docker-compose up --exit-code-from cypress
+      - store_artifacts:
+          path: e2e/cypress/videos
+      - store_artifacts:
+          path: e2e/cypress/screenshots
   deploy:
     docker:
       - image: google/cloud-sdk:240.0.0
@@ -61,10 +79,12 @@ workflows:
       - test-backend:
           requires:
             - build-frontend
+      - e2e
       - deploy:
           requires:
             - build-frontend
             - test-backend
+            - e2e
           filters:
             branches:
               only: master
