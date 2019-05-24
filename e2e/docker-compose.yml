@@ -1,0 +1,20 @@
+version: '3.2'
+services:
+  whatgotdone:
+    build:
+      context: ../
+      args:
+        BUILD_TAGS: staging
+    environment:
+      - PORT=3000
+    volumes:
+      - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
+  cypress:
+    image: "cypress/included:3.3.0"
+    depends_on:
+      - whatgotdone
+    environment:
+      - CYPRESS_baseUrl=http://whatgotdone:3000
+    working_dir: /e2e
+    volumes:
+      - ./:/e2e
