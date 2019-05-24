@@ -21,5 +21,4 @@ WORKDIR /app
 ARG BUILD_TAGS="dev"
 RUN go build --tags "$BUILD_TAGS" -o /app/main web/main.go
 
-EXPOSE $PORT
 ENTRYPOINT /app/main
