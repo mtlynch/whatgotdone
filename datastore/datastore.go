@@ -4,11 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 
 	"github.com/mtlynch/whatgotdone/types"
 )
@@ -47,18 +45,6 @@ type (
 		LastModified string `firestore:"lastModified,omitempty"`
 	}
 )
-
-func newFirestoreClient(ctx context.Context) (*firestore.Client, error) {
-
-	const devServiceAccount = "service-account-creds.json"
-
-	if _, err := os.Stat(devServiceAccount); !os.IsNotExist(err) {
-		const firestoreProjectID = "whatgotdone-dev"
-		return firestore.NewClient(ctx, firestoreProjectID, option.WithCredentialsFile(devServiceAccount))
-	}
-	const firestoreProjectID = "whatgotdone"
-	return firestore.NewClient(ctx, firestoreProjectID)
-}
 
 func New() Datastore {
 	ctx := context.Background()
