@@ -36,7 +36,7 @@ jobs:
           name: Retrieve staging credentials from CircleCI
           command: |
             echo "$SERVICE_ACCOUNT_STAGING" | \
-              base64 --decode > "${HOME}/repo/service-account-creds-staging.json"
+              base64 --decode > service-account-creds-staging.json
       - run:
           name: Perform end-to-end tests.
           command: |
