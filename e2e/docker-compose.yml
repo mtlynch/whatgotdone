@@ -4,6 +4,7 @@ services:
     build:
       context: ../
       args:
+        NPM_BUILD_CMD: build-staging
         BUILD_TAGS: staging
     environment:
       - PORT=3000
@@ -11,6 +12,8 @@ services:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./cypress/videos:/app/e2e/cypress/videos
       - ./cypress/screenshots:/app/e2e/cypress/screenshots
+    ports:
+      - 3000:3000
   cypress:
     image: "cypress/included:3.3.0"
     depends_on:
