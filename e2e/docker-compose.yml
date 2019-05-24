@@ -9,6 +9,8 @@ services:
       - PORT=3000
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
+      - ./cypress/videos:/app/e2e/cypress/videos
+      - ./cypress/screenshots:/app/e2e/cypress/screenshots
   cypress:
     image: "cypress/included:3.3.0"
     depends_on:
