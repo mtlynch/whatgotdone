@@ -10,7 +10,15 @@
       </p>
       <p>&nbsp;</p>
     </div>
-    <b-table striped hover :items="items" :fields="fields"></b-table>
+    <b-table
+      class="features"
+      head-variant="light"
+      striped
+      hover
+      outlined
+      :items="items"
+      :fields="fields"
+    ></b-table>
   </div>
 </template>
 
@@ -48,5 +56,9 @@ export default {
 <style scoped>
 .pro {
   text-align: left;
+}
+
+.features {
+  margin-top: 100px;
 }
 </style>
