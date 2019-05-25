@@ -10,7 +10,15 @@
       </p>
       <p>&nbsp;</p>
     </div>
-    <b-table striped hover :items="items" :fields="fields"></b-table>
+    <b-table
+      class="features"
+      head-variant="light"
+      striped
+      hover
+      outlined
+      :items="items"
+      :fields="fields"
+    ></b-table>
   </div>
 </template>
 
@@ -38,6 +46,11 @@ export default {
           feature: "Automatically send email summaries to your teammates",
           basic: "️",
           pro: "✔️"
+        },
+        {
+          feature: "Zapier integration",
+          basic: "️",
+          pro: "✔️"
         }
       ]
     };
@@ -48,5 +61,9 @@ export default {
 <style scoped>
 .pro {
   text-align: left;
+}
+
+.features {
+  margin-top: 100px;
 }
 </style>
