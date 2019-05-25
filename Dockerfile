@@ -19,7 +19,7 @@ COPY ./go.sum /app/go.sum
 
 WORKDIR /app
 
-ARG BUILD_TAGS="dev"
-RUN go build --tags "$BUILD_TAGS" -o /app/main web/main.go
+ARG GO_BUILD_TAGS="dev"
+RUN go build --tags "$GO_BUILD_TAGS" -o /app/main web/main.go
 
 ENTRYPOINT /app/main

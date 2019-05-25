@@ -4,14 +4,13 @@ services:
     build:
       context: ../
       args:
-        NPM_BUILD_CMD: build-staging
-        BUILD_TAGS: staging
+        NPM_BUILD_MODE: staging
+        GO_BUILD_TAGS: staging
     environment:
       - PORT=3000
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
-      - ./cypress/videos:/app/e2e/cypress/videos
-      - ./cypress/screenshots:/app/e2e/cypress/screenshots
+      - ./:/app/e2e
     ports:
       - 3000:3000
   cypress:

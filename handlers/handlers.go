@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -186,13 +185,16 @@ func (s *defaultServer) entryHandler() http.HandlerFunc {
 
 func (s defaultServer) userMeHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Print("Got a request on /user/me")
 		enableCors(&w)
 
 		user, err := s.loggedInUser(r)
 		if err != nil {
+			log.Print("User is not logged in")
 			http.Error(w, "You must be logged in to retrieve information about your account", http.StatusForbidden)
 			return
 		}
+		log.Printf("User found: %v", user.Username)
 
 		type userMeResponse struct {
 			Username string `json:"username"`
@@ -280,34 +282,6 @@ func (s *defaultServer) apiRootHandler() http.HandlerFunc {
 		enableCors(&w)
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	}
-}
-
-func enableCsp(w *http.ResponseWriter) {
-	defaultSrc := strings.Join([]string{
-		"'self'",
-		// URLs for /login route
-		"https://widget.userkit.io",
-		"https://api.userkit.io",
-		"https://www.google.com/recaptcha/api.js",
-		"https://www.gstatic.com/recaptcha/api2/",
-		"https://fonts.googleapis.com",
-		"https://fonts.gstatic.com",
-		"https://www.google-analytics.com",
-		"https://www.googletagmanager.com",
-	}, " ")
-	imgSrc := strings.Join([]string{
-		"'self'",
-		// For bootstrap navbar images
-		"data:",
-		// For Google Analytics
-		"https://www.google-analytics.com",
-	}, " ")
-	frameSrc := strings.Join([]string{
-		"'self'",
-		// For sendinblue mailing list signup
-		"https://sibforms.com",
-	}, " ")
-	(*w).Header().Set("Content-Security-Policy", fmt.Sprintf("default-src %s; img-src %s; frame-src %s", defaultSrc, imgSrc, frameSrc))
 }
 
 func (s defaultServer) loggedInUser(r *http.Request) (*userkit.User, error) {

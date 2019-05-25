@@ -5,6 +5,16 @@ it('loads the homepage', () => {
     .should('contain', 'What did you get done this week?')
 })
 
+it('views recent posts', () => {
+  cy.visit('/recent')
+
+  cy.get('div.journal').should('contain', 'staging.jimmy\'s update')
+})
+
+it('gets recent entries by API', () => {
+  cy.request('/api/recentEntries')
+})
+
 it('logs in', () => {
   cy.visit('/login')
 
