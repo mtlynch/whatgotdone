@@ -185,16 +185,13 @@ func (s *defaultServer) entryHandler() http.HandlerFunc {
 
 func (s defaultServer) userMeHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Print("Got a request on /user/me")
 		enableCors(&w)
 
 		user, err := s.loggedInUser(r)
 		if err != nil {
-			log.Print("User is not logged in")
 			http.Error(w, "You must be logged in to retrieve information about your account", http.StatusForbidden)
 			return
 		}
-		log.Printf("User found: %v", user.Username)
 
 		type userMeResponse struct {
 			Username string `json:"username"`
