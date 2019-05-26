@@ -41,7 +41,7 @@ export default {
           .catch(() => {
             // Do nothing, wait for request to succeed.
           });
-      }, 100);
+      }, 500);
     }
   }
 };
