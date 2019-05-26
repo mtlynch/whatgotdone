@@ -7,7 +7,7 @@ services:
         NPM_BUILD_MODE: staging
         GO_BUILD_TAGS: staging
     environment:
-      - PORT=3000
+      - PORT=3123
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/e2e
@@ -16,7 +16,7 @@ services:
     depends_on:
       - whatgotdone
     environment:
-      - CYPRESS_baseUrl=http://whatgotdone:3000
+      - CYPRESS_baseUrl=http://whatgotdone:3123
     working_dir: /e2e
     volumes:
       - ./:/e2e
