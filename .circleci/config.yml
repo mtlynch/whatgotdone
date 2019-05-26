@@ -41,7 +41,7 @@ jobs:
           name: Perform end-to-end tests.
           command: |
             cd e2e
-            docker-compose up --exit-code-from cypress
+            docker-compose up --exit-code-from cypress --abort-on-container-exit
       - store_artifacts:
           path: e2e/cypress/videos
       - store_artifacts:
