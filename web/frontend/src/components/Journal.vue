@@ -1,7 +1,7 @@
 <template>
   <div class="journal">
     <div class="journalEntry">
-      <div class="journalBody">
+      <div class="journal-body">
         <vue-markdown
           :linkify="false"
           :html="false"
@@ -32,7 +32,7 @@ export default {
 </script>
 
 <style scoped>
-.journalBody {
+.journal-body {
   text-align: left;
 }
 .date {
