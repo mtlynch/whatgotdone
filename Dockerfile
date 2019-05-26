@@ -3,8 +3,9 @@ FROM node:10.15.3 AS frontend_builder
 COPY ./web/frontend /app/web/frontend
 WORKDIR /app/web/frontend
 
+ARG NPM_BUILD_MODE="development"
 RUN npm install
-RUN npm run build
+RUN npm run build -- --mode "$NPM_BUILD_MODE"
 
 FROM golang:1.11.8
 
@@ -18,7 +19,7 @@ COPY ./go.sum /app/go.sum
 
 WORKDIR /app
 
-ARG BUILD_TAGS="dev"
-RUN go build --tags "$BUILD_TAGS" -o /app/main web/main.go
+ARG GO_BUILD_TAGS="dev"
+RUN go build --tags "$GO_BUILD_TAGS" -o /app/main web/main.go
 
 ENTRYPOINT /app/main
