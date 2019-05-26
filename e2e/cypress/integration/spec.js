@@ -11,7 +11,7 @@ it('views recent posts', () => {
   cy.get('div.journal').should('contain', 'staging.jimmy\'s update')
 })
 
-it('logs in', () => {
+it('logs in and signs out', () => {
   cy.visit('/login')
 
   cy.get('#userkit_username')
@@ -21,4 +21,8 @@ it('logs in', () => {
   cy.get('form').submit()
 
   cy.url().should('include', '/submit')
+
+  cy.visit('/logout')
+  cy.url().should('include', '/login')
+  cy.get('#userkit_username')
 })

@@ -32,16 +32,14 @@ export default {
   methods: {
     pollLoginStatus() {
       this.polling = setInterval(() => {
-        const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
-        this.$http
-          .get(url, { withCredentials: true })
-          .then(() => {
-            this.$router.push("/submit");
-          })
-          .catch(() => {
-            // Do nothing, wait for request to succeed.
-          });
-      }, 500);
+        if (this.isLoggedIn()) {
+          this.$router.push("/submit");
+        }
+      }, 100);
+    },
+    isLoggedIn() {
+      // eslint-disable-next-line
+      return typeof UserKit !== "undefined" && UserKit.isLoggedIn();
     }
   }
 };
