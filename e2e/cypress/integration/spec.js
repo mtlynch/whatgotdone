@@ -12,9 +12,6 @@ it('views recent posts', () => {
 })
 
 it('logs in and signs out', () => {
-  cy.server()
-  cy.route('/api/entries/*').as('getEntries')
-
   cy.visit('/login')
 
   cy.get('#userkit_username')
