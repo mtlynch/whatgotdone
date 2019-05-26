@@ -24,4 +24,5 @@ it('logs in and signs out', () => {
 
   cy.visit('/logout')
   cy.url().should('include', '/login')
+  cy.get('#userkit_username')
 })
