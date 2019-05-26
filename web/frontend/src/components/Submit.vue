@@ -7,7 +7,7 @@
         <span class="endDate">{{ date | moment("dddd, ll") }}</span>.
       </p>
       <textarea-autosize
-        class="form-control"
+        class="form-control journal-markdown"
         v-model="entryContent"
         name="markdown"
         :min-height="250"
