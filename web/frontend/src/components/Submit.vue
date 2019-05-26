@@ -86,13 +86,23 @@ export default {
             this.$router.push(result.data.path);
           }
         });
+    },
+    thisFriday() {
+      const today = moment().isoWeekday();
+      const friday = 5;
+
+      if (today <= friday) {
+        return moment().isoWeekday(friday);
+      } else {
+        return moment()
+          .add(1, "weeks")
+          .isoWeekday(friday);
+      }
     }
   },
   created() {
     this.loadUsername();
-    this.date = moment()
-      .isoWeekday("Friday")
-      .format("YYYY-MM-DD");
+    this.date = this.thisFriday().format("YYYY-MM-DD");
   },
   watch: {
     date: function() {
