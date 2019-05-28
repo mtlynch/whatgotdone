@@ -33,6 +33,7 @@ export default {
     pollLoginStatus() {
       this.polling = setInterval(() => {
         if (this.isLoggedIn()) {
+          this.loadUsername(5);
           this.$router.push("/submit");
         }
       }, 100);
@@ -40,6 +41,20 @@ export default {
     isLoggedIn() {
       // eslint-disable-next-line
       return typeof UserKit !== "undefined" && UserKit.isLoggedIn();
+    },
+    loadUsername(attempts) {
+      if (attempts <= 0) {
+        return;
+      }
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
+      this.$http
+        .get(url, { withCredentials: true })
+        .then(result => {
+          this.$store.commit("setUsername", result.data.username);
+        })
+        .catch(() => {
+          this.loadUsername(attempts - 1);
+        });
     }
   }
 };

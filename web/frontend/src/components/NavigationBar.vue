@@ -13,9 +13,8 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-item-dropdown text="Account" right>
-          <!-- This must be href instead of to so that we get the proper server-side redirect -->
-          <b-dropdown-item href="/me">Profile</b-dropdown-item>
+        <b-nav-item-dropdown v-if="username" text="Account" class="account-dropdown" right>
+          <b-dropdown-item :to="'/' + username" class="profile-link">Profile</b-dropdown-item>
           <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-button variant="success" v-b-toggle.nav-collapse to="/submit">Post Update</b-button>
@@ -26,7 +25,12 @@
 
 <script>
 export default {
-  name: "NavigationBar"
+  name: "NavigationBar",
+  computed: {
+    username() {
+      return this.$store.state.username;
+    }
+  }
 };
 </script>
 

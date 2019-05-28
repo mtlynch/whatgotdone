@@ -6,6 +6,7 @@ import VueMoment from 'vue-moment'
 import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
+import store from './store.js'
 import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Logout from "./components/Logout.vue";
@@ -53,6 +54,7 @@ Vue.use(VueAnalytics, {
 })
 
 new Vue({
+  store,
   router,
   render: h => h(App),
 }).$mount('#app')

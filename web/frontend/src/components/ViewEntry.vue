@@ -75,6 +75,9 @@ export default {
       }
       return links;
     },
+    username: function() {
+      return this.$store.state.username;
+    },
     currentEntry: function() {
       if (!this.$route.params.date) {
         return null;

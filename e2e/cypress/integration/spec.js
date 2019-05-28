@@ -40,6 +40,20 @@ it('logs in and posts an update', () => {
     .should('contain', entryText)
 })
 
+it('logs in and views profile', () => {
+  cy.visit('/login')
+  cy.get('#userkit_username')
+    .type('staging.jimmy')
+  cy.get('#userkit_password')
+    .type('just4st@ginG!')
+  cy.get('form').submit()
+
+  cy.get('.account-dropdown').click()
+  cy.get('.profile-link a').click()
+
+  cy.url().should('include', '/staging.jimmy')
+})
+
 it('logs in and signs out', () => {
   cy.visit('/login')
 
