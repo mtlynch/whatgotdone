@@ -266,7 +266,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 }
 
 func validateEntryDate(date string) bool {
-	t, err := time.Parse("YYYY-MM-DD", date)
+	t, err := time.Parse("2006-01-02", date)
 	if err != nil {
 		return false
 	}
@@ -286,7 +286,7 @@ func validateEntryDate(date string) bool {
 func thisFriday() time.Time {
 	t := time.Now()
 	for t.Weekday() != time.Friday {
-		t.AddDate(0, 0, 1)
+		t = t.AddDate(0, 0, 1)
 	}
 	return t
 }
