@@ -89,10 +89,32 @@ export default {
           .add(1, "weeks")
           .isoWeekday(friday);
       }
+    },
+    validateDate(d) {
+      const m = moment(d);
+      if (!m.isValid()) {
+        return false;
+      }
+      const whatGotDoneCreationYear = 2019;
+      if (m.year() < whatGotDoneCreationYear) {
+        return false;
+      }
+      if (m > this.thisFriday()) {
+        return false;
+      }
+      const friday = 5;
+      if (m.isoWeekday() != friday) {
+        return false;
+      }
+      return true;
     }
   },
   created() {
-    this.date = this.thisFriday().format("YYYY-MM-DD");
+    if (this.$route.params.date && this.validateDate(this.$route.params.date)) {
+      this.date = this.$route.params.date;
+    } else {
+      this.date = this.thisFriday().format("YYYY-MM-DD");
+    }
   },
   watch: {
     date: function() {

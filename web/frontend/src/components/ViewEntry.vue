@@ -25,6 +25,12 @@
       </p>
     </template>
     <p v-if="backendError" class="error">Failed to connect to backend: {{ backendError }}</p>
+    <b-button
+      v-if="canEdit"
+      :to="'/entry/edit/' + this.$route.params.date"
+      variant="primary"
+      class="float-right"
+    >Edit</b-button>
   </div>
 </template>
 
@@ -77,6 +83,9 @@ export default {
     },
     username: function() {
       return this.$store.state.username;
+    },
+    canEdit: function() {
+      return this.username && this.username === this.$route.params.username;
     },
     currentEntry: function() {
       if (!this.$route.params.date) {

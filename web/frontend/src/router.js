@@ -19,6 +19,7 @@ const routes = [
   { path: '/pro', component: ProPitch },
   { path: '/upgrade', component: ProUpgrade },
   { path: '/submit', component: Submit },
+  { path: '/entry/edit/:date', component: Submit },
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
   { path: '/privacy-policy', component: PrivacyPolicy },
