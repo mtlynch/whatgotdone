@@ -238,6 +238,12 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			log.Printf("Failed to decode request: %s", r.Body)
 			http.Error(w, "Failed to decode request", http.StatusBadRequest)
 		}
+		if !validateEntryDate(t.Date) {
+			log.Printf("Invalid date: %s", t.Date)
+			http.Error(w, "Invalid date", http.StatusBadRequest)
+			return
+		}
+
 		j := types.JournalEntry{
 			Date:         t.Date,
 			LastModified: time.Now().Format(time.RFC3339),
@@ -247,6 +253,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Failed to insert journal entry: %s", err)
 			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
+			return
 		}
 		resp := submitResponse{
 			Ok:   true,
@@ -256,6 +263,32 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			panic(err)
 		}
 	}
+}
+
+func validateEntryDate(date string) bool {
+	t, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return false
+	}
+	const whatGotDoneEpochYear = 2019
+	if t.Year() < whatGotDoneEpochYear {
+		return false
+	}
+	if t.Weekday() != time.Friday {
+		return false
+	}
+	if t.After(thisFriday()) {
+		return false
+	}
+	return true
+}
+
+func thisFriday() time.Time {
+	t := time.Now()
+	for t.Weekday() != time.Friday {
+		t = t.AddDate(0, 0, 1)
+	}
+	return t
 }
 
 func (s defaultServer) logoutHandler() http.HandlerFunc {
