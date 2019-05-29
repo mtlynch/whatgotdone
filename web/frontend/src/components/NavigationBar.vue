@@ -17,7 +17,12 @@
           <b-dropdown-item :to="'/' + username" class="profile-link">Profile</b-dropdown-item>
           <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
-        <b-button variant="success" v-b-toggle.nav-collapse to="/submit">Post Update</b-button>
+        <b-button
+          class="post-update"
+          variant="success"
+          v-b-toggle.nav-collapse
+          to="/submit"
+        >Post Update</b-button>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
