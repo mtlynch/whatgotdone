@@ -36,6 +36,7 @@
 
 <script>
 import Vue from "vue";
+import moment from "moment";
 import Journal from "./Journal.vue";
 import JournalHeader from "./JournalHeader.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
@@ -60,13 +61,7 @@ export default {
     },
     pageGen(pageNum) {
       const dateRaw = this.links[pageNum - 1].split("/")[2];
-      const dateUtc = new Date(`${dateRaw}T00:00:00Z`);
-      const userTimezoneOffset = dateUtc.getTimezoneOffset() * 60000;
-      const date = new Date(dateUtc.getTime() + userTimezoneOffset);
-      const friendlyMonth = date.toLocaleString("en-us", {
-        month: "short"
-      });
-      return `${friendlyMonth}. ${date.getDate()}`;
+      return new moment(dateRaw).format("MMM. D");
     },
     goToLatestEntry() {
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
