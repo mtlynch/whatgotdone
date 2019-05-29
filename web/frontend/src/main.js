@@ -18,10 +18,12 @@ Vue.use(BootstrapVue)
 Vue.use(VueMoment)
 Vue.prototype.moment = VueMoment
 
-Vue.use(VueAnalytics, {
-  id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID,
-  router
-})
+if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID.length > 1) {
+  Vue.use(VueAnalytics, {
+    id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID,
+    router
+  });
+}
 
 new Vue({
   store,
