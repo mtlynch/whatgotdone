@@ -71,6 +71,36 @@ export default {
     goToLatestEntry() {
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
       this.$router.replace(`/${this.$route.params.username}/${lastEntry.key}`);
+    },
+    loadJournalEntries: function() {
+      this.journalEntries = [];
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${
+        this.$route.params.username
+      }`;
+      this.$http
+        .get(url)
+        .then(result => {
+          for (const entry of result.data) {
+            this.journalEntries.push({
+              key: entry.date,
+              date: new Date(entry.date),
+              lastModified: new Date(entry.lastModified),
+              markdown: entry.markdown
+            });
+          }
+          if (this.journalEntries.length == 0) {
+            return;
+          }
+          this.journalEntries.sort((a, b) => a.date - b.date);
+
+          if (!this.$route.params.date) {
+            this.goToLatestEntry();
+            return;
+          }
+        })
+        .catch(error => {
+          this.backendError = error;
+        });
     }
   },
   computed: {
@@ -100,39 +130,15 @@ export default {
     }
   },
   created() {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${
-      this.$route.params.username
-    }`;
-    this.$http
-      .get(url)
-      .then(result => {
-        this.journalEntries = [];
-        for (const entry of result.data) {
-          this.journalEntries.push({
-            key: entry.date,
-            date: new Date(entry.date),
-            lastModified: new Date(entry.lastModified),
-            markdown: entry.markdown
-          });
-        }
-        if (this.journalEntries.length == 0) {
-          return;
-        }
-        this.journalEntries.sort((a, b) => a.date - b.date);
-
-        if (!this.$route.params.date) {
-          this.goToLatestEntry();
-          return;
-        }
-      })
-      .catch(error => {
-        this.backendError = error;
-      });
+    this.loadJournalEntries();
   },
   watch: {
-    $route() {
-      if (!this.$route.params.date) {
+    $route(to, from) {
+      if (!to.params.date) {
         this.goToLatestEntry();
+      }
+      if (to.params.username != from.params.username) {
+        this.loadJournalEntries();
       }
     }
   }
