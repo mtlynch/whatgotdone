@@ -14,6 +14,8 @@ it('views recent posts', () => {
 it('clicking "Post Update" before authenticating prompts login', () => {
   cy.visit('/')
 
+  cy.get('nav .account-dropdown').should('not.exist');
+
   cy.get('nav .post-update').click()
 
   cy.url().should('include', '/login')
