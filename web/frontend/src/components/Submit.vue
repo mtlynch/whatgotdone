@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     loadEntryContent() {
-      if (this.date.length == 0 || this.username.length == 0) {
+      if (this.date.length == 0 || !this.username) {
         return;
       }
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${
@@ -110,6 +110,10 @@ export default {
     }
   },
   created() {
+    if (!this.username) {
+      this.$router.push("/login");
+      return;
+    }
     if (this.$route.params.date && this.validateDate(this.$route.params.date)) {
       this.date = this.$route.params.date;
     } else {

@@ -11,6 +11,14 @@ it('views recent posts', () => {
   cy.get('div.journal').should('contain', 'staging.jimmy\'s update')
 })
 
+it('clicking "Post Update" before authenticating prompts login', () => {
+  cy.visit('/')
+
+  cy.get('nav .post-update').click()
+
+  cy.url().should('include', '/login')
+})
+
 it('logs in and posts an update', () => {
   cy.server()
   cy.route('/api/entry/staging.jimmy/*').as('getEntry')
