@@ -146,7 +146,7 @@ func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 			entries[i], entries[opp] = entries[opp], entries[i]
 		}
 
-		const maxEntries = 25
+		const maxEntries = 10
 		if len(entries) > maxEntries {
 			entries = entries[:maxEntries]
 		}
