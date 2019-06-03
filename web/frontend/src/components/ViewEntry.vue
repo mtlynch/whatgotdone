@@ -1,16 +1,7 @@
 <template>
   <div class="view-entry container">
     <template v-if="journalEntries.length > 0">
-      <div v-if="journalEntries" class="overflow-auto">
-        <b-pagination-nav
-          :link-gen="linkGen"
-          :page-gen="pageGen"
-          :number-of-pages="links.length"
-          v-if="links.length > 0"
-          align="center"
-          use-router
-        ></b-pagination-nav>
-      </div>
+      <b-pagination-nav :pages="pages" v-if="pages.length > 0" align="center" use-router></b-pagination-nav>
 
       <JournalHeader :username="$route.params.username" :date="$route.params.date"/>
       <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
@@ -56,13 +47,6 @@ export default {
     };
   },
   methods: {
-    linkGen(pageNum) {
-      return this.links[pageNum - 1];
-    },
-    pageGen(pageNum) {
-      const dateRaw = this.links[pageNum - 1].split("/")[2];
-      return new moment(dateRaw).format("MMM. D").replace("May.", "May");
-    },
     goToLatestEntry() {
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
       this.$router.replace(`/${this.$route.params.username}/${lastEntry.key}`);
@@ -99,12 +83,15 @@ export default {
     }
   },
   computed: {
-    links: function() {
-      let links = [];
+    pages: function() {
+      let pages = [];
       for (const entry of this.journalEntries) {
-        links.push(`/${this.$route.params.username}/${entry.key}`);
+        pages.push({
+          link: `/${this.$route.params.username}/${entry.key}`,
+          text: new moment(entry.key).format("MMM. D").replace("May.", "May")
+        });
       }
-      return links;
+      return pages;
     },
     username: function() {
       return this.$store.state.username;
