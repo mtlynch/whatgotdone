@@ -61,7 +61,7 @@ export default {
     },
     pageGen(pageNum) {
       const dateRaw = this.links[pageNum - 1].split("/")[2];
-      return new moment(dateRaw).format("MMM. D");
+      return new moment(dateRaw).format("MMM. D").replace("May.", "May");
     },
     goToLatestEntry() {
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
