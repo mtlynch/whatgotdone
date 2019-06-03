@@ -47,13 +47,6 @@ export default {
     };
   },
   methods: {
-    entryDates: function() {
-      const dates = [];
-      for (const entry of this.journalEntries) {
-        dates.push(entry.key);
-      }
-      return dates;
-    },
     goToLatestEntry() {
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
       this.$router.replace(`/${this.$route.params.username}/${lastEntry.key}`);
@@ -92,10 +85,10 @@ export default {
   computed: {
     pages: function() {
       let pages = [];
-      for (const d of this.entryDates()) {
+      for (const entry of this.journalEntries) {
         pages.push({
-          link: `/${this.$route.params.username}/${d}`,
-          text: new moment(d).format("MMM. D").replace("May.", "May")
+          link: `/${this.$route.params.username}/${entry.key}`,
+          text: new moment(entry.key).format("MMM. D").replace("May.", "May")
         });
       }
       return pages;
