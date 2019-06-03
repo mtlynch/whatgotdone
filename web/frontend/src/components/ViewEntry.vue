@@ -1,16 +1,16 @@
 <template>
   <div class="view-entry container">
     <template v-if="journalEntries.length > 0">
-      <div v-if="journalEntries" class="overflow-auto">
-        <b-pagination-nav
-          :link-gen="linkGen"
-          :page-gen="pageGen"
-          :number-of-pages="links.length"
-          v-if="links.length > 0"
-          align="center"
-          use-router
-        ></b-pagination-nav>
-      </div>
+      <b-pagination-nav
+        :pages="pages"
+        :number-of-pages="totalPages"
+        v-if="pages.length > 0"
+        v-model="currentEntryIndex"
+        align="center"
+        no-page-detect
+        use-router
+      ></b-pagination-nav>
+      <b-form-checkbox v-model="showEmptyEntries" v-if="canEdit">Show empty entries</b-form-checkbox>
 
       <JournalHeader :username="$route.params.username" :date="$route.params.date"/>
       <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
@@ -52,20 +52,60 @@ export default {
   data() {
     return {
       journalEntries: [],
+      showEmptyEntries: false,
       backendError: null
     };
   },
   methods: {
-    linkGen(pageNum) {
-      return this.links[pageNum - 1];
-    },
-    pageGen(pageNum) {
-      const dateRaw = this.links[pageNum - 1].split("/")[2];
-      return new moment(dateRaw).format("MMM. D");
-    },
     goToLatestEntry() {
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
       this.$router.replace(`/${this.$route.params.username}/${lastEntry.key}`);
+    },
+    thisFriday() {
+      const today = moment().isoWeekday();
+      const friday = 5;
+
+      if (today <= friday) {
+        return moment().isoWeekday(friday);
+      } else {
+        return moment()
+          .add(1, "weeks")
+          .isoWeekday(friday);
+      }
+    },
+    entryDates: function() {
+      const dates = [];
+      if (this.showEmptyEntries) {
+        let d = moment(this.journalEntries[0].key);
+        while (d <= this.thisFriday()) {
+          dates.push(d.format("YYYY-MM-DD"));
+          d = d.add(1, "weeks");
+        }
+      } else {
+        for (const entry of this.journalEntries) {
+          dates.push(entry.key);
+        }
+      }
+      return dates;
+    },
+    getCurrentEntryIndex: function() {
+      console.log("in getCurrentEntryIndex");
+      if (!this.$route.params.date) {
+        console.log("route date is null");
+        return null;
+      }
+      const dates = this.entryDates();
+      for (let i in dates) {
+        const entryDate = dates[i];
+        console.log(`${i} -> ${entryDate}`);
+        if (this.$route.params.date === entryDate) {
+          let ans = +i + 1;
+          console.log(`returning ${ans} from getCurrentEntryIndex`);
+          return +i + 1;
+        }
+      }
+      console.log("returning null from getCurrentEntryIndex");
+      return null;
     },
     loadJournalEntries: function() {
       this.journalEntries = [];
@@ -99,12 +139,24 @@ export default {
     }
   },
   computed: {
-    links: function() {
-      let links = [];
-      for (const entry of this.journalEntries) {
-        links.push(`/${this.$route.params.username}/${entry.key}`);
+    totalPages: function() {
+      let total = this.entryDates().length;
+      console.log(`totalPages: ${total}`);
+      return this.entryDates().length;
+    },
+    pages: function() {
+      const pages = [];
+      for (const d of this.entryDates()) {
+        pages.push({
+          link: {
+            path: `/${this.$route.params.username}/${d}`
+          },
+          text: new moment(d).format("MMM. D").replace("May.", "May")
+        });
       }
-      return links;
+      console.log("generating pages");
+      console.log(pages);
+      return pages;
     },
     username: function() {
       return this.$store.state.username;
@@ -112,16 +164,22 @@ export default {
     canEdit: function() {
       return this.username && this.username === this.$route.params.username;
     },
+    currentEntryIndex: {
+      get: function() {
+        return this.getCurrentEntryIndex();
+      },
+      set: function(newValue) {
+        console.log(`Setting currentEntryIndex to ${newValue}`);
+        return false;
+      }
+    },
     currentEntry: function() {
-      if (!this.$route.params.date) {
+      const index = this.getCurrentEntryIndex();
+      console.log(`currentEntry: ${index}`);
+      if (index === null) {
         return null;
       }
-      for (const entry of this.journalEntries) {
-        if (this.$route.params.date === entry.key) {
-          return entry;
-        }
-      }
-      return null;
+      return this.journalEntries[index];
     }
   },
   created() {
