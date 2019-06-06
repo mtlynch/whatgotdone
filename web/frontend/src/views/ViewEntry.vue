@@ -28,8 +28,8 @@
 <script>
 import Vue from "vue";
 import moment from "moment";
-import Journal from "./Journal.vue";
-import JournalHeader from "./JournalHeader.vue";
+import Journal from "../components/Journal.vue";
+import JournalHeader from "../components/JournalHeader.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
 
 Vue.use(Pagination);
