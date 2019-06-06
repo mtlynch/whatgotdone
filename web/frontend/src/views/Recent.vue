@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import PartialJournal from "./PartialJournal.vue";
+import PartialJournal from "../components/PartialJournal.vue";
 
 import refreshRecent from "../controllers/Recent.js";
 

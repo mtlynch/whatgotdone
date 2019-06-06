@@ -1,16 +1,16 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Home from "./components/Home.vue";
-import Login from "./components/Login.vue";
-import Logout from "./components/Logout.vue";
-import PrivacyPolicy from "./components/PrivacyPolicy.vue";
-import ProPitch from "./components/ProPitch.vue";
-import ProUpgrade from "./components/ProUpgrade.vue";
-import Recent from "./components/Recent.vue";
-import Submit from "./components/Submit.vue";
-import ViewEntry from "./components/ViewEntry.vue";
-import MissingPage from "./components/404.vue";
+import Home from "./views/Home.vue";
+import Login from "./views/Login.vue";
+import Logout from "./views/Logout.vue";
+import PrivacyPolicy from "./views/PrivacyPolicy.vue";
+import ProPitch from "./views/ProPitch.vue";
+import ProUpgrade from "./views/ProUpgrade.vue";
+import Recent from "./views/Recent.vue";
+import Submit from "./views/Submit.vue";
+import ViewEntry from "./views/ViewEntry.vue";
+import MissingPage from "./views/404.vue";
 
 Vue.use(VueRouter)
 
