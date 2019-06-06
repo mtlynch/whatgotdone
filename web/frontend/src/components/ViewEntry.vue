@@ -3,6 +3,7 @@
     <template v-if="entries.length > 0">
       <b-pagination-nav
         :pages="pages"
+        :number-of-pages="numberOfPages"
         v-model="currentEntryIndex"
         v-if="pages.length > 0"
         align="center"
@@ -94,7 +95,7 @@ export default {
     },
     numberOfPages: function() {
       console.log(`numberOfPages: ${this.pages.length}`);
-      return 100;
+      return this.pages.length;
     },
     username: function() {
       return this.$store.state.username;
@@ -119,8 +120,8 @@ export default {
             return +i + 1;
           }
         }
-        console.log("returning null from getCurrentEntryIndex");
-        return null;
+        console.log("returning 1 from getCurrentEntryIndex");
+        return 1;
       },
       set: function(newValue) {
         console.log(`Setting currentEntryIndex to ${newValue}`);
