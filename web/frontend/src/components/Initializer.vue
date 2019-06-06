@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import refreshRecent from "../controllers/Recent.js";
+
 export default {
   name: "Initializer",
   methods: {
@@ -38,6 +40,7 @@ export default {
   },
   created() {
     this.checkLoginState(5);
+    refreshRecent();
   }
 };
 </script>
