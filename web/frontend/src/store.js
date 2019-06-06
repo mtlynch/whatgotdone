@@ -10,7 +10,8 @@ const vuexLocal = new VuexPersistence({
 
 export default new Vuex.Store({
   state: {
-    username: null
+    username: null,
+    recentEntries: null
   },
   mutations: {
     setUsername(state, username) {
@@ -18,7 +19,10 @@ export default new Vuex.Store({
     },
     clearUsername(state) {
       state.username = null;
-    }
+    },
+    setRecent(state, entries) {
+      state.recentEntries = entries;
+    },
   },
   plugins: [vuexLocal.plugin]
 });
