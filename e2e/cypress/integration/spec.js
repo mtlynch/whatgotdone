@@ -63,19 +63,3 @@ it('logs in and views profile', () => {
 
   cy.url().should('include', '/staging.jimmy')
 })
-
-it('logs in and signs out', () => {
-  cy.visit('/login')
-
-  cy.get('#userkit_username')
-    .type('staging.jimmy')
-  cy.get('#userkit_password')
-    .type('just4st@ginG!')
-  cy.get('form').submit()
-
-  cy.url().should('include', '/submit')
-
-  cy.visit('/logout')
-  cy.url().should('include', '/login')
-  cy.get('#userkit_username')
-})
