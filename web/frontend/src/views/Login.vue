@@ -35,6 +35,7 @@ export default {
     pollLoginStatus() {
       this.polling = setInterval(() => {
         if (this.isLoggedIn()) {
+          clearInterval(this.polling);
           updateLoginState(5);
           this.$router.push("/submit");
         }
