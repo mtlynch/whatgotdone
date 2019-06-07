@@ -17,6 +17,7 @@ services:
       - whatgotdone
     environment:
       - CYPRESS_baseUrl=http://whatgotdone:3123
+      - DEBUG=cypress:server:request,cypress:server:server,cypress:server:proxy,cypress:network:agent,cypress:server:browsers
     working_dir: /e2e
     volumes:
       - ./:/e2e
