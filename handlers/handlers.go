@@ -31,8 +31,6 @@ func (s *defaultServer) indexHandler() http.HandlerFunc {
 			"./web/frontend/dist/index.html"))
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCsp(&w)
-
 		type page struct {
 			Title string
 		}
@@ -53,8 +51,6 @@ func (s defaultServer) submitPageHandler() http.HandlerFunc {
 			"./web/frontend/dist/index.html"))
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCsp(&w)
-
 		_, err := s.loggedInUser(r)
 		if err != nil {
 			http.Redirect(w, r, "/login", http.StatusFound)
@@ -76,8 +72,6 @@ func (s defaultServer) submitPageHandler() http.HandlerFunc {
 
 func (s defaultServer) meRedirectHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCsp(&w)
-
 		u, err := s.loggedInUser(r)
 		if err != nil {
 			http.Redirect(w, r, "/login", http.StatusFound)
@@ -89,8 +83,6 @@ func (s defaultServer) meRedirectHandler() http.HandlerFunc {
 
 func (s *defaultServer) entriesHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-
 		entries, err := s.datastore.All(usernameFromRequestPath(r))
 		if err != nil {
 			log.Printf("Failed to retrieve entries: %s", err)
@@ -105,8 +97,6 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 
 func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-
 		users, err := s.datastore.Users()
 		if err != nil {
 			log.Printf("Failed to retrieve users: %s", err)
@@ -159,8 +149,6 @@ func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 
 func (s *defaultServer) entryHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-
 		date, err := dateFromRequestPath(r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -185,8 +173,6 @@ func (s *defaultServer) entryHandler() http.HandlerFunc {
 
 func (s defaultServer) userMeHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-
 		user, err := s.loggedInUser(r)
 		if err != nil {
 			http.Error(w, "You must be logged in to retrieve information about your account", http.StatusForbidden)
@@ -209,7 +195,6 @@ func (s defaultServer) userMeHandler() http.HandlerFunc {
 
 func (s *defaultServer) submitHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
 		if r.Method == "OPTIONS" {
 			return
 		}
@@ -293,8 +278,6 @@ func thisFriday() time.Time {
 
 func (s defaultServer) logoutHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-
 		http.SetCookie(w, &http.Cookie{
 			Name:    "userkit_auth_token",
 			Value:   "",
@@ -309,7 +292,6 @@ func (s defaultServer) logoutHandler() http.HandlerFunc {
 // Catchall for when no API route matches.
 func (s *defaultServer) apiRootHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	}
 }
