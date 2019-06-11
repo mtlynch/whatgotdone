@@ -14,20 +14,10 @@ import (
 type Datastore interface {
 	Users() ([]string, error)
 	All(username string) ([]types.JournalEntry, error)
-	Get(username string, date string) (types.JournalEntry, error)
 	GetDraft(username string, date string) (types.JournalEntry, error)
 	Insert(username string, j types.JournalEntry) error
 	InsertDraft(username string, j types.JournalEntry) error
 	Close() error
-}
-
-type EntryNotFoundError struct {
-	Username string
-	Date     string
-}
-
-func (f EntryNotFoundError) Error() string {
-	return fmt.Sprintf("Could not find journal entry for user %s on date %s", f.Username, f.Date)
 }
 
 type DraftNotFoundError struct {
@@ -110,28 +100,6 @@ func (c defaultClient) All(username string) ([]types.JournalEntry, error) {
 		entries = append(entries, j)
 	}
 	return entries, nil
-}
-
-func (c defaultClient) Get(username string, date string) (types.JournalEntry, error) {
-	iter := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return types.JournalEntry{}, err
-		}
-		var j types.JournalEntry
-		doc.DataTo(&j)
-		if j.Date == date {
-			return j, nil
-		}
-	}
-	return types.JournalEntry{}, EntryNotFoundError{
-		Username: username,
-		Date:     date,
-	}
 }
 
 func (c defaultClient) GetDraft(username string, date string) (types.JournalEntry, error) {

@@ -13,7 +13,6 @@ import (
 	"github.com/gorilla/mux"
 	userkit "github.com/workpail/userkit-go"
 
-	"github.com/mtlynch/whatgotdone/datastore"
 	"github.com/mtlynch/whatgotdone/types"
 )
 
@@ -147,42 +146,15 @@ func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 	}
 }
 
-func (s *defaultServer) entryHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		date, err := dateFromRequestPath(r)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		j, err := s.datastore.Get(usernameFromRequestPath(r), date)
-		if err != nil {
-			if _, ok := err.(datastore.EntryNotFoundError); ok {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-			log.Printf("Failed to retrieve entry: %s", err)
-			http.Error(w, "Failed to retrieve entry", http.StatusInternalServerError)
-			return
-		}
-
-		if err := json.NewEncoder(w).Encode(j); err != nil {
-			panic(err)
-		}
-	}
-}
-
 func (s *defaultServer) draftHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
-			log.Print("handling /api/draft OPTIONS")
 		} else if r.Method == "GET" {
-			log.Print("handling /api/draft GET")
 			s.handleDraftGet(w, r)
 		} else if r.Method == "POST" {
-			log.Print("handling /api/draft POST")
 			s.handleDraftPost(w, r)
 		} else {
-			log.Print("handling /api/draft invalid verb")
+			log.Printf("Invalid method for drafts handler: %s", r.Method)
 			http.Error(w, "Invalid operation", http.StatusBadRequest)
 		}
 	}
