@@ -13,6 +13,7 @@ func (s *defaultServer) routes() {
 
 	s.router.HandleFunc("/api/entries/{username}", s.enableCors(s.entriesHandler()))
 	s.router.HandleFunc("/api/entry/{username}/{date}", s.enableCors(s.entryHandler()))
+	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftHandler()))
 	s.router.HandleFunc("/api/recentEntries", s.enableCors(s.recentEntriesHandler()))
 	s.router.HandleFunc("/api/user/me", s.enableCors(s.userMeHandler()))
 	s.router.HandleFunc("/api/submit", s.enableCors(s.submitHandler()))

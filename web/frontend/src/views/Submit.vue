@@ -17,7 +17,14 @@
         (You can use
         <a href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)
       </p>
-      <button type="submit" class="btn btn-primary float-right">Publish</button>
+      <div class="d-flex justify-content-end">
+        <button
+          @click.prevent="handleSaveDraft"
+          class="btn btn-primary save-draft"
+          :disabled="changesSaved"
+        >{{ saveLabel }}</button>
+        <button type="submit" class="btn btn-primary">Publish</button>
+      </div>
     </form>
   </div>
 </template>
@@ -34,7 +41,9 @@ export default {
   data() {
     return {
       date: "",
-      entryContent: ""
+      entryContent: "",
+      changesSaved: true,
+      saveLabel: "Save Draft"
     };
   },
   computed: {
@@ -47,11 +56,9 @@ export default {
       if (this.date.length == 0 || !this.username) {
         return;
       }
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${
-        this.username
-      }/${this.date}`;
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${this.date}`;
       this.$http
-        .get(url)
+        .get(url, { withCredentials: true })
         .then(result => {
           this.entryContent = result.data.markdown;
         })
@@ -59,6 +66,26 @@ export default {
           if (error.response.status == 404) {
             this.entryContent = "";
           }
+        });
+    },
+    handleSaveDraft() {
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${this.date}`;
+      this.$http
+        .post(
+          url,
+          {
+            entryContent: this.entryContent
+          },
+          { withCredentials: true }
+        )
+        .then(result => {
+          if (result.data.ok) {
+            this.changesSaved = true;
+            this.saveLabel = "Changes Saved";
+          }
+        })
+        .catch(() => {
+          this.changesSaved = false;
         });
     },
     handleSubmit() {
@@ -126,6 +153,10 @@ export default {
     },
     username: function() {
       this.loadEntryContent();
+    },
+    entryContent: function() {
+      this.changesSaved = false;
+      this.saveLabel = "Save Draft";
     }
   }
 };
@@ -140,5 +171,9 @@ export default {
 span.endDate {
   color: rgb(255, 208, 56);
   font-weight: bold;
+}
+
+.save-draft {
+  margin-right: 20px;
 }
 </style>

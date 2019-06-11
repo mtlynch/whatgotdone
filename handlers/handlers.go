@@ -171,6 +171,97 @@ func (s *defaultServer) entryHandler() http.HandlerFunc {
 	}
 }
 
+func (s *defaultServer) draftHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "OPTIONS" {
+			log.Print("handling /api/draft OPTIONS")
+		} else if r.Method == "GET" {
+			log.Print("handling /api/draft GET")
+			s.handleDraftGet(w, r)
+		} else if r.Method == "POST" {
+			log.Print("handling /api/draft POST")
+			s.handleDraftPost(w, r)
+		} else {
+			log.Print("handling /api/draft invalid verb")
+			http.Error(w, "Invalid operation", http.StatusBadRequest)
+		}
+	}
+}
+
+func (s defaultServer) handleDraftGet(w http.ResponseWriter, r *http.Request) {
+	user, err := s.loggedInUser(r)
+	if err != nil {
+		http.Error(w, "You must log in to retrieve a draft entry", http.StatusForbidden)
+		return
+	}
+
+	date, err := dateFromRequestPath(r)
+	if err != nil {
+		log.Printf("Invalid date: %s", date)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	j, err := s.datastore.GetDraft(user.Username, date)
+	if err != nil {
+		log.Printf("Failed to retrieve draft entry: %s", err)
+		http.Error(w, "Failed to retrieve draft entry", http.StatusInternalServerError)
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(j); err != nil {
+		panic(err)
+	}
+}
+
+func (s defaultServer) handleDraftPost(w http.ResponseWriter, r *http.Request) {
+	user, err := s.loggedInUser(r)
+	if err != nil {
+		http.Error(w, "You must log in to save a draft entry", http.StatusForbidden)
+		return
+	}
+
+	type draftRequest struct {
+		EntryContent string `json:"entryContent"`
+	}
+
+	type draftResponse struct {
+		Ok bool `json:"ok"`
+	}
+
+	var t draftRequest
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&t)
+	if err != nil {
+		log.Printf("Failed to decode request: %s", r.Body)
+		http.Error(w, "Failed to decode request", http.StatusBadRequest)
+	}
+
+	date, err := dateFromRequestPath(r)
+	if err != nil {
+		log.Printf("Invalid date: %s", date)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	j := types.JournalEntry{
+		Date:         date,
+		LastModified: time.Now().Format(time.RFC3339),
+		Markdown:     t.EntryContent,
+	}
+	err = s.datastore.InsertDraft(user.Username, j)
+	if err != nil {
+		log.Printf("Failed to update draft entry: %s", err)
+		http.Error(w, "Failed to update draft entry", http.StatusInternalServerError)
+		return
+	}
+	resp := draftResponse{
+		Ok: true,
+	}
+	if err := json.NewEncoder(w).Encode(resp); err != nil {
+		panic(err)
+	}
+}
+
 func (s defaultServer) userMeHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		user, err := s.loggedInUser(r)
@@ -233,6 +324,13 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			Date:         t.Date,
 			LastModified: time.Now().Format(time.RFC3339),
 			Markdown:     t.EntryContent,
+		}
+
+		err = s.datastore.InsertDraft(user.Username, j)
+		if err != nil {
+			log.Printf("Failed to update journal draft entry: %s", err)
+			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
+			return
 		}
 		err = s.datastore.Insert(user.Username, j)
 		if err != nil {

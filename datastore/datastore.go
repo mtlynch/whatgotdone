@@ -15,7 +15,9 @@ type Datastore interface {
 	Users() ([]string, error)
 	All(username string) ([]types.JournalEntry, error)
 	Get(username string, date string) (types.JournalEntry, error)
+	GetDraft(username string, date string) (types.JournalEntry, error)
 	Insert(username string, j types.JournalEntry) error
+	InsertDraft(username string, j types.JournalEntry) error
 	Close() error
 }
 
@@ -26,6 +28,15 @@ type EntryNotFoundError struct {
 
 func (f EntryNotFoundError) Error() string {
 	return fmt.Sprintf("Could not find journal entry for user %s on date %s", f.Username, f.Date)
+}
+
+type DraftNotFoundError struct {
+	Username string
+	Date     string
+}
+
+func (f DraftNotFoundError) Error() string {
+	return fmt.Sprintf("Could not find draft entry for user %s on date %s", f.Username, f.Date)
 }
 
 type (
@@ -49,6 +60,8 @@ type (
 const (
 	entriesRootKey    = "journalEntries"
 	perUserEntriesKey = "entries"
+	draftsRootKey     = "journalDrafts"
+	perUserDraftsKey  = "drafts"
 )
 
 func New() Datastore {
@@ -100,7 +113,7 @@ func (c defaultClient) All(username string) ([]types.JournalEntry, error) {
 }
 
 func (c defaultClient) Get(username string, date string) (types.JournalEntry, error) {
-	iter := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
+	iter := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -121,6 +134,28 @@ func (c defaultClient) Get(username string, date string) (types.JournalEntry, er
 	}
 }
 
+func (c defaultClient) GetDraft(username string, date string) (types.JournalEntry, error) {
+	iter := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Documents(c.ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return types.JournalEntry{}, err
+		}
+		var j types.JournalEntry
+		doc.DataTo(&j)
+		if j.Date == date {
+			return j, nil
+		}
+	}
+	return types.JournalEntry{}, DraftNotFoundError{
+		Username: username,
+		Date:     date,
+	}
+}
+
 func (c defaultClient) Insert(username string, j types.JournalEntry) error {
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(entriesRootKey).Doc(username).Set(c.ctx, userDocument{
@@ -133,4 +168,14 @@ func (c defaultClient) Insert(username string, j types.JournalEntry) error {
 
 func (c defaultClient) Close() error {
 	return c.firestoreClient.Close()
+}
+
+func (c defaultClient) InsertDraft(username string, j types.JournalEntry) error {
+	// Create a User document so that its children appear in Firestore console.
+	c.firestoreClient.Collection(draftsRootKey).Doc(username).Set(c.ctx, userDocument{
+		Username:     username,
+		LastModified: j.LastModified,
+	})
+	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Doc(j.Date).Set(c.ctx, j)
+	return err
 }
