@@ -17,3 +17,10 @@ npm run build -- --mode development
 ```
 cmd /c "go build --tags dev -o main.exe web\main.go && main.exe"
 ```
+
+### Run E2E tests
+
+```
+cd e2e
+docker-compose up --exit-code-from cypress --abort-on-container-exit --build
+```
