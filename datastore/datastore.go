@@ -46,6 +46,11 @@ type (
 	}
 )
 
+const (
+	entriesRootKey    = "journalEntries"
+	perUserEntriesKey = "entries"
+)
+
 func New() Datastore {
 	ctx := context.Background()
 
@@ -60,7 +65,7 @@ func New() Datastore {
 }
 
 func (c defaultClient) Users() (users []string, err error) {
-	iter := c.firestoreClient.Collection("journalEntries").Documents(c.ctx)
+	iter := c.firestoreClient.Collection(entriesRootKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -78,7 +83,7 @@ func (c defaultClient) Users() (users []string, err error) {
 
 func (c defaultClient) All(username string) ([]types.JournalEntry, error) {
 	entries := make([]types.JournalEntry, 0)
-	iter := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Documents(c.ctx)
+	iter := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -95,7 +100,7 @@ func (c defaultClient) All(username string) ([]types.JournalEntry, error) {
 }
 
 func (c defaultClient) Get(username string, date string) (types.JournalEntry, error) {
-	iter := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Documents(c.ctx)
+	iter := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -118,11 +123,11 @@ func (c defaultClient) Get(username string, date string) (types.JournalEntry, er
 
 func (c defaultClient) Insert(username string, j types.JournalEntry) error {
 	// Create a User document so that its children appear in Firestore console.
-	c.firestoreClient.Collection("journalEntries").Doc(username).Set(c.ctx, userDocument{
+	c.firestoreClient.Collection(entriesRootKey).Doc(username).Set(c.ctx, userDocument{
 		Username:     username,
 		LastModified: j.LastModified,
 	})
-	_, err := c.firestoreClient.Collection("journalEntries").Doc(username).Collection("entries").Doc(j.Date).Set(c.ctx, j)
+	_, err := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Doc(j.Date).Set(c.ctx, j)
 	return err
 }
 
