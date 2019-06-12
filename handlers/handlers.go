@@ -96,37 +96,6 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 	}
 }
 
-func (s *defaultServer) backfillDraftsHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		users, err := s.datastore.Users()
-		if err != nil {
-			log.Printf("Failed to retrieve users: %s", err)
-			http.Error(w, fmt.Sprintf("Failed to retrieve users: %s", err), http.StatusInternalServerError)
-			return
-		}
-
-		for _, username := range users {
-			log.Printf("Backfilling for user %s", username)
-			userEntries, err := s.datastore.All(username)
-			if err != nil {
-				log.Printf("Failed to retrieve entries for user %s: %s", username, err)
-				http.Error(w, fmt.Sprintf("Failed to retrieve entries for user %s: %s", username, err), http.StatusInternalServerError)
-				return
-			}
-			for _, entry := range userEntries {
-				_, err := s.datastore.GetDraft(username, entry.Date)
-				if _, ok := err.(datastore.DraftNotFoundError); ok {
-					log.Printf("Backfilling draft for: %s -> %s", username, entry.Date)
-					s.datastore.InsertDraft(username, entry)
-				} else if err != nil {
-					log.Printf("Failed to retrieve draft entry: %s", err)
-				}
-			}
-		}
-		log.Print("Finished backfill")
-	}
-}
-
 func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		users, err := s.datastore.Users()
