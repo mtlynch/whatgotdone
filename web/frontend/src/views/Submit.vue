@@ -10,6 +10,7 @@
         class="form-control journal-markdown"
         v-model="entryContent"
         name="markdown"
+        @input="debouncedSaveDraft"
         :min-height="250"
         :max-height="650"
       ></textarea-autosize>
@@ -33,6 +34,7 @@
 import Vue from "vue";
 import VueTextareaAutosize from "vue-textarea-autosize";
 import moment from "moment";
+import _ from "lodash";
 
 Vue.use(VueTextareaAutosize);
 
@@ -69,6 +71,7 @@ export default {
         });
     },
     handleSaveDraft() {
+      this.saveLabel = "Saving";
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${this.date}`;
       this.$http
         .post(
@@ -88,6 +91,9 @@ export default {
           this.changesSaved = false;
         });
     },
+    debouncedSaveDraft: _.debounce(function() {
+      this.handleSaveDraft();
+    }, 2500),
     handleSubmit() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/submit`;
       this.$http
@@ -174,6 +180,7 @@ span.endDate {
 }
 
 .save-draft {
+  width: 150px;
   margin-right: 20px;
 }
 </style>
