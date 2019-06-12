@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -15,6 +17,7 @@ import (
 
 type mockDatastore struct {
 	journalEntries []types.JournalEntry
+	journalDrafts  []types.JournalEntry
 	users          []string
 }
 
@@ -26,11 +29,11 @@ func (ds mockDatastore) All(username string) ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }
 
-func (ds mockDatastore) Get(username string, date string) (types.JournalEntry, error) {
-	if len(ds.journalEntries) > 0 {
-		return ds.journalEntries[0], nil
+func (ds mockDatastore) GetDraft(username string, date string) (types.JournalEntry, error) {
+	if len(ds.journalDrafts) > 0 {
+		return ds.journalDrafts[0], nil
 	}
-	return types.JournalEntry{}, datastore.EntryNotFoundError{
+	return types.JournalEntry{}, datastore.DraftNotFoundError{
 		Username: username,
 		Date:     date,
 	}
@@ -40,8 +43,25 @@ func (ds mockDatastore) Insert(username string, j types.JournalEntry) error {
 	return nil
 }
 
+func (ds mockDatastore) InsertDraft(username string, j types.JournalEntry) error {
+	return nil
+}
+
 func (ds mockDatastore) Close() error {
 	return nil
+}
+
+type mockAuthenticator struct {
+	tokensToUsers map[string]string
+}
+
+func (a mockAuthenticator) UserFromAuthToken(authToken string) (string, error) {
+	for k, v := range a.tokensToUsers {
+		if k == authToken {
+			return v, nil
+		}
+	}
+	return "", errors.New("mock token not found")
 }
 
 func init() {
@@ -125,24 +145,93 @@ func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
 	}
 }
 
-func TestEntryHandlerWhenDateMatches(t *testing.T) {
-	entries := []types.JournalEntry{
+func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
+	drafts := []types.JournalEntry{
 		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
 	}
 	ds := mockDatastore{
-		journalEntries: entries,
+		journalDrafts: drafts,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
+		authenticator: mockAuthenticator{},
+		datastore:     ds,
+		router:        router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/draft/2019-04-19", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusForbidden {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusForbidden)
+	}
+}
+
+func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
+	drafts := []types.JournalEntry{
+		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+	}
+	ds := mockDatastore{
+		journalDrafts: drafts,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_A": "dummyUser",
+			},
+		},
 		datastore: ds,
 		router:    router,
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/entry/dummyUser/2019-04-19", nil)
+	req, err := http.NewRequest("GET", "/api/draft/2019-04-19", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_invalid", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusForbidden {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusForbidden)
+	}
+}
+
+func TestDraftHandlerWhenDateMatches(t *testing.T) {
+	drafts := []types.JournalEntry{
+		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+	}
+	ds := mockDatastore{
+		journalDrafts: drafts,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_A": "dummyUser",
+			},
+		},
+		datastore: ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/draft/2019-04-19", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
 	s.router.ServeHTTP(w, req)
@@ -157,27 +246,33 @@ func TestEntryHandlerWhenDateMatches(t *testing.T) {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
 
-	if !reflect.DeepEqual(response, entries[0]) {
-		t.Fatalf("Unexpected response: got %v want %v", response, entries[0])
+	if !reflect.DeepEqual(response, drafts[0]) {
+		t.Fatalf("Unexpected response: got %v want %v", response, drafts[0])
 	}
 }
 
-func TestEntryHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing.T) {
+func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing.T) {
 	entries := []types.JournalEntry{}
 	ds := mockDatastore{
-		journalEntries: entries,
+		journalDrafts: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_A": "dummyUser",
+			},
+		},
 		datastore: ds,
 		router:    router,
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/entry/dummyUser/2019-04-19", nil)
+	req, err := http.NewRequest("GET", "/api/draft/2019-04-19", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
 	s.router.ServeHTTP(w, req)
@@ -188,22 +283,28 @@ func TestEntryHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing
 	}
 }
 
-func TestEntryHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
+func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 	entries := []types.JournalEntry{}
 	ds := mockDatastore{
-		journalEntries: entries,
+		journalDrafts: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_A": "dummyUser",
+			},
+		},
 		datastore: ds,
 		router:    router,
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/entry/dummyUser/201904-19", nil)
+	req, err := http.NewRequest("GET", "/api/draft/201904-19", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
 	s.router.ServeHTTP(w, req)
