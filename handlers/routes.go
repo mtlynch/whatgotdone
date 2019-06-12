@@ -16,7 +16,6 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/recentEntries", s.enableCors(s.recentEntriesHandler()))
 	s.router.HandleFunc("/api/user/me", s.enableCors(s.userMeHandler()))
 	s.router.HandleFunc("/api/submit", s.enableCors(s.submitHandler()))
-	s.router.HandleFunc("/api/backfillDrafts", s.enableCors(s.backfillDraftsHandler()))
 	s.router.HandleFunc("/api/logout", s.enableCors(s.logoutHandler()))
 	s.router.PathPrefix("/api").HandlerFunc(s.enableCors(s.apiRootHandler()))
 
