@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gorilla/mux"
-	userkit "github.com/workpail/userkit-go"
 
+	"github.com/mtlynch/whatgotdone/auth"
 	"github.com/mtlynch/whatgotdone/datastore"
 )
 
@@ -12,14 +12,9 @@ type Server interface {
 }
 
 func New() Server {
-	ks := datastore.NewUserKitKeyStore()
-	sk, err := ks.SecretKey()
-	if err != nil {
-		panic(err)
-	}
 	s := defaultServer{
+		authenticator: auth.New(),
 		datastore:     datastore.New(),
-		userKitClient: userkit.NewUserKit(sk),
 		router:        mux.NewRouter(),
 	}
 	s.routes()
@@ -27,8 +22,8 @@ func New() Server {
 }
 
 type defaultServer struct {
+	authenticator auth.Authenticator
 	datastore     datastore.Datastore
-	userKitClient userkit.Client
 	router        *mux.Router
 }
 

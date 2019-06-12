@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	userkit "github.com/workpail/userkit-go"
 
 	"github.com/mtlynch/whatgotdone/datastore"
 	"github.com/mtlynch/whatgotdone/types"
@@ -77,7 +76,7 @@ func (s defaultServer) meRedirectHandler() http.HandlerFunc {
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
-		http.Redirect(w, r, "/"+u.Username, http.StatusFound)
+		http.Redirect(w, r, "/"+u, http.StatusFound)
 	}
 }
 
@@ -173,7 +172,7 @@ func (s *defaultServer) entryHandler() http.HandlerFunc {
 
 func (s defaultServer) userMeHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		user, err := s.loggedInUser(r)
+		username, err := s.loggedInUser(r)
 		if err != nil {
 			http.Error(w, "You must be logged in to retrieve information about your account", http.StatusForbidden)
 			return
@@ -184,7 +183,7 @@ func (s defaultServer) userMeHandler() http.HandlerFunc {
 		}
 
 		resp := userMeResponse{
-			Username: user.Username,
+			Username: username,
 		}
 
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
@@ -199,7 +198,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			return
 		}
 
-		user, err := s.loggedInUser(r)
+		username, err := s.loggedInUser(r)
 		if err != nil {
 			http.Error(w, "You must log in to submit a journal entry", http.StatusForbidden)
 			return
@@ -234,7 +233,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			LastModified: time.Now().Format(time.RFC3339),
 			Markdown:     t.EntryContent,
 		}
-		err = s.datastore.Insert(user.Username, j)
+		err = s.datastore.Insert(username, j)
 		if err != nil {
 			log.Printf("Failed to insert journal entry: %s", err)
 			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
@@ -242,7 +241,7 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 		}
 		resp := submitResponse{
 			Ok:   true,
-			Path: fmt.Sprintf("/%s/%s", user.Username, t.Date),
+			Path: fmt.Sprintf("/%s/%s", username, t.Date),
 		}
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
 			panic(err)
@@ -296,16 +295,12 @@ func (s *defaultServer) apiRootHandler() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) loggedInUser(r *http.Request) (*userkit.User, error) {
+func (s defaultServer) loggedInUser(r *http.Request) (string, error) {
 	tokenCookie, err := r.Cookie("userkit_auth_token")
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	user, err := s.userKitClient.Users.GetUserBySession(tokenCookie.Value)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
+	return s.authenticator.UserFromAuthToken(tokenCookie.Value)
 }
 
 func usernameFromRequestPath(r *http.Request) string {

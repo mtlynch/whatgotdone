@@ -10,6 +10,7 @@ RUN npm run build -- --mode "$NPM_BUILD_MODE"
 FROM golang:1.11.8
 
 COPY --from=frontend_builder /app/web/frontend/dist /app/web/frontend/dist
+COPY ./auth /app/auth
 COPY ./datastore /app/datastore
 COPY ./handlers /app/handlers
 COPY ./types /app/types
