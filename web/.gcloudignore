@@ -6,5 +6,4 @@ Dockerfile
 README.md
 *.exe
 *_test.go
-web/frontend/
-!web/frontend/dist
+*.vue
