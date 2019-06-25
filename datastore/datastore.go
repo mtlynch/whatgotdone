@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
@@ -97,6 +98,9 @@ func (c defaultClient) All(username string) ([]types.JournalEntry, error) {
 		}
 		var j types.JournalEntry
 		doc.DataTo(&j)
+		if strings.TrimSpace(j.Markdown) == "" {
+			continue
+		}
 		entries = append(entries, j)
 	}
 	return entries, nil
