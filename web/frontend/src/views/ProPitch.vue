@@ -18,7 +18,14 @@
       outlined
       :items="items"
       :fields="fields"
-    ></b-table>
+    >
+      <template slot="basic" slot-scope="data">
+        <img src="/images/heavy-check-mark.png" v-if="data.item.basic" class="checkmark">
+      </template>
+      <template slot="pro" slot-scope="data">
+        <img src="/images/heavy-check-mark.png" v-if="data.item.pro" class="checkmark">
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -40,12 +47,12 @@ export default {
         }
       ],
       items: [
-        { feature: "Unlimited posts", basic: "✔️", pro: "✔️" },
-        { feature: "Share updates privately", basic: "️", pro: "✔️" },
+        { feature: "Unlimited posts", basic: true, pro: true },
+        { feature: "Share updates privately", basic: false, pro: true },
         {
           feature: "Automatically send email summaries to your teammates",
-          basic: "️",
-          pro: "✔️"
+          basic: false,
+          pro: true
         }
       ]
     };
@@ -60,5 +67,9 @@ export default {
 
 .features {
   margin-top: 100px;
+}
+
+.checkmark {
+  max-width: 20px;
 }
 </style>
