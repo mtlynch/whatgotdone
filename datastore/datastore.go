@@ -18,6 +18,8 @@ type Datastore interface {
 	GetDraft(username string, date string) (types.JournalEntry, error)
 	Insert(username string, j types.JournalEntry) error
 	InsertDraft(username string, j types.JournalEntry) error
+	GetReactions(username string, date string) ([]types.Reaction, error)
+	AddReaction(username string, date string, reaction types.Reaction) error
 	Close() error
 }
 
@@ -40,6 +42,10 @@ type (
 		Username     string `firestore:"username,omitempty"`
 		LastModified string `firestore:"lastModified,omitempty"`
 	}
+
+	reactionsDocument struct {
+		Reactions []types.Reaction `firestore:"reactions,omitempty"`
+	}
 )
 
 const (
@@ -47,6 +53,7 @@ const (
 	perUserEntriesKey = "entries"
 	draftsRootKey     = "journalDrafts"
 	perUserDraftsKey  = "drafts"
+	reactionsRootKey  = "reactions"
 )
 
 func New() Datastore {
@@ -144,4 +151,21 @@ func (c defaultClient) InsertDraft(username string, j types.JournalEntry) error 
 	})
 	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Doc(j.Date).Set(c.ctx, j)
 	return err
+}
+
+func (c defaultClient) GetReactions(username string, date string) ([]types.Reaction, error) {
+	reactionsKey := username + "_" + date
+	docsnap, err := c.firestoreClient.Collection(reactionsRootKey).Doc(reactionsKey).Get(c.ctx)
+	if err != nil {
+		return nil, err
+	}
+	var rd reactionsDocument
+	if err := docsnap.DataTo(&rd); err != nil {
+		return nil, err
+	}
+	return rd.Reactions, nil
+}
+
+func (c defaultClient) AddReaction(username string, date string, reaction types.Reaction) error {
+	return nil
 }

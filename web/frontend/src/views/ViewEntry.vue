@@ -9,6 +9,7 @@
         No journal entry found for
         <b>{{ entryDate }}</b>
       </p>
+      <Reactions :username="$route.params.username" :date="$route.params.date" />
     </template>
     <template v-else>
       <p>
@@ -30,6 +31,7 @@ import Vue from "vue";
 import moment from "moment";
 import Journal from "../components/Journal.vue";
 import JournalHeader from "../components/JournalHeader.vue";
+import Reactions from "../components/Reactions.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
 
 Vue.use(Pagination);
@@ -38,7 +40,8 @@ export default {
   name: "ViewEntry",
   components: {
     Journal,
-    JournalHeader
+    JournalHeader,
+    Reactions
   },
   data() {
     return {
@@ -53,7 +56,11 @@ export default {
     },
     loadJournalEntries: function() {
       this.journalEntries = [];
+<<<<<<< HEAD
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.entryAuthor}`;
+=======
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.$route.params.username}`;
+>>>>>>> Adding partial implementation of reactions
       this.$http
         .get(url)
         .then(result => {
