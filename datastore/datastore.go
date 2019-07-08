@@ -49,11 +49,12 @@ type (
 )
 
 const (
-	entriesRootKey    = "journalEntries"
-	perUserEntriesKey = "entries"
-	draftsRootKey     = "journalDrafts"
-	perUserDraftsKey  = "drafts"
-	reactionsRootKey  = "reactions"
+	entriesRootKey      = "journalEntries"
+	perUserEntriesKey   = "entries"
+	draftsRootKey       = "journalDrafts"
+	perUserDraftsKey    = "drafts"
+	reactionsRootKey    = "reactions"
+	perUserReactionsKey = "perUserReactions"
 )
 
 func New() Datastore {
@@ -153,19 +154,32 @@ func (c defaultClient) InsertDraft(username string, j types.JournalEntry) error 
 	return err
 }
 
-func (c defaultClient) GetReactions(username string, date string) ([]types.Reaction, error) {
-	reactionsKey := username + "_" + date
-	docsnap, err := c.firestoreClient.Collection(reactionsRootKey).Doc(reactionsKey).Get(c.ctx)
-	if err != nil {
-		return nil, err
+func (c defaultClient) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {
+	reactions := []types.Reaction{}
+	entryReactionsKey := getEntryReactionsKey(entryAuthor, entryDate)
+	iter := c.firestoreClient.Collection(reactionsRootKey).Doc(entryReactionsKey).Collection(perUserReactionsKey).Documents(c.ctx)
+	for {
+		log.Println("Starting iteration")
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			log.Println("Iterator is done")
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var r types.Reaction
+		doc.DataTo(&r)
+		log.Printf("r=%v", r)
+		reactions = append(reactions, r)
 	}
-	var rd reactionsDocument
-	if err := docsnap.DataTo(&rd); err != nil {
-		return nil, err
-	}
-	return rd.Reactions, nil
+	return reactions, nil
 }
 
-func (c defaultClient) AddReaction(username string, date string, reaction types.Reaction) error {
+func (c defaultClient) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
 	return nil
+}
+
+func getEntryReactionsKey(entryAuthor string, entryDate string) string {
+	return entryAuthor + "_" + entryDate
 }
