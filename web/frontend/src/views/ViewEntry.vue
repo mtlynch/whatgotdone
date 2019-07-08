@@ -116,11 +116,11 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (!to.params.date) {
-        this.goToLatestEntry();
-      }
       if (to.params.username != from.params.username) {
         this.loadJournalEntries();
+      }
+      if (!to.params.date) {
+        this.goToLatestEntry();
       }
     }
   }
