@@ -56,11 +56,7 @@ export default {
     },
     loadJournalEntries: function() {
       this.journalEntries = [];
-<<<<<<< HEAD
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.entryAuthor}`;
-=======
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.$route.params.username}`;
->>>>>>> Adding partial implementation of reactions
       this.$http
         .get(url)
         .then(result => {
