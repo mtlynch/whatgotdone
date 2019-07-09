@@ -209,7 +209,7 @@ func (s defaultServer) handleDraftPost(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&t)
 	if err != nil {
-		log.Printf("Failed to decode request: %s", r.Body)
+		log.Printf("Failed to decode request: %s", err)
 		http.Error(w, "Failed to decode request", http.StatusBadRequest)
 	}
 
@@ -273,8 +273,6 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 			return
 		}
 
-		decoder := json.NewDecoder(r.Body)
-
 		type submitRequest struct {
 			Date         string `json:"date"`
 			EntryContent string `json:"entryContent"`
@@ -286,9 +284,10 @@ func (s *defaultServer) submitHandler() http.HandlerFunc {
 		}
 
 		var t submitRequest
+		decoder := json.NewDecoder(r.Body)
 		err = decoder.Decode(&t)
 		if err != nil {
-			log.Printf("Failed to decode request: %s", r.Body)
+			log.Printf("Failed to decode request: %s", err)
 			http.Error(w, "Failed to decode request", http.StatusBadRequest)
 		}
 		if !validateEntryDate(t.Date) {
