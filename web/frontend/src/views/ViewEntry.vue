@@ -3,22 +3,22 @@
     <template v-if="journalEntries.length > 0">
       <b-pagination-nav :pages="pages" v-if="pages.length > 0" align="center" use-router></b-pagination-nav>
 
-      <JournalHeader :username="$route.params.username" :date="$route.params.date"/>
-      <Journal v-bind:entry="currentEntry" v-if="currentEntry"/>
+      <JournalHeader :entryAuthor="entryAuthor" :entryDate="entryDate" />
+      <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p v-else>
         No journal entry found for
-        <b>{{ $route.params.date }}</b>
+        <b>{{ entryDate }}</b>
       </p>
     </template>
     <template v-else>
       <p>
-        <span class="username">{{ $route.params.username }}</span> has not posted any What Got Done updates.
+        <span class="username">{{ entryAuthor }}</span> has not posted any What Got Done updates.
       </p>
     </template>
     <p v-if="backendError" class="error">Failed to connect to backend: {{ backendError }}</p>
     <b-button
       v-if="canEdit"
-      :to="'/entry/edit/' + this.$route.params.date"
+      :to="'/entry/edit/' + this.entryDate"
       variant="primary"
       class="float-right"
     >Edit</b-button>
@@ -49,13 +49,11 @@ export default {
   methods: {
     goToLatestEntry() {
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
-      this.$router.replace(`/${this.$route.params.username}/${lastEntry.key}`);
+      this.$router.replace(`/${this.entryAuthor}/${lastEntry.key}`);
     },
     loadJournalEntries: function() {
       this.journalEntries = [];
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${
-        this.$route.params.username
-      }`;
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.entryAuthor}`;
       this.$http
         .get(url)
         .then(result => {
@@ -72,7 +70,7 @@ export default {
           }
           this.journalEntries.sort((a, b) => a.date - b.date);
 
-          if (!this.$route.params.date) {
+          if (!this.entryDate) {
             this.goToLatestEntry();
             return;
           }
@@ -87,24 +85,32 @@ export default {
       let pages = [];
       for (const entry of this.journalEntries) {
         pages.push({
-          link: `/${this.$route.params.username}/${entry.key}`,
+          link: `/${this.entryAuthor}/${entry.key}`,
           text: new moment(entry.key).format("MMM. D").replace("May.", "May")
         });
       }
       return pages;
     },
-    username: function() {
+    loggedInUsername: function() {
       return this.$store.state.username;
     },
     canEdit: function() {
-      return this.username && this.username === this.$route.params.username;
+      return (
+        this.loggedInUsername && this.loggedInUsername === this.entryAuthor
+      );
+    },
+    entryAuthor: function() {
+      return this.$route.params.username;
+    },
+    entryDate: function() {
+      return this.$route.params.date;
     },
     currentEntry: function() {
-      if (!this.$route.params.date) {
+      if (!this.entryDate) {
         return null;
       }
       for (const entry of this.journalEntries) {
-        if (this.$route.params.date === entry.key) {
+        if (this.entryDate === entry.key) {
           return entry;
         }
       }
