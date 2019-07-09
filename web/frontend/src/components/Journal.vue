@@ -9,7 +9,7 @@
           :source="entry.markdown"
         ></vue-markdown>
       </div>
-      <div class="date">Last modified {{ entry.lastModified | moment("lll") }}</div>
+      <div class="last-modified-date">Last modified {{ entry.lastModified | moment("lll") }}</div>
     </div>
   </div>
 </template>
@@ -35,13 +35,14 @@ export default {
 .journal-body {
   text-align: left;
 }
-.date {
+
+.last-modified-date {
   font-style: italic;
   margin-top: 40px;
 }
 
 @media screen and (min-width: 768px) {
-  .date {
+  .last-modified-date {
     text-align: right;
     margin-top: 5px;
   }

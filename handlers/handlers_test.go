@@ -47,6 +47,14 @@ func (ds mockDatastore) InsertDraft(username string, j types.JournalEntry) error
 	return nil
 }
 
+func (ds mockDatastore) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {
+	return nil, nil
+}
+
+func (ds mockDatastore) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
+	return nil
+}
+
 func (ds mockDatastore) Close() error {
 	return nil
 }
