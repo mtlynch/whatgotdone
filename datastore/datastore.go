@@ -190,5 +190,5 @@ func (c defaultClient) AddReaction(entryAuthor string, entryDate string, reactio
 }
 
 func getEntryReactionsKey(entryAuthor string, entryDate string) string {
-	return entryAuthor + "_" + entryDate
+	return entryAuthor + "->" + entryDate
 }

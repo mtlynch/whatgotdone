@@ -97,12 +97,6 @@ export default {
     loggedInUsername: function() {
       return this.$store.state.username;
     },
-    entryAuthor: function() {
-      return this.$route.params.username;
-    },
-    entryDate: function() {
-      return this.$route.params.date;
-    },
     canEdit: function() {
       return (
         this.loggedInUsername && this.loggedInUsername === this.entryAuthor

@@ -19,6 +19,7 @@ type mockDatastore struct {
 	journalEntries []types.JournalEntry
 	journalDrafts  []types.JournalEntry
 	users          []string
+	reactions      []types.Reaction
 }
 
 func (ds mockDatastore) Users() ([]string, error) {
@@ -48,7 +49,7 @@ func (ds mockDatastore) InsertDraft(username string, j types.JournalEntry) error
 }
 
 func (ds mockDatastore) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {
-	return nil, nil
+	return ds.reactions, nil
 }
 
 func (ds mockDatastore) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
