@@ -9,7 +9,6 @@
         No journal entry found for
         <b>{{ entryDate }}</b>
       </p>
-      <Reactions :username="$route.params.username" :date="$route.params.date" />
     </template>
     <template v-else>
       <p>
@@ -21,8 +20,9 @@
       v-if="canEdit"
       :to="'/entry/edit/' + this.entryDate"
       variant="primary"
-      class="float-right"
+      class="float-right edit-btn"
     >Edit</b-button>
+    <Reactions :username="$route.params.username" :date="$route.params.date" />
   </div>
 </template>
 
@@ -144,5 +144,9 @@ export default {
 span.username {
   color: rgb(255, 208, 56);
   font-weight: bold;
+}
+
+.edit-btn {
+  margin: 25px 0px;
 }
 </style>

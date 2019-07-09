@@ -37,5 +37,13 @@ export default {
 }
 .date {
   font-style: italic;
+  margin-top: 40px;
+}
+
+@media screen and (min-width: 768px) {
+  .date {
+    text-align: right;
+    margin-top: 5px;
+  }
 }
 </style>

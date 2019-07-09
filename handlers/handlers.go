@@ -234,7 +234,7 @@ func (s *defaultServer) reactionsHandler() http.HandlerFunc {
 		} else if r.Method == "GET" {
 			s.handleReactionsGet(w, r)
 		} else if r.Method == "POST" {
-			s.handleDraftPost(w, r)
+			s.handleReactionsPost(w, r)
 		} else {
 			log.Printf("Invalid method for drafts handler: %s", r.Method)
 			http.Error(w, "Invalid operation", http.StatusBadRequest)
@@ -256,37 +256,39 @@ func (s defaultServer) handleReactionsGet(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if err := json.NewEncoder(w).Encode(reactions); err != nil {
+	reactionsFiltered := []types.Reaction{}
+	for _, reaction := range reactions {
+		if reaction.Symbol != "" {
+			reactionsFiltered = append(reactionsFiltered, reaction)
+		}
+	}
+
+	if err := json.NewEncoder(w).Encode(reactionsFiltered); err != nil {
 		panic(err)
 	}
 }
 
 func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Request) {
+	log.Println("in handleReactionsPost")
 	username, err := s.loggedInUser(r)
 	if err != nil {
 		http.Error(w, "You must log in to provide a reaction", http.StatusForbidden)
 		return
 	}
 
-	type reactionRequest struct {
-		Reaction string `json:"reaction"`
-	}
-
-	type reactionResponse struct {
-		Ok bool `json:"ok"`
-	}
-
-	var rr reactionRequest
-	decoder := json.NewDecoder(r.Body)
-	err = decoder.Decode(&rr)
+	log.Println("Getting reaction symbol")
+	reactionSymbol, err := reactionSymbolFromRequest(r)
 	if err != nil {
-		log.Printf("Failed to decode request: %s", r.Body)
-		http.Error(w, "Failed to decode request", http.StatusBadRequest)
+		log.Printf("Invalid reactions request: %s", r.Body)
+		http.Error(w, "Invalid reactions request", http.StatusBadRequest)
 	}
 
-	date, err := dateFromRequestPath(r)
+	entryAuthor := usernameFromRequestPath(r)
+
+	log.Printf("reactionSymbol = %v", reactionSymbol)
+	entryDate, err := dateFromRequestPath(r)
 	if err != nil {
-		log.Printf("Invalid date: %s", date)
+		log.Printf("Invalid date: %s", entryDate)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -294,13 +296,17 @@ func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Reques
 	reaction := types.Reaction{
 		Username:  username,
 		Timestamp: time.Now().Format(time.RFC3339),
-		Reaction:  rr.Reaction,
+		Symbol:    reactionSymbol,
 	}
-	err = s.datastore.AddReaction(username, date, reaction)
+	err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
 	if err != nil {
 		log.Printf("Failed to add reaction: %s", err)
 		http.Error(w, "Failed to add reaction", http.StatusInternalServerError)
 		return
+	}
+
+	type reactionResponse struct {
+		Ok bool `json:"ok"`
 	}
 	resp := reactionResponse{
 		Ok: true,
@@ -308,6 +314,35 @@ func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Reques
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		panic(err)
 	}
+}
+
+func reactionSymbolFromRequest(r *http.Request) (string, error) {
+	type reactionRequest struct {
+		ReactionSymbol string `json:"reactionSymbol"`
+	}
+	var rr reactionRequest
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&rr)
+	if err != nil {
+		return "", err
+	}
+	log.Printf("reactionSymbol = %v", rr.ReactionSymbol)
+
+	if !isValidReaction(rr.ReactionSymbol) {
+		return "", errors.New("Invalid reaction choice")
+	}
+
+	return rr.ReactionSymbol, nil
+}
+
+func isValidReaction(reaction string) bool {
+	validReactionSymbols := [...]string{"", "👍", "🙁", "🎉"}
+	for _, v := range validReactionSymbols {
+		if reaction == v {
+			return true
+		}
+	}
+	return false
 }
 
 func (s defaultServer) userMeHandler() http.HandlerFunc {
