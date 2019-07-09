@@ -41,6 +41,9 @@ export default {
       this.selectedReaction = "";
     },
     loadReactions: function() {
+      if (!this.entryAuthor || !this.entryDate) {
+        return;
+      }
       const reactions = [];
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.entryAuthor}/${this.entryDate}`;
       this.$http
