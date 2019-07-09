@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -97,7 +98,7 @@ func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Reques
 
 func reactionSymbolFromRequest(r *http.Request) (string, error) {
 	type reactionRequest struct {
-		ReactionSymbol string `json:"reactionSymbol"`
+		ReactionSymbol *string `json:"reactionSymbol"`
 	}
 	var rr reactionRequest
 	decoder := json.NewDecoder(r.Body)
@@ -106,11 +107,16 @@ func reactionSymbolFromRequest(r *http.Request) (string, error) {
 		return "", err
 	}
 
-	if !isValidReaction(rr.ReactionSymbol) {
-		return "", fmt.Errorf("Invalid reaction choice: %s", rr.ReactionSymbol)
+	if rr.ReactionSymbol == nil {
+		return "", errors.New(`Request is missing required field: "reactionSymbol"`)
 	}
 
-	return rr.ReactionSymbol, nil
+	reactionSymbol := *rr.ReactionSymbol
+	if !isValidReaction(reactionSymbol) {
+		return "", fmt.Errorf("Invalid reaction choice: %s", reactionSymbol)
+	}
+
+	return reactionSymbol, nil
 }
 
 func isValidReaction(reaction string) bool {

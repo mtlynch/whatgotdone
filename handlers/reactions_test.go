@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -11,13 +13,22 @@ import (
 	"github.com/mtlynch/whatgotdone/types"
 )
 
+func (ds mockDatastore) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {
+	return ds.reactions, nil
+}
+
+func (ds *mockDatastore) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
+	ds.reactions = append(ds.reactions, reaction)
+	return nil
+}
+
 func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
 	ds := mockDatastore{
 		reactions: []types.Reaction{},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -55,7 +66,7 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -80,5 +91,144 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 
 	if !reflect.DeepEqual(response, reactions) {
 		t.Fatalf("Unexpected response: got %v want %v", response, reactions)
+	}
+}
+
+func TestReactionsPostStoresValidReaction(t *testing.T) {
+	reactions := []types.Reaction{}
+	ds := mockDatastore{
+		reactions: reactions,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_C": "dummyUserC",
+			},
+		},
+		datastore: &ds,
+		router:    router,
+	}
+	s.routes()
+
+	requestBody := []byte(`{ "reactionSymbol": "👍" }`)
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", bytes.NewBuffer(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+	if len(ds.reactions) != 1 {
+		t.Fatalf("unexpected reaction count: got %v (%v) want %v",
+			len(ds.reactions), ds.reactions, 1)
+	}
+	if ds.reactions[0].Username != "dummyUserC" {
+		t.Fatalf("unexpected username in reaction: got %v want %v",
+			ds.reactions[0].Username, "dummyUserC")
+	}
+	if ds.reactions[0].Symbol != "👍" {
+		t.Fatalf("unexpected symbol in reaction: got [%v] want [%v]",
+			ds.reactions[0].Symbol, "👍")
+	}
+}
+
+func TestReactionsPostRejectsRequestWithMissingSymbolField(t *testing.T) {
+	reactions := []types.Reaction{}
+	ds := mockDatastore{
+		reactions: reactions,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_C": "dummyUserC",
+			},
+		},
+		datastore: &ds,
+		router:    router,
+	}
+	s.routes()
+
+	requestBody := []byte(`{ "dummyNonExistentFieldName": "👍" }`)
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", bytes.NewBuffer(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusBadRequest {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
+func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
+	reactions := []types.Reaction{}
+	ds := mockDatastore{
+		reactions: reactions,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_C": "dummyUserC",
+			},
+		},
+		datastore: &ds,
+		router:    router,
+	}
+	s.routes()
+
+	requestBody := []byte(`{ "reactionSymbol": "!" }`)
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", bytes.NewBuffer(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusBadRequest {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
+func TestReactionsPostRejectsRequestWhenUserIsNotLoggedIn(t *testing.T) {
+	reactions := []types.Reaction{}
+	ds := mockDatastore{
+		reactions: reactions,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{},
+		datastore:     &ds,
+		router:        router,
+	}
+	s.routes()
+
+	requestBody := []byte(`{ "symbol": "👍" }`)
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUser/2019-04-19", bytes.NewBuffer(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusForbidden {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusForbidden)
 	}
 }
