@@ -61,7 +61,7 @@ export default {
           reactions.sort((a, b) => b.timestamp - a.timestamp);
           this.reactions = reactions;
         })
-        .catch(error => {
+        .catch(() => {
           // Ignore error for reactions, as they're non-essential.
         });
     },
