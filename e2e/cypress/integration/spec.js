@@ -21,6 +21,14 @@ it('clicking "Post Update" before authenticating prompts login', () => {
   cy.url().should('include', '/login')
 })
 
+it('reacting to an entry before authenticating prompts login', () => {
+  cy.visit('/staging.jimmy/2019-06-28')
+
+  cy.get('.reaction-buttons .btn:first-of-type').click();
+
+  cy.url().should('include', '/login')
+})
+
 it('logs in and posts an update', () => {
   cy.server()
   cy.route('/api/draft/*').as('getDraft')
@@ -99,6 +107,33 @@ it('logs in and views profile', () => {
   cy.get('.profile-link a').click()
 
   cy.url().should('include', '/staging.jimmy')
+})
+
+it('logs in and reacts to an entry', () => {
+  cy.server()
+  cy.route('POST', 'https://api.userkit.io/v1/widget/login').as('postUserKitLogin')
+  cy.visit('/login')
+
+  cy.get('#userkit_username')
+    .type('staging.jimmy')
+  cy.get('#userkit_password')
+    .type('just4st@ginG!')
+  cy.get('form').submit()
+  cy.wait('@postUserKitLogin')
+
+  cy.visit('/staging.jimmy/2019-06-28')
+
+  cy.request('POST', '/api/reactions/entry/staging.jimmy/2019-06-28', { reactionSymbol: "" }).as('postClearReaction')
+
+  cy.route('POST', '/api/reactions/entry/staging.jimmy/2019-06-28').as('postReaction')
+  cy.get('.reaction-buttons .btn:first-of-type').click();
+  cy.wait('@postReaction').then(() => {
+    // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
+    cy.get('.reaction')
+      .then((element) => {
+        expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy reacted with a 👍');
+      });
+  });
 })
 
 it('logs in and signs out', () => {

@@ -269,23 +269,20 @@ func (s defaultServer) handleReactionsGet(w http.ResponseWriter, r *http.Request
 }
 
 func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Request) {
-	log.Println("in handleReactionsPost")
 	username, err := s.loggedInUser(r)
 	if err != nil {
 		http.Error(w, "You must log in to provide a reaction", http.StatusForbidden)
 		return
 	}
 
-	log.Println("Getting reaction symbol")
 	reactionSymbol, err := reactionSymbolFromRequest(r)
 	if err != nil {
-		log.Printf("Invalid reactions request: %s", r.Body)
+		log.Printf("Invalid reactions request: %v", err)
 		http.Error(w, "Invalid reactions request", http.StatusBadRequest)
 	}
 
 	entryAuthor := usernameFromRequestPath(r)
 
-	log.Printf("reactionSymbol = %v", reactionSymbol)
 	entryDate, err := dateFromRequestPath(r)
 	if err != nil {
 		log.Printf("Invalid date: %s", entryDate)
@@ -326,10 +323,9 @@ func reactionSymbolFromRequest(r *http.Request) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	log.Printf("reactionSymbol = %v", rr.ReactionSymbol)
 
 	if !isValidReaction(rr.ReactionSymbol) {
-		return "", errors.New("Invalid reaction choice")
+		return "", fmt.Errorf("Invalid reaction choice: %s", rr.ReactionSymbol)
 	}
 
 	return rr.ReactionSymbol, nil

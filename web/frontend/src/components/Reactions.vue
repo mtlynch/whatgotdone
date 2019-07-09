@@ -1,17 +1,17 @@
 <template>
   <div class="reactions">
-    <div class="reactionButtons">
+    <div class="reaction-buttons">
       <b-button
         v-for="symbol in reactionSymbols"
         v-bind:key="symbol"
         :variant="buttonVariant(symbol)"
-        @click="sendReaction(symbol)"
+        @click="handleReaction(symbol)"
       >{{ symbol }}</b-button>
     </div>
     <div class="reaction" v-for="reaction in reactions" v-bind:key="reaction.key">
       <p>
-        <Username :username="reaction.username" />
-        reacted with a {{ reaction.reaction }}
+        <Username :username="reaction.username" />&nbsp;reacted with a
+        <span class="reaction-symbol">{{ reaction.reaction }}</span>
       </p>
     </div>
   </div>
@@ -22,8 +22,8 @@ import Username from "./Username.vue";
 export default {
   name: "Reactions",
   props: {
-    username: String,
-    date: String
+    entryAuthor: String,
+    entryDate: String
   },
   components: {
     Username
@@ -36,9 +36,13 @@ export default {
     };
   },
   methods: {
+    clear: function() {
+      this.reactions = [];
+      this.selectedReaction = "";
+    },
     loadReactions: function() {
       const reactions = [];
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.username}/${this.date}`;
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.entryAuthor}/${this.entryDate}`;
       this.$http
         .get(url)
         .then(result => {
@@ -53,6 +57,7 @@ export default {
               this.selectedReaction = reaction.symbol;
             }
           }
+          // Sort from newest to oldest.
           reactions.sort((a, b) => b.timestamp - a.timestamp);
           this.reactions = reactions;
         })
@@ -60,13 +65,21 @@ export default {
           // Ignore error for reactions, as they're non-essential.
         });
     },
-    sendReaction: function(reactionSymbol) {
+    reloadReactions: function() {
+      this.clear();
+      this.loadReactions();
+    },
+    handleReaction: function(reactionSymbol) {
+      if (!this.loggedInUsername) {
+        this.$router.push("/login");
+        return;
+      }
       if (this.selectedReaction == reactionSymbol) {
         this.selectedReaction = "";
       } else {
         this.selectedReaction = reactionSymbol;
       }
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.$route.params.username}/${this.$route.params.date}`;
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.entryAuthor}/${this.entryDate}`;
       this.$http.post(
         url,
         {
@@ -79,14 +92,12 @@ export default {
     updateReactions: function() {
       const newReactions = [];
       if (this.selectedReaction) {
-        console.log("Adding reaction to end");
         newReactions.push({
           key: this.loggedInUsername,
           username: this.loggedInUsername,
           timestamp: new Date(),
           reaction: this.selectedReaction
         });
-        console.log(this.reactions);
       }
       for (const reaction of this.reactions) {
         if (reaction.username == this.loggedInUsername) {
@@ -111,6 +122,14 @@ export default {
   },
   created() {
     this.loadReactions();
+  },
+  watch: {
+    entryAuthor: function() {
+      this.reloadReactions();
+    },
+    entryDate: function() {
+      this.reloadReactions();
+    }
   }
 };
 </script>
@@ -122,27 +141,38 @@ export default {
   }
 }
 
-.reactionButtons {
+.reaction-buttons {
   margin-top: 40px;
   margin-bottom: 25px;
   clear: both;
 }
 
 @media screen and (min-width: 768px) {
-  .reactionButtons {
+  .reaction-buttons {
     margin-top: 0px;
     clear: none;
   }
 }
 
 .btn {
-  margin-right: 5px;
+  margin-right: 12px;
   font-size: 24pt;
 }
 
 @media screen and (min-width: 768px) {
   .btn {
+    margin-right: 8px;
     font-size: 12pt;
+  }
+}
+
+.reaction-symbol {
+  font-size: 18pt;
+}
+
+@media screen and (min-width: 768px) {
+  .reaction-symbol {
+    font-size: 14pt;
   }
 }
 </style>

@@ -22,7 +22,7 @@
       variant="primary"
       class="float-right edit-btn"
     >Edit</b-button>
-    <Reactions :username="$route.params.username" :date="$route.params.date" />
+    <Reactions :entryAuthor="entryAuthor" :entryDate="entryDate" />
   </div>
 </template>
 
@@ -100,6 +100,12 @@ export default {
     },
     loggedInUsername: function() {
       return this.$store.state.username;
+    },
+    entryAuthor: function() {
+      return this.$route.params.username;
+    },
+    entryDate: function() {
+      return this.$route.params.date;
     },
     canEdit: function() {
       return (
