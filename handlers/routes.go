@@ -20,6 +20,5 @@ func (s *defaultServer) routes() {
 	s.router.PathPrefix("/api").HandlerFunc(s.enableCors(s.apiRootHandler()))
 
 	s.router.HandleFunc("/submit", s.enableCsp(s.submitPageHandler()))
-	s.router.HandleFunc("/me", s.enableCsp(s.meRedirectHandler()))
 	s.router.PathPrefix("/").HandlerFunc(s.enableCsp(s.indexHandler()))
 }
