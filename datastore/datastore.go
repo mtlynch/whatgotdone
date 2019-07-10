@@ -18,6 +18,8 @@ type Datastore interface {
 	GetDraft(username string, date string) (types.JournalEntry, error)
 	Insert(username string, j types.JournalEntry) error
 	InsertDraft(username string, j types.JournalEntry) error
+	GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error)
+	AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error
 	Close() error
 }
 
@@ -40,13 +42,24 @@ type (
 		Username     string `firestore:"username,omitempty"`
 		LastModified string `firestore:"lastModified,omitempty"`
 	}
+
+	reactionsDocument struct {
+		Reactions []types.Reaction `firestore:"reactions,omitempty"`
+	}
+
+	entryReactionsDocument struct {
+		entryAuthor string `firestore:"entryAuthor,omitempty"`
+		entryDate   string `firestore:"entryDate,omitempty"`
+	}
 )
 
 const (
-	entriesRootKey    = "journalEntries"
-	perUserEntriesKey = "entries"
-	draftsRootKey     = "journalDrafts"
-	perUserDraftsKey  = "drafts"
+	entriesRootKey      = "journalEntries"
+	perUserEntriesKey   = "entries"
+	draftsRootKey       = "journalDrafts"
+	perUserDraftsKey    = "drafts"
+	reactionsRootKey    = "reactions"
+	perUserReactionsKey = "perUserReactions"
 )
 
 func New() Datastore {
@@ -144,4 +157,38 @@ func (c defaultClient) InsertDraft(username string, j types.JournalEntry) error 
 	})
 	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Doc(j.Date).Set(c.ctx, j)
 	return err
+}
+
+func (c defaultClient) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {
+	reactions := []types.Reaction{}
+	iter := c.firestoreClient.Collection(reactionsRootKey).Doc(getEntryReactionsKey(entryAuthor, entryDate)).Collection(perUserReactionsKey).Documents(c.ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		var r types.Reaction
+		doc.DataTo(&r)
+		reactions = append(reactions, r)
+	}
+	return reactions, nil
+}
+
+func (c defaultClient) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
+	// Create a entryReactionsDocument document so that its children appear in Firestore console.
+	c.firestoreClient.Collection(reactionsRootKey).Doc(getEntryReactionsKey(entryAuthor, entryDate)).Set(c.ctx, entryReactionsDocument{
+		entryAuthor: entryAuthor,
+		entryDate:   entryDate,
+	})
+
+	_, err := c.firestoreClient.Collection(reactionsRootKey).Doc(getEntryReactionsKey(entryAuthor, entryDate)).Collection(perUserReactionsKey).Doc(reaction.Username).Set(c.ctx, reaction)
+
+	return err
+}
+
+func getEntryReactionsKey(entryAuthor string, entryDate string) string {
+	return entryAuthor + ":" + entryDate
 }

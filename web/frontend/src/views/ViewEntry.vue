@@ -20,8 +20,9 @@
       v-if="canEdit"
       :to="'/entry/edit/' + this.entryDate"
       variant="primary"
-      class="float-right"
+      class="float-right edit-btn"
     >Edit</b-button>
+    <Reactions :entryAuthor="entryAuthor" :entryDate="entryDate" />
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import Vue from "vue";
 import moment from "moment";
 import Journal from "../components/Journal.vue";
 import JournalHeader from "../components/JournalHeader.vue";
+import Reactions from "../components/Reactions.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
 
 Vue.use(Pagination);
@@ -38,7 +40,8 @@ export default {
   name: "ViewEntry",
   components: {
     Journal,
-    JournalHeader
+    JournalHeader,
+    Reactions
   },
   data() {
     return {
@@ -48,6 +51,14 @@ export default {
   },
   methods: {
     goToLatestEntry() {
+      // I don't understand how this can happen, but sometimes I'm seeing the
+      // e2e test try to redirect the client to /undefined/[somedate] and it
+      // seems to be caused when goToLatestEntry is called when
+      // this.entryAuthor is undefined, even though that seems like it should
+      // never happen.
+      if (!this.entryAuthor) {
+        return;
+      }
       const lastEntry = this.journalEntries[this.journalEntries.length - 1];
       this.$router.replace(`/${this.entryAuthor}/${lastEntry.key}`);
     },
@@ -137,5 +148,9 @@ export default {
 span.username {
   color: rgb(255, 208, 56);
   font-weight: bold;
+}
+
+.edit-btn {
+  margin: 25px 0px;
 }
 </style>

@@ -19,6 +19,7 @@ type mockDatastore struct {
 	journalEntries []types.JournalEntry
 	journalDrafts  []types.JournalEntry
 	users          []string
+	reactions      []types.Reaction
 }
 
 func (ds mockDatastore) Users() ([]string, error) {
@@ -83,7 +84,7 @@ func TestEntriesHandler(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -116,7 +117,7 @@ func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -155,7 +156,7 @@ func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{},
-		datastore:     ds,
+		datastore:     &ds,
 		router:        router,
 	}
 	s.routes()
@@ -188,7 +189,7 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -222,7 +223,7 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -263,7 +264,7 @@ func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -295,7 +296,7 @@ func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -322,7 +323,7 @@ func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -348,7 +349,7 @@ func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
@@ -385,7 +386,7 @@ func TestRecentEntriesHandlerSortsCorrectly(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: ds,
+		datastore: &ds,
 		router:    router,
 	}
 	s.routes()
