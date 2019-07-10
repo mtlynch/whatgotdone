@@ -60,6 +60,8 @@ const (
 	perUserDraftsKey    = "drafts"
 	reactionsRootKey    = "reactions"
 	perUserReactionsKey = "perUserReactions"
+	secretsRootKey      = "secrets"
+	secretUserKitDocKey = "userKitKey"
 )
 
 func New() Datastore {

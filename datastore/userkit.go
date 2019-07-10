@@ -28,7 +28,7 @@ func NewUserKitKeyStore() UserKitKeystore {
 	}
 }
 func (c defaultClient) SecretKey() (string, error) {
-	doc, err := c.firestoreClient.Collection("secrets").Doc("userKitKey").Get(c.ctx)
+	doc, err := c.firestoreClient.Collection(secretsRootKey).Doc(secretUserKitDocKey).Get(c.ctx)
 	if err != nil {
 		return "", err
 	}
