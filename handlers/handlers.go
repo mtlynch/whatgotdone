@@ -109,6 +109,11 @@ func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 				return
 			}
 			for _, entry := range userEntries {
+				// Filter low-effort posts or test posts from the recent list.
+				const minimumRelevantLength = 30
+				if len(entry.Markdown) < minimumRelevantLength {
+					continue
+				}
 				entries = append(entries, recentEntry{
 					Author:       username,
 					Date:         entry.Date,
@@ -134,7 +139,7 @@ func (s *defaultServer) recentEntriesHandler() http.HandlerFunc {
 			entries[i], entries[opp] = entries[opp], entries[i]
 		}
 
-		const maxEntries = 10
+		const maxEntries = 15
 		if len(entries) > maxEntries {
 			entries = entries[:maxEntries]
 		}
