@@ -29,7 +29,6 @@
 import Vue from "vue";
 import moment from "moment";
 import Journal from "../components/Journal.vue";
-import JournalHeader from "../components/JournalHeader.vue";
 import Reactions from "../components/Reactions.vue";
 import Username from "../components/Username.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
@@ -40,7 +39,6 @@ export default {
   name: "ViewEntry",
   components: {
     Journal,
-    JournalHeader,
     Reactions,
     Username
   },
