@@ -195,19 +195,6 @@ func thisFriday() time.Time {
 	return t
 }
 
-func (s defaultServer) logoutHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		http.SetCookie(w, &http.Cookie{
-			Name:    "userkit_auth_token",
-			Value:   "",
-			Path:    "/",
-			Expires: time.Unix(0, 0),
-		})
-
-		w.Write([]byte("You are now logged out"))
-	}
-}
-
 // Catchall for when no API route matches.
 func (s *defaultServer) apiRootHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
