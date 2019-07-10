@@ -28,11 +28,18 @@ func (s *defaultServer) reactionsHandler() http.HandlerFunc {
 func (s defaultServer) handleReactionsGet(w http.ResponseWriter, r *http.Request) {
 	date, err := dateFromRequestPath(r)
 	if err != nil {
-		log.Printf("Invalid date: %s", date)
+		log.Printf("Invalid date: %s - %s", date, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	reactions, err := s.datastore.GetReactions(usernameFromRequestPath(r), date)
+
+	username, err := usernameFromRequestPath(r)
+	if err != nil {
+		log.Printf("Failed to retrieve username from request path: %s", err)
+		http.Error(w, "Invalid username", http.StatusBadRequest)
+	}
+
+	reactions, err := s.datastore.GetReactions(username, date)
 	if err != nil {
 		log.Printf("Failed to retrieve reactions: %s", err)
 		http.Error(w, "Failed to retrieve reactions", http.StatusInternalServerError)

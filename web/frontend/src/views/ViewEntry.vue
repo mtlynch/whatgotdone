@@ -55,9 +55,6 @@ export default {
       this.$router.replace(`/${this.entryAuthor}/${lastEntry.key}`);
     },
     loadJournalEntries: function() {
-      if (!this.entryAuthor) {
-        return;
-      }
       this.journalEntries = [];
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.entryAuthor}`;
       this.$http
