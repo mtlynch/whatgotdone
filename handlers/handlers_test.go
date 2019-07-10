@@ -370,13 +370,13 @@ func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 
 func TestRecentEntriesHandlerSortsCorrectly(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers"},
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T22:00:00.000Z", Markdown: "Read a pamphlet"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news"},
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap"},
+		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
+		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
+		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
+		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
+		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T22:00:00.000Z", Markdown: "Read a pamphlet from The Cat Society"},
+		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
+		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,
@@ -411,13 +411,13 @@ func TestRecentEntriesHandlerSortsCorrectly(t *testing.T) {
 	}
 
 	expected := []recentEntry{
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read the news"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read a book"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers"},
-		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie"},
-		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap"},
+		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
+		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
+		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
+		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
+		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
+		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
+		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
