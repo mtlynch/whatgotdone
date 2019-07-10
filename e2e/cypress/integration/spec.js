@@ -121,8 +121,8 @@ it('logs in and reacts to an entry', () => {
   cy.get('form').submit()
   cy.wait('@postUserKitLogin')
 
+  // Clear any existing reaction on the entry.
   cy.request('POST', '/api/reactions/entry/staging.jimmy/2019-06-28', { reactionSymbol: "" }).as('postClearReaction')
-  cy.wait('@postClearReaction')
 
   cy.visit('/staging.jimmy/2019-06-28')
 
