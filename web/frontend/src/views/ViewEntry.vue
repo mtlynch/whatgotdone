@@ -22,7 +22,7 @@
       variant="primary"
       class="float-right edit-btn"
     >Edit</b-button>
-    <Reactions :entryAuthor="entryAuthor" :entryDate="entryDate" v-if="journalEntries.length > 0" />
+    <Reactions :entryAuthor="entryAuthor" :entryDate="entryDate" v-if="currentEntry" />
   </div>
 </template>
 
