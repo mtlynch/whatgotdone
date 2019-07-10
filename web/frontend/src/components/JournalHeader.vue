@@ -11,7 +11,7 @@ export default {
   name: "JournalHeader",
   props: {
     entryAuthor: String,
-    entryDate: String
+    entryDate: Date
   },
   components: {
     Username

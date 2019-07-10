@@ -12,7 +12,7 @@ export default function refreshRecent() {
         recentEntries.push({
           key: `/${entry.author}/${formattedDate}`,
           author: entry.author,
-          date: entry.date,
+          date: new Date(entry.date),
           markdown: entry.markdown
         });
       }
