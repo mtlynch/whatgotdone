@@ -84,7 +84,12 @@ func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	log.Printf("Adding reaction %s -> %s for %s/%s", username, reactionSymbol, entryAuthor, entryDate)
+	if reactionSymbol != "" {
+		log.Printf("Adding reaction %s -> [%s] for %s/%s", username, reactionSymbol, entryAuthor, entryDate)
+	} else {
+		log.Printf("Clearing reaction from %s for %s/%s", username, entryAuthor, entryDate)
+	}
+
 	reaction := types.Reaction{
 		Username:  username,
 		Timestamp: time.Now().Format(time.RFC3339),
