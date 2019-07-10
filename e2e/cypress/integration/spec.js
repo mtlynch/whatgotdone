@@ -29,6 +29,18 @@ it('reacting to an entry before authenticating prompts login', () => {
   cy.url().should('include', '/login')
 })
 
+it('reaction buttons should not appear when the user has no posts', () => {
+  cy.visit('/dummyUserWithZeroPosts')
+
+  cy.get('.reaction-buttons').should('not.exist');
+})
+
+it('reaction buttons should not appear when the post is missing', () => {
+  cy.visit('/staging.jimmy/2000-01-07')
+
+  cy.get('.reaction-buttons').should('not.exist');
+})
+
 it('logs in and posts an update', () => {
   cy.server()
   cy.route('/api/draft/*').as('getDraft')
