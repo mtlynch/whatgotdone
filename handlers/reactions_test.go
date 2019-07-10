@@ -94,6 +94,31 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 	}
 }
 
+func TestReactionsGetWhenEntryAuthorIsUndefined(t *testing.T) {
+	ds := mockDatastore{
+		reactions: []types.Reaction{},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore: &ds,
+		router:    router,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/reactions/entry/undefined/2019-07-12", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusBadRequest {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
 func TestReactionsPostStoresValidReaction(t *testing.T) {
 	reactions := []types.Reaction{}
 	ds := mockDatastore{
@@ -191,6 +216,39 @@ func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
 
 	requestBody := []byte(`{ "reactionSymbol": "!" }`)
 	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", bytes.NewBuffer(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusBadRequest {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusBadRequest)
+	}
+}
+
+func TestReactionsPostRejectsRequestWhenUsernameIsUndefined(t *testing.T) {
+	reactions := []types.Reaction{}
+	ds := mockDatastore{
+		reactions: reactions,
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]string{
+				"mock_token_C": "dummyUserC",
+			},
+		},
+		datastore: &ds,
+		router:    router,
+	}
+	s.routes()
+
+	requestBody := []byte(`{ "reactionSymbol": "👍" }`)
+	req, err := http.NewRequest("POST", "/api/reactions/entry/undefined/2019-04-19", bytes.NewBuffer(requestBody))
 	if err != nil {
 		t.Fatal(err)
 	}
