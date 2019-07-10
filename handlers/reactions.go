@@ -37,6 +37,7 @@ func (s defaultServer) handleReactionsGet(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		log.Printf("Failed to retrieve username from request path: %s", err)
 		http.Error(w, "Invalid username", http.StatusBadRequest)
+		return
 	}
 
 	reactions, err := s.datastore.GetReactions(entryAuthor, date)
@@ -69,12 +70,14 @@ func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		log.Printf("Invalid reactions request: %v", err)
 		http.Error(w, "Invalid reactions request", http.StatusBadRequest)
+		return
 	}
 
 	entryAuthor, err := usernameFromRequestPath(r)
 	if err != nil {
 		log.Printf("Failed to retrieve username from request path: %s", err)
 		http.Error(w, "Invalid username", http.StatusBadRequest)
+		return
 	}
 
 	entryDate, err := dateFromRequestPath(r)

@@ -77,6 +77,7 @@ func (s *defaultServer) entriesHandler() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Failed to retrieve username from request path: %s", err)
 			http.Error(w, "Invalid username", http.StatusBadRequest)
+			return
 		}
 
 		entries, err := s.datastore.All(username)
@@ -376,6 +377,8 @@ func (s defaultServer) loggedInUser(r *http.Request) (string, error) {
 
 func usernameFromRequestPath(r *http.Request) (string, error) {
 	username := mux.Vars(r)["username"]
+	// If something goes wrong in a JavaScript-based client, it will send the literal string "undefined" as the username
+	// when the username variable is undefined.
 	if username == "undefined" || username == "" {
 		return "", errors.New("Invalid username")
 	}
