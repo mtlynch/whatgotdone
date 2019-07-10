@@ -121,9 +121,10 @@ it('logs in and reacts to an entry', () => {
   cy.get('form').submit()
   cy.wait('@postUserKitLogin')
 
-  cy.visit('/staging.jimmy/2019-06-28')
-
   cy.request('POST', '/api/reactions/entry/staging.jimmy/2019-06-28', { reactionSymbol: "" }).as('postClearReaction')
+  cy.wait('@postClearReaction')
+
+  cy.visit('/staging.jimmy/2019-06-28')
 
   cy.route('POST', '/api/reactions/entry/staging.jimmy/2019-06-28').as('postReaction')
   cy.get('.reaction-buttons .btn:first-of-type').click();
