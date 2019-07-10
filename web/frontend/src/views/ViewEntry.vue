@@ -145,11 +145,6 @@ export default {
 </script>
 
 <style scoped>
-span.username {
-  color: rgb(255, 208, 56);
-  font-weight: bold;
-}
-
 .edit-btn {
   margin: 25px 0px;
 }
