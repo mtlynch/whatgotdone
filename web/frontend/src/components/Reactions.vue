@@ -76,8 +76,8 @@ export default {
               reaction: this.selectedReaction
             });
           }
-          // Sort from newest to oldest.
-          reactions.sort((a, b) => b.timestamp - a.timestamp);
+          // Sort from oldest to newest.
+          reactions.sort((a, b) => a.timestamp - b.timestamp);
           this.reactions = reactions;
           if (this.selectedReaction == "") {
             this.selectedReaction = newSelectedReaction;
