@@ -6,6 +6,9 @@ services:
       args:
         NPM_BUILD_MODE: staging
         GO_BUILD_TAGS: staging
+        # Use a unique "reactions" key in the datastore (ensures that the
+        # datastore is always empty of reactions).
+        USE_FRESH_REACTIONS_KEY: 1
     environment:
       - PORT=3123
     volumes:

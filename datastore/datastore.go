@@ -53,17 +53,6 @@ type (
 	}
 )
 
-const (
-	entriesRootKey      = "journalEntries"
-	perUserEntriesKey   = "entries"
-	draftsRootKey       = "journalDrafts"
-	perUserDraftsKey    = "drafts"
-	reactionsRootKey    = "reactions"
-	perUserReactionsKey = "perUserReactions"
-	secretsRootKey      = "secrets"
-	secretUserKitDocKey = "userKitKey"
-)
-
 func New() Datastore {
 	ctx := context.Background()
 

@@ -21,6 +21,14 @@ COPY ./go.sum /app/go.sum
 WORKDIR /app
 
 ARG GO_BUILD_TAGS="dev"
-RUN go build --tags "$GO_BUILD_TAGS" -o /app/main web/main.go
+ARG USE_FRESH_REACTIONS_KEY="0"
+RUN set -xe && \
+  PER_USER_REACTIONS_KEY="perUserReactions" && \
+  if test "$USE_FRESH_REACTIONS_KEY" = "1"; then PER_USER_REACTIONS_KEY="${PER_USER_REACTIONS_KEY}-$(date +'%s')"; fi && \
+  go build \
+  --tags "$GO_BUILD_TAGS" \
+  -ldflags "-X github.com/mtlynch/whatgotdone/datastore.perUserReactionsKey=${PER_USER_REACTIONS_KEY}" \
+  -o /app/main \
+  web/main.go
 
 ENTRYPOINT /app/main
