@@ -121,19 +121,20 @@ it('logs in and reacts to an entry', () => {
   cy.wait('@postUserKitLogin')
 
   // Clear any existing reaction on the entry.
-  cy.request('POST', '/api/reactions/entry/staging.jimmy/2019-06-28', { reactionSymbol: "" }).as('postClearReaction')
+  cy.request('POST', '/api/reactions/entry/staging.jimmy/2019-06-28', { reactionSymbol: "" }).then(() => {
 
-  cy.visit('/staging.jimmy/2019-06-28')
+    // Visit a post and react to the entry.
+    cy.visit('/staging.jimmy/2019-06-28')
 
-  cy.route('POST', '/api/reactions/entry/staging.jimmy/2019-06-28').as('postReaction')
-  cy.get('.reaction-buttons .btn:first-of-type').click();
-  cy.wait('@postReaction').then(() => {
+    cy.get('.reaction-buttons .btn:first-of-type').click();
+
     // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
     cy.get('.reaction')
       .then((element) => {
         expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy reacted with a 👍');
       });
   });
+
 })
 
 it('logs in and signs out', () => {

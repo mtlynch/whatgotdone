@@ -50,15 +50,22 @@ export default {
         .get(url)
         .then(result => {
           for (const reaction of result.data) {
+            if (reaction.username == this.loggedInUsername) {
+              if (this.selectedReaction == "") {
+                this.selectedReaction = reaction.symbol;
+              } else {
+                // Don't overwrite the local reaction symbol if the user
+                // clicked a reaction before the request finished.
+                continue;
+              }
+            }
+
             reactions.push({
               key: reaction.username,
               username: reaction.username,
               timestamp: new Date(reaction.timestamp),
               reaction: reaction.symbol
             });
-            if (reaction.username == this.loggedInUsername) {
-              this.selectedReaction = reaction.symbol;
-            }
           }
           // Sort from newest to oldest.
           reactions.sort((a, b) => b.timestamp - a.timestamp);
