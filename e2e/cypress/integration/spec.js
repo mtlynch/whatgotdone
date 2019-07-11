@@ -1,3 +1,13 @@
+Cypress.Commands.add('login', (username, password, options = {}) => {
+  cy.visit('/login')
+
+  cy.get('#userkit_username')
+    .type(username)
+  cy.get('#userkit_password')
+    .type(password)
+  cy.get('form').submit()
+})
+
 it('loads the homepage', () => {
   cy.visit('/')
 
@@ -45,13 +55,7 @@ it('logs in and posts an update', () => {
   cy.server()
   cy.route('/api/draft/*').as('getDraft')
 
-  cy.visit('/login')
-
-  cy.get('#userkit_username')
-    .type('staging.jimmy')
-  cy.get('#userkit_password')
-    .type('just4st@ginG!')
-  cy.get('form').submit()
+  cy.login('staging.jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/submit')
 
@@ -75,13 +79,7 @@ it('logs in and saves a draft', () => {
   cy.route('GET', '/api/draft/*').as('getDraft')
   cy.route('POST', '/api/draft/*').as('postDraft')
 
-  cy.visit('/login')
-
-  cy.get('#userkit_username')
-    .type('staging.jimmy')
-  cy.get('#userkit_password')
-    .type('just4st@ginG!')
-  cy.get('form').submit()
+  cy.login('staging.jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/submit')
 
@@ -108,12 +106,7 @@ it('logs in and saves a draft', () => {
 })
 
 it('logs in and views profile', () => {
-  cy.visit('/login')
-  cy.get('#userkit_username')
-    .type('staging.jimmy')
-  cy.get('#userkit_password')
-    .type('just4st@ginG!')
-  cy.get('form').submit()
+  cy.login('staging.jimmy', 'just4st@ginG!')
 
   cy.get('.account-dropdown').click()
   cy.get('.profile-link a').click()
@@ -124,13 +117,7 @@ it('logs in and views profile', () => {
 it('logs in and reacts to an entry', () => {
   cy.server()
   cy.route('POST', 'https://api.userkit.io/v1/widget/login').as('postUserKitLogin')
-  cy.visit('/login')
-
-  cy.get('#userkit_username')
-    .type('staging.jimmy')
-  cy.get('#userkit_password')
-    .type('just4st@ginG!')
-  cy.get('form').submit()
+  cy.login('staging.jimmy', 'just4st@ginG!')
   cy.wait('@postUserKitLogin')
 
   // Clear any existing reaction on the entry.
@@ -150,13 +137,7 @@ it('logs in and reacts to an entry', () => {
 })
 
 it('logs in and signs out', () => {
-  cy.visit('/login')
-
-  cy.get('#userkit_username')
-    .type('staging.jimmy')
-  cy.get('#userkit_password')
-    .type('just4st@ginG!')
-  cy.get('form').submit()
+  cy.login('staging.jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/submit')
 
