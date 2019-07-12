@@ -1,5 +1,6 @@
 <template>
   <div class="journal">
+    <JournalHeader :entryAuthor="entry.author" :entryDate="entry.date" />
     <div class="journalEntry">
       <div class="journal-body">
         <vue-markdown
@@ -17,6 +18,7 @@
 <script>
 import Vue from "vue";
 import VueMarkdown from "vue-markdown";
+import JournalHeader from "./JournalHeader.vue";
 
 Vue.use(VueMarkdown);
 
@@ -26,6 +28,7 @@ export default {
     entry: Object
   },
   components: {
+    JournalHeader,
     VueMarkdown
   }
 };

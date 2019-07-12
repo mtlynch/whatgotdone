@@ -3,10 +3,9 @@
     <template v-if="journalEntries.length > 0">
       <b-pagination-nav :pages="pages" v-if="pages.length > 0" align="center" use-router></b-pagination-nav>
 
-      <JournalHeader :entryAuthor="entryAuthor" :entryDate="entryDate" />
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p v-else>
-        No journal entry found for
+        <Username :username="entryAuthor" />&nbsp;has not posted a journal entry for
         <b>{{ entryDate }}</b>
       </p>
     </template>
@@ -30,8 +29,8 @@
 import Vue from "vue";
 import moment from "moment";
 import Journal from "../components/Journal.vue";
-import JournalHeader from "../components/JournalHeader.vue";
 import Reactions from "../components/Reactions.vue";
+import Username from "../components/Username.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
 
 Vue.use(Pagination);
@@ -40,8 +39,8 @@ export default {
   name: "ViewEntry",
   components: {
     Journal,
-    JournalHeader,
-    Reactions
+    Reactions,
+    Username
   },
   data() {
     return {
@@ -71,6 +70,7 @@ export default {
           for (const entry of result.data) {
             this.journalEntries.push({
               key: entry.date,
+              author: this.entryAuthor,
               date: new Date(entry.date),
               lastModified: new Date(entry.lastModified),
               markdown: entry.markdown
