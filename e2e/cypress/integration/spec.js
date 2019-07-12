@@ -31,6 +31,15 @@ it('clicking "Post Update" before authenticating prompts login', () => {
   cy.url().should('include', '/login')
 })
 
+it('renders the date correctly', () => {
+  cy.visit('/staging.jimmy/2019-06-28')
+
+  cy.get('.journalHeader')
+    .then((element) => {
+      expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy\'s update for the week ending on Friday, Jun 28, 2019');
+    });
+})
+
 it('reacting to an entry before authenticating prompts login', () => {
   cy.visit('/staging.jimmy/2019-06-28')
 

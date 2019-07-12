@@ -18,6 +18,9 @@ services:
     environment:
       - CYPRESS_baseUrl=http://whatgotdone:3123
       - DEBUG=cypress:server:request,cypress:server:server,cypress:server:proxy,cypress:network:agent,cypress:server:browsers
+      # Set test timezone to Los Angeles so that we're more likely to catch
+      # incorrect UTC vs. local date translations.
+      - TZ=America/Los_Angeles
     working_dir: /e2e
     volumes:
       - ./:/e2e
