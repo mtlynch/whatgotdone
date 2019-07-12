@@ -45,6 +45,7 @@ export default {
         return;
       }
       const reactions = [];
+      let newSelectedReaction = "";
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.entryAuthor}/${this.entryDate}`;
       this.$http
         .get(url)
@@ -52,7 +53,7 @@ export default {
           for (const reaction of result.data) {
             if (reaction.username == this.loggedInUsername) {
               if (this.selectedReaction == "") {
-                this.selectedReaction = reaction.symbol;
+                newSelectedReaction = reaction.symbol;
               } else {
                 // Don't overwrite the local reaction symbol if the user
                 // clicked a reaction before the request finished.
@@ -67,9 +68,20 @@ export default {
               reaction: reaction.symbol
             });
           }
+          if (this.selectedReaction != "") {
+            reactions.push({
+              key: this.loggedInUsername,
+              username: this.loggedInUsername,
+              timestamp: new Date(),
+              reaction: this.selectedReaction
+            });
+          }
           // Sort from newest to oldest.
           reactions.sort((a, b) => b.timestamp - a.timestamp);
           this.reactions = reactions;
+          if (this.selectedReaction == "") {
+            this.selectedReaction = newSelectedReaction;
+          }
         })
         .catch(() => {
           // Ignore error for reactions, as they're non-essential.
@@ -101,19 +113,19 @@ export default {
     },
     updateReactions: function() {
       const newReactions = [];
-      if (this.selectedReaction) {
+      for (const reaction of this.reactions) {
+        if (reaction.username == this.loggedInUsername) {
+          continue;
+        }
+        newReactions.push(reaction);
+      }
+      if (this.selectedReaction != "") {
         newReactions.push({
           key: this.loggedInUsername,
           username: this.loggedInUsername,
           timestamp: new Date(),
           reaction: this.selectedReaction
         });
-      }
-      for (const reaction of this.reactions) {
-        if (reaction.username == this.loggedInUsername) {
-          continue;
-        }
-        newReactions.push(reaction);
       }
       this.reactions = newReactions;
     },
