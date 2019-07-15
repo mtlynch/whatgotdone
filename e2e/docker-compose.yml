@@ -12,7 +12,7 @@ services:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/e2e
   cypress:
-    image: "cypress/included:3.3.1"
+    image: "cypress/included:3.4.0"
     depends_on:
       - whatgotdone
     environment:
