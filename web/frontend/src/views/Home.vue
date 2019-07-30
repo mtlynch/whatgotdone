@@ -3,7 +3,7 @@
     <div class="jumbotron">
       <h1 class="display-3">What did you get done this week?</h1>
       <p class="lead">What Got Done is the simple, easy way to share progress with your teammates.</p>
-      <hr class="my-4">
+      <hr class="my-4" />
       <p>End each week by reflecting on what you accomplished.</p>
       <ul>
         <li>Keep your teammates informed</li>
@@ -30,7 +30,7 @@
         <p>What Got Done is a weekly ritual to remind yourself of your accomplishments.</p>
       </div>
       <div class="col">
-        <img id="typing-update" src="/images/typing-update.gif">
+        <img id="typing-update" src="/images/typing-update.gif" />
       </div>
     </div>
 
@@ -41,7 +41,7 @@
         <p>When you're done, share a clean summary of your week of work with your teammates.</p>
       </div>
       <div class="col">
-        <img id="example-rendered" src="/images/example-rendered.jpg">
+        <img id="example-rendered" src="/images/example-rendered.jpg" />
       </div>
     </div>
 
@@ -54,7 +54,7 @@
         <p>What Got Done lets you write updates your way, highlighting what's important instead of forcing your teammates to dig through a list of checkboxes.</p>
       </div>
       <div class="col">
-        <img id="example-freeform" src="/images/example-freeform.jpg">
+        <img id="example-freeform" src="/images/example-freeform.jpg" />
       </div>
     </div>
 
