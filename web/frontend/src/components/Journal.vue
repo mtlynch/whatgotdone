@@ -1,15 +1,13 @@
 <template>
   <div class="journal">
     <JournalHeader :entryAuthor="entry.author" :entryDate="entry.date" />
-    <div class="journalEntry">
-      <div class="journal-body">
-        <vue-markdown
-          :linkify="false"
-          :html="false"
-          :anchorAttributes="{rel: 'nofollow' }"
-          :source="entry.markdown"
-        ></vue-markdown>
-      </div>
+    <div class="journal-body">
+      <vue-markdown
+        :linkify="false"
+        :html="false"
+        :anchorAttributes="{rel: 'nofollow' }"
+        :source="entry.markdown"
+      ></vue-markdown>
       <div class="last-modified-date">Last modified {{ entry.lastModified | moment("lll") }}</div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <p class="journalHeader">
+  <p class="journal-header">
     <Username :username="entryAuthor" />'s update for the week ending on
     <b>{{ entryDate | moment("utc", "dddd, ll") }}</b>
   </p>
