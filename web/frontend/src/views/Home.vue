@@ -12,12 +12,11 @@
       </ul>
 
       <div class="jumbotron-footer">
+        <b-button class="btn btn-lg btn-start-now" variant="primary" to="/submit">Start&nbsp;now</b-button>
         <b-button
-          class="btn btn-primary btn-lg"
-          variant="outline-primary"
-          to="/submit"
-        >Start&nbsp;now</b-button>
-        <b-button class="btn btn-lg btn-secondary" to="/recent">View&nbsp;recent&nbsp;entries</b-button>
+          class="btn btn-lg btn-success btn-view-recent"
+          to="/recent"
+        >View&nbsp;recent&nbsp;entries</b-button>
       </div>
     </div>
 
@@ -107,31 +106,15 @@ a {
 }
 
 .jumbotron-footer {
-  margin-top: 40px;
+  margin-top: 60px;
   text-align: center;
 }
 
 @media screen and (min-width: 768px) {
   .jumbotron-footer {
+    margin-top: 40px;
     text-align: right;
   }
-}
-
-.btn {
-  margin-top: 20px;
-}
-
-@media screen and (min-width: 768px) {
-  .btn {
-    margin-top: 0px;
-  }
-}
-
-.btn-primary {
-  border: 1px solid rgba(0, 0, 0, 0.45);
-  background: rgb(21, 255, 177);
-  color: rgb(5, 70, 9) !important;
-  margin-right: 15px;
 }
 
 @media screen and (min-width: 768px) {
@@ -140,23 +123,12 @@ a {
   }
 }
 
-.btn-primary:hover {
-  border: 1px solid rgb(4, 61, 23);
-  background: rgb(180, 250, 226);
-  color: rgb(5, 70, 9) !important;
+.btn-start-now {
+  margin-right: 15px;
 }
 
-a.btn-secondary {
-  background: rgb(115, 116, 199);
-  border: 1px solid rgba(0, 0, 0, 0.45);
-  color: rgb(41, 2, 49) !important;
+.btn-view-recent {
   margin-right: 0px;
-}
-
-a.btn-secondary:hover {
-  background: rgb(163, 164, 233);
-  border: 1px solid rgb(0, 0, 0);
-  color: rgb(41, 2, 49) !important;
 }
 
 .flex-grid {
