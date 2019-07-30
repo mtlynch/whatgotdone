@@ -27,6 +27,7 @@
         <button type="submit" :disabled="entryContent.length == 0" class="btn btn-primary">Publish</button>
       </div>
     </form>
+    <JournalPreview :markdown="entryContent" />
   </div>
 </template>
 
@@ -35,11 +36,15 @@ import Vue from "vue";
 import VueTextareaAutosize from "vue-textarea-autosize";
 import moment from "moment";
 import _ from "lodash";
+import JournalPreview from "../components/JournalPreview.vue";
 
 Vue.use(VueTextareaAutosize);
 
 export default {
   name: "Submit",
+  components: {
+    JournalPreview
+  },
   data() {
     return {
       date: "",
