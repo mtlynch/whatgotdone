@@ -10,7 +10,7 @@
           :source="entrySnippet"
         ></vue-markdown>
       </div>
-      <b-button class="read-more" :to="entry.key">More</b-button>
+      <b-button variant="primary" :to="entry.key">More</b-button>
     </div>
   </div>
 </template>
@@ -49,7 +49,7 @@ div.journal {
   border: 1px solid rgb(26, 0, 68);
   padding: 10px;
   margin-bottom: 60px;
-  background: rgb(79, 87, 161);
+  background-color: #4e5d6c;
 }
 
 @media screen and (min-width: 768px) {
@@ -81,7 +81,7 @@ div.journal {
 
 .read-more {
   padding: 8px 25px;
-  background: rgb(50, 62, 187);
+  background: rgb(0, 167, 97);
   border-color: rgb(0, 0, 0);
 }
 </style>
