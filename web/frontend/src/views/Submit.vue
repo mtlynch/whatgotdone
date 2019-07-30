@@ -4,7 +4,7 @@
     <form @submit.prevent="handleSubmit">
       <p>
         Enter your update for the week ending
-        <span class="endDate">{{ date | moment("dddd, ll") }}</span>.
+        <span class="end-date">{{ date | moment("dddd, ll") }}</span>.
       </p>
       <textarea-autosize
         class="form-control journal-markdown"
@@ -174,7 +174,7 @@ export default {
   font-size: 11pt;
 }
 
-span.endDate {
+span.end-date {
   color: rgb(255, 208, 56);
   font-weight: bold;
 }
