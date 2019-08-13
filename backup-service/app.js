@@ -1,4 +1,4 @@
-/* Source: https://firebase.google.com/docs/firestore/solutions/schedule-export */
+/* Based on: https://firebase.google.com/docs/firestore/solutions/schedule-export */
 
 const axios = require('axios');
 const dateformat = require('dateformat');
@@ -21,29 +21,21 @@ app.get('/cloud-firestore-export', async (req, res) => {
     Authorization: 'Bearer ' + accessToken
   };
 
-  const outputUriPrefix = req.param('outputUriPrefix');
-  if (!(outputUriPrefix && outputUriPrefix.indexOf('gs://') == 0)) {
-    res.status(500).send(`Malformed outputUriPrefix: ${outputUriPrefix}`);
+  const outputUriPrefix = 'gs://' + process.env.BUCKET_NAME;
+
+  let path = outputUriPrefix;
+  if (!path.endsWith('/')) {
+    path += '/';
   }
 
   // Construct a backup path folder based on the timestamp
-  const timestamp = dateformat(Date.now(), 'yyyy-mm-dd-HH-MM-ss');
-  let path = outputUriPrefix;
-  if (path.endsWith('/')) {
-    path += timestamp;
-  } else {
-    path += '/' + timestamp;
-  }
+  path += dateformat(Date.now(), 'yyyy-mm-dd-HH-MM-ss');
+
+  console.log(`Exporting Firestore data to ${path}`);
 
   const body = {
     outputUriPrefix: path
   };
-
-  // If specified, mark specific collections for backup
-  const collectionParam = req.param('collections');
-  if (collectionParam) {
-    body.collectionIds = collectionParam.split(',');
-  }
 
   const projectId = process.env.GOOGLE_CLOUD_PROJECT;
   const url = `https://firestore.googleapis.com/v1beta1/projects/${projectId}/databases/(default):exportDocuments`;
