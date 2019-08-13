@@ -10,6 +10,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 )
 
@@ -30,11 +31,15 @@ func (s *defaultServer) indexHandler() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		type page struct {
-			Title string
+			Title     string
+			CsrfToken string
 		}
 		p := &page{
-			Title: "What Got Done",
+			CsrfToken: csrf.Token(r),
+			Title:     "What Got Done",
 		}
+		log.Printf("Page data: %v", p)
+		log.Printf("csrfToken=%s", csrf.Token(r))
 		err := templates.ExecuteTemplate(w, "index.html", p)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -56,10 +61,12 @@ func (s defaultServer) submitPageHandler() http.HandlerFunc {
 		}
 
 		type page struct {
-			Title string
+			Title     string
+			CsrfToken string
 		}
 		p := &page{
-			Title: "What Got Done - Submit Entry",
+			Title:     "What Got Done - Submit Entry",
+			CsrfToken: csrf.Token(r),
 		}
 		err = templates.ExecuteTemplate(w, "index.html", p)
 		if err != nil {

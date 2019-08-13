@@ -14,14 +14,15 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/entries/{username}", s.enableCors(s.entriesHandler()))
 	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftOptions())).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftGet())).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftPost())).Methods(http.MethodPost)
+	s.router.HandleFunc("/api/draft/{date}", s.enableCsrf(s.enableCors(s.draftPost()))).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/reactions/entry/{username}/{date}", s.enableCors(s.reactionsHandler()))
 	s.router.HandleFunc("/api/recentEntries", s.enableCors(s.recentEntriesHandler()))
 	s.router.HandleFunc("/api/user/me", s.enableCors(s.userMeHandler()))
 	s.router.HandleFunc("/api/submit", s.enableCors(s.submitHandler()))
-	s.router.HandleFunc("/api/logout", s.enableCors(s.logoutHandler()))
+	s.router.HandleFunc("/api/logout", s.enableCors(s.logoutOptions())).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/logout", s.enableCsrf(s.enableCors(s.logoutPost()))).Methods(http.MethodPost)
 	s.router.PathPrefix("/api").HandlerFunc(s.enableCors(s.apiRootHandler()))
 
-	s.router.HandleFunc("/submit", s.enableCsp(s.submitPageHandler()))
+	s.router.HandleFunc("/submit", s.enableCsrf(s.enableCsp(s.submitPageHandler())))
 	s.router.PathPrefix("/").HandlerFunc(s.enableCsp(s.indexHandler()))
 }
