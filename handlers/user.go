@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func (s defaultServer) userMeHandler() http.HandlerFunc {
+func (s defaultServer) userMeGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := s.loggedInUser(r)
 		if err != nil {
