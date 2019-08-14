@@ -16,7 +16,7 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftGet())).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftPost())).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/reactions/entry/{username}/{date}", s.enableCors(s.reactionsHandler()))
-	s.router.HandleFunc("/api/recentEntries", s.enableCors(s.recentEntriesHandler()))
+	s.router.HandleFunc("/api/recentEntries", s.enableCors(s.recentEntriesGet())).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user/me", s.enableCors(s.userMeGet())).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/submit", s.enableCors(s.submitHandler()))
 	s.router.HandleFunc("/api/logout", s.enableCors(s.logoutOptions())).Methods(http.MethodOptions)
