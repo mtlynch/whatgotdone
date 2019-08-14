@@ -10,12 +10,16 @@ import (
 	"github.com/mtlynch/whatgotdone/types"
 )
 
-func (s *defaultServer) submitHandler() http.HandlerFunc {
+func (s *defaultServer) submitOptions() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			return
 		}
+	}
+}
 
+func (s *defaultServer) submitPost() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := s.loggedInUser(r)
 		if err != nil {
 			http.Error(w, "You must log in to submit a journal entry", http.StatusForbidden)
