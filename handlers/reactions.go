@@ -11,108 +11,102 @@ import (
 	"github.com/mtlynch/whatgotdone/types"
 )
 
-func (s *defaultServer) reactionsHandler() http.HandlerFunc {
+func (s defaultServer) reactionsOptions() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {}
+}
+
+func (s defaultServer) reactionsGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "OPTIONS" {
-		} else if r.Method == "GET" {
-			s.handleReactionsGet(w, r)
-		} else if r.Method == "POST" {
-			s.handleReactionsPost(w, r)
+		date, err := dateFromRequestPath(r)
+		if err != nil {
+			log.Printf("Invalid date: %s - %s", date, err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		entryAuthor, err := usernameFromRequestPath(r)
+		if err != nil {
+			log.Printf("Failed to retrieve username from request path: %s", err)
+			http.Error(w, "Invalid username", http.StatusBadRequest)
+			return
+		}
+
+		reactions, err := s.datastore.GetReactions(entryAuthor, date)
+		if err != nil {
+			log.Printf("Failed to retrieve reactions: %s", err)
+			http.Error(w, "Failed to retrieve reactions", http.StatusInternalServerError)
+			return
+		}
+
+		reactionsFiltered := []types.Reaction{}
+		for _, reaction := range reactions {
+			if reaction.Symbol != "" {
+				reactionsFiltered = append(reactionsFiltered, reaction)
+			}
+		}
+
+		if err := json.NewEncoder(w).Encode(reactionsFiltered); err != nil {
+			panic(err)
+		}
+	}
+}
+
+func (s defaultServer) reactionsPost() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username, err := s.loggedInUser(r)
+		if err != nil {
+			http.Error(w, "You must log in to provide a reaction", http.StatusForbidden)
+			return
+		}
+
+		reactionSymbol, err := reactionSymbolFromRequest(r)
+		if err != nil {
+			log.Printf("Invalid reactions request: %v", err)
+			http.Error(w, "Invalid reactions request", http.StatusBadRequest)
+			return
+		}
+
+		entryAuthor, err := usernameFromRequestPath(r)
+		if err != nil {
+			log.Printf("Failed to retrieve username from request path: %s", err)
+			http.Error(w, "Invalid username", http.StatusBadRequest)
+			return
+		}
+
+		entryDate, err := dateFromRequestPath(r)
+		if err != nil {
+			log.Printf("Invalid date: %s", entryDate)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		if reactionSymbol != "" {
+			log.Printf("Adding reaction %s -> [%s] for %s/%s", username, reactionSymbol, entryAuthor, entryDate)
 		} else {
-			log.Printf("Invalid method for drafts handler: %s", r.Method)
-			http.Error(w, "Invalid operation", http.StatusBadRequest)
+			log.Printf("Clearing reaction from %s for %s/%s", username, entryAuthor, entryDate)
 		}
-	}
-}
 
-func (s defaultServer) handleReactionsGet(w http.ResponseWriter, r *http.Request) {
-	date, err := dateFromRequestPath(r)
-	if err != nil {
-		log.Printf("Invalid date: %s - %s", date, err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	entryAuthor, err := usernameFromRequestPath(r)
-	if err != nil {
-		log.Printf("Failed to retrieve username from request path: %s", err)
-		http.Error(w, "Invalid username", http.StatusBadRequest)
-		return
-	}
-
-	reactions, err := s.datastore.GetReactions(entryAuthor, date)
-	if err != nil {
-		log.Printf("Failed to retrieve reactions: %s", err)
-		http.Error(w, "Failed to retrieve reactions", http.StatusInternalServerError)
-		return
-	}
-
-	reactionsFiltered := []types.Reaction{}
-	for _, reaction := range reactions {
-		if reaction.Symbol != "" {
-			reactionsFiltered = append(reactionsFiltered, reaction)
+		reaction := types.Reaction{
+			Username:  username,
+			Timestamp: time.Now().Format(time.RFC3339),
+			Symbol:    reactionSymbol,
 		}
-	}
+		err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
+		if err != nil {
+			log.Printf("Failed to add reaction: %s", err)
+			http.Error(w, "Failed to add reaction", http.StatusInternalServerError)
+			return
+		}
 
-	if err := json.NewEncoder(w).Encode(reactionsFiltered); err != nil {
-		panic(err)
-	}
-}
-
-func (s defaultServer) handleReactionsPost(w http.ResponseWriter, r *http.Request) {
-	username, err := s.loggedInUser(r)
-	if err != nil {
-		http.Error(w, "You must log in to provide a reaction", http.StatusForbidden)
-		return
-	}
-
-	reactionSymbol, err := reactionSymbolFromRequest(r)
-	if err != nil {
-		log.Printf("Invalid reactions request: %v", err)
-		http.Error(w, "Invalid reactions request", http.StatusBadRequest)
-		return
-	}
-
-	entryAuthor, err := usernameFromRequestPath(r)
-	if err != nil {
-		log.Printf("Failed to retrieve username from request path: %s", err)
-		http.Error(w, "Invalid username", http.StatusBadRequest)
-		return
-	}
-
-	entryDate, err := dateFromRequestPath(r)
-	if err != nil {
-		log.Printf("Invalid date: %s", entryDate)
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	if reactionSymbol != "" {
-		log.Printf("Adding reaction %s -> [%s] for %s/%s", username, reactionSymbol, entryAuthor, entryDate)
-	} else {
-		log.Printf("Clearing reaction from %s for %s/%s", username, entryAuthor, entryDate)
-	}
-
-	reaction := types.Reaction{
-		Username:  username,
-		Timestamp: time.Now().Format(time.RFC3339),
-		Symbol:    reactionSymbol,
-	}
-	err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
-	if err != nil {
-		log.Printf("Failed to add reaction: %s", err)
-		http.Error(w, "Failed to add reaction", http.StatusInternalServerError)
-		return
-	}
-
-	type reactionResponse struct {
-		Ok bool `json:"ok"`
-	}
-	resp := reactionResponse{
-		Ok: true,
-	}
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		panic(err)
+		type reactionResponse struct {
+			Ok bool `json:"ok"`
+		}
+		resp := reactionResponse{
+			Ok: true,
+		}
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			panic(err)
+		}
 	}
 }
 
