@@ -5,15 +5,19 @@
 </template>
 
 <script>
+import getCsrfToken from "../controllers/CsrfToken.js";
+
 export default {
   name: "Logout",
   created() {
     this.$store.commit("clearUsername");
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/logout`;
-    this.$http.post(url).then(() => {
-      this.deleteCookie("userkit_auth_token");
-      window.location.href = "/login";
-    });
+    this.$http
+      .post(url, {}, { headers: { "X-CSRF-Token": getCsrfToken() } })
+      .then(() => {
+        this.deleteCookie("userkit_auth_token");
+        window.location.href = "/login";
+      });
   },
   methods: {
     deleteCookie(name) {

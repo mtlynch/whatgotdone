@@ -56,6 +56,10 @@ jobs:
       - attach_workspace:
           at: ./
       - run:
+          name: Retrieve CSRF secret from CircleCI
+          command: |
+            envsubst web/env_variables.yaml.tmpl > web/env_variables.yaml
+      - run:
           name: Retrieve client secret from CircleCI
           command: |
             echo "$CLIENT_SECRET" | \

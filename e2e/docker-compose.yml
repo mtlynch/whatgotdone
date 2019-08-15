@@ -8,6 +8,7 @@ services:
         GO_BUILD_TAGS: staging
     environment:
       - PORT=3123
+      - CSRF_SECRET_SEED="dummy-staging-seed"
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/e2e

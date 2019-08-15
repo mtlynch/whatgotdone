@@ -19,6 +19,8 @@
 
 <script>
 import Username from "./Username.vue";
+import getCsrfToken from "../controllers/CsrfToken.js";
+
 export default {
   name: "Reactions",
   props: {
@@ -107,7 +109,7 @@ export default {
         {
           reactionSymbol: this.selectedReaction
         },
-        { withCredentials: true }
+        { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
       );
       this.updateReactions();
     },
