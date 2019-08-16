@@ -1,11 +1,8 @@
 package handlers
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"time"
 
@@ -40,28 +37,6 @@ func (s *defaultServer) indexHandler(pageTitle string) http.HandlerFunc {
 		err := templates.ExecuteTemplate(w, "index.html", p)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	}
-}
-
-func (s *defaultServer) entriesHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := usernameFromRequestPath(r)
-		if err != nil {
-			log.Printf("Failed to retrieve username from request path: %s", err)
-			http.Error(w, "Invalid username", http.StatusBadRequest)
-			return
-		}
-
-		entries, err := s.datastore.All(username)
-		if err != nil {
-			log.Printf("Failed to retrieve entries: %s", err)
-			http.Error(w, fmt.Sprintf("Failed to retrieve entries for %s", username), http.StatusInternalServerError)
-			return
-		}
-
-		if err := json.NewEncoder(w).Encode(entries); err != nil {
-			panic(err)
 		}
 	}
 }
