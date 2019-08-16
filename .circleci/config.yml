@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Retrieve CSRF secret from CircleCI
           command: |
-            printf "env_variables:\n  CSRF_SECRET_SEED=%s" "$CSRF_SECRET_SEED" > web/env_variables.yaml
+            printf "env_variables:\n  CSRF_SECRET_SEED: '%s'" "$CSRF_SECRET_SEED" > web/env_variables.yaml
       - run:
           name: Retrieve client secret from CircleCI
           command: |
