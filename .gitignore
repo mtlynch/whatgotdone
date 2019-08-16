@@ -6,3 +6,6 @@ gin-bin
 *.swo
 
 service-account-creds*.json
+
+# Holds secret environment variables in prod
+env_variables.yaml
