@@ -35,6 +35,6 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/logout", s.enableCsrf(s.enableCors(s.logoutPost()))).Methods(http.MethodPost)
 	s.router.PathPrefix("/api").HandlerFunc(s.enableCors(s.apiRootHandler()))
 
-	s.router.HandleFunc("/submit", s.enableCsrf(s.enableCsp(s.submitPageHandler())))
-	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
+	s.router.HandleFunc("/submit", s.enableCsrf(s.enableCsp(s.indexHandler("What Got Done - Submit Entry")))).Methods(http.MethodGet)
+	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler("What Got Done")))).Methods(http.MethodGet)
 }

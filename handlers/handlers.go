@@ -22,7 +22,7 @@ type recentEntry struct {
 	Markdown     string `json:"markdown"`
 }
 
-func (s *defaultServer) indexHandler() http.HandlerFunc {
+func (s *defaultServer) indexHandler(pageTitle string) http.HandlerFunc {
 	var templates = template.Must(
 		// Use custom delimiters so Go's delimiters don't clash with Vue's.
 		template.New("index.html").Delims("[[", "]]").ParseFiles(
@@ -35,37 +35,9 @@ func (s *defaultServer) indexHandler() http.HandlerFunc {
 		}
 		p := &page{
 			CsrfToken: csrf.Token(r),
-			Title:     "What Got Done",
+			Title:     pageTitle,
 		}
 		err := templates.ExecuteTemplate(w, "index.html", p)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	}
-}
-
-func (s defaultServer) submitPageHandler() http.HandlerFunc {
-	var templates = template.Must(
-		// Use custom delimiters so Go's delimiters don't clash with Vue's.
-		template.New("index.html").Delims("[[", "]]").ParseFiles(
-			"./web/frontend/dist/index.html"))
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		_, err := s.loggedInUser(r)
-		if err != nil {
-			http.Redirect(w, r, "/login", http.StatusFound)
-			return
-		}
-
-		type page struct {
-			Title     string
-			CsrfToken string
-		}
-		p := &page{
-			Title:     "What Got Done - Submit Entry",
-			CsrfToken: csrf.Token(r),
-		}
-		err = templates.ExecuteTemplate(w, "index.html", p)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
