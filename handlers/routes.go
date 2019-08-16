@@ -32,9 +32,9 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/submit", s.enableCors(s.submitOptions())).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/submit", s.enableCors(s.submitPost())).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/logout", s.enableCors(s.logoutOptions())).Methods(http.MethodOptions)
-	s.router.HandleFunc("/api/logout", s.enableCors(s.logoutPost())).Methods(http.MethodPost)
+	s.router.HandleFunc("/api/logout", s.enableCsrf(s.enableCors(s.logoutPost()))).Methods(http.MethodPost)
 	s.router.PathPrefix("/api").HandlerFunc(s.enableCors(s.apiRootHandler()))
 
-	s.router.HandleFunc("/submit", s.enableCsp(s.submitPageHandler()))
-	s.router.PathPrefix("/").HandlerFunc(s.enableCsp(s.indexHandler()))
+	s.router.HandleFunc("/submit", s.enableCsrf(s.enableCsp(s.submitPageHandler())))
+	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
 }

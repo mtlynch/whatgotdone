@@ -22,14 +22,22 @@ func (ds *mockDatastore) AddReaction(entryAuthor string, entryDate string, react
 	return nil
 }
 
+// Create a dummy CSRF middleware that never rejects HTTP requests.
+func dummyCsrfMiddleware() httpMiddlewareHandler {
+	return func(h http.Handler) http.Handler {
+		return h
+	}
+}
+
 func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
 	ds := mockDatastore{
 		reactions: []types.Reaction{},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -66,8 +74,9 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -100,8 +109,9 @@ func TestReactionsGetWhenEntryAuthorIsUndefined(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -131,8 +141,9 @@ func TestReactionsPostStoresValidReaction(t *testing.T) {
 				"mock_token_C": "dummyUserC",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -176,8 +187,9 @@ func TestReactionsPostRejectsRequestWithMissingSymbolField(t *testing.T) {
 				"mock_token_C": "dummyUserC",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -209,8 +221,9 @@ func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
 				"mock_token_C": "dummyUserC",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -242,8 +255,9 @@ func TestReactionsPostRejectsRequestWhenUsernameIsUndefined(t *testing.T) {
 				"mock_token_C": "dummyUserC",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -270,9 +284,10 @@ func TestReactionsPostRejectsRequestWhenUserIsNotLoggedIn(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		authenticator: mockAuthenticator{},
-		datastore:     &ds,
-		router:        router,
+		authenticator:  mockAuthenticator{},
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 

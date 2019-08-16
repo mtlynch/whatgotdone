@@ -37,6 +37,7 @@ import VueTextareaAutosize from "vue-textarea-autosize";
 import moment from "moment";
 import _ from "lodash";
 import JournalPreview from "../components/JournalPreview.vue";
+import getCsrfToken from "../controllers/CsrfToken.js";
 
 Vue.use(VueTextareaAutosize);
 
@@ -84,7 +85,7 @@ export default {
           {
             entryContent: this.entryContent
           },
-          { withCredentials: true }
+          { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
         )
         .then(result => {
           if (result.data.ok) {
@@ -108,7 +109,7 @@ export default {
             date: this.date,
             entryContent: this.entryContent
           },
-          { withCredentials: true }
+          { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
         )
         .then(result => {
           if (result.data.ok) {
