@@ -129,21 +129,33 @@ it('logs in and reacts to an entry', () => {
   cy.login('staging.jimmy', 'just4st@ginG!')
   cy.wait('@postUserKitLogin')
 
-  // Clear any existing reaction on the entry.
-  cy.request('POST', '/api/reactions/entry/staging.jimmy/2019-06-28', { reactionSymbol: "" }).then(() => {
+  cy.visit('/staging.jimmy/2019-06-28')
+    .its('document')
+    .then((document) => {
+      const csrfToken = document
+        .querySelector("meta[name='csrf-token']")
+        .getAttribute("content");
 
-    // Visit a post and react to the entry.
-    cy.visit('/staging.jimmy/2019-06-28')
+      // Clear any existing reaction on the entry.
+      cy.request({
+        url: '/api/reactions/entry/staging.jimmy/2019-06-28',
+        method: 'POST',
+        headers: {
+          'X-Csrf-Token': csrfToken,
+        },
+        body: { reactionSymbol: "" },
+      }).then(() => {
+        cy.visit('/staging.jimmy/2019-06-28').then(() => {
+          cy.get('.reaction-buttons .btn:first-of-type').click();
 
-    cy.get('.reaction-buttons .btn:first-of-type').click();
-
-    // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
-    cy.get('.reaction')
-      .then((element) => {
-        expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy reacted with a 👍');
+          // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
+          cy.get('.reaction')
+            .then((element) => {
+              expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy reacted with a 👍');
+            });
+        })
       });
-  });
-
+    });
 })
 
 it('logs in and signs out', () => {
