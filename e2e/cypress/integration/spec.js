@@ -145,13 +145,15 @@ it('logs in and reacts to an entry', () => {
         },
         body: { reactionSymbol: "" },
       }).then(() => {
-        cy.get('.reaction-buttons .btn:first-of-type').click();
+        cy.visit('/staging.jimmy/2019-06-28').then(() => {
+          cy.get('.reaction-buttons .btn:first-of-type').click();
 
-        // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
-        cy.get('.reaction')
-          .then((element) => {
-            expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy reacted with a 👍');
-          });
+          // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
+          cy.get('.reaction')
+            .then((element) => {
+              expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy reacted with a 👍');
+            });
+        })
       });
     });
 })
