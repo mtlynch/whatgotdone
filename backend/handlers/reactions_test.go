@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/mtlynch/whatgotdone/types"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (ds mockDatastore) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {

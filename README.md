@@ -7,7 +7,7 @@
 ### Build frontend
 
 ```
-cd web/frontend
+cd frontend
 npm install
 npm run build -- --mode development
 ```
@@ -15,7 +15,7 @@ npm run build -- --mode development
 ### Run backend
 
 ```
-cmd /c "go build --tags dev -o main.exe web\main.go && main.exe"
+cmd /c "go build --tags dev -o main.exe backend\main.go && main.exe"
 ```
 
 ### Run E2E tests

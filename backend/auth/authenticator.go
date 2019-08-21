@@ -3,7 +3,7 @@ package auth
 import (
 	userkit "github.com/workpail/userkit-go"
 
-	"github.com/mtlynch/whatgotdone/datastore"
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
 
 type Authenticator interface {

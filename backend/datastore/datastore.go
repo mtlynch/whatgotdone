@@ -9,7 +9,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 
-	"github.com/mtlynch/whatgotdone/types"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type Datastore interface {

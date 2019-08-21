@@ -23,7 +23,7 @@ func (s *defaultServer) indexHandler(pageTitle string) http.HandlerFunc {
 	var templates = template.Must(
 		// Use custom delimiters so Go's delimiters don't clash with Vue's.
 		template.New("index.html").Delims("[[", "]]").ParseFiles(
-			"./web/frontend/dist/index.html"))
+			"./frontend/dist/index.html"))
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		type page struct {

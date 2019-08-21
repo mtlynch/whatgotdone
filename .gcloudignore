@@ -8,6 +8,6 @@ README.md
 *_test.go
 *.vue
 # TODO(mtlynch): Remove this when we've figured out how to remove everything but the
-# /web/frontend/dist directory. This is just a test.
-/web/frontend/src
-!/web/frontend/src/controllers/**
+# /frontend/dist directory. This is just a test.
+/frontend/src
+!/frontend/src/controllers/**

@@ -8,7 +8,7 @@ import (
 
 	muxHandlers "github.com/gorilla/handlers"
 
-	"github.com/mtlynch/whatgotdone/handlers"
+	"github.com/mtlynch/whatgotdone/backend/handlers"
 )
 
 func main() {
