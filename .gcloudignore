@@ -6,7 +6,10 @@ Dockerfile
 README.md
 *.exe
 *_test.go
+*_dev.go
+*_staging.go
 *.vue
+/e2e
 # TODO(mtlynch): Remove this when we've figured out how to remove everything but the
 # /frontend/dist directory. This is just a test.
 /frontend/src
