@@ -5,8 +5,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/mtlynch/whatgotdone/auth"
-	"github.com/mtlynch/whatgotdone/datastore"
+	"github.com/mtlynch/whatgotdone/backend/auth"
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
 
 type Server interface {

@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/mtlynch/whatgotdone/datastore"
-	"github.com/mtlynch/whatgotdone/types"
+	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type mockDatastore struct {

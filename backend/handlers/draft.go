@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mtlynch/whatgotdone/datastore"
-	"github.com/mtlynch/whatgotdone/types"
+	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (s defaultServer) draftOptions() http.HandlerFunc {

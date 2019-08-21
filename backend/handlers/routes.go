@@ -5,7 +5,7 @@ import (
 )
 
 func (s *defaultServer) routes() {
-	fs := http.FileServer(http.Dir("./web/frontend/dist"))
+	fs := http.FileServer(http.Dir("./frontend/dist"))
 	s.router.PathPrefix("/js").Handler(fs)
 	s.router.PathPrefix("/css").Handler(fs)
 	s.router.PathPrefix("/images").Handler(fs)

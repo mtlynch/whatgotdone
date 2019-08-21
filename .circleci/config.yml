@@ -7,24 +7,24 @@ jobs:
       - checkout
       - run:
           name: Download npm packages
-          command: npm --prefix ./web/frontend install
+          command: npm --prefix ./frontend install
       - run:
           name: Lint client
-          command: npm --prefix ./web/frontend run lint
+          command: npm --prefix ./frontend run lint
       - run:
           name: Build production frontend
-          command: npm --prefix ./web/frontend run build
+          command: npm --prefix ./frontend run build
       - persist_to_workspace:
           root: ./
           paths:
-            - ./web/frontend/dist
+            - ./frontend/dist
   test-backend:
     docker:
       - image: circleci/golang:1.11
     steps:
       - checkout
       - attach_workspace:
-          at: ./
+          at: ./backend
       - run:
           name: Test go packages
           command: go test -v ./...
@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Retrieve CSRF secret from CircleCI
           command: |
-            printf "env_variables:\n  CSRF_SECRET_SEED: '%s'" "$CSRF_SECRET_SEED" > web/env_variables.yaml
+            printf "env_variables:\n  CSRF_SECRET_SEED: '%s'" "$CSRF_SECRET_SEED" > env_variables.yaml
       - run:
           name: Retrieve client secret from CircleCI
           command: |
@@ -74,7 +74,7 @@ jobs:
           command: gcloud config set project "${GCLOUD_PROJECT}"
       - run:
           name: Deploy to AppEngine
-          command: gcloud --quiet app deploy web/app.yaml --promote
+          command: gcloud --quiet app deploy --promote
 workflows:
   version: 2
   test-deploy:

@@ -1,3 +1,0 @@
-runtime: go111
-includes:
-  - env_variables.yaml

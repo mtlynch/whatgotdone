@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mtlynch/whatgotdone/types"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (s defaultServer) reactionsOptions() http.HandlerFunc {
