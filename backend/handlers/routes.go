@@ -33,7 +33,10 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/submit", s.enableCsrf(s.enableCors(s.submitPost()))).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/logout", s.enableCors(s.logoutOptions())).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/logout", s.enableCsrf(s.enableCors(s.logoutPost()))).Methods(http.MethodPost)
-	s.router.PathPrefix("/api").HandlerFunc(s.enableCors(s.apiRootHandler()))
+	// Catchall for when no API route matches.
+	s.router.PathPrefix("/api").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "Invalid API path", http.StatusBadRequest)
+	})
 
 	s.router.HandleFunc("/submit", s.enableCsrf(s.enableCsp(s.indexHandler("What Got Done - Submit Entry")))).Methods(http.MethodGet)
 	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler("What Got Done")))).Methods(http.MethodGet)
