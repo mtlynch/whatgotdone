@@ -24,7 +24,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ./backend
+          at: ./
       - run:
           name: Test go packages
           command: go test -v ./...

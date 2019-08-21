@@ -61,7 +61,7 @@ func (a mockAuthenticator) UserFromAuthToken(authToken string) (string, error) {
 func init() {
 	// The handler uses relative paths to find the template file. Switch to the
 	// app's root directory so that the relative paths work.
-	if err := os.Chdir("../"); err != nil {
+	if err := os.Chdir("../../"); err != nil {
 		panic(err)
 	}
 }
