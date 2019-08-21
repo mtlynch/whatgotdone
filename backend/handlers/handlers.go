@@ -67,13 +67,6 @@ func thisFriday() time.Time {
 	return t
 }
 
-// Catchall for when no API route matches.
-func (s *defaultServer) apiRootHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		http.Error(w, "Invalid API path", http.StatusBadRequest)
-	}
-}
-
 func (s defaultServer) loggedInUser(r *http.Request) (string, error) {
 	tokenCookie, err := r.Cookie(userKitAuthCookieName)
 	if err != nil {
