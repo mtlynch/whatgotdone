@@ -34,10 +34,10 @@
 <script>
 import Vue from "vue";
 import VueTextareaAutosize from "vue-textarea-autosize";
-import moment from "moment";
 import _ from "lodash";
 import JournalPreview from "../components/JournalPreview.vue";
 import getCsrfToken from "../controllers/CsrfToken.js";
+import { isValidEntryDate, thisFriday } from "../controllers/EntryDates.js";
 
 Vue.use(VueTextareaAutosize);
 
@@ -116,36 +116,6 @@ export default {
             this.$router.push(result.data.path);
           }
         });
-    },
-    thisFriday() {
-      const today = moment().isoWeekday();
-      const friday = 5;
-
-      if (today <= friday) {
-        return moment().isoWeekday(friday);
-      } else {
-        return moment()
-          .add(1, "weeks")
-          .isoWeekday(friday);
-      }
-    },
-    validateDate(d) {
-      const m = moment(d);
-      if (!m.isValid()) {
-        return false;
-      }
-      const whatGotDoneCreationYear = 2019;
-      if (m.year() < whatGotDoneCreationYear) {
-        return false;
-      }
-      if (m > this.thisFriday()) {
-        return false;
-      }
-      const friday = 5;
-      if (m.isoWeekday() != friday) {
-        return false;
-      }
-      return true;
     }
   },
   created() {
@@ -153,10 +123,10 @@ export default {
       this.$router.push("/login");
       return;
     }
-    if (this.$route.params.date && this.validateDate(this.$route.params.date)) {
+    if (this.$route.params.date && isValidEntryDate(this.$route.params.date)) {
       this.date = this.$route.params.date;
     } else {
-      this.date = this.thisFriday().format("YYYY-MM-DD");
+      this.date = thisFriday();
     }
   },
   watch: {

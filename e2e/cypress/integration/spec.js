@@ -66,7 +66,7 @@ it('logs in and posts an update', () => {
 
   cy.login('staging.jimmy', 'just4st@ginG!')
 
-  cy.url().should('include', '/submit')
+  cy.url().should('include', '/entry/edit')
 
   // Wait for page to pull down any previous entry.
   cy.wait('@getDraft')
@@ -90,7 +90,7 @@ it('logs in and saves a draft', () => {
 
   cy.login('staging.jimmy', 'just4st@ginG!')
 
-  cy.url().should('include', '/submit')
+  cy.url().should('include', '/entry/edit')
 
   // Wait for page to pull down any previous entry.
   cy.wait('@getDraft')
@@ -106,7 +106,7 @@ it('logs in and saves a draft', () => {
   cy.wait('@postDraft')
 
   // User should stay on the same page after saving a draft.
-  cy.url().should('include', '/submit')
+  cy.url().should('include', '/entry/edit')
 
   cy.visit('/recent')
 
@@ -161,7 +161,7 @@ it('logs in and reacts to an entry', () => {
 it('logs in and signs out', () => {
   cy.login('staging.jimmy', 'just4st@ginG!')
 
-  cy.url().should('include', '/submit')
+  cy.url().should('include', '/entry/edit')
 
   cy.visit('/logout')
   cy.url().should('include', '/login')

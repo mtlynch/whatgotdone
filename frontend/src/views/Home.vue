@@ -12,7 +12,11 @@
       </ul>
 
       <div class="jumbotron-footer">
-        <b-button class="btn btn-lg btn-start-now" variant="primary" to="/submit">Start&nbsp;now</b-button>
+        <b-button
+          class="btn btn-lg btn-start-now"
+          variant="primary"
+          :to="'/entry/edit/' + this.thisFriday"
+        >Start&nbsp;now</b-button>
         <b-button
           class="btn btn-lg btn-success btn-view-recent"
           to="/recent"
@@ -68,8 +72,15 @@
 </template>
 
 <script>
+import { thisFriday } from "../controllers/EntryDates.js";
+
 export default {
-  name: "Home"
+  name: "Home",
+  data() {
+    return {
+      thisFriday: thisFriday()
+    };
+  }
 };
 </script>
 

@@ -38,6 +38,5 @@ func (s *defaultServer) routes() {
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	})
 
-	s.router.HandleFunc("/submit", s.enableCsrf(s.enableCsp(s.indexHandler("What Got Done - Submit Entry")))).Methods(http.MethodGet)
 	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler("What Got Done")))).Methods(http.MethodGet)
 }
