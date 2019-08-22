@@ -14,9 +14,9 @@ import (
 
 type Datastore interface {
 	Users() ([]string, error)
-	All(username string) ([]types.JournalEntry, error)
+	AllEntries(username string) ([]types.JournalEntry, error)
 	GetDraft(username string, date string) (types.JournalEntry, error)
-	Insert(username string, j types.JournalEntry) error
+	InsertEntry(username string, j types.JournalEntry) error
 	InsertDraft(username string, j types.JournalEntry) error
 	GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error)
 	AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error
@@ -94,7 +94,7 @@ func (c defaultClient) Users() (users []string, err error) {
 	return users, nil
 }
 
-func (c defaultClient) All(username string) ([]types.JournalEntry, error) {
+func (c defaultClient) AllEntries(username string) ([]types.JournalEntry, error) {
 	entries := make([]types.JournalEntry, 0)
 	iter := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
 	for {
@@ -137,7 +137,7 @@ func (c defaultClient) GetDraft(username string, date string) (types.JournalEntr
 	}
 }
 
-func (c defaultClient) Insert(username string, j types.JournalEntry) error {
+func (c defaultClient) InsertEntry(username string, j types.JournalEntry) error {
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(entriesRootKey).Doc(username).Set(c.ctx, userDocument{
 		Username:     username,

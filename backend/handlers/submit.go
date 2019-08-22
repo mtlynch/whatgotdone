@@ -56,7 +56,7 @@ func (s *defaultServer) submitPost() http.HandlerFunc {
 			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
 			return
 		}
-		err = s.datastore.Insert(username, j)
+		err = s.datastore.InsertEntry(username, j)
 		if err != nil {
 			log.Printf("Failed to insert journal entry: %s", err)
 			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
