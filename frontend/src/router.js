@@ -8,7 +8,7 @@ import PrivacyPolicy from "./views/PrivacyPolicy.vue";
 import ProPitch from "./views/ProPitch.vue";
 import ProUpgrade from "./views/ProUpgrade.vue";
 import Recent from "./views/Recent.vue";
-import Submit from "./views/Submit.vue";
+import EditEntry from "./views/EditEntry.vue";
 import ViewEntry from "./views/ViewEntry.vue";
 import MissingPage from "./views/404.vue";
 
@@ -18,7 +18,7 @@ const routes = [
   { path: '/recent', component: Recent },
   { path: '/pro', component: ProPitch },
   { path: '/upgrade', component: ProUpgrade },
-  { path: '/entry/edit/:date', component: Submit },
+  { path: '/entry/edit/:date', component: EditEntry },
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
   { path: '/privacy-policy', component: PrivacyPolicy },
