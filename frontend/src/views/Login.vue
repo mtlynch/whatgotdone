@@ -38,7 +38,7 @@ export default {
         if (this.isLoggedIn()) {
           clearInterval(this.polling);
           updateLoginState(5);
-          this.$router.push("/entry/edit/" + this.thisFriday);
+          this.$router.push("/entry/edit/" + thisFriday());
         }
       }, 100);
     },
