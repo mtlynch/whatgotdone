@@ -2,11 +2,16 @@
   <div class="view-entry container">
     <template v-if="journalEntries.length > 0">
       <b-pagination-nav :pages="pages" v-if="pages.length > 0" align="center" use-router></b-pagination-nav>
+      <b-form-checkbox
+        v-model="showEmptyEntries"
+        v-if="canEdit"
+        class="show-empty"
+      >Show empty entries</b-form-checkbox>
 
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p v-else>
         <Username :username="entryAuthor" />&nbsp;has not posted a journal entry for
-        <b>{{ entryDate }}</b>
+        <b>{{ entryDate | moment("utc", "dddd, ll") }}</b>
       </p>
     </template>
     <template v-else>
@@ -32,6 +37,7 @@ import Journal from "../components/Journal.vue";
 import Reactions from "../components/Reactions.vue";
 import Username from "../components/Username.vue";
 import Pagination from "bootstrap-vue/es/components/pagination";
+import { thisFriday } from "../controllers/EntryDates.js";
 
 Vue.use(Pagination);
 
@@ -45,6 +51,7 @@ export default {
   data() {
     return {
       journalEntries: [],
+      showEmptyEntries: false,
       backendError: null
     };
   },
@@ -94,13 +101,28 @@ export default {
   computed: {
     pages: function() {
       let pages = [];
-      for (const entry of this.journalEntries) {
+      for (const date of this.entryDates) {
         pages.push({
-          link: `/${this.entryAuthor}/${entry.key}`,
-          text: new moment(entry.key).format("MMM. D").replace("May.", "May")
+          link: `/${this.entryAuthor}/${date}`,
+          text: new moment(date).format("MMM. D").replace("May.", "May")
         });
       }
       return pages;
+    },
+    entryDates: function() {
+      let dates = [];
+      if (this.showEmptyEntries) {
+        let d = moment(this.journalEntries[0].key);
+        while (d <= moment(thisFriday())) {
+          dates.push(d.format("YYYY-MM-DD"));
+          d = d.add(1, "weeks");
+        }
+      } else {
+        for (const entry of this.journalEntries) {
+          dates.push(entry.key);
+        }
+      }
+      return dates;
     },
     loggedInUsername: function() {
       return this.$store.state.username;
@@ -147,5 +169,9 @@ export default {
 <style scoped>
 .edit-btn {
   margin: 25px 0px;
+}
+
+.show-empty {
+  margin: 10px 0px 25px 0px;
 }
 </style>
