@@ -139,6 +139,13 @@ export default {
     entryContent: function() {
       this.changesSaved = false;
       this.saveLabel = "Save Draft";
+    },
+    $route(to, from) {
+      if (to.params.date != from.params.date) {
+        if (isValidEntryDate(to.params.date)) {
+          this.date = to.params.date;
+        }
+      }
     }
   }
 };
