@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { thisFriday } from "../controllers/EntryDates.js";
 import updateLoginState from "../controllers/LoginState.js";
 
 export default {
@@ -37,7 +38,7 @@ export default {
         if (this.isLoggedIn()) {
           clearInterval(this.polling);
           updateLoginState(5);
-          this.$router.push("/submit");
+          this.$router.push("/entry/edit/" + this.thisFriday);
         }
       }, 100);
     },
