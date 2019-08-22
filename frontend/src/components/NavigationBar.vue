@@ -21,7 +21,7 @@
           class="post-update"
           variant="success"
           v-b-toggle.nav-collapse
-          to="/submit"
+          :to="'/entry/edit/' + this.thisFriday"
         >Post Update</b-button>
       </b-navbar-nav>
     </b-collapse>
@@ -29,8 +29,15 @@
 </template>
 
 <script>
+import { thisFriday } from "../controllers/EntryDates.js";
+
 export default {
   name: "NavigationBar",
+  data() {
+    return {
+      thisFriday: thisFriday()
+    };
+  },
   computed: {
     username() {
       return this.$store.state.username;
