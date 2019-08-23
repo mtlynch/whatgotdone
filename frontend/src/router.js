@@ -5,8 +5,6 @@ import Home from "./views/Home.vue";
 import Login from "./views/Login.vue";
 import Logout from "./views/Logout.vue";
 import PrivacyPolicy from "./views/PrivacyPolicy.vue";
-import ProPitch from "./views/ProPitch.vue";
-import ProUpgrade from "./views/ProUpgrade.vue";
 import Recent from "./views/Recent.vue";
 import EditEntry from "./views/EditEntry.vue";
 import ViewEntry from "./views/ViewEntry.vue";
@@ -16,8 +14,6 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/recent', component: Recent },
-  { path: '/pro', component: ProPitch },
-  { path: '/upgrade', component: ProUpgrade },
   { path: '/entry/edit/:date', component: EditEntry },
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
