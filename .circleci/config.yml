@@ -40,8 +40,8 @@ jobs:
       - run:
           name: Retrieve staging UserKit secret key from CircleCI
           command: |
-            echo "USERKIT_SECRET=${USERKIT_SECRET_STAGING}" > \
-              staging-secrets.env
+            echo "USERKIT_SECRET=${USERKIT_SECRET_STAGING}" \
+              > e2e\staging-secrets.env
       - run:
           name: Perform end-to-end tests.
           command: |
