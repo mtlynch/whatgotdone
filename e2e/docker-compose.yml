@@ -9,6 +9,8 @@ services:
     environment:
       - PORT=3123
       - CSRF_SECRET_SEED="dummy-staging-seed"
+    env_file:
+      - staging-secrets.env
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/e2e
