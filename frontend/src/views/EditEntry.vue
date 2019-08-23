@@ -42,7 +42,7 @@ import { isValidEntryDate, thisFriday } from "../controllers/EntryDates.js";
 Vue.use(VueTextareaAutosize);
 
 export default {
-  name: "Submit",
+  name: "EditEntry",
   components: {
     JournalPreview
   },
