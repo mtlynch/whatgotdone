@@ -1,3 +1,5 @@
 # Cypress Artifacts
 cypress/screenshots/
 cypress/videos/
+
+staging-secrets.env

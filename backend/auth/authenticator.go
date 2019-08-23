@@ -1,9 +1,10 @@
 package auth
 
 import (
-	userkit "github.com/workpail/userkit-go"
+	"log"
+	"os"
 
-	"github.com/mtlynch/whatgotdone/backend/datastore"
+	userkit "github.com/workpail/userkit-go"
 )
 
 type Authenticator interface {
@@ -17,10 +18,9 @@ type (
 )
 
 func New() Authenticator {
-	ks := datastore.NewUserKitKeyStore()
-	sk, err := ks.SecretKey()
-	if err != nil {
-		panic(err)
+	sk := os.Getenv("USERKIT_SECRET")
+	if sk == "" {
+		log.Fatal("USERKIT_SECRET environment variable must be set")
 	}
 	return defaultAuthenticator{
 		userKitClient: userkit.NewUserKit(sk),
