@@ -7,6 +7,7 @@ import (
 	userkit "github.com/workpail/userkit-go"
 )
 
+// Authenticator wraps a user authentication system.
 type Authenticator interface {
 	UserFromAuthToken(authToken string) (string, error)
 }
@@ -17,6 +18,7 @@ type (
 	}
 )
 
+// New creates a new Authenticator interface.
 func New() Authenticator {
 	sk := os.Getenv("USERKIT_SECRET")
 	if sk == "" {
@@ -27,6 +29,8 @@ func New() Authenticator {
 	}
 }
 
+// UserFromAuthToken finds the user associated with the given auth token and
+// returns that user's username.
 func (a defaultAuthenticator) UserFromAuthToken(authToken string) (string, error) {
 	user, err := a.userKitClient.Users.GetUserBySession(authToken)
 	if err != nil {
