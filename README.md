@@ -22,27 +22,44 @@ TODO(mtlynch): Fill this in.
 
 ## Development notes
 
-These instructions are currently for Windows, but they'll soon be translated to bash.
+### Pre-requisites
+
+* [Node.js](https://nodejs.org/) (8.x or higher)
+* [Go](https://golang.org/dl/) (1.11 or higher)
+* [Docker](https://www.docker.com/) (for E2E tests)
+* [Google Cloud SDK](https://cloud.google.com/sdk/install) (for deployment)
+
+In addition, you must create a [UserKit](https://userkit.io/) account and have your UserKit App Secret Key available.
+
+### Set environment variables
+
+```bash
+export USERKIT_SECRET="[enter your UserKit secret key]"
+```
 
 ### Build frontend
 
-```
-cd frontend
-npm install
-npm run build -- --mode development
+```bash
+cd frontend && \
+  npm install && \
+  npm run build -- --mode development
 ```
 
 ### Run backend
 
-```
-cmd /c "go build --tags dev -o main.exe backend\main.go && main.exe"
+```bash
+mkdir bin && \
+  go build --tags dev -o ./bin/main backend/main.go && \
+  ./bin/main
 ```
 
 ### Run E2E tests
 
-```
-cd e2e
-docker-compose up --exit-code-from cypress --abort-on-container-exit --build
+To run the end to end tests, you'll need to create a dedicated GCP project. You can reuse your dev project, but the E2E tests will write
+
+```bash
+cd e2e && \
+  docker-compose up --exit-code-from cypress --abort-on-container-exit --build
 ```
 
 ### Quirks of the dev environment
