@@ -8,7 +8,8 @@ services:
         GO_BUILD_TAGS: staging
     environment:
       - PORT=3123
-      - CSRF_SECRET_SEED="dummy-staging-seed"
+      - CSRF_SECRET_SEED=dummy-staging-seed
+      - GOOGLE_CLOUD_PROJECT=whatgotdone-staging
     env_file:
       - staging-secrets.env
     volumes:

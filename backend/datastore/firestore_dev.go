@@ -10,7 +10,6 @@ import (
 )
 
 func newFirestoreClient(ctx context.Context) (*firestore.Client, error) {
-	const firestoreProjectID = "whatgotdone-dev"
 	const devServiceAccount = "service-account-creds-dev.json"
-	return firestore.NewClient(ctx, firestoreProjectID, option.WithCredentialsFile(devServiceAccount))
+	return firestore.NewClient(ctx, getGoogleCloudProjectId(), option.WithCredentialsFile(devServiceAccount))
 }

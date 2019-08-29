@@ -34,6 +34,7 @@ In addition, you must create a [UserKit](https://userkit.io/) account and have y
 ### Set environment variables
 
 ```bash
+export GOOGLE_CLOUD_PROJECT="[enter your GCP project ID]"
 export USERKIT_SECRET="[enter your UserKit secret key]"
 ```
 
@@ -55,7 +56,20 @@ mkdir bin && \
 
 ### Run E2E tests
 
-To run the end to end tests, you'll need to create a dedicated GCP project. You can reuse your dev project, but the E2E tests will write
+To run the end to end tests, you'll need to create a dedicated GCP project. You can reuse your dev project, but the E2E tests will write to the datastore for the GCP project you specify. Specify the GCP project in `e2e\docker-compose.yml` under `GOOGLE_CLOUD_PROJECT`.
+
+You'll also need to create a dedicated UserKit app. Save the UserKit app secret in a file called `e2e/staging-secrets.env` with the following contents:
+
+```text
+USERKIT_SECRET=[your userkit app secret]
+```
+
+You'll also need to manually create a user for that app with the following credentials:
+
+* Username: `staging.jimmy`
+* Password: `just4st@ginG!`
+
+When you've completed these steps, you can run the E2E tests as follows:
 
 ```bash
 cd e2e && \
