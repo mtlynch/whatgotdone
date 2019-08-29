@@ -1,3 +1,7 @@
+// Package datastore provides functionality for storing and retrieving
+// persistent data. This package does not enforce access control, so it is the
+// client's responsibility to enforce authentication and authorization before
+// retrieving private data from the datastore.
 package datastore
 
 import (
@@ -13,6 +17,9 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
+// Datastore represents the Firestore datastore. It's responsible for storing
+// and retrieving all persistent data (journal entries, journal drafts,
+// reactions).
 type Datastore interface {
 	Users() ([]string, error)
 	AllEntries(username string) ([]types.JournalEntry, error)
@@ -24,6 +31,7 @@ type Datastore interface {
 	Close() error
 }
 
+// DraftNotFoundError occurs when no draft exists for a user with a given date.
 type DraftNotFoundError struct {
 	Username string
 	Date     string
@@ -65,6 +73,7 @@ const (
 	secretUserKitDocKey = "userKitKey"
 )
 
+// New creates a new Datastore instance.
 func New() Datastore {
 	ctx := context.Background()
 
@@ -78,6 +87,7 @@ func New() Datastore {
 	}
 }
 
+// Users returns all the users who have published entries.
 func (c defaultClient) Users() (users []string, err error) {
 	iter := c.firestoreClient.Collection(entriesRootKey).Documents(c.ctx)
 	for {
@@ -95,6 +105,7 @@ func (c defaultClient) Users() (users []string, err error) {
 	return users, nil
 }
 
+// AllEntries returns all published entries.
 func (c defaultClient) AllEntries(username string) ([]types.JournalEntry, error) {
 	entries := make([]types.JournalEntry, 0)
 	iter := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
@@ -116,6 +127,7 @@ func (c defaultClient) AllEntries(username string) ([]types.JournalEntry, error)
 	return entries, nil
 }
 
+// GetDraft returns an entry draft for the given user for the given date.
 func (c defaultClient) GetDraft(username string, date string) (types.JournalEntry, error) {
 	iter := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Documents(c.ctx)
 	for {
@@ -138,6 +150,8 @@ func (c defaultClient) GetDraft(username string, date string) (types.JournalEntr
 	}
 }
 
+// InsertEntry saves an entry to the datastore, overwriting any existing entry
+// with the same name and username.
 func (c defaultClient) InsertEntry(username string, j types.JournalEntry) error {
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(entriesRootKey).Doc(username).Set(c.ctx, userDocument{
@@ -148,10 +162,14 @@ func (c defaultClient) InsertEntry(username string, j types.JournalEntry) error 
 	return err
 }
 
+// Close cleans up datastore resources. Clients should not call any Datastore
+// functions after calling Close().
 func (c defaultClient) Close() error {
 	return c.firestoreClient.Close()
 }
 
+// InsertDraft saves an entry draft to the datastore, overwriting any existing
+// entry with the same name and username.
 func (c defaultClient) InsertDraft(username string, j types.JournalEntry) error {
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(draftsRootKey).Doc(username).Set(c.ctx, userDocument{
@@ -162,6 +180,7 @@ func (c defaultClient) InsertDraft(username string, j types.JournalEntry) error 
 	return err
 }
 
+// GetReactions retrieves reader reactions associated with a published entry.
 func (c defaultClient) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {
 	reactions := []types.Reaction{}
 	iter := c.firestoreClient.Collection(reactionsRootKey).Doc(getEntryReactionsKey(entryAuthor, entryDate)).Collection(perUserReactionsKey).Documents(c.ctx)
@@ -180,6 +199,8 @@ func (c defaultClient) GetReactions(entryAuthor string, entryDate string) ([]typ
 	return reactions, nil
 }
 
+// AddReaction saves a reader reactions associated with a published entry,
+// overwriting any existing reaction.
 func (c defaultClient) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
 	// Create a entryReactionsDocument document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(reactionsRootKey).Doc(getEntryReactionsKey(entryAuthor, entryDate)).Set(c.ctx, entryReactionsDocument{

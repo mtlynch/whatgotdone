@@ -14,7 +14,9 @@ What Got Done uses [UserKit](https://docs.userkit.io/) for user authentication. 
 
 ### Datastore
 
-TODO(mtlynch): Fill this in.
+What Got Done uses [Google Cloud Firestore](https://firebase.google.com/docs/firestore) for data storage.
+
+Only the What Got Done backend can access the Firestore database. Specifically, the `datastore` package manages all interactions with Firestore.
 
 ### E2E tests
 
