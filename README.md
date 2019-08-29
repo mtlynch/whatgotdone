@@ -40,6 +40,13 @@ export GOOGLE_CLOUD_PROJECT="[enter your GCP project ID]"
 export USERKIT_SECRET="[enter your UserKit secret key]"
 ```
 
+Create a file called `frontend\.env.development.local` with the following contents:
+
+```text
+VUE_APP_USERKIT_APP_ID='[your userkit APP ID]'
+VUE_APP_GOOGLE_ANALYTICS_ID='0'
+```
+
 ### Build frontend
 
 ```bash
