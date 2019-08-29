@@ -162,12 +162,6 @@ func (c defaultClient) InsertEntry(username string, j types.JournalEntry) error 
 	return err
 }
 
-// Close cleans up datastore resources. Clients should not call any Datastore
-// functions after calling Close().
-func (c defaultClient) Close() error {
-	return c.firestoreClient.Close()
-}
-
 // InsertDraft saves an entry draft to the datastore, overwriting any existing
 // entry with the same name and username.
 func (c defaultClient) InsertDraft(username string, j types.JournalEntry) error {
@@ -211,6 +205,12 @@ func (c defaultClient) AddReaction(entryAuthor string, entryDate string, reactio
 	_, err := c.firestoreClient.Collection(reactionsRootKey).Doc(getEntryReactionsKey(entryAuthor, entryDate)).Collection(perUserReactionsKey).Doc(reaction.Username).Set(c.ctx, reaction)
 
 	return err
+}
+
+// Close cleans up datastore resources. Clients should not call any Datastore
+// functions after calling Close().
+func (c defaultClient) Close() error {
+	return c.firestoreClient.Close()
 }
 
 func getEntryReactionsKey(entryAuthor string, entryDate string) string {
