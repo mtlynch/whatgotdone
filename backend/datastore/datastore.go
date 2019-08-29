@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"cloud.google.com/go/firestore"
@@ -193,4 +194,12 @@ func (c defaultClient) AddReaction(entryAuthor string, entryDate string, reactio
 
 func getEntryReactionsKey(entryAuthor string, entryDate string) string {
 	return entryAuthor + ":" + entryDate
+}
+
+func getGoogleCloudProjectId() string {
+	projectId := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	if projectId == "" {
+		log.Fatalf("GOOGLE_CLOUD_PROJECT environment variable must be set")
+	}
+	return projectId
 }
