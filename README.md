@@ -56,6 +56,14 @@ mkdir bin && \
   ./bin/main
 ```
 
+### Run backend unit tests
+
+Unit tests run in normal Golang fashion:
+
+```bash
+go test ./...
+```
+
 ### Run E2E tests
 
 To run the end to end tests, you'll need to create a dedicated GCP project. You can reuse your dev project, but the E2E tests will write to the datastore for the GCP project you specify. Specify the GCP project in `e2e\docker-compose.yml` under `GOOGLE_CLOUD_PROJECT`.
