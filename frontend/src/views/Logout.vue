@@ -16,7 +16,12 @@ export default {
       .post(url, {}, { headers: { "X-CSRF-Token": getCsrfToken() } })
       .then(() => {
         this.deleteCookie("userkit_auth_token");
-        window.location.href = "/login";
+        window.location.href = "/";
+      })
+      .finally(() => {
+        // Logout can fail if CSRF goes out of state. In this case, still
+        // delete the CSRF cookie.
+        this.deleteCookie("csrf_base");
       });
   },
   methods: {

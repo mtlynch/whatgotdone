@@ -164,6 +164,5 @@ it('logs in and signs out', () => {
   cy.url().should('include', '/entry/edit')
 
   cy.visit('/logout')
-  cy.url().should('include', '/login')
-  cy.get('#userkit_username')
+  cy.location('pathname').should('eq', '/')
 })
