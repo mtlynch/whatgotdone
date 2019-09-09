@@ -21,7 +21,7 @@ export default {
       .finally(() => {
         // Logout can fail if CSRF goes out of state. In this case, still
         // delete the CSRF cookie.
-        this.deleteCookie("csrf_base2");
+        this.deleteCookie("csrf_base_v3");
       });
   },
   methods: {
