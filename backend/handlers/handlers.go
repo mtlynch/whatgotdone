@@ -1,21 +1,11 @@
 package handlers
 
 import (
-	"errors"
 	"net/http"
 	"time"
-
-	"github.com/gorilla/mux"
 )
 
 const userKitAuthCookieName = "userkit_auth_token"
-
-type recentEntry struct {
-	Author       string `json:"author"`
-	Date         string `json:"date"`
-	lastModified string
-	Markdown     string `json:"markdown"`
-}
 
 func validateEntryDate(date string) bool {
 	t, err := time.Parse("2006-01-02", date)
@@ -49,24 +39,4 @@ func (s defaultServer) loggedInUser(r *http.Request) (string, error) {
 		return "", err
 	}
 	return s.authenticator.UserFromAuthToken(tokenCookie.Value)
-}
-
-func usernameFromRequestPath(r *http.Request) (string, error) {
-	username := mux.Vars(r)["username"]
-	// If something goes wrong in a JavaScript-based client, it will send the literal string "undefined" as the username
-	// when the username variable is undefined.
-	if username == "undefined" || username == "" {
-		return "", errors.New("Invalid username")
-	}
-	return username, nil
-}
-
-func dateFromRequestPath(r *http.Request) (string, error) {
-	date := mux.Vars(r)["date"]
-	dateFormat := "2006-01-02"
-	_, err := time.Parse(dateFormat, date)
-	if err != nil {
-		return "", errors.New("Invalid date format: must be YYYY-MM-DD")
-	}
-	return date, nil
 }
