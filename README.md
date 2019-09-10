@@ -6,7 +6,9 @@
 
 ### Frontend vs. Backend
 
-TODO(mtlynch): Fill this in.
+What Got Done uses a somewhat unusual system for rendering pages. The Go backend first pre-renders the page server-side to populate tags related to SEO or social media that need to be set server-side. The Vue2 frontend renders the remainder of the page client-side. To avoid conflicts between the two systems' template syntax, Go uses `[[`, `]]` delimiters, while Vue uses `{{`, `}}` delimiters.
+
+The Go backend handles all of What Got Done's `/api/*` routes. These routes are What Got Done's RESTful interface between the frontend and the backend. These routes never send HTML, and instead only send JSON back and forth.
 
 ### User authentication
 
@@ -20,7 +22,14 @@ Only the What Got Done backend can access the Firestore database. Specifically, 
 
 ### E2E tests
 
-TODO(mtlynch): Fill this in.
+What Got Done's end-to-end tests use Cypress and follow the testing pattern defined in the article [End-to-End Testing Web Apps: The Painless Way](https://mtlynch.io/painless-web-app-testing/). The testing architecture consists of two Docker containers (see [docker-compose.yml](blob/master/e2e/docker-compose.yml)):
+
+* What Got Done container
+* Cypress container
+
+The Cypress container runs a browser to exercise What Got Done's critical functionality. It uses an independent environment and credentials from the production app so that nothing in the E2E tests affect state on production UserKit or Google Cloud Platform.
+
+To run the E2E tests yourself, see the [section below](#run-e2e-tests).
 
 ## Development notes
 
@@ -32,6 +41,8 @@ TODO(mtlynch): Fill this in.
 * [Google Cloud SDK](https://cloud.google.com/sdk/install) (for deployment)
 
 In addition, you must create a [UserKit](https://userkit.io/) account and have your UserKit App Secret Key available.
+
+TODO: Explain how to prep GCP credentials.
 
 ### Set environment variables
 
