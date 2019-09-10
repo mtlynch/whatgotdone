@@ -7,6 +7,13 @@ import (
 	"sort"
 )
 
+type recentEntry struct {
+	Author       string `json:"author"`
+	Date         string `json:"date"`
+	lastModified string
+	Markdown     string `json:"markdown"`
+}
+
 func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		users, err := s.datastore.Users()
