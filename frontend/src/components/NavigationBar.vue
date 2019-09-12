@@ -8,6 +8,7 @@
       <b-navbar-nav>
         <b-nav-item to="/">About</b-nav-item>
         <b-nav-item to="/recent">Recent</b-nav-item>
+        <b-nav-item href="https://github.com/mtlynch/whatgotdone">Contribute</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
