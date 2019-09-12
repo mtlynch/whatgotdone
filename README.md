@@ -33,36 +33,49 @@ What Got Done's end-to-end tests use Cypress and follow the testing pattern defi
 
 The Cypress container runs a browser to exercise What Got Done's critical functionality. It uses an independent environment and credentials from the production app so that nothing in the E2E tests affect state on production UserKit or Google Cloud Platform.
 
-To run the E2E tests yourself, see the [section below](#run-e2e-tests).
+To run the E2E tests yourself, see the [section below](#optional-run-e2e-tests).
 
 ## Development notes
 
-### Pre-requisites
+### 0. Pre-requisites
 
 * [Node.js](https://nodejs.org/) (8.x or higher)
 * [Go](https://golang.org/dl/) (1.11 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
 * [Google Cloud SDK](https://cloud.google.com/sdk/install) (for deployment)
 
-In addition, you must create a [UserKit](https://userkit.io/) account and have your UserKit App Secret Key available.
+### 1. Create a UserKit app
 
-TODO: Explain how to prep GCP credentials.
+To run a development version of What Got Done, you'll need to create a free account on [UserKit](https://userkit.io/). Create a new UserKit app and have your UserKit App Secret Key available.
 
-### Set environment variables
+### 2. Create a project on Google Cloud Platform
+
+What Got Done relies on Google Cloud Firestore. To run a development version of What Got Done:
+
+1. Create a new Google Cloud Platform project.
+1. Create a service account with "Owner" role.
+1. Create a private key for the service account in JSON format and download it to a file called `./service-account-creds-dev.json`.
+
+### 3. Set environment variables
+
+Set the following environment variables:
 
 ```bash
 export GOOGLE_CLOUD_PROJECT="[enter your GCP project ID]"
 export USERKIT_SECRET="[enter your UserKit secret key]"
+export CSRF_SECRET_SEED="any-random-string"
 ```
 
 Create a file called `frontend\.env.development.local` with the following contents:
 
 ```text
-VUE_APP_USERKIT_APP_ID='[your userkit APP ID]'
+VUE_APP_USERKIT_APP_ID='[your UserKit App ID]'
 VUE_APP_GOOGLE_ANALYTICS_ID='0'
 ```
 
-### Build frontend
+### 4. Build the frontend
+
+To build the Vue frontend for What Got Done, run the following command:
 
 ```bash
 cd frontend && \
@@ -70,7 +83,9 @@ cd frontend && \
   npm run build -- --mode development
 ```
 
-### Run backend
+### 5. Run the backend
+
+To run the Go backend server, run the following command:
 
 ```bash
 mkdir bin && \
@@ -78,7 +93,29 @@ mkdir bin && \
   ./bin/main
 ```
 
-### Run backend unit tests
+What Got Done is now running on [http://localhost:3001](http://localhost:3001).
+
+### Optional: Run frontend with hot reloading
+
+If you're making changes to the Vue code, you'll probably want to run the standard Vue HTTP server with hot reloading. Keep the backend running, and in a separate shell session, run the following command:
+
+```bash
+cd frontend && \
+  npm run serve
+```
+
+A hot-reloading Vue server will run on port [http://localhost:8085](http://localhost:8085). It will communicate with the What Got Done backend at port 3001.
+
+#### Quirks of the dev environment
+
+Because the production What Got Done server runs both the frontend and the backend on a single port, there are a few hacks to make a development version work:
+
+* CORS is enabled in dev mode so that the frontend can make CORS requests to the backend from a different HTTP port.
+* CSRF protection is disabled in dev mode because the Vue dev server doesn't know how to render the `<meta name="csrf-token" />` tag.
+* Page titles don't work properly in dev mode because the Vue dev server doesn't know how to render the `<title>` tag.
+* The Content Security Policy header in dev mode needs `unsafe-eval`, whereas we disable this in production.
+
+### Optional: Run backend unit tests
 
 Unit tests run in normal Golang fashion:
 
@@ -86,7 +123,7 @@ Unit tests run in normal Golang fashion:
 go test ./...
 ```
 
-### Run E2E tests
+### Optional: Run E2E tests
 
 To run the end to end tests, you'll need to create a dedicated GCP project. You can reuse your dev project, but the E2E tests will write to the datastore for the GCP project you specify. Specify the GCP project in `e2e\docker-compose.yml` under `GOOGLE_CLOUD_PROJECT`.
 
@@ -107,7 +144,3 @@ When you've completed these steps, you can run the E2E tests as follows:
 cd e2e && \
   docker-compose up --exit-code-from cypress --abort-on-container-exit --build
 ```
-
-### Quirks of the dev environment
-
-TODO(mtlynch): Fill this in.
