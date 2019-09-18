@@ -34,7 +34,7 @@ func (s *defaultServer) indexHandler() http.HandlerFunc {
 
 // getPageTitle returns the <title> value of the page. By default it's
 // "What Got Done" but if the date or username are available, we prepend those
-// to the title, so that it can be "username - YYYY-MM-DD - What Got Done".
+// to the title, so that it can be "username's What Got Done for the week of YYYY-MM-DD".
 func getPageTitle(r *http.Request) string {
 	t := "What Got Done"
 
