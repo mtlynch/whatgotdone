@@ -38,5 +38,6 @@ func (s *defaultServer) routes() {
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	})
 
-	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler("What Got Done")))).Methods(http.MethodGet)
+	s.router.PathPrefix("/{username}/{date}").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
+	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
 }

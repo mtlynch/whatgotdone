@@ -25,6 +25,16 @@ if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID.length > 1) {
   });
 }
 
+// This callback runs before every route change, including on page load.
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title(to);
+  } else {
+    document.title = "What Got Done";
+  }
+  next();
+});
+
 new Vue({
   store,
   router,
