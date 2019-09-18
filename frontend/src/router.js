@@ -19,7 +19,13 @@ const routes = [
   { path: '/logout', component: Logout },
   { path: '/privacy-policy', component: PrivacyPolicy },
   { path: '/:username', component: ViewEntry },
-  { path: '/:username/:date', component: ViewEntry },
+  {
+    path: '/:username/:date', component: ViewEntry, meta: {
+      title: (route) => {
+        return `${route.params.username}'s What Got Done for the week of ${route.params.date}`
+      },
+    }
+  },
   { path: '/', component: Home },
   { path: '*', component: MissingPage },
 ]
