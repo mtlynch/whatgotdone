@@ -29,12 +29,7 @@ func (s defaultServer) enableCsp(h http.HandlerFunc) http.HandlerFunc {
 			// For Google Analytics
 			"https://www.google-analytics.com",
 		}, " ")
-		frameSrc := strings.Join([]string{
-			"'self'",
-			// For sendinblue mailing list signup
-			"https://sibforms.com",
-		}, " ")
-		w.Header().Set("Content-Security-Policy", fmt.Sprintf("default-src %s; img-src %s; frame-src %s", defaultSrc, imgSrc, frameSrc))
+		w.Header().Set("Content-Security-Policy", fmt.Sprintf("default-src %s; img-src %s", defaultSrc, imgSrc))
 		h(w, r)
 	}
 }
