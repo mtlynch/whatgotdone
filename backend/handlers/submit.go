@@ -18,6 +18,10 @@ func (s *defaultServer) submitOptions() http.HandlerFunc {
 	}
 }
 
+// submitPost handles HTTP POST requests for users to create new What Got Done
+// updates. The updates can be new versions of previously published updates (in
+// which case, we'll update the existing entries in the datastore) or a brand
+// new update (in which case, we'll create new entries in the datastore).
 func (s *defaultServer) submitPost() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := s.loggedInUser(r)
