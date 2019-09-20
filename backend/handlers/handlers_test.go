@@ -64,4 +64,18 @@ func init() {
 	if err := os.Chdir("../../"); err != nil {
 		panic(err)
 	}
+
+	// Ensure that the frontend/dist/index.html exists. The handler functions
+	// need it, even if it's empty.
+	if _, err := os.Stat("./frontend/dist/index.html"); os.IsNotExist(err) {
+		// Ensure that the frontend/dist folder exists.
+		if err = os.MkdirAll("./frontend/dist", os.ModePerm); err != nil {
+			panic(err)
+		}
+		// Create frontend/dist/index.html.
+		if _, err := os.Create("./frontend/dist/index.html"); err != nil {
+			panic(err)
+		}
+	}
+
 }
