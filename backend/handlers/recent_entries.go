@@ -7,7 +7,6 @@ import (
 	"sort"
 )
 
-//
 type recentEntry struct {
 	Author       string `json:"author"`
 	Date         string `json:"date"`
