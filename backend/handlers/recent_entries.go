@@ -10,6 +10,7 @@ import (
 type recentEntry struct {
 	Author       string `json:"author"`
 	Date         string `json:"date"`
+	// Skip JSON serialization for lastModified as clients don't need this field.
 	lastModified string
 	Markdown     string `json:"markdown"`
 }

@@ -5,6 +5,7 @@ import (
 )
 
 func (s *defaultServer) routes() {
+	// Serve static resources.
 	fs := http.FileServer(http.Dir("./frontend/dist"))
 	s.router.PathPrefix("/js").Handler(fs)
 	s.router.PathPrefix("/css").Handler(fs)
@@ -20,6 +21,7 @@ func (s *defaultServer) routes() {
 	s.router.Path("/mstile-150x150.png").Handler(fs)
 	s.router.Path("/site.webmanifest").Handler(fs)
 
+	// Handle routes that require backend logic.
 	s.router.HandleFunc("/api/entries/{username}", s.enableCors(s.entriesGet())).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftOptions())).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/draft/{date}", s.enableCors(s.draftGet())).Methods(http.MethodGet)
@@ -38,6 +40,8 @@ func (s *defaultServer) routes() {
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	})
 
+	// Serve index.html, the base page HTML before Vue rendering happens, and
+	// render certain page elements server-side.
 	s.router.PathPrefix("/{username}/{date}").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
 	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
 }
