@@ -5,7 +5,7 @@
       <vue-markdown
         :linkify="false"
         :html="false"
-        :anchorAttributes="{rel: 'nofollow' }"
+        :anchorAttributes="{rel: 'ugc' }"
         :source="markdown"
       ></vue-markdown>
     </div>

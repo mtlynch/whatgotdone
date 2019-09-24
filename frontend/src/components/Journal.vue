@@ -5,7 +5,7 @@
       <vue-markdown
         :linkify="false"
         :html="false"
-        :anchorAttributes="{rel: 'nofollow' }"
+        :anchorAttributes="{rel: 'ugc' }"
         :source="entry.markdown"
       ></vue-markdown>
       <div class="last-modified-date">Last modified {{ entry.lastModified | moment("lll") }}</div>
