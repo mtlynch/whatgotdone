@@ -15,9 +15,22 @@ His target response times are as follows:
 * Respond to an email about the project: <= 3 business days
 * Add a new feature: *Best effort*
 
+## Submitting a good pull request
+
+To help get your pull request merged in quickly, keep these guidelines in mind:
+
+* Keep the pull request **narrowly scoped**.
+  * A pull request should do just one thing (e.g., fix a single bug, refactor one file)
+* Write a descriptive pull request title and commit message.
+  * e.g., "Refactoring indexHandler to a separate file"
+* [Rebase your changes](https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase) onto `mtlynch:master`.
+  * Ensure that your pull request doesn't have any distracting merge commits.
+
 ## Build checks
 
-On any pull request, [Circle CI](https://circleci.com/gh/mtlynch/whatgotdone) automatically runs What Got Done's unit tests and end-to-end tests. Ensure that your pull requests passes these checks.
+~~On any pull request, [Circle CI](https://circleci.com/gh/mtlynch/whatgotdone) automatically runs What Got Done's unit tests and end-to-end tests. Ensure that your pull requests passes these checks.~~
+
+* **TODO(mtlynch)**: Get Circle CI tests to run for third-party pull requests without exposing any CI secrets. In the meantime, developers can run all tests locally (see [README](https://github.com/mtlynch/whatgotdone)).
 
 ## I want to add a feature
 
