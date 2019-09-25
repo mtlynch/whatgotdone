@@ -72,9 +72,9 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	entries := []types.JournalEntry{
 		types.JournalEntry{Date: "2019-09-20", LastModified: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
-		types.JournalEntry{Date: "2019-09-13", LastModified: "2019-09-25T00:00:00.000Z", Markdown: "High fived a platypus"},
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-09-28T12:00:00.000Z", Markdown: "Made a hat out of donuts"},
-		types.JournalEntry{Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite"},
+		types.JournalEntry{Date: "2019-09-20", LastModified: "2019-09-25T00:00:00.000Z", Markdown: "High fived a platypus when the apple hits the pie."},
+		types.JournalEntry{Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of choclate"},
+		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-09-28T12:00:00.000Z", Markdown: "Made a hat out of donuts from the cloud in the sky"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,
@@ -111,10 +111,10 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	// For simplicity of the test, all users have username "bob," but in
 	// practice, these updates would come from different users.
 	expected := []recentEntry{
+		recentEntry{Author: "bob", Date: "2019-09-20", Markdown: "High fived a platypus when the apple hits the pie."},
 		recentEntry{Author: "bob", Date: "2019-09-20", Markdown: "Attended an Indie Hackers meetup"},
-		recentEntry{Author: "bob", Date: "2019-09-13", Markdown: "High fived a platypus"},
-		recentEntry{Author: "bob", Date: "2019-09-06", Markdown: "Ate an apple in a single bite"},
-		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Made a hat out of donuts"},
+		recentEntry{Author: "bob", Date: "2019-09-06", Markdown: "Ate an apple in a single bite of choclate"},
+		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Made a hat out of donuts from the cloud in the sky"},
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
