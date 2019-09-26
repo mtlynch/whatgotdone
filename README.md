@@ -44,6 +44,10 @@ The Cypress container runs a browser to exercise What Got Done's critical functi
 
 To run the E2E tests yourself, see the [section below](#optional-run-e2e-tests).
 
+## Contributing to What Got Done
+
+Interested in contributing code or bug reports to What Got Done? That's great! Check our [Contibutor Guidelines](https://github.com/mtlynch/whatgotdone/blob/master/CONTRIBUTING.md) for more details.
+
 ## Development notes
 
 ### 0. Pre-requisites
