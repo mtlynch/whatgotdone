@@ -15,41 +15,45 @@ import (
 // server-side rendering of template variables before the Vue frontend renders
 // the page client-side.
 func (s defaultServer) serveStaticResource() http.HandlerFunc {
-	return func(rw http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		fs := http.Dir("./frontend/dist")
-		// Open the file
 		file, err := fs.Open(r.URL.Path)
-		if err == nil {
-			// Gather the information about the file
-			stats, err := file.Stat()
-			if err != nil {
-				log.Printf("Failed to retrieve the information of %s from the file system: %s", r.URL.Path, err)
-				http.Error(rw, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			// We can't serve directories
-			if !stats.IsDir() {
-				// Copy the file back to the user
-				if _, err = io.Copy(rw, file); err != nil {
-					log.Printf("Failed to copy the file %s to the response writer: %s", r.URL.Path, err)
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-				return
-			}
-		}
-		// If our issue was anything other than the file not existing
-		if err != nil && !os.IsNotExist(err) {
+		if os.IsNotExist(err) {
+			// If there's no static file that matches this route, serve the index
+			// page and let the frontend handle it.
+			serveIndexPage(w, r)
+			return
+		} else if err != nil {
 			log.Printf("Failed to retrieve the file %s from the file system: %s", r.URL.Path, err)
-			http.Error(rw, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Failed to find file: " + r.URL.Path, http.StatusInternalServerError)
 			return
 		}
-		serveIndexPage(rw, r)
+		defer file.Close()
+
+		stat, err := file.Stat()
+		if err != nil {
+			log.Printf("Failed to retrieve the information of %s from the file system: %s", r.URL.Path, err)
+			http.Error(w, "Failed to serve: " + r.URL.Path, http.StatusInternalServerError)
+			return
+		}
+		if stat.IsDir() {
+			// If the client requested a directory, serve the index page.
+			serveIndexPage(w, r)
+			return
+		}
+
+		// Otherwise, serve a static file.
+		if _, err = io.Copy(w, file); err != nil {
+			log.Printf("Failed to copy the file %s to the response writer: %s", r.URL.Path, err)
+			http.Error(w, "Failed to serve: " + r.URL.Path, http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
 // serveIndexPage returns the file `./frontend/dist/index.html` rendered by the
 // golang templating engine.
-func serveIndexPage(rw http.ResponseWriter, r *http.Request) {
+func serveIndexPage(w http.ResponseWriter, r *http.Request) {
 	type page struct {
 		Title     string
 		CsrfToken string
@@ -57,11 +61,11 @@ func serveIndexPage(rw http.ResponseWriter, r *http.Request) {
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
 	indexTemplate := template.Must(template.New("index.html").Delims("[[", "]]").
 			ParseFiles("./frontend/dist/index.html"))
-	if err := indexTemplate.ExecuteTemplate(rw, "index.html", page{
+	if err := indexTemplate.ExecuteTemplate(w, "index.html", page{
 		CsrfToken: csrf.Token(r),
 		Title:     getPageTitle(r),
 	}); err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
