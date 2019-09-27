@@ -10,24 +10,13 @@ import (
 	"github.com/gorilla/csrf"
 )
 
-type page struct {
-	Title     string
-	CsrfToken string
-}
-
-var (
-	fs = http.Dir("./frontend/dist")
-	// Use custom delimiters so Go's delimiters don't clash with Vue's.
-	indexTemplate = template.Must(template.New("index.html").Delims("[[", "]]").
-			ParseFiles("./frontend/dist/index.html"))
-)
-
 // serveStaticPage serves any static file under `./frontend/dist` or if said
 // file does not exist then it returns the index.html template and performs some
 // server-side rendering of template variables before the Vue frontend renders
 // the page client-side.
 func (s defaultServer) serveStaticPage() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
+		fs := http.Dir("./frontend/dist")
 		// Open the file
 		file, err := fs.Open(r.URL.Path)
 		if err == nil {
@@ -61,6 +50,13 @@ func (s defaultServer) serveStaticPage() http.HandlerFunc {
 // serveIndexPage returns the file `./frontend/dist/index.html` rendered by the
 // golang templating engine.
 func serveIndexPage(rw http.ResponseWriter, r *http.Request) {
+	type page struct {
+		Title     string
+		CsrfToken string
+	}
+	// Use custom delimiters so Go's delimiters don't clash with Vue's.
+	indexTemplate := template.Must(template.New("index.html").Delims("[[", "]]").
+			ParseFiles("./frontend/dist/index.html"))
 	if err := indexTemplate.ExecuteTemplate(rw, "index.html", page{
 		CsrfToken: csrf.Token(r),
 		Title:     getPageTitle(r),
