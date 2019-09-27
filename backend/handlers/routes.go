@@ -27,6 +27,6 @@ func (s *defaultServer) routes() {
 
 	// Serve index.html, the base page HTML before Vue rendering happens, and
 	// render certain page elements server-side.
-	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.serveStaticPage()))).Methods(http.MethodGet)
 	s.router.PathPrefix("/{username}/{date}").HandlerFunc(s.enableCsrf(s.enableCsp(s.serveStaticPage()))).Methods(http.MethodGet)
+	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.serveStaticPage()))).Methods(http.MethodGet)
 }
