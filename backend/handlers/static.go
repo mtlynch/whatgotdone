@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -47,11 +46,7 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 		}
 
 		// Otherwise, serve a static file.
-		if _, err = io.Copy(w, file); err != nil {
-			log.Printf("Failed to copy the file %s to the response writer: %s", r.URL.Path, err)
-			http.Error(w, "Failed to serve: " + r.URL.Path, http.StatusInternalServerError)
-			return
-		}
+		http.ServeFile(w, r, path.Join(frontendRootDir, r.URL.Path))
 	}
 }
 
