@@ -3,6 +3,7 @@ package handlers
 import (
 	"errors"
 	"os"
+	"path"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -64,16 +65,17 @@ func init() {
 	if err := os.Chdir("../../"); err != nil {
 		panic(err)
 	}
+	frontendIndexPath := path.Join(frontendRootDir, frontendIndexFilename)
 
 	// Ensure that the frontend/dist/index.html exists. The handler functions
 	// need it, even if it's empty.
-	if _, err := os.Stat("./frontend/dist/index.html"); os.IsNotExist(err) {
+	if _, err := os.Stat(frontendIndexPath); os.IsNotExist(err) {
 		// Ensure that the frontend/dist folder exists.
-		if err = os.MkdirAll("./frontend/dist", os.ModePerm); err != nil {
+		if err = os.MkdirAll(frontendRootDir, os.ModePerm); err != nil {
 			panic(err)
 		}
 		// Create frontend/dist/index.html.
-		if _, err := os.Create("./frontend/dist/index.html"); err != nil {
+		if _, err := os.Create(frontendIndexPath); err != nil {
 			panic(err)
 		}
 	}

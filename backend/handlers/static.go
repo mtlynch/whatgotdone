@@ -5,10 +5,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"text/template"
 
 	"github.com/gorilla/csrf"
 )
+
+const frontendRootDir = "./frontend/dist"
+const frontendIndexFilename = "index.html"
 
 // serveStaticResource serves any static file under `./frontend/dist` or if said
 // file does not exist then it returns the index.html template and performs some
@@ -16,7 +20,7 @@ import (
 // the page client-side.
 func (s defaultServer) serveStaticResource() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fs := http.Dir("./frontend/dist")
+		fs := http.Dir(frontendRootDir)
 		file, err := fs.Open(r.URL.Path)
 		if os.IsNotExist(err) {
 			// If there's no static file that matches this route, serve the index
@@ -59,9 +63,9 @@ func serveIndexPage(w http.ResponseWriter, r *http.Request) {
 		CsrfToken string
 	}
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
-	indexTemplate := template.Must(template.New("index.html").Delims("[[", "]]").
-			ParseFiles("./frontend/dist/index.html"))
-	if err := indexTemplate.ExecuteTemplate(w, "index.html", page{
+	indexTemplate := template.Must(template.New(frontendIndexFilename).Delims("[[", "]]").
+			ParseFiles(path.Join(frontendRootDir, frontendIndexFilename)))
+	if err := indexTemplate.ExecuteTemplate(w, frontendIndexFilename, page{
 		CsrfToken: csrf.Token(r),
 		Title:     getPageTitle(r),
 	}); err != nil {
