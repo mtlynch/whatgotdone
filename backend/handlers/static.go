@@ -22,6 +22,10 @@ var (
 			ParseFiles("./frontend/dist/index.html"))
 )
 
+// serveStaticPage serves any static file under `./frontend/dist` or if said
+// file does not exist then it returns the index.html template and performs some
+// server-side rendering of template variables before the Vue frontend renders
+// the page client-side.
 func (s defaultServer) serveStaticPage() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		// Open the file
