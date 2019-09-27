@@ -2,10 +2,19 @@ package handlers
 
 import (
 	"net/http"
+	"path"
 	"time"
 )
 
-const userKitAuthCookieName = "userkit_auth_token"
+const (
+	userKitAuthCookieName = "userkit_auth_token"
+	frontendRootDir = "./frontend/dist"
+	frontendIndexFilename = "index.html"
+)
+
+var (
+	frontendIndexPath = path.Join(frontendRootDir, frontendIndexFilename)
+)
 
 func validateEntryDate(date string) bool {
 	t, err := time.Parse("2006-01-02", date)

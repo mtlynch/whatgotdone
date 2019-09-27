@@ -5,6 +5,21 @@ import (
 )
 
 func (s *defaultServer) routes() {
+	// Serve static resources.
+	fs := http.FileServer(http.Dir("./frontend/dist"))
+	s.router.PathPrefix("/js").Handler(fs)
+	s.router.PathPrefix("/css").Handler(fs)
+	s.router.PathPrefix("/images").Handler(fs)
+	s.router.Path("/android-chrome-192x192.png").Handler(fs)
+	s.router.Path("/android-chrome-512x512.png").Handler(fs)
+	s.router.Path("/app.js").Handler(fs)
+	s.router.Path("/apple-touch-icon.png").Handler(fs)
+	s.router.Path("/browserconfig.xml").Handler(fs)
+	s.router.Path("/favicon-16x16.png").Handler(fs)
+	s.router.Path("/favicon-32x32.png").Handler(fs)
+	s.router.Path("/favicon.ico").Handler(fs)
+	s.router.Path("/mstile-150x150.png").Handler(fs)
+	s.router.Path("/site.webmanifest").Handler(fs)
 
 	// Handle routes that require backend logic.
 	s.router.HandleFunc("/api/entries/{username}", s.enableCors(s.entriesGet())).Methods(http.MethodGet)
@@ -27,6 +42,6 @@ func (s *defaultServer) routes() {
 
 	// Serve index.html, the base page HTML before Vue rendering happens, and
 	// render certain page elements server-side.
-	s.router.PathPrefix("/{username}/{date}").HandlerFunc(s.enableCsrf(s.enableCsp(s.serveStaticResource()))).Methods(http.MethodGet)
-	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.serveStaticResource()))).Methods(http.MethodGet)
+	s.router.PathPrefix("/{username}/{date}").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
+	s.router.PathPrefix("/").HandlerFunc(s.enableCsrf(s.enableCsp(s.indexHandler()))).Methods(http.MethodGet)
 }

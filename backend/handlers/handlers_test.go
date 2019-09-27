@@ -65,7 +65,6 @@ func init() {
 	if err := os.Chdir("../../"); err != nil {
 		panic(err)
 	}
-	frontendIndexPath := path.Join(frontendRootDir, frontendIndexFilename)
 
 	// Ensure that the frontend/dist/index.html exists. The handler functions
 	// need it, even if it's empty.
