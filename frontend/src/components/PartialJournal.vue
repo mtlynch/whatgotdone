@@ -50,6 +50,7 @@ div.journal {
   padding: 10px;
   margin-bottom: 60px;
   background-color: #4e5d6c;
+  overflow: scroll;
 }
 
 @media screen and (min-width: 768px) {

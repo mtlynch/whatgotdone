@@ -35,6 +35,7 @@ export default {
 <style scoped>
 .journal-body {
   text-align: left;
+  overflow: scroll;
 }
 
 .last-modified-date {
