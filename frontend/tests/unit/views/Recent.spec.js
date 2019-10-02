@@ -11,16 +11,16 @@ describe('Recent.vue', () => {
   test('renders recent items as PartialJournals', () => {
     const recentEntries = [
       {
-        key: `/testAuthor/01-01-2000`,
-        author: {},
-        date: new Date(2019),
-        markdown: '',
+        key: '/testUser321/2019-09-27',
+        author: 'testUser321',
+        date: new Date(2019, 9, 27),
+        markdown: 'I went to the zoo today',
       },
       {
-        key: `/testAuthor/01-02-2000`,
-        author: {},
-        date: new Date(2019),
-        markdown: '',
+        key: '/testUser456/2019-09-27',
+        author: 'testUser456',
+        date: new Date(2019, 9, 27),
+        markdown: 'I ate an ice-cream sandwich yesterday',
       },
     ];
 
