@@ -12,6 +12,9 @@ jobs:
           name: Lint client
           command: npm --prefix ./frontend run lint
       - run:
+          name: Unit test client
+          command: npm --prefix ./frontend run test:unit
+      - run:
           name: Build production frontend
           command: npm --prefix ./frontend run build
       - persist_to_workspace:
