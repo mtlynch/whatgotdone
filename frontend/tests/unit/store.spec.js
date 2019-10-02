@@ -2,12 +2,11 @@ import { mutations } from '@/store';
 
 describe('mutations', () => {
   test('setUsername sets a username', () => {
-    const username = 'testUser123';
     const state = {
       username: null,
     };
-    mutations.setUsername(state, username);
-    expect(state.username).toBe(username);
+    mutations.setUsername(state, 'testUser123');
+    expect(state.username).toBe('testUser123');
   });
 
   test('clearUsername clears the username', () => {
@@ -21,16 +20,16 @@ describe('mutations', () => {
   test('setRecent adds recent entries', () => {
     const entries = [
       {
-        key: `/testAuthor/mm-dd-yyyy`,
-        author: {},
-        date: new Date(2019),
-        markdown: '',
+        key: '/testUser321/2019-09-27',
+        author: 'testUser321',
+        date: new Date(2019, 9, 27),
+        markdown: 'I went to the zoo today',
       },
       {
-        key: `/testAuthor/mm-dd-yyyy`,
-        author: {},
-        date: new Date(2019),
-        markdown: '',
+        key: '/testUser456/2019-09-27',
+        author: 'testUser456',
+        date: new Date(2019, 9, 27),
+        markdown: 'I ate an ice-cream sandwich yesterday',
       },
     ];
     const state = {
