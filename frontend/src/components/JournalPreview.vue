@@ -35,7 +35,11 @@ export default {
   background-color: #4e5d6c;
   border: 1px solid rgb(90, 90, 90);
   text-align: left;
-  overflow: scroll;
+  overflow: auto;
+}
+
+@media screen and (min-width: 768px) {
+  overflow: visible;
 }
 
 .preview-bar {
