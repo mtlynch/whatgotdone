@@ -50,13 +50,14 @@ div.journal {
   padding: 10px;
   margin-bottom: 60px;
   background-color: #4e5d6c;
-  overflow: scroll;
+  overflow: auto;
 }
 
 @media screen and (min-width: 768px) {
   div.journal {
     padding: 15px;
     margin-bottom: 40px;
+    overflow: visible;
   }
 }
 

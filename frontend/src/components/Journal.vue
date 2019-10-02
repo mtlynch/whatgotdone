@@ -35,7 +35,11 @@ export default {
 <style scoped>
 .journal-body {
   text-align: left;
-  overflow: scroll;
+  overflow: auto;
+}
+
+@media screen and (min-width: 768px) {
+  overflow: visible;
 }
 
 .last-modified-date {
