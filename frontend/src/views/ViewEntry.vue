@@ -9,7 +9,7 @@
       >Show empty entries</b-form-checkbox>
 
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
-      <p v-else>
+      <p class="missing-entry" v-else>
         <Username :username="entryAuthor" />&nbsp;has not posted a journal entry for
         <b>{{ entryDate | moment("utc", "dddd, ll") }}</b>
       </p>

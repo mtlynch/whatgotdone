@@ -100,7 +100,7 @@ it('logs in and posts an empty update (deleting the update)', () => {
   cy.get('form').submit()
 
   cy.url().should('include', '/staging.jimmy/')
-  cy.get('.journal-body')
+  cy.get('.missing-entry')
     .should('contain', 'staging.jimmy has not posted a journal entry for')
 })
 
