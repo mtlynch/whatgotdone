@@ -24,7 +24,7 @@
           class="btn btn-primary save-draft"
           :disabled="changesSaved"
         >{{ saveLabel }}</button>
-        <button type="submit" :disabled="entryContent.length == 0" class="btn btn-primary">Publish</button>
+        <button type="submit" class="btn btn-primary">Publish</button>
       </div>
     </form>
     <JournalPreview :markdown="entryContent" />

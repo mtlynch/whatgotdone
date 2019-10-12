@@ -85,6 +85,25 @@ it('logs in and posts an update', () => {
     .should('contain', entryText)
 })
 
+it('logs in and posts an empty update (deleting the update)', () => {
+  cy.server()
+  cy.route('/api/draft/*').as('getDraft')
+
+  cy.login('staging.jimmy', 'just4st@ginG!')
+
+  cy.url().should('include', '/entry/edit')
+
+  // Wait for page to pull down any previous entry.
+  cy.wait('@getDraft')
+
+  cy.get('.journal-markdown').clear()
+  cy.get('form').submit()
+
+  cy.url().should('include', '/staging.jimmy/')
+  cy.get('.journal-body')
+    .should('contain', 'staging.jimmy has not posted a journal entry for')
+})
+
 it('logs in and saves a draft', () => {
   cy.server()
   cy.route('GET', '/api/draft/*').as('getDraft')
