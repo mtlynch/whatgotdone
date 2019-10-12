@@ -101,7 +101,7 @@ it('logs in and posts an empty update (deleting the update)', () => {
 
   cy.url().should('include', '/staging.jimmy/')
   cy.get('.missing-entry')
-    .should('contain', 'staging.jimmy has not posted a journal entry for')
+    .should('be.visible')
 })
 
 it('logs in and saves a draft', () => {
