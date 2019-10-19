@@ -56,18 +56,6 @@ export default {
     };
   },
   methods: {
-    goToLatestEntry() {
-      // I don't understand how this can happen, but sometimes I'm seeing the
-      // e2e test try to redirect the client to /undefined/[somedate] and it
-      // seems to be caused when goToLatestEntry is called when
-      // this.entryAuthor is undefined, even though that seems like it should
-      // never happen.
-      if (!this.entryAuthor) {
-        return;
-      }
-      const lastEntry = this.journalEntries[this.journalEntries.length - 1];
-      this.$router.replace(`/${this.entryAuthor}/${lastEntry.key}`);
-    },
     loadJournalEntries: function() {
       this.journalEntries = [];
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.entryAuthor}`;
@@ -87,11 +75,6 @@ export default {
             return;
           }
           this.journalEntries.sort((a, b) => a.date - b.date);
-
-          if (!this.entryDate) {
-            this.goToLatestEntry();
-            return;
-          }
         })
         .catch(error => {
           this.backendError = error;
@@ -157,9 +140,6 @@ export default {
     $route(to, from) {
       if (to.params.username != from.params.username) {
         this.loadJournalEntries();
-      }
-      if (!to.params.date) {
-        this.goToLatestEntry();
       }
     }
   }
