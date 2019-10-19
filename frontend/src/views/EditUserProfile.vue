@@ -6,6 +6,8 @@
 
     <h2>About</h2>
 
+    <p>Name: <input type="text" :value="realName" /></p>
+
     <textarea v-model="aboutMarkdown" />
 
     <h2>Contact</h2>
@@ -31,6 +33,7 @@ export default {
     return {
       // TODO(mtlynch): Retrieve this from the server.
       avatarUrl: "https://i.stack.imgur.com/rdgMY.jpg",
+      realName: "Michael Lynch",
       aboutMarkdown: "Hi, I'm Michael, creator of What Got Done.\n\nI also blog at [mtlynch.io](https://mtlynch.io).",
       twitterUsername: "deliberatecoder",
       email: "michael@mtlynch.io",

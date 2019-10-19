@@ -4,6 +4,7 @@
 
     <h1>{{ username }}</h1>
 
+    <p>Name: {{ realName }}</p>
     <p>Member since: {{ joinDate }}</p>
     <p>Updates: {{ entryCount }}</p>
 
@@ -16,12 +17,14 @@
       :source="aboutMarkdown"
     ></vue-markdown>
 
-    <h2>Contact</h2>
+    <template v-if="twitterUsername || email">
+      <h2>Contact</h2>
 
-    <ul>
-      <li><a :href="'https://twitter.com/' + twitterUsername">@{{ twitterUsername }}</a> (Twitter)</li>
-      <li><a :href="'mailto:' + email">{{ email }}</a> (Email)</li>
-    </ul>
+      <ul>
+        <li v-if="twitterUsername"><a :href="'https://twitter.com/' + twitterUsername">@{{ twitterUsername }}</a> (Twitter)</li>
+        <li v-if="email"><a :href="'mailto:' + email">{{ email }}</a> (Email)</li>
+      </ul>
+    </template>
 
     <b-button
       v-if="canEdit"
@@ -29,6 +32,10 @@
       variant="primary"
       class="edit-btn float-right"
     >Edit</b-button>
+
+    <h2>Recent entries</h2>
+
+    <p>TODO: Show user's recent partial journals</p>
   </div>
 </template>
 
@@ -45,7 +52,8 @@ export default {
       // TODO(mtlynch): Retrieve this from the server.
       avatarUrl: "https://i.stack.imgur.com/rdgMY.jpg",
       username: "michael",
-      joinDate: "2019-03-01",
+      realName: "Michael Lynch",
+      joinDate: "2019-05-02",
       entryCount: 26,
       aboutMarkdown: "Hi, I'm Michael, creator of What Got Done.\n\nI also blog at [mtlynch.io](https://mtlynch.io).",
       twitterUsername: "deliberatecoder",
@@ -62,5 +70,9 @@ export default {
 <style scoped>
 * {
   text-align: left;
+}
+
+h2 {
+  clear: both;
 }
 </style>
