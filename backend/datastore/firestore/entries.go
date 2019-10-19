@@ -8,8 +8,8 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-// AllEntries returns all published entries.
-func (c client) AllEntries(username string) ([]types.JournalEntry, error) {
+// GetEntries returns all published entries for the given user.
+func (c client) GetEntries(username string) ([]types.JournalEntry, error) {
 	entries := make([]types.JournalEntry, 0)
 	iter := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
 	for {

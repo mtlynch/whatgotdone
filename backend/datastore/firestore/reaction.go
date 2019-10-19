@@ -25,7 +25,7 @@ func (c client) GetReactions(entryAuthor string, entryDate string) ([]types.Reac
 	return reactions, nil
 }
 
-// AddReaction saves a reader reactions associated with a published entry,
+// AddReaction saves a reader reaction associated with a published entry,
 // overwriting any existing reaction.
 func (c client) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
 	// Create a entryReactionsDocument document so that its children appear in Firestore console.

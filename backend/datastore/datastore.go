@@ -14,13 +14,25 @@ import (
 // storing and retrieving all persistent data (journal entries, journal drafts,
 // reactions).
 type Datastore interface {
+	// Users returns all the users who have published entries.
 	Users() ([]string, error)
-	AllEntries(username string) ([]types.JournalEntry, error)
+	// GetEntries returns all published entries for the given user.
+	GetEntries(username string) ([]types.JournalEntry, error)
+	// GetDraft returns an entry draft for the given user for the given date.
 	GetDraft(username string, date string) (types.JournalEntry, error)
+	// InsertEntry saves an entry to the datastore, overwriting any existing entry
+	// with the same name and username.
 	InsertEntry(username string, j types.JournalEntry) error
+	// InsertDraft saves an entry draft to the datastore, overwriting any existing
+	// draft with the same name and username.
 	InsertDraft(username string, j types.JournalEntry) error
+	// GetReactions retrieves reader reactions associated with a published entry.
 	GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error)
+	// AddReaction saves a reader reaction associated with a published entry,
+	// overwriting any existing reaction.
 	AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error
+	// Close cleans up datastore resources. Clients should not call any Datastore
+	// functions after calling Close().
 	Close() error
 }
 
