@@ -15,6 +15,13 @@ func (s defaultServer) userGet() http.HandlerFunc {
 			return
 		}
 
+		p, err := s.datastore.GetUserProfile(username)
+		if err != nil {
+			log.Printf("Failed to retrieve user profile data for %s: %s", username, err)
+			http.Error(w, "Invalid username", http.StatusNotFound)
+			return
+		}
+
 		type userResponse struct {
 			Username      string `json:"username"`
 			AboutMarkdown string `json:"aboutMarkdown"`
@@ -24,9 +31,9 @@ func (s defaultServer) userGet() http.HandlerFunc {
 
 		resp := userResponse{
 			Username:      username,
-			AboutMarkdown: "Hi, I'm Michael, creator of What Got Done.\n\nI also blog at [mtlynch.io](https://mtlynch.io).",
-			TwitterHandle: "deliberatecoder",
-			EmailAddress:  "michael@mtlynch.io",
+			AboutMarkdown: p.AboutMarkdown,
+			TwitterHandle: p.TwitterHandle,
+			EmailAddress:  p.EmailAddress,
 		}
 
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
