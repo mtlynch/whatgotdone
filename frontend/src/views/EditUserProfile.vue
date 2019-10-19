@@ -6,7 +6,7 @@
 
     <h2>About</h2>
 
-    <textarea>{{ aboutMarkdown }}</textarea>
+    <textarea v-model="aboutMarkdown" />
 
     <h2>Contact</h2>
 
