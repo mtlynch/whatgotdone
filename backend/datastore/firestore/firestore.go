@@ -44,10 +44,10 @@ const (
 	secretUserKitDocKey = "userKitKey"
 )
 
-func getGoogleCloudProjectId() string {
-	projectId := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	if projectId == "" {
+func getGoogleCloudProjectID() string {
+	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	if projectID == "" {
 		log.Fatalf("GOOGLE_CLOUD_PROJECT environment variable must be set")
 	}
-	return projectId
+	return projectID
 }

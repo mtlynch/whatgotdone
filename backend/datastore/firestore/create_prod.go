@@ -10,5 +10,5 @@ import (
 )
 
 func newFirestoreClient(ctx context.Context) (*firestore.Client, error) {
-	return firestore.NewClient(ctx, getGoogleCloudProjectId())
+	return firestore.NewClient(ctx, getGoogleCloudProjectID())
 }
