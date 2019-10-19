@@ -9,3 +9,6 @@ service-account-creds*.json
 
 # Holds secret environment variables in prod
 env_variables.yaml
+
+# Holds secret environment variables for dev
+env_variables.sh
