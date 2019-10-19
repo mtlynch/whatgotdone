@@ -8,5 +8,6 @@ require (
 	github.com/gorilla/handlers v1.4.0
 	github.com/gorilla/mux v1.6.2
 	github.com/workpail/userkit-go v0.0.0-20180527213510-29d105cd872b
+	golang.org/x/tools/gopls v0.1.7 // indirect
 	google.golang.org/api v0.3.2
 )
