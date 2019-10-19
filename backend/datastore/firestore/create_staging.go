@@ -1,6 +1,6 @@
 // +build staging
 
-package datastore
+package firestore
 
 import (
 	"context"

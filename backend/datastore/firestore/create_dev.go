@@ -1,6 +1,6 @@
 // +build dev
 
-package datastore
+package firestore
 
 import (
 	"context"
