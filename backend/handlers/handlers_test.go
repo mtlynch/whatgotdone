@@ -20,7 +20,7 @@ func (ds mockDatastore) Users() ([]string, error) {
 	return ds.users, nil
 }
 
-func (ds mockDatastore) AllEntries(username string) ([]types.JournalEntry, error) {
+func (ds mockDatastore) GetEntries(username string) ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }
 

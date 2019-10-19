@@ -16,7 +16,7 @@ func (s *defaultServer) entriesGet() http.HandlerFunc {
 			return
 		}
 
-		entries, err := s.datastore.AllEntries(username)
+		entries, err := s.datastore.GetEntries(username)
 		if err != nil {
 			log.Printf("Failed to retrieve entries: %s", err)
 			http.Error(w, fmt.Sprintf("Failed to retrieve entries for %s", username), http.StatusInternalServerError)

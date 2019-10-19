@@ -25,7 +25,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 
 		var entries []recentEntry
 		for _, username := range users {
-			userEntries, err := s.datastore.AllEntries(username)
+			userEntries, err := s.datastore.GetEntries(username)
 			if err != nil {
 				log.Printf("Failed to retrieve entries for user %s: %s", username, err)
 				return
