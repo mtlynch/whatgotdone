@@ -69,6 +69,12 @@ func TestUserPost(t *testing.T) {
 			http.StatusBadRequest,
 			types.UserProfile{},
 		},
+		// If the request contains an invalid Twitter handle, reject it.
+		{
+			`{ "aboutMarkdown": "I'm a little teapot", "twitterHandle": "inv@liD==h&le", "emailAddress": "hi@example.com" }`,
+			http.StatusBadRequest,
+			types.UserProfile{},
+		},
 	}
 
 	ds := mockDatastore{}

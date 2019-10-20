@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestEmail(t *testing.T) {
+func TestEmailAddress(t *testing.T) {
 	var tests = []struct {
 		explanation   string
 		email         string

@@ -69,6 +69,11 @@ func (s defaultServer) userPost() http.HandlerFunc {
 			return
 		}
 
+		if userProfile.TwitterHandle != "" && !validate.TwitterHandle(userProfile.TwitterHandle) {
+			http.Error(w, "Invalid twitter handle", http.StatusBadRequest)
+			return
+		}
+
 		err = s.datastore.SetUserProfile(username, userProfile)
 		if err != nil {
 			log.Printf("Failed to update user profile: %s", err)
