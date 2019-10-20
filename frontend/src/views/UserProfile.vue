@@ -119,7 +119,8 @@ export default {
             markdown: entry.markdown
           });
         }
-        this.recentEntries.sort((a, b) => a.date - b.date);
+        // Sort newest to oldest.
+        this.recentEntries.sort((a, b) => b.date - a.date);
         this.entriesLoaded = true;
       });
     }
