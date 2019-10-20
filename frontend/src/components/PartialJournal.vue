@@ -10,7 +10,9 @@
           :source="entrySnippet"
         ></vue-markdown>
       </div>
-      <b-button variant="primary" :to="entry.key">More</b-button>
+      <div class="text-center">
+        <b-button variant="primary" :to="entry.key">More</b-button>
+      </div>
     </div>
   </div>
 </template>
@@ -79,11 +81,5 @@ div.journal {
 .journal-body {
   text-align: left;
   margin-bottom: 50px;
-}
-
-.read-more {
-  padding: 8px 25px;
-  background: rgb(0, 167, 97);
-  border-color: rgb(0, 0, 0);
 }
 </style>
