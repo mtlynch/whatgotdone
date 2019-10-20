@@ -19,7 +19,7 @@
       </li>
     </ul>
 
-    <b-button to="/michael" variant="primary" class="float-right">Save</b-button>
+    <b-button variant="primary" class="float-right" @click.prevent="handleSave()">Save</b-button>
   </div>
 </template>
 
@@ -32,9 +32,27 @@ export default {
       aboutMarkdown:
         "Hi, I'm Michael, creator of What Got Done.\n\nI also blog at [mtlynch.io](https://mtlynch.io).",
       twitterUsername: "deliberatecoder",
-      email: "michael@mtlynch.io",
-      canEdit: true
+      email: "michael@mtlynch.io"
     };
+  },
+  computed: {
+    loggedInUsername: function() {
+      return this.$store.state.username;
+    }
+  },
+  methods: {
+    handleSave: function() {
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/user`;
+      this.$http.post(
+        url,
+        {
+          aboutMarkdown: this.aboutMarkdown,
+          twitterUsername: this.twitterUsername,
+          emailAddress: this.emailAddress
+        },
+        { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
+      );
+    }
   }
 };
 </script>
