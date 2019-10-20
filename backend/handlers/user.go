@@ -4,7 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
+
+func (s defaultServer) userOptions() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {}
+}
 
 func (s defaultServer) userGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -42,6 +48,40 @@ func (s defaultServer) userGet() http.HandlerFunc {
 	}
 }
 
+func (s defaultServer) userPost() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username, err := s.loggedInUser(r)
+		if err != nil {
+			http.Error(w, "You must log in to update your profile", http.StatusForbidden)
+			return
+		}
+
+		userProfile, err := profileFromRequest(r)
+		if err != nil {
+			log.Printf("Invalid profile update request: %v", err)
+			http.Error(w, "Invalid profile update request", http.StatusBadRequest)
+			return
+		}
+
+		err = s.datastore.SetUserProfile(username, userProfile)
+		if err != nil {
+			log.Printf("Failed to update user profile: %s", err)
+			http.Error(w, "Failed to update user profile", http.StatusInternalServerError)
+			return
+		}
+
+		type profileUpdateResponse struct {
+			Ok bool `json:"ok"`
+		}
+		resp := profileUpdateResponse{
+			Ok: true,
+		}
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			panic(err)
+		}
+	}
+}
+
 func (s defaultServer) userMeGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := s.loggedInUser(r)
@@ -62,4 +102,28 @@ func (s defaultServer) userMeGet() http.HandlerFunc {
 			panic(err)
 		}
 	}
+}
+
+type profileUpdateRequest struct {
+	AboutMarkdown string `json:"aboutMarkdown"`
+	EmailAddress  string `json:"emailAddress"`
+	TwitterHandle string `json:"twitterHandle"`
+}
+
+func profileFromRequest(r *http.Request) (types.UserProfile, error) {
+	var pur profileUpdateRequest
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&pur)
+	if err != nil {
+		return types.UserProfile{}, err
+	}
+	return types.UserProfile{
+		AboutMarkdown: pur.AboutMarkdown,
+		EmailAddress:  pur.EmailAddress,
+		TwitterHandle: pur.TwitterHandle,
+	}, nil
+}
+
+func isValidProfile(profileUpdateRequest string) bool {
+	return false
 }

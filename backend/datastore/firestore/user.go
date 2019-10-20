@@ -37,3 +37,9 @@ func (c client) GetUserProfile(username string) (profile types.UserProfile, err 
 	}
 	return p, nil
 }
+
+// SetUserProfile updates the given user's profile.
+func (c client) SetUserProfile(username string, p types.UserProfile) error {
+	_, err := c.firestoreClient.Collection(userProfilesRootKey).Doc(username).Set(c.ctx, p)
+	return err
+}

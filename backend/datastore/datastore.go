@@ -18,6 +18,8 @@ type Datastore interface {
 	Users() ([]string, error)
 	// GetUserProfile returns profile information for the given user.
 	GetUserProfile(username string) (types.UserProfile, error)
+	// SetUserProfile updates the given user's profile.
+	SetUserProfile(username string, profile types.UserProfile) error
 	// GetEntries returns all published entries for the given user.
 	GetEntries(username string) ([]types.JournalEntry, error)
 	// GetDraft returns an entry draft for the given user for the given date.

@@ -14,15 +14,11 @@ type mockDatastore struct {
 	journalDrafts  []types.JournalEntry
 	users          []string
 	reactions      []types.Reaction
+	userProfile    types.UserProfile
 }
 
 func (ds mockDatastore) Users() ([]string, error) {
 	return ds.users, nil
-}
-
-func (ds mockDatastore) GetUserProfile(username string) (types.UserProfile, error) {
-	p := types.UserProfile{}
-	return p, nil
 }
 
 func (ds mockDatastore) GetEntries(username string) ([]types.JournalEntry, error) {
