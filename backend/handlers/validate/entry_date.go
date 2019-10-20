@@ -6,8 +6,9 @@ import "time"
 // valid, the date must be:
 //
 //  * In YYYY-MM-DD format
+//  * A Friday
 //  * After 2019-01-01
-//  * Be no later than the next Friday
+//  * Be no later than the nearest following Friday
 func EntryDate(date string) bool {
 	t, err := time.Parse("2006-01-02", date)
 	if err != nil {
