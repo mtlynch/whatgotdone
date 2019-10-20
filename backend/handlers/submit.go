@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -42,7 +43,7 @@ func (s *defaultServer) submitPost() http.HandlerFunc {
 			log.Printf("Failed to decode request: %s", err)
 			http.Error(w, "Failed to decode request", http.StatusBadRequest)
 		}
-		if !validateEntryDate(t.Date) {
+		if !validate.EntryDate(t.Date) {
 			log.Printf("Invalid date: %s", t.Date)
 			http.Error(w, "Invalid date", http.StatusBadRequest)
 			return
