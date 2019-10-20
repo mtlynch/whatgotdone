@@ -20,8 +20,14 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
   { path: '/privacy-policy', component: PrivacyPolicy },
-  { path: '/:username', component: UserProfile },
-  { path: '/:username/edit', component: EditUserProfile },
+  {
+    path: '/:username', component: UserProfile, meta: {
+      title: (route) => {
+        return `${route.params.username} - What Got Done`
+      },
+    },
+  },
+  { path: '/profile/edit', component: EditUserProfile },
   {
     path: '/:username/:date', component: ViewEntry, meta: {
       title: (route) => {
