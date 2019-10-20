@@ -57,7 +57,6 @@ export default {
   name: "EditUserProfile",
   data() {
     return {
-      // TODO(mtlynch): Retrieve this from the server.
       aboutMarkdown: "",
       twitterHandle: "",
       emailAddress: "",
@@ -112,9 +111,6 @@ export default {
             this.formError = error;
           }
         });
-    },
-    sleep: function(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
     }
   },
   created() {

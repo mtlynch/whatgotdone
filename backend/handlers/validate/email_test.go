@@ -40,7 +40,7 @@ func TestEmailAddress(t *testing.T) {
 	for _, tt := range tests {
 		validActual := EmailAddress(tt.email)
 		if validActual != tt.validExpected {
-			t.Errorf("%s: input: %s, got %v, want %v", tt.explanation, tt.email, validActual, tt.validExpected)
+			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.email, validActual, tt.validExpected)
 		}
 	}
 }

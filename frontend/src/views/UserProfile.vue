@@ -106,39 +106,34 @@ export default {
           }
         });
     },
-    loadrecentEntries: function() {
+    loadRecentEntries: function() {
       this.recentEntries = [];
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.username}`;
-      this.$http
-        .get(url)
-        .then(result => {
-          for (const entry of result.data) {
-            this.recentEntries.push({
-              key: `${this.username}/${entry.date}`,
-              author: this.username,
-              date: new Date(entry.date),
-              lastModified: new Date(entry.lastModified),
-              markdown: entry.markdown
-            });
-          }
-          this.recentEntries.sort((a, b) => a.date - b.date);
-          this.entriesLoaded = true;
-        })
-        .catch(() => {
-          // TODO: Handle errors.
-        });
+      this.$http.get(url).then(result => {
+        for (const entry of result.data) {
+          this.recentEntries.push({
+            key: `${this.username}/${entry.date}`,
+            author: this.username,
+            date: new Date(entry.date),
+            lastModified: new Date(entry.lastModified),
+            markdown: entry.markdown
+          });
+        }
+        this.recentEntries.sort((a, b) => a.date - b.date);
+        this.entriesLoaded = true;
+      });
     }
   },
   created() {
     this.loadProfile();
-    this.loadrecentEntries();
+    this.loadRecentEntries();
   },
   watch: {
     $route(to, from) {
       if (to.params.username != from.params.username) {
         this.clear();
         this.loadProfile();
-        this.loadrecentEntries();
+        this.loadRecentEntries();
       }
     }
   }

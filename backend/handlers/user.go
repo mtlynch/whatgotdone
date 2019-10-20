@@ -24,7 +24,6 @@ func (s defaultServer) userGet() http.HandlerFunc {
 		}
 
 		p, err := s.datastore.GetUserProfile(username)
-
 		if _, ok := err.(datastore.UserProfileNotFoundError); ok {
 			http.Error(w, "No profile found", http.StatusNotFound)
 			return
@@ -35,14 +34,12 @@ func (s defaultServer) userGet() http.HandlerFunc {
 		}
 
 		type userResponse struct {
-			Username      string `json:"username"`
 			AboutMarkdown string `json:"aboutMarkdown"`
 			TwitterHandle string `json:"twitterHandle"`
 			EmailAddress  string `json:"emailAddress"`
 		}
 
 		resp := userResponse{
-			Username:      username,
 			AboutMarkdown: p.AboutMarkdown,
 			TwitterHandle: p.TwitterHandle,
 			EmailAddress:  p.EmailAddress,
@@ -125,13 +122,12 @@ func (s defaultServer) userMeGet() http.HandlerFunc {
 	}
 }
 
-type profileUpdateRequest struct {
-	AboutMarkdown string `json:"aboutMarkdown"`
-	EmailAddress  string `json:"emailAddress"`
-	TwitterHandle string `json:"twitterHandle"`
-}
-
 func profileFromRequest(r *http.Request) (types.UserProfile, error) {
+	type profileUpdateRequest struct {
+		AboutMarkdown string `json:"aboutMarkdown"`
+		EmailAddress  string `json:"emailAddress"`
+		TwitterHandle string `json:"twitterHandle"`
+	}
 	var pur profileUpdateRequest
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&pur)

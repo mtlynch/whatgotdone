@@ -43,12 +43,12 @@ func TestUserBio(t *testing.T) {
 		},
 		{
 			"bio that's exactly 300 characters is valid",
-			strings.Repeat("A", 300),
+			strings.Repeat("A", UserBioMaxLength),
 			true,
 		},
 		{
 			"bio longer than 300 characters is invalid",
-			strings.Repeat("A", 301),
+			strings.Repeat("A", UserBioMaxLength+1),
 			false,
 		},
 		{
