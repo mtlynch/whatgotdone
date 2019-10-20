@@ -37,12 +37,28 @@ func TestUserPost(t *testing.T) {
 				EmailAddress:  "hi@example.com",
 			},
 		},
-		// Partially populated request body.
+		// Accept an update with only about field populated.
+		{
+			`{ "aboutMarkdown": "I'm a little teapot" }`,
+			http.StatusOK,
+			types.UserProfile{
+				AboutMarkdown: "I'm a little teapot",
+			},
+		},
+		// Accept an update with only twitter field populated.
 		{
 			`{ "twitterHandle": "someTweeter" }`,
 			http.StatusOK,
 			types.UserProfile{
 				TwitterHandle: "someTweeter",
+			},
+		},
+		// Accept an update with only email address field populated.
+		{
+			`{ "emailAddress": "hi@example.com" }`,
+			http.StatusOK,
+			types.UserProfile{
+				EmailAddress: "hi@example.com",
 			},
 		},
 		// When request body is empty dict, store empty profile.
