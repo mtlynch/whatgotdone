@@ -2,7 +2,10 @@ package firestore
 
 import (
 	"google.golang.org/api/iterator"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -29,16 +32,20 @@ func (c client) GetUserProfile(username string) (profile types.UserProfile, err 
 	doc := c.firestoreClient.Collection(userProfilesRootKey).Doc(username)
 	docsnap, err := doc.Get(c.ctx)
 	if err != nil {
-		return profile, err
+		if status.Code(err) == codes.NotFound {
+			return types.UserProfile{}, datastore.UserProfileNotFoundError{Username: username}
+		}
+		return types.UserProfile{}, err
 	}
 	var p types.UserProfile
 	if err := docsnap.DataTo(&p); err != nil {
-		return profile, err
+		return types.UserProfile{}, err
 	}
 	return p, nil
 }
 
-// SetUserProfile updates the given user's profile.
+// SetUserProfile updates the given user's profile or creates a new profile for
+// the user.
 func (c client) SetUserProfile(username string, p types.UserProfile) error {
 	_, err := c.firestoreClient.Collection(userProfilesRootKey).Doc(username).Set(c.ctx, p)
 	return err

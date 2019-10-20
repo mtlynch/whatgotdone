@@ -49,3 +49,13 @@ type DraftNotFoundError struct {
 func (f DraftNotFoundError) Error() string {
 	return fmt.Sprintf("Could not find draft entry for user %s on date %s", f.Username, f.Date)
 }
+
+// UserProfileNotFoundError occurs when no profile exists for the given
+// username. The user might exist, but they have not submitted profile data.
+type UserProfileNotFoundError struct {
+	Username string
+}
+
+func (f UserProfileNotFoundError) Error() string {
+	return fmt.Sprintf("No user profile found for username %s", f.Username)
+}

@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -23,7 +24,11 @@ func (s defaultServer) userGet() http.HandlerFunc {
 		}
 
 		p, err := s.datastore.GetUserProfile(username)
-		if err != nil {
+
+		if _, ok := err.(datastore.UserProfileNotFoundError); ok {
+			http.Error(w, "No profile found", http.StatusNotFound)
+			return
+		} else if err != nil {
 			log.Printf("Failed to retrieve user profile data for %s: %s", username, err)
 			http.Error(w, "Invalid username", http.StatusNotFound)
 			return

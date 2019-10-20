@@ -2,22 +2,44 @@
   <div>
     <h1>Edit Profile</h1>
 
-    <h2>About</h2>
+    <p>Fill out your public profile below:</p>
 
-    <textarea v-model="aboutMarkdown" />
+    <div class="form-group">
+      <label for="userBio">Bio</label>
+      <textarea
+        id="userBio"
+        v-model="aboutMarkdown"
+        :disabled="!profileLoaded"
+        class="form-control"
+        maxlength="300"
+        placeholder="Tell others who you are and what your current projects are"
+      />
+    </div>
 
-    <h2>Contact</h2>
+    <div class="form-group">
+      <label for="emailAddress">Public email address</label>
+      <input
+        type="email"
+        v-model="emailAddress"
+        class="form-control"
+        id="emailAddress"
+        :disabled="!profileLoaded"
+        placeholder="name@example.com"
+      />
+    </div>
 
-    <ul>
-      <li>
-        Twitter:
-        <input type="text" v-model="twitterHandle" maxlength="15" />
-      </li>
-      <li>
-        Email:
-        <input type="text" v-model="emailAddress" />
-      </li>
-    </ul>
+    <div class="form-group">
+      <label for="twitterHandle">Twitter handle</label>
+      <input
+        type="text"
+        v-model="twitterHandle"
+        class="form-control"
+        id="twitterHandle"
+        :disabled="!profileLoaded"
+      />
+    </div>
+
+    <div class="alert alert-primary" role="alert" v-if="formError">{{ formError }}</div>
 
     <b-button variant="primary" class="float-right" @click.prevent="handleSave()">Save</b-button>
   </div>
@@ -33,7 +55,9 @@ export default {
       // TODO(mtlynch): Retrieve this from the server.
       aboutMarkdown: "",
       twitterHandle: "",
-      emailAddress: ""
+      emailAddress: "",
+      profileLoaded: false,
+      formError: null
     };
   },
   computed: {
@@ -42,6 +66,20 @@ export default {
     }
   },
   methods: {
+    loadProfile: function() {
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/${this.loggedInUsername}`;
+      this.$http
+        .get(url)
+        .then(result => {
+          this.aboutMarkdown = result.data.aboutMarkdown;
+          this.twitterHandle = result.data.twitterHandle;
+          this.emailAddress = result.data.emailAddress;
+          this.profileLoaded = true;
+        })
+        .catch(() => {
+          // TODO: Handle errors.
+        });
+    },
     handleSave: function() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/user`;
       this.$http
@@ -59,10 +97,19 @@ export default {
             this.$router.push(`/${this.loggedInUsername}`);
           }
         })
-        .catch(() => {
+        .catch(error => {
+          if (error.response && error.response.data) {
+            this.formError = error.response.data;
+          } else {
+            this.formError = error;
+          }
+
           // TODO: Handle error.
         });
     }
+  },
+  created() {
+    this.loadProfile();
   }
 };
 </script>
