@@ -91,6 +91,12 @@ func TestUserPost(t *testing.T) {
 			http.StatusBadRequest,
 			types.UserProfile{},
 		},
+		// If the request contains an illegal bio, reject it.
+		{
+			`{ "aboutMarkdown": "# Headings are invalid", "twitterHandle": "someTweeter", "emailAddress": "hi@example.com" }`,
+			http.StatusBadRequest,
+			types.UserProfile{},
+		},
 	}
 
 	ds := mockDatastore{}

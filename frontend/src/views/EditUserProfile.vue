@@ -11,11 +11,11 @@
     <ul>
       <li>
         Twitter:
-        <input type="text" :value="twitterUsername" />
+        <input type="text" v-model="twitterHandle" maxlength="15" />
       </li>
       <li>
         Email:
-        <input type="text" :value="email" />
+        <input type="text" v-model="emailAddress" />
       </li>
     </ul>
 
@@ -31,10 +31,9 @@ export default {
   data() {
     return {
       // TODO(mtlynch): Retrieve this from the server.
-      aboutMarkdown:
-        "Hi, I'm Michael, creator of What Got Done.\n\nI also blog at [mtlynch.io](https://mtlynch.io).",
-      twitterUsername: "deliberatecoder",
-      email: "michael@mtlynch.io"
+      aboutMarkdown: "",
+      twitterHandle: "",
+      emailAddress: ""
     };
   },
   computed: {
@@ -45,15 +44,24 @@ export default {
   methods: {
     handleSave: function() {
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/user`;
-      this.$http.post(
-        url,
-        {
-          aboutMarkdown: this.aboutMarkdown,
-          twitterUsername: this.twitterUsername,
-          emailAddress: this.emailAddress
-        },
-        { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
-      );
+      this.$http
+        .post(
+          url,
+          {
+            aboutMarkdown: this.aboutMarkdown,
+            twitterHandle: this.twitterHandle,
+            emailAddress: this.emailAddress
+          },
+          { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
+        )
+        .then(result => {
+          if (result.data.ok) {
+            this.$router.push(`/${this.loggedInUsername}`);
+          }
+        })
+        .catch(() => {
+          // TODO: Handle error.
+        });
     }
   }
 };

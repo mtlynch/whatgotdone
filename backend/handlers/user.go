@@ -64,6 +64,11 @@ func (s defaultServer) userPost() http.HandlerFunc {
 			return
 		}
 
+		if !validate.UserBio(userProfile.AboutMarkdown) {
+			http.Error(w, "Invalid user bio", http.StatusBadRequest)
+			return
+		}
+
 		if userProfile.EmailAddress != "" && !validate.EmailAddress(userProfile.EmailAddress) {
 			http.Error(w, "Invalid email address", http.StatusBadRequest)
 			return

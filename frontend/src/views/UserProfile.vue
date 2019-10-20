@@ -24,7 +24,13 @@
       </ul>
     </template>
 
-    <b-button v-if="canEdit" to="/profile/edit/" variant="primary" class="edit-btn float-right">Edit</b-button>
+    <b-button
+      v-if="canEdit"
+      to="/profile/edit"
+      variant="primary"
+      class="edit-btn float-right"
+      :disabled="!profileLoaded"
+    >Edit</b-button>
 
     <h2>Recent entries</h2>
 
@@ -50,7 +56,8 @@ export default {
       aboutMarkdown: "",
       twitterHandle: null,
       emailAddress: null,
-      recentEntries: []
+      recentEntries: [],
+      profileLoaded: false
     };
   },
   computed: {
@@ -75,6 +82,7 @@ export default {
           this.aboutMarkdown = result.data.aboutMarkdown;
           this.twitterHandle = result.data.twitterHandle;
           this.emailAddress = result.data.emailAddress;
+          this.profileLoaded = true;
         })
         .catch(() => {
           // TODO: Handle errors.
