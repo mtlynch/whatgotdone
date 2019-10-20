@@ -37,6 +37,16 @@ func TestUserPost(t *testing.T) {
 				EmailAddress:  "hi@example.com",
 			},
 		},
+		// Trims leading and trailing whitespace from about field.
+		{
+			`{ "aboutMarkdown": " I'm a little teapot\t\n", "twitterHandle": "someTweeter", "emailAddress": "hi@example.com" }`,
+			http.StatusOK,
+			types.UserProfile{
+				AboutMarkdown: "I'm a little teapot",
+				TwitterHandle: "someTweeter",
+				EmailAddress:  "hi@example.com",
+			},
+		},
 		// Accept an update with only about field populated.
 		{
 			`{ "aboutMarkdown": "I'm a little teapot" }`,

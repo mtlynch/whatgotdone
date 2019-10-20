@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
@@ -135,7 +136,7 @@ func profileFromRequest(r *http.Request) (types.UserProfile, error) {
 		return types.UserProfile{}, err
 	}
 	return types.UserProfile{
-		AboutMarkdown: pur.AboutMarkdown,
+		AboutMarkdown: strings.TrimSpace(pur.AboutMarkdown),
 		EmailAddress:  pur.EmailAddress,
 		TwitterHandle: pur.TwitterHandle,
 	}, nil
