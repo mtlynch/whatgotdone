@@ -28,7 +28,7 @@ func (c client) Users() (users []string, err error) {
 }
 
 // UserProfile returns profile information about the given user.
-func (c client) GetUserProfile(username string) (profile types.UserProfile, err error) {
+func (c client) GetUserProfile(username string) (types.UserProfile, error) {
 	doc := c.firestoreClient.Collection(userProfilesRootKey).Doc(username)
 	docsnap, err := doc.Get(c.ctx)
 	if err != nil {

@@ -9,6 +9,7 @@
       :html="false"
       :anchorAttributes="{rel: 'ugc' }"
       :source="aboutMarkdown"
+      class="user-bio"
     ></vue-markdown>
 
     <p
@@ -21,10 +22,13 @@
 
       <ul>
         <li v-if="emailAddress">
-          <a :href="'mailto:' + emailAddress">{{ emailAddress }}</a> (Email)
+          <a :href="'mailto:' + emailAddress" class="email-address">{{ emailAddress }}</a> (Email)
         </li>
         <li v-if="twitterHandle">
-          <a :href="'https://twitter.com/' + twitterHandle">@{{ twitterHandle }}</a> (Twitter)
+          <a
+            :href="'https://twitter.com/' + twitterHandle"
+            class="twitter-handle"
+          >@{{ twitterHandle }}</a> (Twitter)
         </li>
       </ul>
     </template>

@@ -144,7 +144,3 @@ func profileFromRequest(r *http.Request) (types.UserProfile, error) {
 		TwitterHandle: pur.TwitterHandle,
 	}, nil
 }
-
-func isValidProfile(profileUpdateRequest string) bool {
-	return false
-}

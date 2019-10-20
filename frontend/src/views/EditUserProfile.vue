@@ -5,9 +5,9 @@
     <p>Fill out your public profile below:</p>
 
     <div class="form-group">
-      <label for="userBio">Bio</label>
+      <label for="user-bio">Bio</label>
       <textarea
-        id="userBio"
+        id="user-bio"
         v-model="aboutMarkdown"
         :disabled="!profileLoaded"
         class="form-control"
@@ -17,31 +17,36 @@
     </div>
 
     <div class="form-group">
-      <label for="emailAddress">Public email address</label>
+      <label for="email-address">Public email address</label>
       <input
         type="email"
         v-model="emailAddress"
         class="form-control"
-        id="emailAddress"
+        id="email-address"
         :disabled="!profileLoaded"
         placeholder="name@example.com"
       />
     </div>
 
     <div class="form-group">
-      <label for="twitterHandle">Twitter handle</label>
+      <label for="twitter-handle">Twitter handle</label>
       <input
         type="text"
         v-model="twitterHandle"
         class="form-control"
-        id="twitterHandle"
+        id="twitter-handle"
         :disabled="!profileLoaded"
       />
     </div>
 
     <div class="alert alert-primary" role="alert" v-if="formError">{{ formError }}</div>
 
-    <b-button variant="primary" class="float-right" @click.prevent="handleSave()">Save</b-button>
+    <b-button
+      variant="primary"
+      class="float-right"
+      @click.prevent="handleSave()"
+      id="save-profile"
+    >Save</b-button>
   </div>
 </template>
 
@@ -76,8 +81,11 @@ export default {
           this.emailAddress = result.data.emailAddress;
           this.profileLoaded = true;
         })
-        .catch(() => {
-          // TODO: Handle errors.
+        .catch(error => {
+          if (error.response && error.response.status == 404) {
+            // A 404 for a user profile is equivalent to retrieving an empty profile.
+            this.profileLoaded = true;
+          }
         });
     },
     handleSave: function() {
@@ -103,9 +111,10 @@ export default {
           } else {
             this.formError = error;
           }
-
-          // TODO: Handle error.
         });
+    },
+    sleep: function(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
     }
   },
   created() {

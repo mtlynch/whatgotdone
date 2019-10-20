@@ -50,12 +50,6 @@ it('renders the date correctly', () => {
     });
 })
 
-it('reaction buttons should not appear when the user has no posts', () => {
-  cy.visit('/dummyUserWithZeroPosts')
-
-  cy.get('.reaction-buttons').should('not.exist');
-})
-
 it('reaction buttons should not appear when the post is missing', () => {
   cy.visit('/staging.jimmy/2000-01-07')
 
@@ -186,4 +180,49 @@ it('logs in and signs out', () => {
 
   cy.visit('/logout')
   cy.location('pathname').should('eq', '/')
+})
+
+it('views a non-existing user profile with empty information', () => {
+  cy.visit('/nonExistentUser')
+  cy.get('.no-bio-message')
+    .should('be.visible')
+  cy.get('.no-entries-message')
+    .should('be.visible')
+})
+
+it('logs in updates profile', () => {
+  cy.server()
+  cy.route('/api/user/staging.jimmy').as('getUserProfile')
+
+  cy.login('staging.jimmy', 'just4st@ginG!')
+
+  cy.url().should('include', '/entry/edit')
+
+  cy.visit('/staging.jimmy')
+  cy.get('.edit-btn').click()
+
+  // Wait for page to pull down existing profile.
+  cy.wait('@getUserProfile')
+
+  cy.get('#user-bio')
+    .clear()
+    .type("Hello, my name is staging.jimmy!")
+
+  cy.get('#email-address')
+    .clear()
+    .type("staging.jimmy@example.com")
+
+  cy.get('#twitter-handle')
+    .clear()
+    .type("jack")
+
+  cy.get('#save-profile').click()
+  cy.url().should('include', '/staging.jimmy')
+
+  cy.get('.user-bio')
+    .should('contain', "Hello, my name is staging.jimmy!")
+  cy.get('.email-address')
+    .should('contain', "staging.jimmy@example.com")
+  cy.get('.twitter-handle')
+    .should('contain', "jack")
 })
