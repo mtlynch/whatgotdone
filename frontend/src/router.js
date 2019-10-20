@@ -8,6 +8,8 @@ import PrivacyPolicy from "./views/PrivacyPolicy.vue";
 import Recent from "./views/Recent.vue";
 import EditEntry from "./views/EditEntry.vue";
 import ViewEntry from "./views/ViewEntry.vue";
+import EditUserProfile from "./views/EditUserProfile.vue";
+import UserProfile from "./views/UserProfile.vue";
 import MissingPage from "./views/404.vue";
 
 Vue.use(VueRouter)
@@ -18,7 +20,14 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
   { path: '/privacy-policy', component: PrivacyPolicy },
-  { path: '/:username', component: ViewEntry },
+  {
+    path: '/:username', component: UserProfile, meta: {
+      title: (route) => {
+        return `${route.params.username} - What Got Done`
+      },
+    },
+  },
+  { path: '/profile/edit', component: EditUserProfile },
   {
     path: '/:username/:date', component: ViewEntry, meta: {
       title: (route) => {

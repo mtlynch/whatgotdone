@@ -42,6 +42,7 @@ const (
 	perUserReactionsKey = "perUserReactions"
 	secretsRootKey      = "secrets"
 	secretUserKitDocKey = "userKitKey"
+	userProfilesRootKey = "userProfiles"
 )
 
 func getGoogleCloudProjectID() string {

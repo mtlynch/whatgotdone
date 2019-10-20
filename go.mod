@@ -10,4 +10,5 @@ require (
 	github.com/workpail/userkit-go v0.0.0-20180527213510-29d105cd872b
 	golang.org/x/tools/gopls v0.1.7 // indirect
 	google.golang.org/api v0.3.2
+	google.golang.org/grpc v1.19.0
 )

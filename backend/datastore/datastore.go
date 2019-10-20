@@ -16,6 +16,10 @@ import (
 type Datastore interface {
 	// Users returns all the users who have published entries.
 	Users() ([]string, error)
+	// GetUserProfile returns profile information for the given user.
+	GetUserProfile(username string) (types.UserProfile, error)
+	// SetUserProfile updates the given user's profile.
+	SetUserProfile(username string, profile types.UserProfile) error
 	// GetEntries returns all published entries for the given user.
 	GetEntries(username string) ([]types.JournalEntry, error)
 	// GetDraft returns an entry draft for the given user for the given date.
@@ -44,4 +48,14 @@ type DraftNotFoundError struct {
 
 func (f DraftNotFoundError) Error() string {
 	return fmt.Sprintf("Could not find draft entry for user %s on date %s", f.Username, f.Date)
+}
+
+// UserProfileNotFoundError occurs when no profile exists for the given
+// username. The user might exist, but they have not submitted profile data.
+type UserProfileNotFoundError struct {
+	Username string
+}
+
+func (f UserProfileNotFoundError) Error() string {
+	return fmt.Sprintf("No user profile found for username %s", f.Username)
 }

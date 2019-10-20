@@ -14,6 +14,7 @@ type mockDatastore struct {
 	journalDrafts  []types.JournalEntry
 	users          []string
 	reactions      []types.Reaction
+	userProfile    types.UserProfile
 }
 
 func (ds mockDatastore) Users() ([]string, error) {
