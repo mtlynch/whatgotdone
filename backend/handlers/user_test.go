@@ -21,7 +21,56 @@ func (ds *mockDatastore) SetUserProfile(username string, p types.UserProfile) er
 	return nil
 }
 
-func TestUserPostStoresValidProfile(t *testing.T) {
+func TestUserPost(t *testing.T) {
+	var userPostTests = []struct {
+		requestBody         string
+		httpStatusExpected  int
+		userProfileExpected types.UserProfile
+	}{
+		// Valid case.
+		{
+			`{ "aboutMarkdown": "I'm a little teapot", "twitterHandle": "someTweeter", "emailAddress": "hi@example.com" }`,
+			http.StatusOK,
+			types.UserProfile{
+				AboutMarkdown: "I'm a little teapot",
+				TwitterHandle: "someTweeter",
+				EmailAddress:  "hi@example.com",
+			},
+		},
+		// Partially populated request body.
+		{
+			`{ "twitterHandle": "someTweeter" }`,
+			http.StatusOK,
+			types.UserProfile{
+				TwitterHandle: "someTweeter",
+			},
+		},
+		// When request body is empty dict, store empty profile.
+		{
+			`{ }`,
+			http.StatusOK,
+			types.UserProfile{},
+		},
+		// When request body is empty string, return bad request error.
+		{
+			"",
+			http.StatusBadRequest,
+			types.UserProfile{},
+		},
+		// When request body is malformed dict, return bad request error.
+		{
+			"{",
+			http.StatusBadRequest,
+			types.UserProfile{},
+		},
+		// If the request contains a malformed email, reject it.
+		{
+			`{ "aboutMarkdown": "I'm a little teapot", "twitterHandle": "someTweeter", "emailAddress": "hi[at]example.com" }`,
+			http.StatusBadRequest,
+			types.UserProfile{},
+		},
+	}
+
 	ds := mockDatastore{}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -36,131 +85,23 @@ func TestUserPostStoresValidProfile(t *testing.T) {
 	}
 	s.routes()
 
-	requestBody := []byte(`{ "aboutMarkdown": "I'm a little teapot", "twitterHandle": "someTweeter", "emailAddress": "hi@example.com" }`)
-	req, err := http.NewRequest("POST", "/api/user", bytes.NewBuffer(requestBody))
-	if err != nil {
-		t.Fatal(err)
-	}
-	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
+	for _, tt := range userPostTests {
+		req, err := http.NewRequest("POST", "/api/user", bytes.NewBuffer([]byte(tt.requestBody)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
 
-	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+		w := httptest.NewRecorder()
+		s.router.ServeHTTP(w, req)
 
-	if status := w.Code; status != http.StatusOK {
-		t.Fatalf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-	userProfileExpected := types.UserProfile{
-		AboutMarkdown: "I'm a little teapot",
-		TwitterHandle: "someTweeter",
-		EmailAddress:  "hi@example.com",
-	}
-	if !reflect.DeepEqual(ds.userProfile, userProfileExpected) {
-		t.Fatalf("unexpected user profile: got %v want %v",
-			ds.userProfile, userProfileExpected)
-	}
-}
-
-func TestUserPostStoresEmptyProfileWhenRequestIsPartiallyPopulatedDict(t *testing.T) {
-	ds := mockDatastore{}
-	router := mux.NewRouter()
-	s := defaultServer{
-		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
-				"mock_token_C": "dummyUserC",
-			},
-		},
-		datastore:      &ds,
-		router:         router,
-		csrfMiddleware: dummyCsrfMiddleware(),
-	}
-	s.routes()
-
-	requestBody := []byte(`{ "twitterHandle": "someTweeter" }`)
-	req, err := http.NewRequest("POST", "/api/user", bytes.NewBuffer(requestBody))
-	if err != nil {
-		t.Fatal(err)
-	}
-	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
-
-	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
-
-	if status := w.Code; status != http.StatusOK {
-		t.Fatalf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-	userProfileExpected := types.UserProfile{
-		TwitterHandle: "someTweeter",
-	}
-	if !reflect.DeepEqual(ds.userProfile, userProfileExpected) {
-		t.Fatalf("unexpected user profile: got %v want %v",
-			ds.userProfile, userProfileExpected)
-	}
-}
-
-func TestUserPostStoresEmptyProfileWhenRequestIsEmptyDict(t *testing.T) {
-	ds := mockDatastore{}
-	router := mux.NewRouter()
-	s := defaultServer{
-		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
-				"mock_token_C": "dummyUserC",
-			},
-		},
-		datastore:      &ds,
-		router:         router,
-		csrfMiddleware: dummyCsrfMiddleware(),
-	}
-	s.routes()
-
-	requestBody := []byte(`{ }`)
-	req, err := http.NewRequest("POST", "/api/user", bytes.NewBuffer(requestBody))
-	if err != nil {
-		t.Fatal(err)
-	}
-	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
-
-	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
-
-	if status := w.Code; status != http.StatusOK {
-		t.Fatalf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-	if !reflect.DeepEqual(ds.userProfile, types.UserProfile{}) {
-		t.Fatalf("unexpected user profile: got %v want %v",
-			ds.userProfile, types.UserProfile{})
-	}
-}
-
-func TestUserPostReturnsStatusBadRequestWhenRequestIsEmptyString(t *testing.T) {
-	ds := mockDatastore{}
-	router := mux.NewRouter()
-	s := defaultServer{
-		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
-				"mock_token_C": "dummyUserC",
-			},
-		},
-		datastore:      &ds,
-		router:         router,
-		csrfMiddleware: dummyCsrfMiddleware(),
-	}
-	s.routes()
-
-	requestBody := []byte("")
-	req, err := http.NewRequest("POST", "/api/user", bytes.NewBuffer(requestBody))
-	if err != nil {
-		t.Fatal(err)
-	}
-	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
-
-	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
-
-	if status := w.Code; status != http.StatusBadRequest {
-		t.Fatalf("handler returned wrong status code: got %v want %v",
-			status, http.StatusBadRequest)
+		if status := w.Code; status != tt.httpStatusExpected {
+			t.Fatalf("for input [%s], handler returned wrong status code: got %v want %v",
+				tt.requestBody, status, tt.httpStatusExpected)
+		}
+		if tt.httpStatusExpected == http.StatusOK && !reflect.DeepEqual(ds.userProfile, tt.userProfileExpected) {
+			t.Fatalf("for input [%s], unexpected user profile: got %v want %v",
+				tt.requestBody, ds.userProfile, tt.userProfileExpected)
+		}
 	}
 }
