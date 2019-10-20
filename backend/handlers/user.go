@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -60,6 +61,11 @@ func (s defaultServer) userPost() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Invalid profile update request: %v", err)
 			http.Error(w, "Invalid profile update request", http.StatusBadRequest)
+			return
+		}
+
+		if userProfile.EmailAddress != "" && !validate.EmailAddress(userProfile.EmailAddress) {
+			http.Error(w, "Invalid email address", http.StatusBadRequest)
 			return
 		}
 
