@@ -143,12 +143,12 @@ a {
 }
 
 .flex-grid {
-  display: flex;
+  display: block;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .flex-grid {
-    display: block;
+    display: flex;
   }
 }
 
