@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from "./views/Home.vue";
+import SignUp from "./views/SignUp.vue";
 import Login from "./views/Login.vue";
 import Logout from "./views/Logout.vue";
 import PrivacyPolicy from "./views/PrivacyPolicy.vue";
@@ -17,6 +18,7 @@ Vue.use(VueRouter)
 const routes = [
   { path: '/recent', component: Recent },
   { path: '/entry/edit/:date', component: EditEntry },
+  { path: '/register', component: SignUp },
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
   { path: '/privacy-policy', component: PrivacyPolicy },
