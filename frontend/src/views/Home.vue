@@ -154,11 +154,18 @@ a {
 
 .col {
   flex: 1;
+  padding: 0px;
 }
 
 .col img {
   margin-top: 28px;
   max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .col img {
+    margin-left: 50px;
+  }
 }
 
 #example-rendered {
