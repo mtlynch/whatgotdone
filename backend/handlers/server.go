@@ -7,7 +7,6 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/auth"
 	"github.com/mtlynch/whatgotdone/backend/datastore"
-	"github.com/mtlynch/whatgotdone/backend/datastore/firestore"
 )
 
 // Server handles HTTP requests for the What Got Done backend.
@@ -20,7 +19,7 @@ type Server interface {
 func New() Server {
 	s := defaultServer{
 		authenticator:  auth.New(),
-		datastore:      firestore.New(),
+		datastore:      newDatastore(),
 		router:         mux.NewRouter(),
 		csrfMiddleware: newCsrfMiddleware(),
 	}
