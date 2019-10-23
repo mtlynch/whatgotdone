@@ -1,5 +1,3 @@
-// +build !staging
-
 package handlers
 
 import (
