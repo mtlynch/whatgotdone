@@ -35,9 +35,6 @@ type Datastore interface {
 	// AddReaction saves a reader reaction associated with a published entry,
 	// overwriting any existing reaction.
 	AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error
-	// Close cleans up datastore resources. Clients should not call any Datastore
-	// functions after calling Close().
-	Close() error
 }
 
 // DraftNotFoundError occurs when no draft exists for a user with a given date.
