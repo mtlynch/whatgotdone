@@ -8,9 +8,9 @@ import (
 	"github.com/gorilla/csrf"
 )
 
-func (s defaultServer) enableCsrf(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (s defaultServer) enableCsrf(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-CSRF-Token", csrf.Token(r))
-		h(w, r)
-	}
+		h.ServeHTTP(w, r)
+	})
 }
