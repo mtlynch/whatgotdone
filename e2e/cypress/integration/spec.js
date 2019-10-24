@@ -23,7 +23,7 @@ it('loads the homepage', () => {
 it('views recent posts', () => {
   cy.visit('/recent')
 
-  cy.get('div.journal').should('contain', 'staging.jimmy\'s update')
+  cy.get('div.journal').should('contain', 'staging_jimmy\'s update')
 })
 
 it('clicking "Post Update" before authenticating prompts login', () => {
@@ -37,7 +37,7 @@ it('clicking "Post Update" before authenticating prompts login', () => {
 })
 
 it('reacting to an entry before authenticating prompts login', () => {
-  cy.visit('/staging.jimmy/2019-06-28')
+  cy.visit('/staging_jimmy/2019-06-28')
 
   cy.get('.reaction-buttons .btn:first-of-type').click();
 
@@ -45,18 +45,18 @@ it('reacting to an entry before authenticating prompts login', () => {
 })
 
 it('renders the date correctly', () => {
-  cy.visit('/staging.jimmy/2019-06-28')
+  cy.visit('/staging_jimmy/2019-06-28')
 
-  cy.title().should('eq', 'staging.jimmy\'s What Got Done for the week of 2019-06-28')
+  cy.title().should('eq', 'staging_jimmy\'s What Got Done for the week of 2019-06-28')
 
   cy.get('.journal-header')
     .then((element) => {
-      expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy\'s update for the week ending on Friday, Jun 28, 2019');
+      expect(element.text().replace(/\s+/g, ' ')).to.equal('staging_jimmy\'s update for the week ending on Friday, Jun 28, 2019');
     });
 })
 
 it('reaction buttons should not appear when the post is missing', () => {
-  cy.visit('/staging.jimmy/2000-01-07')
+  cy.visit('/staging_jimmy/2000-01-07')
 
   cy.get('.reaction-buttons').should('not.exist');
 })
@@ -65,7 +65,7 @@ it('logs in and posts an update', () => {
   cy.server()
   cy.route('/api/draft/*').as('getDraft')
 
-  cy.login('staging.jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/entry/edit')
 
@@ -79,7 +79,7 @@ it('logs in and posts an update', () => {
     .type(entryText)
   cy.get('form').submit()
 
-  cy.url().should('include', '/staging.jimmy/')
+  cy.url().should('include', '/staging_jimmy/')
   cy.get('.journal-body')
     .should('contain', entryText)
 })
@@ -88,7 +88,7 @@ it('logs in and posts an empty update (deleting the update)', () => {
   cy.server()
   cy.route('/api/draft/*').as('getDraft')
 
-  cy.login('staging.jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/entry/edit')
 
@@ -98,7 +98,7 @@ it('logs in and posts an empty update (deleting the update)', () => {
   cy.get('.journal-markdown').clear()
   cy.get('form').submit()
 
-  cy.url().should('include', '/staging.jimmy/')
+  cy.url().should('include', '/staging_jimmy/')
   cy.get('.missing-entry')
     .should('be.visible')
 })
@@ -108,7 +108,7 @@ it('logs in and saves a draft', () => {
   cy.route('GET', '/api/draft/*').as('getDraft')
   cy.route('POST', '/api/draft/*').as('postDraft')
 
-  cy.login('staging.jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/entry/edit')
 
@@ -135,21 +135,21 @@ it('logs in and saves a draft', () => {
 })
 
 it('logs in and views profile', () => {
-  cy.login('staging.jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'just4st@ginG!')
 
   cy.get('.account-dropdown').click()
   cy.get('.profile-link a').click()
 
-  cy.url().should('include', '/staging.jimmy')
+  cy.url().should('include', '/staging_jimmy')
 })
 
 it('logs in and reacts to an entry', () => {
   cy.server()
   cy.route('POST', 'https://api.userkit.io/v1/widget/login').as('postUserKitLogin')
-  cy.login('staging.jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'just4st@ginG!')
   cy.wait('@postUserKitLogin')
 
-  cy.visit('/staging.jimmy/2019-06-28')
+  cy.visit('/staging_jimmy/2019-06-28')
     .its('document')
     .then((document) => {
       const csrfToken = document
@@ -158,20 +158,20 @@ it('logs in and reacts to an entry', () => {
 
       // Clear any existing reaction on the entry.
       cy.request({
-        url: '/api/reactions/entry/staging.jimmy/2019-06-28',
+        url: '/api/reactions/entry/staging_jimmy/2019-06-28',
         method: 'POST',
         headers: {
           'X-Csrf-Token': csrfToken,
         },
         body: { reactionSymbol: "" },
       }).then(() => {
-        cy.visit('/staging.jimmy/2019-06-28').then(() => {
+        cy.visit('/staging_jimmy/2019-06-28').then(() => {
           cy.get('.reaction-buttons .btn:first-of-type').click();
 
           // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
           cy.get('.reaction')
             .then((element) => {
-              expect(element.text().replace(/\s+/g, ' ')).to.equal('staging.jimmy reacted with a 👍');
+              expect(element.text().replace(/\s+/g, ' ')).to.equal('staging_jimmy reacted with a 👍');
             });
         })
       });
@@ -179,7 +179,7 @@ it('logs in and reacts to an entry', () => {
 })
 
 it('logs in and signs out', () => {
-  cy.login('staging.jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/entry/edit')
 
@@ -197,13 +197,13 @@ it('views a non-existing user profile with empty information', () => {
 
 it('logs in updates profile', () => {
   cy.server()
-  cy.route('/api/user/staging.jimmy').as('getUserProfile')
+  cy.route('/api/user/staging_jimmy').as('getUserProfile')
 
-  cy.login('staging.jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'just4st@ginG!')
 
   cy.url().should('include', '/entry/edit')
 
-  cy.visit('/staging.jimmy')
+  cy.visit('/staging_jimmy')
   cy.get('.edit-btn').click()
 
   // Wait for page to pull down existing profile.
@@ -211,23 +211,23 @@ it('logs in updates profile', () => {
 
   cy.get('#user-bio')
     .clear()
-    .type("Hello, my name is staging.jimmy!")
+    .type("Hello, my name is staging_jimmy!")
 
   cy.get('#email-address')
     .clear()
-    .type("staging.jimmy@example.com")
+    .type("staging_jimmy@example.com")
 
   cy.get('#twitter-handle')
     .clear()
     .type("jack")
 
   cy.get('#save-profile').click()
-  cy.url().should('include', '/staging.jimmy')
+  cy.url().should('include', '/staging_jimmy')
 
   cy.get('.user-bio')
-    .should('contain', "Hello, my name is staging.jimmy!")
+    .should('contain', "Hello, my name is staging_jimmy!")
   cy.get('.email-address')
-    .should('contain', "staging.jimmy@example.com")
+    .should('contain', "staging_jimmy@example.com")
   cy.get('.twitter-handle')
     .should('contain', "jack")
 })
