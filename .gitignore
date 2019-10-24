@@ -12,3 +12,6 @@ env_variables.yaml
 
 # Holds secret environment variables for dev
 env_variables.sh
+
+# Holds secret environment variables when running docker-compose
+docker-secrets.env

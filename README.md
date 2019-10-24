@@ -76,7 +76,15 @@ Create a file called `frontend/.env.development.local` with the following conten
 VUE_APP_USERKIT_APP_ID='[your UserKit App ID]'
 ```
 
-### 3. Build the frontend
+### 3. Start a Redis instance
+
+Run the following command to start a Redis server in a Docker container:
+
+```bash
+docker run -it -p 6379:6379 redis
+```
+
+### 4. Build the frontend
 
 To build the Vue frontend for What Got Done, run the following command:
 
@@ -86,7 +94,7 @@ cd frontend && \
   npm run build -- --mode development
 ```
 
-### 4. Run the backend
+### 5. Run the backend
 
 To run the Go backend server, run the following command:
 

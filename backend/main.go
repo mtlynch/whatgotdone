@@ -25,7 +25,10 @@ func main() {
 	if port == "" {
 		port = "3001"
 	}
-	log.Printf("Listening on %s", port)
+
+	log.Print("Options:")
+	log.Printf("  datastore address: [%v]", *datastoreAddr)
+	log.Printf("          HTTP port: [%v]", port)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }

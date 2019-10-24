@@ -23,4 +23,4 @@ WORKDIR /app
 ARG GO_BUILD_TAGS="dev"
 RUN go build --tags "$GO_BUILD_TAGS" -o /app/main backend/main.go
 
-ENTRYPOINT /app/main
+ENTRYPOINT ["/app/main"]
