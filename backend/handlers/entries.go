@@ -87,11 +87,11 @@ func (s *defaultServer) entryPost() http.HandlerFunc {
 			return
 		}
 
-		type submitResponse struct {
+		type entryResponse struct {
 			Ok   bool   `json:"ok"`
 			Path string `json:"path"`
 		}
-		resp := submitResponse{
+		resp := entryResponse{
 			Ok:   true,
 			Path: fmt.Sprintf("/%s/%s", username, date),
 		}
