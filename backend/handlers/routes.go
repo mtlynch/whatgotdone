@@ -10,8 +10,8 @@ func (s *defaultServer) routes() {
 
 	// Handle routes that require backend logic.
 	s.router.HandleFunc("/api/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/entry/{date}", s.editEntryOptions()).Methods(http.MethodOptions)
-	s.router.HandleFunc("/api/entry/{date}", s.editEntryPost()).Methods(http.MethodPost)
+	s.router.HandleFunc("/api/entry/{date}", s.entryOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/entry/{date}", s.entryPost()).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/draft/{date}", s.draftOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/draft/{date}", s.draftGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/draft/{date}", s.draftPost()).Methods(http.MethodPost)
