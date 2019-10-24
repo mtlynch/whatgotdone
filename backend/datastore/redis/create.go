@@ -6,12 +6,12 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
 
-// New creates a new Datastore instance.
+// New creates a new Datastore instance implemented with Redis as the backend.
 func New() datastore.Datastore {
 	c := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Password: "",
+		DB:       0,
 	})
 	return client{
 		redisClient: c,
