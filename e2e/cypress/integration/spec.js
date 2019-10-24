@@ -11,7 +11,6 @@ Cypress.Commands.add('login', (username, password, options = {}) => {
   cy.get('#userkit_password')
     .type(password)
   cy.get('form').submit()
-
 })
 
 it('loads the homepage', () => {
