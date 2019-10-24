@@ -10,8 +10,12 @@ import (
 // mode, it can still communicate with the backend server.
 func (s defaultServer) enableCors(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Origin") == "" {
-			http.Error(w, "Cross domain requests require Origin header", http.StatusBadRequest)
+		origin := r.Header.Get("Origin")
+		if origin == "" {
+			origin = r.Header.Get("Host")
+		}
+		if origin == "" {
+			http.Error(w, "(dev mode) Request needs a Host or Origin header", http.StatusBadRequest)
 			return
 		}
 		w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
