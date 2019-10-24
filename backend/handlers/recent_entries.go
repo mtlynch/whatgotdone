@@ -8,8 +8,8 @@ import (
 )
 
 type recentEntry struct {
-	Author       string `json:"author"`
-	Date         string `json:"date"`
+	Author string `json:"author"`
+	Date   string `json:"date"`
 	// Skip JSON serialization for lastModified as clients don't need this field.
 	lastModified string
 	Markdown     string `json:"markdown"`
@@ -20,14 +20,16 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 		users, err := s.datastore.Users()
 		if err != nil {
 			log.Printf("Failed to retrieve users: %s", err)
+			http.Error(w, "Failed to retrieve users", http.StatusInternalServerError)
 			return
 		}
 
-		var entries []recentEntry
+		entries := []recentEntry{}
 		for _, username := range users {
 			userEntries, err := s.datastore.GetEntries(username)
 			if err != nil {
 				log.Printf("Failed to retrieve entries for user %s: %s", username, err)
+				http.Error(w, "Failed to retrieve users", http.StatusInternalServerError)
 				return
 			}
 			for _, entry := range userEntries {

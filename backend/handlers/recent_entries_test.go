@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -120,5 +121,35 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
+	}
+}
+
+func TestRecentEntriesHandlerReturnsEmptyArrayWhenDatastoreIsEmpty(t *testing.T) {
+	ds := mockDatastore{}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/recentEntries", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	response := strings.TrimSpace(w.Body.String())
+	want := "[]"
+	if response != want {
+		t.Fatalf("Unexpected response: got %v want %v", response, want)
 	}
 }
