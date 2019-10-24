@@ -22,8 +22,9 @@ func TestEntriesHandler(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -55,8 +56,9 @@ func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -91,8 +93,9 @@ func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -117,8 +120,9 @@ func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
