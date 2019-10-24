@@ -1,7 +1,6 @@
 package validate
 
 import (
-	"log"
 	"regexp"
 )
 
@@ -11,7 +10,6 @@ import (
 //  * 1-60 characters
 //  * Only English letters, numbers, and underscores
 func Username(username string) bool {
-	log.Printf("validating username: %v", username) // dbg
 	// If something goes wrong in a JavaScript-based client, it will send the
 	// literal string "undefined" as the username when the username variable is
 	// undefined.
