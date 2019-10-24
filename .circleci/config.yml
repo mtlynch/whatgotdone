@@ -90,6 +90,9 @@ jobs:
             echo "$CLIENT_SECRET" | \
               base64 --decode > "${HOME}/client-secret.json"
       - run:
+          name: Set frontend environment variables
+          command: cp frontend/.env.prod frontend/.env
+      - run:
           name: Authenticate gcloud
           command: |
             gcloud auth activate-service-account \
