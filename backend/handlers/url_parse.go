@@ -6,13 +6,12 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 )
 
 func usernameFromRequestPath(r *http.Request) (string, error) {
 	username := mux.Vars(r)["username"]
-	// If something goes wrong in a JavaScript-based client, it will send the literal string "undefined" as the username
-	// when the username variable is undefined.
-	if username == "undefined" || username == "" {
+	if !validate.Username(username) {
 		return "", errors.New("Invalid username")
 	}
 	return username, nil
