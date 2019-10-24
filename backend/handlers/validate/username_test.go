@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -23,6 +24,11 @@ func TestUsername(t *testing.T) {
 		{
 			"underscore characters are allowed",
 			"jack_and_jill",
+			true,
+		},
+		{
+			"handle with exactly 60 characters is valid",
+			strings.Repeat("A", 60),
 			true,
 		},
 		{
@@ -61,8 +67,8 @@ func TestUsername(t *testing.T) {
 			false,
 		},
 		{
-			"handle with more than 15 characters is invalid",
-			"jackandjillwentup",
+			"handle with more than 60 characters is invalid",
+			strings.Repeat("A", 61),
 			false,
 		},
 		{

@@ -8,7 +8,7 @@ import (
 // Username validates that a What Got Done username is valid.
 // Valid What Got Done usernames are whatever UserKit allows, which is
 // currently:
-//  * 1-15 characters
+//  * 1-60 characters
 //  * Only English letters, numbers, and underscores
 func Username(username string) bool {
 	log.Printf("validating username: %v", username) // dbg
