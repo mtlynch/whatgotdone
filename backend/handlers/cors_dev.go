@@ -12,7 +12,7 @@ func (s defaultServer) enableCors(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
 		if origin == "" {
-			origin = r.Header.Get("Host")
+			origin = r.Host
 		}
 		if origin == "" {
 			http.Error(w, "(dev mode) Request needs a Host or Origin header", http.StatusBadRequest)

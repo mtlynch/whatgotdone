@@ -83,7 +83,6 @@ Create a file called `frontend\.env.development.local` with the following conten
 
 ```text
 VUE_APP_USERKIT_APP_ID='[your UserKit App ID]'
-VUE_APP_GOOGLE_ANALYTICS_ID='0'
 ```
 
 ### 4. Build the frontend
