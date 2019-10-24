@@ -23,6 +23,10 @@ func contentSecurityPolicy() string {
 		"https://fonts.googleapis.com",
 		"https://fonts.gstatic.com",
 	}, " ")
+	frameSrc := strings.Join([]string{
+		// URLs for /login route (UserKit)
+		"https://www.google.com/recaptcha/",
+	})
 	imgSrc := strings.Join([]string{
 		"'self'",
 		// For bootstrap navbar images
@@ -31,5 +35,5 @@ func contentSecurityPolicy() string {
 		"https://www.google-analytics.com",
 	},
 		" ")
-	return fmt.Sprintf("script-src-elem %s; style-src-elem %s; img-src %s", scriptSrcElem, styleSrcElem, imgSrc)
+	return fmt.Sprintf("script-src-elem %s; style-src-elem %s; frame-src: %s; img-src %s", scriptSrcElem, styleSrcElem, frameSrc, imgSrc)
 }
