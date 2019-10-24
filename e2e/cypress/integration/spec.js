@@ -1,6 +1,11 @@
 Cypress.Commands.add('login', (username, password, options = {}) => {
   cy.visit('/login')
 
+  // Temporary workaround: Wait a few ms before logging in, otherwise UserKit
+  // fails with "Too many requests." This should go away in a few days when we
+  // switch to the upcoming dummy app ID with no limits.
+  cy.wait(250)
+
   cy.get('#userkit_username')
     .type(username)
   cy.get('#userkit_password')
