@@ -18,7 +18,7 @@ func (s defaultServer) enableCors(h http.Handler) http.Handler {
 			http.Error(w, "(dev mode) Request needs a Host or Origin header", http.StatusBadRequest)
 			return
 		}
-		w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+		w.Header().Set("Access-Control-Allow-Origin", origin)
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Csrf-Token")
 		h.ServeHTTP(w, r)
