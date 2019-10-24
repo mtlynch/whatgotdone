@@ -21,9 +21,10 @@ func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		authenticator: mockAuthenticator{},
-		datastore:     &ds,
-		router:        router,
+		authenticator:  mockAuthenticator{},
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -55,8 +56,9 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -89,8 +91,9 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -130,8 +133,9 @@ func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
@@ -162,8 +166,9 @@ func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 				"mock_token_A": "dummyUser",
 			},
 		},
-		datastore: &ds,
-		router:    router,
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 
