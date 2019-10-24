@@ -21,7 +21,9 @@ services:
       - whatgotdone
     environment:
       - CYPRESS_baseUrl=http://whatgotdone:3123
-      - DEBUG=cypress:server:request,cypress:server:server,cypress:server:proxy,cypress:network:agent,cypress:server:browsers
+      # Uncomment the following line for verbose Cypress debugging output.
+      #- DEBUG=cypress:server:request,cypress:server:server,cypress:server:proxy,cypress:network:agent,cypress:server:browsers
+
       # Set test timezone to Los Angeles so that we're more likely to catch
       # incorrect UTC vs. local date translations.
       - TZ=America/Los_Angeles
