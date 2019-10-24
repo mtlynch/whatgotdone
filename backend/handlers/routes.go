@@ -10,6 +10,8 @@ func (s *defaultServer) routes() {
 
 	// Handle routes that require backend logic.
 	s.router.HandleFunc("/api/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
+	s.router.HandleFunc("/api/entry/{date}", s.editEntryOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/entry/{date}", s.editEntryPost()).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/draft/{date}", s.draftOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/draft/{date}", s.draftGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/draft/{date}", s.draftPost()).Methods(http.MethodPost)
@@ -21,8 +23,6 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/user/{username}", s.userGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user", s.userOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/user", s.userPost()).Methods(http.MethodPost)
-	s.router.HandleFunc("/api/submit", s.submitOptions()).Methods(http.MethodOptions)
-	s.router.HandleFunc("/api/submit", s.submitPost()).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/logout", s.logoutOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/logout", s.logoutPost()).Methods(http.MethodPost)
 	// Catchall for when no API route matches.
