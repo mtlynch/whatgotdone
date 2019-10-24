@@ -20,7 +20,7 @@ COPY ./go.sum /app/go.sum
 
 WORKDIR /app
 
-ARG GO_BUILD_TAGS="dev"
+ARG GO_BUILD_TAGS="dev redis"
 RUN go build --tags "$GO_BUILD_TAGS" -o /app/main backend/main.go
 
 ENTRYPOINT /app/main

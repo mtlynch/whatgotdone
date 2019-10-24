@@ -7,9 +7,13 @@ import (
 )
 
 // New creates a new Datastore instance implemented with Redis as the backend.
-func New() datastore.Datastore {
+func New(datastoreAddress string) datastore.Datastore {
+	addr := datastoreAddress
+	if addr == "" {
+		addr = "localhost:6379"
+	}
 	c := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     addr,
 		Password: "",
 		DB:       0,
 	})

@@ -61,31 +61,22 @@ Interested in contributing code or bug reports to What Got Done? That's great! C
 
 To run a development version of What Got Done, you'll need to create a free account on [UserKit](https://userkit.io/). Create a new UserKit app and have your UserKit App Secret Key available.
 
-### 2. Create a project on Google Cloud Platform
-
-What Got Done relies on Google Cloud Firestore. To run a development version of What Got Done:
-
-1. Create a new Google Cloud Platform project.
-1. Create a service account with "Owner" role.
-1. Create a private key for the service account in JSON format and download it to a file called `./service-account-creds-dev.json`.
-
-### 3. Set environment variables
+### 2. Set environment variables
 
 Set the following environment variables:
 
 ```bash
-export GOOGLE_CLOUD_PROJECT="[enter your GCP project ID]"
 export USERKIT_SECRET="[enter your UserKit secret key]"
 export CSRF_SECRET_SEED="any-random-string"
 ```
 
-Create a file called `frontend\.env.development.local` with the following contents:
+Create a file called `frontend/.env.development.local` with the following contents:
 
 ```text
 VUE_APP_USERKIT_APP_ID='[your UserKit App ID]'
 ```
 
-### 4. Build the frontend
+### 3. Build the frontend
 
 To build the Vue frontend for What Got Done, run the following command:
 
@@ -95,13 +86,13 @@ cd frontend && \
   npm run build -- --mode development
 ```
 
-### 5. Run the backend
+### 4. Run the backend
 
 To run the Go backend server, run the following command:
 
 ```bash
 mkdir bin && \
-  go build --tags dev -o ./bin/main backend/main.go && \
+  go build --tags 'dev redis' -o ./bin/main backend/main.go && \
   ./bin/main
 ```
 
