@@ -14,7 +14,10 @@ import (
 
 func main() {
 	log.Print("Starting whatgotdone server")
+
 	datastoreAddr := flag.String("datastore", "", "Address of datastore to use (e.g., localhost:6379)")
+	flag.Parse()
+
 	s := handlers.New(*datastoreAddr)
 	http.Handle("/", muxHandlers.LoggingHandler(os.Stdout, s.Router()))
 
