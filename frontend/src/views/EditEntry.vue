@@ -101,12 +101,11 @@ export default {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/submit`;
+      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${this.date}`;
       this.$http
         .post(
           url,
           {
-            date: this.date,
             entryContent: this.entryContent
           },
           { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
