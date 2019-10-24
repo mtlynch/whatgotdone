@@ -148,7 +148,7 @@ USERKIT_SECRET=[your userkit app secret]
 
 You'll also need to manually create a user for that app with the following credentials:
 
-* Username: `staging.jimmy`
+* Username: `staging_jimmy`
 * Password: `just4st@ginG!`
 
 When you've completed these steps, you can run the E2E tests as follows:
