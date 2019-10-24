@@ -8,6 +8,6 @@ import (
 )
 
 // New creates a new redis-based Datastore instance.
-func newDatastore(datastoreUrl string) datastore.Datastore {
-	return redis.New(datastoreUrl)
+func newDatastore(datastoreAddr string) datastore.Datastore {
+	return redis.New(datastoreAddr)
 }

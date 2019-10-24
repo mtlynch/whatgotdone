@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,7 +14,8 @@ import (
 
 func main() {
 	log.Print("Starting whatgotdone server")
-	s := handlers.New()
+	datastoreAddr := flag.String("datastore", "", "Address of datastore to use (e.g., localhost:6379)")
+	s := handlers.New(*datastoreAddr)
 	http.Handle("/", muxHandlers.LoggingHandler(os.Stdout, s.Router()))
 
 	port := os.Getenv("PORT")

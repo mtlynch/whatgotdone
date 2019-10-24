@@ -8,6 +8,6 @@ import (
 )
 
 // New creates a new firestore-based Datastore instance.
-func newDatastore() datastore.Datastore {
-	return firestore.New()
+func newDatastore(datastoreAddr string) datastore.Datastore {
+	return firestore.New(datastoreAddr)
 }
