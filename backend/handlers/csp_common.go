@@ -26,7 +26,7 @@ func contentSecurityPolicy() string {
 	frameSrc := strings.Join([]string{
 		// URLs for /login route (UserKit)
 		"https://www.google.com/recaptcha/",
-	})
+	}, " ")
 	imgSrc := strings.Join([]string{
 		"'self'",
 		// For bootstrap navbar images
