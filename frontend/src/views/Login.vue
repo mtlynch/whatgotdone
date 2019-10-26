@@ -11,7 +11,6 @@ import updateLoginState from "../controllers/LoginState.js";
 export default {
   name: "Login",
   mounted() {
-    console.log(this.$store.runOnce);
     if(this.$store.runOnce === true) {
       if(UserKit.isLoggedIn() === true) {
         this.$router.replace("/entry/edit/" + thisFriday());
