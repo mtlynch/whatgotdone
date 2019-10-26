@@ -12,10 +12,15 @@ export default {
   name: "Login",
   mounted() {
     if(this.$store.runOnce === true) {
-      if(UserKit.isLoggedIn() === true) {
+      // ESLint can't detect that these global variables are defined in a
+      // dynamically-loaded script, so make local copies.
+      const userKit = UserKit; // eslint-disable-line no-undef
+      const userKitWidget = UserKitWidget; // eslint-disable-line no-undef
+
+      if(userKit.isLoggedIn() === true) {
         this.$router.replace("/entry/edit/" + thisFriday());
       } else {
-        UserKitWidget.open("login");
+        userKitWidget.open("login");
       }
       return;
     }
