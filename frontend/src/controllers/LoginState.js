@@ -10,7 +10,7 @@ function clearCachedAuthInformation() {
   deleteCookie("userkit_auth_token");
 }
 
-export default function updateLoginState(attempts) {
+export default function updateLoginState(attempts, callback) {
   if (attempts <= 0) {
     return;
   }
@@ -19,6 +19,9 @@ export default function updateLoginState(attempts) {
     .get(url, { withCredentials: true })
     .then(result => {
       store.commit("setUsername", result.data.username);
+      if(typeof callback === 'function') {
+        callback();
+      }
     })
     .catch((error) => {
       // If checking user information fails, the cached authentication information
