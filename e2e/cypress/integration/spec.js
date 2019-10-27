@@ -185,6 +185,8 @@ it('logs in and signs out', () => {
 
   cy.visit('/logout')
   cy.location('pathname').should('eq', '/')
+
+  cy.get('nav .account-dropdown').should('not.exist');
 })
 
 it('views a non-existing user profile with empty information', () => {
