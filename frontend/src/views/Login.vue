@@ -10,12 +10,16 @@ import updateLoginState from "../controllers/LoginState.js";
 
 export default {
   name: "Login",
-  data() {
-    return {
-      polling: null
-    };
-  },
   mounted() {
+    if(this.$store.runOnce === true) {
+      if(UserKit.isLoggedIn() === true) {
+        this.$router.replace("/entry/edit/" + thisFriday());
+      } else {
+        UserKitWidget.open("login");
+      }
+      return;
+    }
+
     let userKitScript = document.createElement("script");
     userKitScript.setAttribute("src", "https://widget.userkit.io/widget.js");
     userKitScript.setAttribute(
@@ -25,27 +29,14 @@ export default {
     userKitScript.setAttribute("data-show-on-load", "login");
     userKitScript.setAttribute("data-login-dismiss", "false");
     document.head.appendChild(userKitScript);
+
+    document.addEventListener("UserKitSignIn", () => {
+      updateLoginState(/*attempts=*/ 5, () => {
+        this.$router.replace("/entry/edit/" + thisFriday());
+      });
+    });
+
+    this.$store.runOnce = true;
   },
-  beforeDestroy() {
-    clearInterval(this.polling);
-  },
-  created() {
-    this.pollLoginStatus();
-  },
-  methods: {
-    pollLoginStatus() {
-      this.polling = setInterval(() => {
-        if (this.isLoggedIn()) {
-          clearInterval(this.polling);
-          updateLoginState(5);
-          this.$router.push("/entry/edit/" + thisFriday());
-        }
-      }, 100);
-    },
-    isLoggedIn() {
-      // eslint-disable-next-line
-      return typeof UserKit !== "undefined" && UserKit.isLoggedIn();
-    }
-  }
 };
 </script>
