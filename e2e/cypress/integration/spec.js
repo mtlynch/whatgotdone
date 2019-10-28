@@ -65,7 +65,7 @@ it('logs in and posts an update', () => {
   cy.server()
   cy.route('/api/draft/*').as('getDraft')
 
-  cy.login('staging_jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'password')
 
   cy.url().should('include', '/entry/edit')
 
@@ -88,7 +88,7 @@ it('logs in and posts an empty update (deleting the update)', () => {
   cy.server()
   cy.route('/api/draft/*').as('getDraft')
 
-  cy.login('staging_jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'password')
 
   cy.url().should('include', '/entry/edit')
 
@@ -108,7 +108,7 @@ it('logs in and saves a draft', () => {
   cy.route('GET', '/api/draft/*').as('getDraft')
   cy.route('POST', '/api/draft/*').as('postDraft')
 
-  cy.login('staging_jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'password')
 
   cy.url().should('include', '/entry/edit')
 
@@ -135,7 +135,7 @@ it('logs in and saves a draft', () => {
 })
 
 it('logs in and views profile', () => {
-  cy.login('staging_jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'password')
 
   cy.get('.account-dropdown').click()
   cy.get('.profile-link a').click()
@@ -146,7 +146,7 @@ it('logs in and views profile', () => {
 it('logs in and reacts to an entry', () => {
   cy.server()
   cy.route('POST', 'https://api.userkit.io/v1/widget/login').as('postUserKitLogin')
-  cy.login('staging_jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'password')
   cy.wait('@postUserKitLogin')
 
   cy.visit('/staging_jimmy/2019-06-28')
@@ -179,7 +179,7 @@ it('logs in and reacts to an entry', () => {
 })
 
 it('logs in and signs out', () => {
-  cy.login('staging_jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'password')
 
   cy.url().should('include', '/entry/edit')
 
@@ -201,7 +201,7 @@ it('logs in updates profile', () => {
   cy.server()
   cy.route('/api/user/staging_jimmy').as('getUserProfile')
 
-  cy.login('staging_jimmy', 'just4st@ginG!')
+  cy.login('staging_jimmy', 'password')
 
   cy.url().should('include', '/entry/edit')
 
