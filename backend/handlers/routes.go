@@ -5,6 +5,7 @@ import (
 )
 
 func (s *defaultServer) routes() {
+	s.router.Use(s.hstsMiddleware)
 	s.router.Use(s.enableCors)
 	s.router.Use(s.enableCsrf)
 
