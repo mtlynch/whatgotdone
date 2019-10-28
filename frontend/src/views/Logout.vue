@@ -16,6 +16,8 @@ export default {
       .post(url, {}, { headers: { "X-CSRF-Token": getCsrfToken() } })
       .then(() => {
         this.deleteCookie("userkit_auth_token");
+        const userKit = UserKit; // eslint-disable-line no-undef
+        userKit.logout();
         window.location.href = "/";
       })
       .finally(() => {
