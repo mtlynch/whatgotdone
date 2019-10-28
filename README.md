@@ -48,6 +48,16 @@ To run the E2E tests yourself, see the [section below](#optional-run-e2e-tests).
 
 Interested in contributing code or bug reports to What Got Done? That's great! Check our [Contibutor Guidelines](https://github.com/mtlynch/whatgotdone/blob/master/CONTRIBUTING.md) for more details.
 
+## QuickStart
+
+To run What Got Done in a Docker container, run
+
+```bash
+docker-compose up
+```
+
+What Got Done will be running at [http://localhost:3001](http://localhost:3001).
+
 ## Development notes
 
 ### 0. Pre-requisites
