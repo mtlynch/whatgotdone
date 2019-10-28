@@ -13,8 +13,7 @@ services:
     environment:
       - PORT=3001
       - CSRF_SECRET_SEED=dummy-dev-secret-seed
-    env_file:
-      - docker-secrets.env
+      - USERKIT_SECRET=dummy.dummy
     depends_on:
       - redis
   redis:
