@@ -156,3 +156,9 @@ Then, run the E2E tests as follows:
 cd e2e && \
   docker-compose up --exit-code-from cypress --abort-on-container-exit --build
 ```
+
+## Integration tests vs. E2E tests
+
+Integration tests have the advantage of running faster because they have fewer remote dependencies. It's also possible for third-party developers to run them because they require no secrets (this also allows CI to run them on third-party pull requests).
+
+E2E tests are more likely to catch real-world bugs because their configuration more closely matches production infrastructure.
