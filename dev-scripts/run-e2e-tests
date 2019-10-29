@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -xe
+
+cd e2e
+docker-compose up --exit-code-from cypress --abort-on-container-exit --build

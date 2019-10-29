@@ -48,6 +48,18 @@ To run the E2E tests yourself, see the [section below](#optional-run-e2e-tests).
 
 Interested in contributing code or bug reports to What Got Done? That's great! Check our [Contibutor Guidelines](https://github.com/mtlynch/whatgotdone/blob/master/CONTRIBUTING.md) for more details.
 
+## QuickStart
+
+To run What Got Done in a Docker container, run
+
+```bash
+docker-compose up
+```
+
+What Got Done will be running at [http://localhost:3001](http://localhost:3001).
+
+Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username using the password `password`.
+
 ## Development notes
 
 ### 0. Pre-requisites
@@ -55,25 +67,13 @@ Interested in contributing code or bug reports to What Got Done? That's great! C
 * [Node.js](https://nodejs.org/) (8.x or higher)
 * [Go](https://golang.org/dl/) (1.11 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
-* [Google Cloud SDK](https://cloud.google.com/sdk/install) (for deployment)
-
-### 1. Create a UserKit app
-
-To run a development version of What Got Done, you'll need to create a free account on [UserKit](https://userkit.io/). Create a new UserKit app and have your UserKit App Secret Key available.
 
 ### 2. Set environment variables
 
-Set the following environment variables:
+Set the following environment variable:
 
 ```bash
-export USERKIT_SECRET="[enter your UserKit secret key]"
 export CSRF_SECRET_SEED="any-random-string"
-```
-
-Create a file called `frontend/.env.development.local` with the following contents:
-
-```text
-VUE_APP_USERKIT_APP_ID='[your UserKit App ID]'
 ```
 
 ### 3. Start a Redis instance
@@ -106,6 +106,8 @@ mkdir bin && \
 
 What Got Done is now running on [http://localhost:3001](http://localhost:3001).
 
+Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username using the password `password`.
+
 ### Optional: Run frontend with hot reloading
 
 If you're making changes to the Vue code, you'll probably want to run the standard Vue HTTP server with hot reloading. Keep the backend running, and in a separate shell session, run the following command:
@@ -124,7 +126,7 @@ Because the production What Got Done server runs both the frontend and the backe
 * CORS is enabled in dev mode so that the frontend can make CORS requests to the backend from a different HTTP port.
 * CSRF protection is disabled in dev mode because the Vue dev server doesn't know how to render the `<meta name="csrf-token" />` tag.
 * Page titles don't work properly in dev mode because the Vue dev server doesn't know how to render the `<title>` tag.
-* The Content Security Policy header in dev mode needs `unsafe-eval`, whereas we disable this in production.
+* The Content Security Policy header in dev mode needs `unsafe-eval` and `unsafe-inline`, whereas we disable this in production.
 
 ### Optional: Run backend unit tests
 
@@ -134,24 +136,27 @@ Unit tests run in normal Golang fashion:
 go test ./...
 ```
 
-### Optional: Run E2E tests
+### Optional: Run integration tests
 
-To run the end to end tests, you'll need to create a dedicated GCP project. You can reuse your dev project, but the E2E tests will write to the datastore for the GCP project you specify. Specify the GCP project in `e2e\docker-compose.yml` under `GOOGLE_CLOUD_PROJECT`.
-
-You'll also need to create a dedicated UserKit app. Save the UserKit app secret in a file called `e2e/staging-secrets.env` with the following contents:
-
-```text
-USERKIT_SECRET=[your userkit app secret]
-```
-
-You'll also need to manually create a user for that app with the following credentials:
-
-* Username: `staging_jimmy`
-* Password: `just4st@ginG!`
-
-When you've completed these steps, you can run the E2E tests as follows:
+Integration tests run all components together using Redis as the datastore and [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
 
 ```bash
-cd e2e && \
-  docker-compose up --exit-code-from cypress --abort-on-container-exit --build
+dev-scripts/run-integration-tests
 ```
+### Optional: Run E2E tests
+
+The E2E tests are a subset of the integration tests, but they use a real GCP Firestore instance instead of a dev-mode Redis datastore.
+
+To run the end to end tests, you'll need to create a dedicated GCP project. Specify the GCP project in `e2e/docker-compose.yml` under `GOOGLE_CLOUD_PROJECT`.
+
+Then, run the E2E tests as follows:
+
+```bash
+dev-scripts/run-e2e-tests
+```
+
+## Integration tests vs. E2E tests
+
+Integration tests have the advantage of running faster because they have fewer remote dependencies. It's also possible for third-party developers to run them because they require no secrets (this also allows CI to run them on third-party pull requests).
+
+E2E tests are more likely to catch real-world bugs because their configuration more closely matches production infrastructure.

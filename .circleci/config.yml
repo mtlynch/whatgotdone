@@ -45,6 +45,17 @@ jobs:
       - run:
           name: Test go packages
           command: go test -v ./...
+  integration:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Perform integration tests.
+          command: dev-scripts/run-integration-tests
+      - store_artifacts:
+          path: integration/cypress/videos
+      - store_artifacts:
+          path: integration/cypress/screenshots
   e2e:
     machine: true
     steps:
@@ -62,9 +73,7 @@ jobs:
               > e2e/staging-secrets.env
       - run:
           name: Perform end-to-end tests.
-          command: |
-            cd e2e
-            docker-compose up --exit-code-from cypress --abort-on-container-exit
+          command: dev-scripts/run-e2e-tests
       - store_artifacts:
           path: e2e/cypress/videos
       - store_artifacts:
@@ -106,11 +115,13 @@ workflows:
     jobs:
       - build-frontend
       - test-backend
+      - integration
       - e2e
       - deploy:
           requires:
             - build-frontend
             - test-backend
+            - integration
             - e2e
           filters:
             branches:
