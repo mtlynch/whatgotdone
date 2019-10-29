@@ -39,10 +39,3 @@ export default function loadUserKit(appId, initFn, signInFn) {
     userKitScript.setAttribute("data-login-dismiss", "false");
     document.head.appendChild(userKitScript);
 }
-
-export function logout() {
-    // eslint-disable-next-line no-unused-vars
-    loadUserKit(process.env.VUE_APP_USERKIT_APP_ID, (userKit, userKitWidget) => {
-        userKit.logout();
-    });
-}
