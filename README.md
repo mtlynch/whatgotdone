@@ -58,7 +58,7 @@ docker-compose up
 
 What Got Done will be running at [http://localhost:3001](http://localhost:3001).
 
-Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username but the is always `password`.
+Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username using the password `password`.
 
 ## Development notes
 
@@ -106,7 +106,7 @@ mkdir bin && \
 
 What Got Done is now running on [http://localhost:3001](http://localhost:3001).
 
-Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username but the is always `password`.
+Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username using the password `password`.
 
 ### Optional: Run frontend with hot reloading
 

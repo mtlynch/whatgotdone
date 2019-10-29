@@ -7,7 +7,7 @@ services:
       context: ../
       args:
         NPM_BUILD_MODE: staging
-        GO_BUILD_TAGS: staging
+        GO_BUILD_TAGS: "staging redis"
     depends_on:
       - redis
     command: "-datastore='redis:6379'"
