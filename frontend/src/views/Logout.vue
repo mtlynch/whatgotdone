@@ -6,6 +6,7 @@
 
 <script>
 import getCsrfToken from "../controllers/CsrfToken.js";
+import logout from "../controllers/UserKit.js";
 
 export default {
   name: "Logout",
