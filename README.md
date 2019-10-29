@@ -68,15 +68,7 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 * [Go](https://golang.org/dl/) (1.11 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
 
-### 2. Set environment variables
-
-Set the following environment variable:
-
-```bash
-export CSRF_SECRET_SEED="any-random-string"
-```
-
-### 3. Start a Redis instance
+### 1. Start a Redis instance
 
 Run the following command to start a Redis server in a Docker container:
 
@@ -84,7 +76,7 @@ Run the following command to start a Redis server in a Docker container:
 docker run -it -p 6379:6379 redis
 ```
 
-### 4. Build the frontend
+### 2. Build the frontend
 
 To build the Vue frontend for What Got Done, run the following command:
 
@@ -94,7 +86,7 @@ cd frontend && \
   npm run build -- --mode development
 ```
 
-### 5. Run the backend
+### 3. Run the backend
 
 To run the Go backend server, run the following command:
 
