@@ -30,6 +30,6 @@ export default function updateLoginState(attempts, callback) {
         clearCachedAuthInformation();
         return;
       }
-      updateLoginState(attempts - 1);
+      updateLoginState(attempts - 1, callback);
     });
 }
