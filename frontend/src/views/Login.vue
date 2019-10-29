@@ -21,7 +21,7 @@ export default {
           userKitWidget.open("login");
         }
       },
-      (userKit, userKitWidget) => {
+      (_userKit, _userKitWidget) => {
         updateLoginState(/*attempts=*/ 5, () => {
           this.$router.replace("/entry/edit/" + thisFriday());
         });
