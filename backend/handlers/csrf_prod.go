@@ -15,6 +15,7 @@ func getCsrfSeed() string {
 	if csrfSeed == "" {
 		log.Fatalf("CSRF_SECRET_SEED environment variable must be set")
 	}
+	return csrfSeed
 }
 
 func (s defaultServer) enableCsrf(h http.Handler) http.Handler {
