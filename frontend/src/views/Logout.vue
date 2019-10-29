@@ -17,6 +17,7 @@ export default {
       .post(url, {}, { headers: { "X-CSRF-Token": getCsrfToken() } })
       .then(() => {
         this.deleteCookie("userkit_auth_token");
+        this.deleteCookie("userkit_recent_login_required_at");
         sessionStorage.removeItem("UserKitApp");
         window.location.href = "/";
       })
@@ -28,8 +29,8 @@ export default {
   },
   methods: {
     deleteCookie(name) {
-      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    }
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
+    },
   }
 };
 </script>
