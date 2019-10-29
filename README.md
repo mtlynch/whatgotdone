@@ -141,8 +141,7 @@ go test ./...
 Integration tests run all components together using Redis as the datastore and [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
 
 ```bash
-cd integration && \
-  docker-compose up --exit-code-from cypress --abort-on-container-exit --build
+dev-scripts/run-integration-tests
 ```
 ### Optional: Run E2E tests
 
@@ -153,8 +152,7 @@ To run the end to end tests, you'll need to create a dedicated GCP project. Spec
 Then, run the E2E tests as follows:
 
 ```bash
-cd e2e && \
-  docker-compose up --exit-code-from cypress --abort-on-container-exit --build
+dev-scripts/run-e2e-tests
 ```
 
 ## Integration tests vs. E2E tests
