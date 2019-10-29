@@ -1,19 +1,23 @@
 version: '3.2'
 services:
+  redis:
+    image: "redis:5.0.6"
   whatgotdone:
     build:
       context: ../
       args:
         NPM_BUILD_MODE: staging
-        GO_BUILD_TAGS: staging
+        GO_BUILD_TAGS: "staging redis"
+    depends_on:
+      - redis
+    command: "-datastore='redis:6379'"
     environment:
       - PORT=3123
       - CSRF_SECRET_SEED=dummy-staging-seed
-      - GOOGLE_CLOUD_PROJECT=whatgotdone-staging
       - USERKIT_SECRET=dummy.dummy
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
-      - ./:/app/e2e
+      - ./:/app/integration
   cypress:
     image: "cypress/included:3.4.0"
     depends_on:
@@ -26,6 +30,6 @@ services:
       # Set test timezone to Los Angeles so that we're more likely to catch
       # incorrect UTC vs. local date translations.
       - TZ=America/Los_Angeles
-    working_dir: /e2e
+    working_dir: /integration
     volumes:
-      - ./:/e2e
+      - ./:/integration

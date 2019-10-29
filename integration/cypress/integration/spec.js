@@ -15,11 +15,6 @@ it('loads the homepage', () => {
     .should('contain', 'What did you get done this week?')
 })
 
-it('views recent posts', () => {
-  cy.visit('/recent')
-
-  cy.get('div.journal').should('contain', 'staging_jimmy\'s update')
-})
 
 it('clicking "Post Update" before authenticating prompts login', () => {
   cy.visit('/')
@@ -29,25 +24,6 @@ it('clicking "Post Update" before authenticating prompts login', () => {
   cy.get('nav .post-update').click()
 
   cy.url().should('include', '/login')
-})
-
-it('reacting to an entry before authenticating prompts login', () => {
-  cy.visit('/staging_jimmy/2019-06-28')
-
-  cy.get('.reaction-buttons .btn:first-of-type').click();
-
-  cy.url().should('include', '/login')
-})
-
-it('renders the date correctly', () => {
-  cy.visit('/staging_jimmy/2019-06-28')
-
-  cy.title().should('eq', 'staging_jimmy\'s What Got Done for the week of 2019-06-28')
-
-  cy.get('.journal-header')
-    .then((element) => {
-      expect(element.text().replace(/\s+/g, ' ')).to.equal('staging_jimmy\'s update for the week ending on Friday, Jun 28, 2019');
-    });
 })
 
 it('reaction buttons should not appear when the post is missing', () => {
@@ -77,25 +53,6 @@ it('logs in and posts an update', () => {
   cy.url().should('include', '/staging_jimmy/')
   cy.get('.journal-body')
     .should('contain', entryText)
-})
-
-it('logs in and posts an empty update (deleting the update)', () => {
-  cy.server()
-  cy.route('/api/draft/*').as('getDraft')
-
-  cy.login('staging_jimmy', 'password')
-
-  cy.url().should('include', '/entry/edit')
-
-  // Wait for page to pull down any previous entry.
-  cy.wait('@getDraft')
-
-  cy.get('.journal-markdown').clear()
-  cy.get('form').submit()
-
-  cy.url().should('include', '/staging_jimmy/')
-  cy.get('.missing-entry')
-    .should('be.visible')
 })
 
 it('logs in and saves a draft', () => {
@@ -136,41 +93,6 @@ it('logs in and views profile', () => {
   cy.get('.profile-link a').click()
 
   cy.url().should('include', '/staging_jimmy')
-})
-
-it('logs in and reacts to an entry', () => {
-  cy.server()
-  cy.route('POST', 'https://api.userkit.io/v1/widget/login').as('postUserKitLogin')
-  cy.login('staging_jimmy', 'password')
-  cy.wait('@postUserKitLogin')
-
-  cy.visit('/staging_jimmy/2019-06-28')
-    .its('document')
-    .then((document) => {
-      const csrfToken = document
-        .querySelector("meta[name='csrf-token']")
-        .getAttribute("content");
-
-      // Clear any existing reaction on the entry.
-      cy.request({
-        url: '/api/reactions/entry/staging_jimmy/2019-06-28',
-        method: 'POST',
-        headers: {
-          'X-Csrf-Token': csrfToken,
-        },
-        body: { reactionSymbol: "" },
-      }).then(() => {
-        cy.visit('/staging_jimmy/2019-06-28').then(() => {
-          cy.get('.reaction-buttons .btn:first-of-type').click();
-
-          // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
-          cy.get('.reaction')
-            .then((element) => {
-              expect(element.text().replace(/\s+/g, ' ')).to.equal('staging_jimmy reacted with a 👍');
-            });
-        })
-      });
-    });
 })
 
 it('logs in and signs out', () => {
