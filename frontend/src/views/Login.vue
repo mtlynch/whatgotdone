@@ -21,7 +21,8 @@ export default {
           userKitWidget.open("login");
         }
       },
-      (_userKit, _userKitWidget) => {
+      // eslint-disable-next-line no-unused-vars
+      (userKit, userKitWidget) => {
         updateLoginState(/*attempts=*/ 5, () => {
           this.$router.replace("/entry/edit/" + thisFriday());
         });
