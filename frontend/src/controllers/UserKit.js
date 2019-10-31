@@ -24,9 +24,11 @@ export default function loadUserKit(appId, initFn, signInFn) {
     }
 
     // Attach listener for 'UserKitSignIn' event
-    document.addEventListener("UserKitSignIn", () => {
-        signInFn(window.UserKit, window.UserKitWidget);
-    });
+    if (typeof signInFn === 'function') {
+        document.addEventListener("UserKitSignIn", () => {
+            signInFn(window.UserKit, window.UserKitWidget);
+        });
+    }
 
     // Load widget.js
     let userKitScript = document.createElement("script");
