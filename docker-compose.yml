@@ -7,7 +7,6 @@ services:
         NPM_BUILD_MODE: development
         GO_BUILD_TAGS: "dev redis"
     command: "-datastore='redis:6379'"
-    #entrypoint: "/app/main -datastore='redis:6379'"
     ports:
       - 3001:3001
     environment:
@@ -18,3 +17,6 @@ services:
       - redis
   redis:
     image: "redis:5.0.6"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ./persist/redis:/data

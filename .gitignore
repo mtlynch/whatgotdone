@@ -2,16 +2,14 @@ bin/
 
 *.exe
 
-*.swp
-*.swo
+# Vim temporary files
+*.sw?
 
+# GCP service account credentials
 service-account-creds*.json
 
 # Holds secret environment variables in prod
 env_variables.yaml
 
-# Holds secret environment variables for dev
-env_variables.sh
-
-# Holds secret environment variables when running docker-compose
-docker-secrets.env
+# Persistent data directory
+persist/
