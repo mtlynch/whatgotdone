@@ -6,6 +6,7 @@
 
 <script>
 import getCsrfToken from "../controllers/CsrfToken.js";
+import { logoutUserKit } from "../controllers/UserKit.js";
 
 export default {
   name: "Logout",
@@ -15,9 +16,7 @@ export default {
     this.$http
       .post(url, {}, { headers: { "X-CSRF-Token": getCsrfToken() } })
       .then(() => {
-        this.deleteCookie("userkit_auth_token");
-        this.deleteCookie("userkit_recent_login_required_at");
-        sessionStorage.removeItem("UserKitApp");
+        logoutUserKit();
         window.location.href = "/";
       })
       .finally(() => {
