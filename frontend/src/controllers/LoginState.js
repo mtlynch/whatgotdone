@@ -1,13 +1,10 @@
 import axios from "axios";
 import store from "../store.js";
-
-function deleteCookie(name) {
-  document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-}
+import { logoutUserKit }  from "../controllers/UserKit.js";
 
 function clearCachedAuthInformation() {
   store.commit("clearUsername");
-  deleteCookie("userkit_auth_token");
+  logoutUserKit();
 }
 
 export default function updateLoginState(attempts, callback) {

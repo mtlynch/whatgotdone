@@ -41,3 +41,9 @@ export default function loadUserKit(appId, initFn, signInFn) {
     userKitScript.setAttribute("data-login-dismiss", "false");
     document.head.appendChild(userKitScript);
 }
+
+export function logoutUserKit() {
+    document.cookie = "userkit_auth_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
+    document.cookie = "userkit_recent_login_required_at=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
+    sessionStorage.removeItem("UserKitApp");
+}
