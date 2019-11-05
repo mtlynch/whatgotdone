@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../store.js";
-import { logoutUserKit }  from "../controllers/UserKit.js";
+import { logoutUserKit } from "../controllers/UserKit.js";
 
 function clearCachedAuthInformation() {
   store.commit("clearUsername");
@@ -16,7 +16,7 @@ export default function updateLoginState(attempts, callback) {
     .get(url, { withCredentials: true })
     .then(result => {
       store.commit("setUsername", result.data.username);
-      if(typeof callback === 'function') {
+      if (typeof callback === 'function') {
         callback();
       }
     })
