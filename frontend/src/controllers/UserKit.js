@@ -1,37 +1,44 @@
-export default function loadUserKit(appId, initFn, signInFn) {
-    const widgetJsUrl = "https://widget.userkit.io/widget.js";
+const widgetJsUrl = "https://widget.userkit.io/widget.js";
 
-    let scriptEls = document.getElementsByTagName("script");
-    for (const el of scriptEls) {
-        if (el.src == widgetJsUrl) {
-            // widget.js already loaded, execute init callback
-            if (typeof initFn === 'function') {
+export default function loadUserKit(appId, initFn, signInFn) {
+    if (isWidgetJsLoaded()) {
+        if (typeof initFn === 'function') {
+            initFn(window.UserKit, window.UserKitWidget);
+        }
+        if (typeof signInFn === 'function' && window.UserKit.isLoggedIn()) {
+            signInFn();
+        }
+    } else {
+        // Attach a listener for 'UserKitInit' event.
+        if (typeof initFn === 'function') {
+            document.addEventListener("UserKitInit", () => {
                 initFn(window.UserKit, window.UserKitWidget);
-            }
-            // if already signed in, execute sign in callback
-            if (typeof signInFn === 'function' && window.UserKit.isLoggedIn()) {
-                signInFn(window.userKit, window.userKitWidget);
-            }
-            return;
+            });
+        }
+
+        // Attach listener for 'UserKitSignIn' event.
+        if (typeof signInFn === 'function') {
+            document.addEventListener("UserKitSignIn", () => {
+                signInFn();
+            });
+        }
+
+        loadWidgetJs(appId);
+    }
+}
+
+// Returns true if the UserKit widget.js is part of the page DOM.
+function isWidgetJsLoaded() {
+    for (const el of document.getElementsByTagName("script")) {
+        if (el.src == widgetJsUrl) {
+            return true;
         }
     }
+    return false;
+}
 
-    // If callback is provided, attach a listener for 'UserKitInit'
-    if (typeof initFn === 'function') {
-        document.addEventListener("UserKitInit", () => {
-            initFn(window.UserKit, window.UserKitWidget);
-        });
-    }
-
-    // Attach listener for 'UserKitSignIn' event
-    if (typeof signInFn === 'function') {
-        document.addEventListener("UserKitSignIn", () => {
-            signInFn(window.UserKit, window.UserKitWidget);
-        });
-    }
-
-    // Load widget.js
-    let userKitScript = document.createElement("script");
+function loadWidgetJs(appId) {
+    const userKitScript = document.createElement("script");
     userKitScript.setAttribute("src", widgetJsUrl);
     userKitScript.setAttribute(
         "data-app-id",
