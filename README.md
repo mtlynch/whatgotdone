@@ -91,6 +91,7 @@ cd frontend && \
 To run the Go backend server, run the following command:
 
 ```bash
+export USERKIT_SECRET="dummy.dummy" && \
 mkdir bin && \
   go build --tags 'dev redis' -o ./bin/main backend/main.go && \
   ./bin/main
