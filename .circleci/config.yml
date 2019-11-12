@@ -57,7 +57,10 @@ jobs:
       - store_artifacts:
           path: integration/cypress/screenshots
   e2e:
-    machine: true
+    machine:
+      # Choose an explicit machine image so that we get the latest version of
+      # docker-compose.
+      image: ubuntu-1604:201903-01
     steps:
       - early_return_for_forked_pull_requests
       - checkout
