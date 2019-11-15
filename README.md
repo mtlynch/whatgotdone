@@ -73,8 +73,10 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 Run the following command to start a [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) in a Docker container:
 
 ```bash
+export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
 docker run \
-  --env "FIRESTORE_PROJECT_ID=dummy-project-id" \
+  --detach \
+  --env "FIRESTORE_PROJECT_ID=${GOOGLE_CLOUD_PROJECT}" \
   --env "PORT=8080" \
   --publish 8080:8080 \
   --name firestore-emulator \
@@ -86,9 +88,10 @@ docker run \
 To build the Vue frontend for What Got Done, run the following command:
 
 ```bash
-cd frontend && \
+pushd frontend && \
   npm install && \
-  npm run build -- --mode development
+  npm run build -- --mode development && \
+  popd
 ```
 
 ### 3. Run the backend
@@ -96,11 +99,10 @@ cd frontend && \
 To run the Go backend server, run the following command:
 
 ```bash
-export USERKIT_SECRET="dummy.dummy" && \
-export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project" && \
-export FIRESTORE_EMULATOR_HOST="localhost:8080" && \
-mkdir bin && \
-  go build --tags 'dev' -o ./bin/main backend/main.go && \
+export USERKIT_SECRET="dummy.dummy"
+export FIRESTORE_EMULATOR_HOST="localhost:8080"
+mkdir bin
+go build --tags 'dev' -o ./bin/main backend/main.go && \
   ./bin/main
 ```
 
