@@ -1,9 +1,10 @@
 version: '3.2'
 services:
   firestore_emulator:
-    image: mtlynch/firestore-emulator
+    image: mtlynch/firestore-emulator:20191115T1224
     environment:
       - FIRESTORE_PROJECT_ID=dummy-local-gcp-project
+      - PORT=8080
   whatgotdone:
     build:
       context: ../
@@ -22,7 +23,7 @@ services:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/integration
   cypress:
-    image: "cypress/included:3.5.0"
+    image: "cypress/included:3.6.1"
     command: ["--browser", "chrome"]
     depends_on:
       - whatgotdone

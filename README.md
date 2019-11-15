@@ -68,12 +68,17 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 * [Go](https://golang.org/dl/) (1.11 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
 
-### 1. Start a Redis instance
+### 1. Start a Firestore emulator
 
-Run the following command to start a Redis server in a Docker container:
+Run the following command to start a [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) in a Docker container:
 
 ```bash
-docker run -it -p 6379:6379 redis
+docker run \
+  --env "FIRESTORE_PROJECT_ID=dummy-project-id" \
+  --env "PORT=8080" \
+  --publish 8080:8080 \
+  --name firestore-emulator \
+  mtlynch/firestore-emulator
 ```
 
 ### 2. Build the frontend
@@ -92,8 +97,10 @@ To run the Go backend server, run the following command:
 
 ```bash
 export USERKIT_SECRET="dummy.dummy" && \
+export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project" && \
+export FIRESTORE_EMULATOR_HOST="localhost:8080" && \
 mkdir bin && \
-  go build --tags 'dev redis' -o ./bin/main backend/main.go && \
+  go build --tags 'dev' -o ./bin/main backend/main.go && \
   ./bin/main
 ```
 
@@ -131,14 +138,14 @@ go test ./...
 
 ### Optional: Run integration tests
 
-Integration tests run all components together using Redis as the datastore and [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
+Integration tests run all components together using a local Firestore emulator as the datastore and [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
 
 ```bash
 dev-scripts/run-integration-tests
 ```
 ### Optional: Run E2E tests
 
-The E2E tests are a subset of the integration tests, but they use a real GCP Firestore instance instead of a dev-mode Redis datastore.
+The E2E tests are a subset of the integration tests, but they use a real GCP Firestore instance instead of a local emulator.
 
 To run the end to end tests, you'll need to create a dedicated GCP project. Specify the GCP project in `e2e/docker-compose.yml` under `GOOGLE_CLOUD_PROJECT`.
 

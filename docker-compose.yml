@@ -5,18 +5,19 @@ services:
       context: .
       args:
         NPM_BUILD_MODE: development
-        GO_BUILD_TAGS: "dev redis"
-    command: "-datastore='redis:6379'"
+        GO_BUILD_TAGS: "dev"
     ports:
       - 3001:3001
     environment:
       - PORT=3001
+      - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
+      - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
       - CSRF_SECRET_SEED=dummy-dev-secret-seed
       - USERKIT_SECRET=dummy.dummy
     depends_on:
-      - redis
-  redis:
-    image: "redis:5.0.6"
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - ./persist/redis:/data
+      - firestore_emulator
+  firestore_emulator:
+    image: mtlynch/firestore-emulator:20191115T1224
+    environment:
+      - FIRESTORE_PROJECT_ID=dummy-local-gcp-project
+      - PORT=8080
