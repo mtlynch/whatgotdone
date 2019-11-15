@@ -1,5 +1,3 @@
-// +build !redis
-
 package handlers
 
 import (
@@ -8,6 +6,6 @@ import (
 )
 
 // New creates a new firestore-based Datastore instance.
-func newDatastore(datastoreAddr string) datastore.Datastore {
-	return firestore.New(datastoreAddr)
+func newDatastore() datastore.Datastore {
+	return firestore.New()
 }

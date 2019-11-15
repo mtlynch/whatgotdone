@@ -16,10 +16,10 @@ type Server interface {
 
 // New creates a new What Got Done server with all the state it needs to
 // satisfy HTTP requests.
-func New(datastoreAddr string) Server {
+func New() Server {
 	s := defaultServer{
 		authenticator:  auth.New(),
-		datastore:      newDatastore(datastoreAddr),
+		datastore:      newDatastore(),
 		router:         mux.NewRouter(),
 		csrfMiddleware: newCsrfMiddleware(),
 	}

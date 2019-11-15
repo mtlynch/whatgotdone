@@ -8,7 +8,7 @@ import (
 )
 
 // New creates a new Datastore instance.
-func New(string) datastore.Datastore {
+func New() datastore.Datastore {
 	ctx := context.Background()
 
 	c, err := newFirestoreClient(ctx)
