@@ -1,58 +1,73 @@
 <template>
   <div class="view-entry container">
     <template v-if="journalEntries.length > 0">
-      <b-pagination-nav :pages="pages" v-if="pages.length > 0" align="center" use-router></b-pagination-nav>
+      <b-pagination-nav
+        :pages="pages"
+        v-if="pages.length > 0"
+        align="center"
+        use-router
+      ></b-pagination-nav>
       <b-form-checkbox
         v-model="showEmptyEntries"
         v-if="canEdit"
         class="show-empty"
-      >Show empty entries</b-form-checkbox>
+        >Show empty entries</b-form-checkbox
+      >
 
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p class="missing-entry" v-else>
-        <Username :username="entryAuthor" />&nbsp;has not posted a journal entry for
-        <b>{{ entryDate | moment("utc", "dddd, ll") }}</b>
+        <Username :username="entryAuthor" />&nbsp;has not posted a journal entry
+        for
+        <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
       </p>
     </template>
     <template v-else>
       <p>
-        <span class="username">{{ entryAuthor }}</span> has not posted any What Got Done updates.
+        <span class="username">{{ entryAuthor }}</span> has not posted any What
+        Got Done updates.
       </p>
     </template>
-    <p v-if="backendError" class="error">Failed to connect to backend: {{ backendError }}</p>
+    <p v-if="backendError" class="error">
+      Failed to connect to backend: {{ backendError }}
+    </p>
     <b-button
       v-if="canEdit"
       :to="'/entry/edit/' + this.entryDate"
       variant="primary"
       class="float-right edit-btn"
-    >Edit</b-button>
-    <Reactions :entryAuthor="entryAuthor" :entryDate="entryDate" v-if="currentEntry" />
+      >Edit</b-button
+    >
+    <Reactions
+      :entryAuthor="entryAuthor"
+      :entryDate="entryDate"
+      v-if="currentEntry"
+    />
   </div>
 </template>
 
 <script>
-import Vue from "vue";
-import moment from "moment";
-import Journal from "../components/Journal.vue";
-import Reactions from "../components/Reactions.vue";
-import Username from "../components/Username.vue";
-import Pagination from "bootstrap-vue/es/components/pagination";
-import { thisFriday } from "../controllers/EntryDates.js";
+import Vue from 'vue';
+import moment from 'moment';
+import Journal from '../components/Journal.vue';
+import Reactions from '../components/Reactions.vue';
+import Username from '../components/Username.vue';
+import Pagination from 'bootstrap-vue/es/components/pagination';
+import {thisFriday} from '../controllers/EntryDates.js';
 
 Vue.use(Pagination);
 
 export default {
-  name: "ViewEntry",
+  name: 'ViewEntry',
   components: {
     Journal,
     Reactions,
-    Username
+    Username,
   },
   data() {
     return {
       journalEntries: [],
       showEmptyEntries: false,
-      backendError: null
+      backendError: null,
     };
   },
   methods: {
@@ -68,7 +83,7 @@ export default {
               author: this.entryAuthor,
               date: new Date(entry.date),
               lastModified: new Date(entry.lastModified),
-              markdown: entry.markdown
+              markdown: entry.markdown,
             });
           }
           if (this.journalEntries.length == 0) {
@@ -79,7 +94,7 @@ export default {
         .catch(error => {
           this.backendError = error;
         });
-    }
+    },
   },
   computed: {
     pages: function() {
@@ -87,7 +102,7 @@ export default {
       for (const date of this.entryDates) {
         pages.push({
           link: `/${this.entryAuthor}/${date}`,
-          text: new moment(date).format("MMM. D").replace("May.", "May")
+          text: new moment(date).format('MMM. D').replace('May.', 'May'),
         });
       }
       return pages;
@@ -97,8 +112,8 @@ export default {
       if (this.showEmptyEntries) {
         let d = moment(this.journalEntries[0].key);
         while (d <= moment(thisFriday())) {
-          dates.push(d.format("YYYY-MM-DD"));
-          d = d.add(1, "weeks");
+          dates.push(d.format('YYYY-MM-DD'));
+          d = d.add(1, 'weeks');
         }
       } else {
         for (const entry of this.journalEntries) {
@@ -131,7 +146,7 @@ export default {
         }
       }
       return null;
-    }
+    },
   },
   created() {
     this.loadJournalEntries();
@@ -141,8 +156,8 @@ export default {
       if (to.params.username != from.params.username) {
         this.loadJournalEntries();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

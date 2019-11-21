@@ -4,7 +4,8 @@
     <form @submit.prevent="handleSubmit">
       <p>
         Enter your update for the week ending
-        <span class="end-date">{{ date | moment("dddd, ll") }}</span>.
+        <span class="end-date">{{ date | moment('dddd, ll') }}</span
+        >.
       </p>
       <textarea-autosize
         class="form-control journal-markdown"
@@ -23,7 +24,9 @@
           @click.prevent="handleSaveDraft"
           class="btn btn-primary save-draft"
           :disabled="changesSaved"
-        >{{ saveLabel }}</button>
+        >
+          {{ saveLabel }}
+        </button>
         <button type="submit" class="btn btn-primary">Publish</button>
       </div>
     </form>
@@ -32,32 +35,32 @@
 </template>
 
 <script>
-import Vue from "vue";
-import VueTextareaAutosize from "vue-textarea-autosize";
-import _ from "lodash";
-import JournalPreview from "../components/JournalPreview.vue";
-import getCsrfToken from "../controllers/CsrfToken.js";
-import { isValidEntryDate, thisFriday } from "../controllers/EntryDates.js";
+import Vue from 'vue';
+import VueTextareaAutosize from 'vue-textarea-autosize';
+import _ from 'lodash';
+import JournalPreview from '../components/JournalPreview.vue';
+import getCsrfToken from '../controllers/CsrfToken.js';
+import {isValidEntryDate, thisFriday} from '../controllers/EntryDates.js';
 
 Vue.use(VueTextareaAutosize);
 
 export default {
-  name: "EditEntry",
+  name: 'EditEntry',
   components: {
-    JournalPreview
+    JournalPreview,
   },
   data() {
     return {
-      date: "",
-      entryContent: "",
+      date: '',
+      entryContent: '',
       changesSaved: true,
-      saveLabel: "Save Draft"
+      saveLabel: 'Save Draft',
     };
   },
   computed: {
     username() {
       return this.$store.state.username;
-    }
+    },
   },
   methods: {
     loadEntryContent() {
@@ -66,31 +69,31 @@ export default {
       }
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${this.date}`;
       this.$http
-        .get(url, { withCredentials: true })
+        .get(url, {withCredentials: true})
         .then(result => {
           this.entryContent = result.data.markdown;
         })
         .catch(error => {
           if (error.response.status == 404) {
-            this.entryContent = "";
+            this.entryContent = '';
           }
         });
     },
     handleSaveDraft() {
-      this.saveLabel = "Saving";
+      this.saveLabel = 'Saving';
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${this.date}`;
       this.$http
         .post(
           url,
           {
-            entryContent: this.entryContent
+            entryContent: this.entryContent,
           },
-          { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
+          {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
         )
         .then(result => {
           if (result.data.ok) {
             this.changesSaved = true;
-            this.saveLabel = "Changes Saved";
+            this.saveLabel = 'Changes Saved';
           }
         })
         .catch(() => {
@@ -106,20 +109,20 @@ export default {
         .post(
           url,
           {
-            entryContent: this.entryContent
+            entryContent: this.entryContent,
           },
-          { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
+          {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
         )
         .then(result => {
           if (result.data.ok) {
             this.$router.push(result.data.path);
           }
         });
-    }
+    },
   },
   created() {
     if (!this.username) {
-      this.$router.push("/login");
+      this.$router.push('/login');
       return;
     }
     if (this.$route.params.date && isValidEntryDate(this.$route.params.date)) {
@@ -137,7 +140,7 @@ export default {
     },
     entryContent: function() {
       this.changesSaved = false;
-      this.saveLabel = "Save Draft";
+      this.saveLabel = 'Save Draft';
     },
     $route(to, from) {
       if (to.params.date != from.params.date) {
@@ -145,8 +148,8 @@ export default {
           this.date = to.params.date;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

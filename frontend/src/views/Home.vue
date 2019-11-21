@@ -2,7 +2,10 @@
   <div class="home">
     <div class="jumbotron">
       <h1 class="display-3">What did you get done this week?</h1>
-      <p class="lead">What Got Done is the simple, easy way to share progress with your teammates.</p>
+      <p class="lead">
+        What Got Done is the simple, easy way to share progress with your
+        teammates.
+      </p>
       <hr class="my-4" />
       <p>End each week by reflecting on what you accomplished.</p>
       <ul>
@@ -16,11 +19,11 @@
           class="btn btn-lg btn-start-now"
           variant="primary"
           :to="'/entry/edit/' + this.thisFriday"
-        >Start&nbsp;now</b-button>
-        <b-button
-          class="btn btn-lg btn-success btn-view-recent"
-          to="/recent"
-        >View&nbsp;recent&nbsp;entries</b-button>
+          >Start&nbsp;now</b-button
+        >
+        <b-button class="btn btn-lg btn-success btn-view-recent" to="/recent"
+          >View&nbsp;recent&nbsp;entries</b-button
+        >
       </div>
     </div>
 
@@ -28,9 +31,15 @@
 
     <div class="flex-grid">
       <div class="col">
-        <p>Have you ever ended a week wondering where all the time went? Take a step back and remember what got done.</p>
+        <p>
+          Have you ever ended a week wondering where all the time went? Take a
+          step back and remember what got done.
+        </p>
 
-        <p>What Got Done is a weekly ritual to remind yourself of your accomplishments.</p>
+        <p>
+          What Got Done is a weekly ritual to remind yourself of your
+          accomplishments.
+        </p>
       </div>
       <div class="col">
         <img id="typing-update" src="/images/typing-update.gif" />
@@ -41,7 +50,10 @@
 
     <div class="flex-grid">
       <div class="col">
-        <p>When you're done, share a clean summary of your week of work with your teammates.</p>
+        <p>
+          When you're done, share a clean summary of your week of work with your
+          teammates.
+        </p>
       </div>
       <div class="col">
         <img id="example-rendered" src="/images/example-rendered.jpg" />
@@ -52,9 +64,16 @@
 
     <div class="flex-grid">
       <div class="col">
-        <p>To-do lists are great for managing what you will do, but they do a poor job of communicating what you accomplished.</p>
+        <p>
+          To-do lists are great for managing what you will do, but they do a
+          poor job of communicating what you accomplished.
+        </p>
 
-        <p>What Got Done lets you write updates your way, highlighting what's important instead of forcing your teammates to dig through a list of checkboxes.</p>
+        <p>
+          What Got Done lets you write updates your way, highlighting what's
+          important instead of forcing your teammates to dig through a list of
+          checkboxes.
+        </p>
       </div>
       <div class="col">
         <img id="example-freeform" src="/images/example-freeform.jpg" />
@@ -63,24 +82,23 @@
 
     <h2>Contact Us</h2>
     <p>
-      If you have questions or feature requests for What Got Done, we'd love to speak to you. Send an email to
-      <a
-        href="mailto:contact@whatgotdone.com"
-      >contact@whatgotdone.com</a>.
+      If you have questions or feature requests for What Got Done, we'd love to
+      speak to you. Send an email to
+      <a href="mailto:contact@whatgotdone.com">contact@whatgotdone.com</a>.
     </p>
   </div>
 </template>
 
 <script>
-import { thisFriday } from "../controllers/EntryDates.js";
+import {thisFriday} from '../controllers/EntryDates.js';
 
 export default {
-  name: "Home",
+  name: 'Home',
   data() {
     return {
-      thisFriday: thisFriday()
+      thisFriday: thisFriday(),
     };
-  }
+  },
 };
 </script>
 

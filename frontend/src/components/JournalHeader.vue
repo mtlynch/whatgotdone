@@ -1,21 +1,21 @@
 <template>
   <p class="journal-header text-center">
     <Username :username="entryAuthor" />'s update for the week ending on
-    <b>{{ entryDate | moment("utc", "dddd, ll") }}</b>
+    <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
   </p>
 </template>
 
 <script>
-import Username from "./Username.vue";
+import Username from './Username.vue';
 export default {
-  name: "JournalHeader",
+  name: 'JournalHeader',
   props: {
     entryAuthor: String,
-    entryDate: Date
+    entryDate: Date,
   },
   components: {
-    Username
-  }
+    Username,
+  },
 };
 </script>
 

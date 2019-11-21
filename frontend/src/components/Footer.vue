@@ -1,6 +1,6 @@
 <template>
   <div class="footer container">
-    <hr>
+    <hr />
     <p class="float-center">
       <a href="mailto:contact@whatgotdone.com">Email Us</a>
       <span class="separator">|</span>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "Footer"
+  name: 'Footer',
 };
 </script>
 

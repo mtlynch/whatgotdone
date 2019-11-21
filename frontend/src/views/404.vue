@@ -7,6 +7,6 @@
 
 <script>
 export default {
-  name: "MissingPage"
+  name: 'MissingPage',
 };
 </script>

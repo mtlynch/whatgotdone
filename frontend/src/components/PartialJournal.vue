@@ -1,12 +1,15 @@
 <template>
   <div class="journal">
-    <JournalHeader :entryAuthor="entry.author" :entryDate="new Date(entry.date)" />
+    <JournalHeader
+      :entryAuthor="entry.author"
+      :entryDate="new Date(entry.date)"
+    />
     <div class="journal-entry">
       <div class="journal-body">
         <vue-markdown
           :linkify="false"
           :html="false"
-          :anchorAttributes="{rel: 'ugc' }"
+          :anchorAttributes="{rel: 'ugc'}"
           :source="entrySnippet"
         ></vue-markdown>
       </div>
@@ -18,31 +21,31 @@
 </template>
 
 <script>
-import Vue from "vue";
-import VueMarkdown from "vue-markdown";
-import JournalHeader from "./JournalHeader.vue";
+import Vue from 'vue';
+import VueMarkdown from 'vue-markdown';
+import JournalHeader from './JournalHeader.vue';
 
 Vue.use(VueMarkdown);
 
 export default {
-  name: "PartialJournal",
+  name: 'PartialJournal',
   props: {
-    entry: Object
+    entry: Object,
   },
   components: {
     VueMarkdown,
-    JournalHeader
+    JournalHeader,
   },
   computed: {
     entrySnippet: function() {
       const maxLines = 12;
-      const entryLines = this.entry.markdown.split("\n");
+      const entryLines = this.entry.markdown.split('\n');
       if (entryLines.length < maxLines) {
-        return entryLines.join("\n");
+        return entryLines.join('\n');
       }
-      return entryLines.slice(0, maxLines).join("\n") + "\n\n...";
-    }
-  }
+      return entryLines.slice(0, maxLines).join('\n') + '\n\n...';
+    },
+  },
 };
 </script>
 

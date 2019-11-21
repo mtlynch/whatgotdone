@@ -5,30 +5,32 @@
       <vue-markdown
         :linkify="false"
         :html="false"
-        :anchorAttributes="{rel: 'ugc' }"
+        :anchorAttributes="{rel: 'ugc'}"
         :source="entry.markdown"
       ></vue-markdown>
-      <div class="last-modified-date">Last modified {{ entry.lastModified | moment("lll") }}</div>
+      <div class="last-modified-date">
+        Last modified {{ entry.lastModified | moment('lll') }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from "vue";
-import VueMarkdown from "vue-markdown";
-import JournalHeader from "./JournalHeader.vue";
+import Vue from 'vue';
+import VueMarkdown from 'vue-markdown';
+import JournalHeader from './JournalHeader.vue';
 
 Vue.use(VueMarkdown);
 
 export default {
-  name: "Journal",
+  name: 'Journal',
   props: {
-    entry: Object
+    entry: Object,
   },
   components: {
     JournalHeader,
-    VueMarkdown
-  }
+    VueMarkdown,
+  },
 };
 </script>
 

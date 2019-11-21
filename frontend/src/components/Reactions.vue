@@ -6,9 +6,14 @@
         v-bind:key="symbol"
         :variant="buttonVariant(symbol)"
         @click="handleReaction(symbol)"
-      >{{ symbol }}</b-button>
+        >{{ symbol }}</b-button
+      >
     </div>
-    <div class="reaction" v-for="reaction in reactions" v-bind:key="reaction.key">
+    <div
+      class="reaction"
+      v-for="reaction in reactions"
+      v-bind:key="reaction.key"
+    >
       <p>
         <Username :username="reaction.username" />&nbsp;reacted with a
         <span class="reaction-symbol">{{ reaction.reaction }}</span>
@@ -18,43 +23,43 @@
 </template>
 
 <script>
-import Username from "./Username.vue";
-import getCsrfToken from "../controllers/CsrfToken.js";
+import Username from './Username.vue';
+import getCsrfToken from '../controllers/CsrfToken.js';
 
 export default {
-  name: "Reactions",
+  name: 'Reactions',
   props: {
     entryAuthor: String,
-    entryDate: String
+    entryDate: String,
   },
   components: {
-    Username
+    Username,
   },
   data() {
     return {
       reactions: [],
-      reactionSymbols: ["👍", "🎉", "🙁"],
-      selectedReaction: ""
+      reactionSymbols: ['👍', '🎉', '🙁'],
+      selectedReaction: '',
     };
   },
   methods: {
     clear: function() {
       this.reactions = [];
-      this.selectedReaction = "";
+      this.selectedReaction = '';
     },
     loadReactions: function() {
       if (!this.entryAuthor || !this.entryDate) {
         return;
       }
       const reactions = [];
-      let newSelectedReaction = "";
+      let newSelectedReaction = '';
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.entryAuthor}/${this.entryDate}`;
       this.$http
         .get(url)
         .then(result => {
           for (const reaction of result.data) {
             if (reaction.username == this.loggedInUsername) {
-              if (this.selectedReaction == "") {
+              if (this.selectedReaction == '') {
                 newSelectedReaction = reaction.symbol;
               } else {
                 // Don't overwrite the local reaction symbol if the user
@@ -67,21 +72,21 @@ export default {
               key: reaction.username,
               username: reaction.username,
               timestamp: new Date(reaction.timestamp),
-              reaction: reaction.symbol
+              reaction: reaction.symbol,
             });
           }
-          if (this.selectedReaction != "") {
+          if (this.selectedReaction != '') {
             reactions.push({
               key: this.loggedInUsername,
               username: this.loggedInUsername,
               timestamp: new Date(),
-              reaction: this.selectedReaction
+              reaction: this.selectedReaction,
             });
           }
           // Sort from oldest to newest.
           reactions.sort((a, b) => a.timestamp - b.timestamp);
           this.reactions = reactions;
-          if (this.selectedReaction == "") {
+          if (this.selectedReaction == '') {
             this.selectedReaction = newSelectedReaction;
           }
         })
@@ -95,11 +100,11 @@ export default {
     },
     handleReaction: function(reactionSymbol) {
       if (!this.loggedInUsername) {
-        this.$router.push("/login");
+        this.$router.push('/login');
         return;
       }
       if (this.selectedReaction == reactionSymbol) {
-        this.selectedReaction = "";
+        this.selectedReaction = '';
       } else {
         this.selectedReaction = reactionSymbol;
       }
@@ -107,9 +112,9 @@ export default {
       this.$http.post(
         url,
         {
-          reactionSymbol: this.selectedReaction
+          reactionSymbol: this.selectedReaction,
         },
-        { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
+        {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
       );
       this.updateReactions();
     },
@@ -121,28 +126,28 @@ export default {
         }
         newReactions.push(reaction);
       }
-      if (this.selectedReaction != "") {
+      if (this.selectedReaction != '') {
         newReactions.push({
           key: this.loggedInUsername,
           username: this.loggedInUsername,
           timestamp: new Date(),
-          reaction: this.selectedReaction
+          reaction: this.selectedReaction,
         });
       }
       this.reactions = newReactions;
     },
     buttonVariant: function(reactionSymbol) {
       if (this.selectedReaction == reactionSymbol) {
-        return "light";
+        return 'light';
       } else {
-        return "secondary";
+        return 'secondary';
       }
-    }
+    },
   },
   computed: {
     loggedInUsername: function() {
       return this.$store.state.username;
-    }
+    },
   },
   created() {
     this.loadReactions();
@@ -153,8 +158,8 @@ export default {
     },
     entryDate: function() {
       this.reloadReactions();
-    }
-  }
+    },
+  },
 };
 </script>
 

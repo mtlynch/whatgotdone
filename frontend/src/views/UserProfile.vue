@@ -7,66 +7,82 @@
     <vue-markdown
       :linkify="false"
       :html="false"
-      :anchorAttributes="{rel: 'ugc' }"
+      :anchorAttributes="{rel: 'ugc'}"
       :source="aboutMarkdown"
       class="user-bio"
     ></vue-markdown>
 
-    <p
-      v-if="profileLoaded && !aboutMarkdown"
-      class="no-bio-message"
-    >This user has not yet created a public bio.</p>
+    <p v-if="profileLoaded && !aboutMarkdown" class="no-bio-message">
+      This user has not yet created a public bio.
+    </p>
 
     <template v-if="twitterHandle || emailAddress">
       <h2>Contact</h2>
 
       <ul>
         <li v-if="emailAddress">
-          <a :href="'mailto:' + emailAddress" class="email-address">{{ emailAddress }}</a> (Email)
+          <a :href="'mailto:' + emailAddress" class="email-address">{{
+            emailAddress
+          }}</a>
+          (Email)
         </li>
         <li v-if="twitterHandle">
           <a
             :href="'https://twitter.com/' + twitterHandle"
             class="twitter-handle"
-          >@{{ twitterHandle }}</a> (Twitter)
+            >@{{ twitterHandle }}</a
+          >
+          (Twitter)
         </li>
       </ul>
     </template>
 
-    <b-button v-if="canEdit" to="/profile/edit" variant="primary" class="edit-btn float-right">Edit</b-button>
+    <b-button
+      v-if="canEdit"
+      to="/profile/edit"
+      variant="primary"
+      class="edit-btn float-right"
+      >Edit</b-button
+    >
 
     <h2>Recent entries</h2>
 
-    <PartialJournal v-bind:key="item.key" v-bind:entry="item" v-for="item in recentEntries" />
+    <PartialJournal
+      v-bind:key="item.key"
+      v-bind:entry="item"
+      v-for="item in recentEntries"
+    />
 
     <p
       v-if="entriesLoaded && recentEntries.length === 0"
       class="no-entries-message"
-    >This user has not submitted any recent updates.</p>
+    >
+      This user has not submitted any recent updates.
+    </p>
   </div>
 </template>
 
 <script>
-import Vue from "vue";
-import VueMarkdown from "vue-markdown";
-import PartialJournal from "../components/PartialJournal.vue";
+import Vue from 'vue';
+import VueMarkdown from 'vue-markdown';
+import PartialJournal from '../components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
 
 export default {
-  name: "UserProfile",
+  name: 'UserProfile',
   components: {
     VueMarkdown,
-    PartialJournal
+    PartialJournal,
   },
   data() {
     return {
-      aboutMarkdown: "",
+      aboutMarkdown: '',
       twitterHandle: null,
       emailAddress: null,
       recentEntries: [],
       profileLoaded: false,
-      entriesLoaded: false
+      entriesLoaded: false,
     };
   },
   computed: {
@@ -78,11 +94,11 @@ export default {
     },
     canEdit: function() {
       return this.loggedInUsername && this.loggedInUsername === this.username;
-    }
+    },
   },
   methods: {
     clear: function() {
-      this.aboutMarkdown = "";
+      this.aboutMarkdown = '';
       this.twitterHandle = null;
       this.emailAddress = null;
       this.recentEntries = [];
@@ -116,14 +132,14 @@ export default {
             author: this.username,
             date: new Date(entry.date),
             lastModified: new Date(entry.lastModified),
-            markdown: entry.markdown
+            markdown: entry.markdown,
           });
         }
         // Sort newest to oldest.
         this.recentEntries.sort((a, b) => b.date - a.date);
         this.entriesLoaded = true;
       });
-    }
+    },
   },
   created() {
     this.loadProfile();
@@ -136,8 +152,8 @@ export default {
         this.loadProfile();
         this.loadRecentEntries();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
