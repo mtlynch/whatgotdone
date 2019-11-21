@@ -5,7 +5,7 @@
       <vue-markdown
         :linkify="false"
         :html="false"
-        :anchorAttributes="{rel: 'ugc' }"
+        :anchorAttributes="{rel: 'ugc'}"
         :source="markdown"
       ></vue-markdown>
     </div>
@@ -13,19 +13,19 @@
 </template>
 
 <script>
-import Vue from "vue";
-import VueMarkdown from "vue-markdown";
+import Vue from 'vue';
+import VueMarkdown from 'vue-markdown';
 
 Vue.use(VueMarkdown);
 
 export default {
-  name: "JournalPreview",
+  name: 'JournalPreview',
   props: {
-    markdown: String
+    markdown: String,
   },
   components: {
-    VueMarkdown
-  }
+    VueMarkdown,
+  },
 };
 </script>
 

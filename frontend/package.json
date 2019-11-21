@@ -5,6 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 8085",
     "build": "vue-cli-service build",
+    "check-format": "prettier --check 'src/**/*.js' 'src/**/*.vue' '.prettierrc'",
+    "format": "prettier --write 'src/**/*.js' 'src/**/*.vue' '.prettierrc'",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
@@ -36,6 +38,7 @@
     "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "prettier": "1.19.1",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {

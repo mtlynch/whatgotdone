@@ -39,35 +39,38 @@
       />
     </div>
 
-    <div class="alert alert-primary" role="alert" v-if="formError">{{ formError }}</div>
+    <div class="alert alert-primary" role="alert" v-if="formError">
+      {{ formError }}
+    </div>
 
     <b-button
       variant="primary"
       class="float-right"
       @click.prevent="handleSave()"
       id="save-profile"
-    >Save</b-button>
+      >Save</b-button
+    >
   </div>
 </template>
 
 <script>
-import getCsrfToken from "../controllers/CsrfToken.js";
+import getCsrfToken from '../controllers/CsrfToken.js';
 
 export default {
-  name: "EditUserProfile",
+  name: 'EditUserProfile',
   data() {
     return {
-      aboutMarkdown: "",
-      twitterHandle: "",
-      emailAddress: "",
+      aboutMarkdown: '',
+      twitterHandle: '',
+      emailAddress: '',
       profileLoaded: false,
-      formError: null
+      formError: null,
     };
   },
   computed: {
     loggedInUsername: function() {
       return this.$store.state.username;
-    }
+    },
   },
   methods: {
     loadProfile: function() {
@@ -95,9 +98,9 @@ export default {
           {
             aboutMarkdown: this.aboutMarkdown,
             twitterHandle: this.twitterHandle,
-            emailAddress: this.emailAddress
+            emailAddress: this.emailAddress,
           },
-          { withCredentials: true, headers: { "X-CSRF-Token": getCsrfToken() } }
+          {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
         )
         .then(result => {
           if (result.data.ok) {
@@ -111,11 +114,11 @@ export default {
             this.formError = error;
           }
         });
-    }
+    },
   },
   created() {
     this.loadProfile();
-  }
+  },
 };
 </script>
 

@@ -1,25 +1,25 @@
 <template>
   <div>
-    <NavigationBar/>
+    <NavigationBar />
     <div id="app" class="container">
       <router-view></router-view>
     </div>
-    <Footer/>
-    <Initializer/>
+    <Footer />
+    <Initializer />
   </div>
 </template>
 
 <script>
-import Initializer from "./components/Initializer";
-import Footer from "./components/Footer";
-import NavigationBar from "./components/NavigationBar";
+import Initializer from './components/Initializer';
+import Footer from './components/Footer';
+import NavigationBar from './components/NavigationBar';
 export default {
-  name: "app",
+  name: 'app',
   components: {
     Initializer,
     Footer,
-    NavigationBar
-  }
+    NavigationBar,
+  },
 };
 </script>
 

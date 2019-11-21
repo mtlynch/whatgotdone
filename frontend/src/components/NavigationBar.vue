@@ -1,6 +1,11 @@
 <template>
-  <b-navbar toggleable="md" class="navbar navbar-expand-lg navbar-light bg-light">
-    <b-navbar-brand v-b-toggle.nav-collapse class="navbar-brand" to="/">What Got Done</b-navbar-brand>
+  <b-navbar
+    toggleable="md"
+    class="navbar navbar-expand-lg navbar-light bg-light"
+  >
+    <b-navbar-brand v-b-toggle.nav-collapse class="navbar-brand" to="/"
+      >What Got Done</b-navbar-brand
+    >
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -8,13 +13,22 @@
       <b-navbar-nav>
         <b-nav-item to="/">About</b-nav-item>
         <b-nav-item to="/recent">Recent</b-nav-item>
-        <b-nav-item href="https://github.com/mtlynch/whatgotdone">Contribute</b-nav-item>
+        <b-nav-item href="https://github.com/mtlynch/whatgotdone"
+          >Contribute</b-nav-item
+        >
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-item-dropdown v-if="username" text="Account" class="account-dropdown" right>
-          <b-dropdown-item :to="'/' + username" class="profile-link">Profile</b-dropdown-item>
+        <b-nav-item-dropdown
+          v-if="username"
+          text="Account"
+          class="account-dropdown"
+          right
+        >
+          <b-dropdown-item :to="'/' + username" class="profile-link"
+            >Profile</b-dropdown-item
+          >
           <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-button
@@ -22,27 +36,28 @@
           variant="success"
           v-b-toggle.nav-collapse
           :to="'/entry/edit/' + this.thisFriday"
-        >Post Update</b-button>
+          >Post Update</b-button
+        >
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
 </template>
 
 <script>
-import { thisFriday } from "../controllers/EntryDates.js";
+import {thisFriday} from '../controllers/EntryDates.js';
 
 export default {
-  name: "NavigationBar",
+  name: 'NavigationBar',
   data() {
     return {
-      thisFriday: thisFriday()
+      thisFriday: thisFriday(),
     };
   },
   computed: {
     username() {
       return this.$store.state.username;
-    }
-  }
+    },
+  },
 };
 </script>
 
