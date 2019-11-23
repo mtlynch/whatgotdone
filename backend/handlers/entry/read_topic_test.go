@@ -102,6 +102,26 @@ func TestReadTopic(t *testing.T) {
 * Multiple studies confirm this`,
 			nil,
 		},
+		{
+			"canonicalizes dots into dashes",
+			`# Kittens
+
+* Adopted 17 kittens
+* Named all of them mittens
+
+# Donuts.com
+
+* Donuts are delicious
+* Multiple studies confirm this
+
+# Soup
+
+* Soup is reportedly not as delicious as donuts`,
+			"donuts-com",
+			`* Donuts are delicious
+* Multiple studies confirm this`,
+			nil,
+		},
 	}
 
 	for _, tt := range tests {

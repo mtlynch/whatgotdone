@@ -43,7 +43,7 @@ func stripMarkdownLink(line string) string {
 }
 
 func canonicalizeHeading(topic string) string {
-	re := regexp.MustCompile(`\s+`)
+	re := regexp.MustCompile(`[^A-Za-z]+`)
 	return re.ReplaceAllString(topic, "-")
 }
 
