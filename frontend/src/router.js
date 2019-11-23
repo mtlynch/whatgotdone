@@ -8,6 +8,7 @@ import PrivacyPolicy from './views/PrivacyPolicy.vue';
 import Recent from './views/Recent.vue';
 import EditEntry from './views/EditEntry.vue';
 import ViewEntry from './views/ViewEntry.vue';
+import ViewTopic from './views/ViewTopic.vue';
 import EditUserProfile from './views/EditUserProfile.vue';
 import UserProfile from './views/UserProfile.vue';
 import MissingPage from './views/404.vue';
@@ -36,6 +37,15 @@ const routes = [
     meta: {
       title: route => {
         return `${route.params.username}'s What Got Done for the week of ${route.params.date}`;
+      },
+    },
+  },
+  {
+    path: '/:username/topic/:topic',
+    component: ViewTopic,
+    meta: {
+      title: route => {
+        return `${route.params.username}'s What Got Done | ${route.params.topic}`;
       },
     },
   },
