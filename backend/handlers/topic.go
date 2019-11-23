@@ -40,7 +40,7 @@ func (s *defaultServer) topicGet() http.HandlerFunc {
 		topicBodies := []topicBody{}
 		for _, e := range entries {
 			body, err := entry.ReadTopic(e.Markdown, topic)
-			if err != nil {
+			if err != nil || body == "" {
 				continue
 			}
 			topicBodies = append(topicBodies, topicBody{

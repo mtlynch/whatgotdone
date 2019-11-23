@@ -27,6 +27,81 @@ func TestReadTopic(t *testing.T) {
 * Multiple studies confirm this`,
 			nil,
 		},
+		{
+			"finds topic when it is in the middle of an entry",
+			`# Kittens
+
+* Adopted 17 kittens
+* Named all of them mittens
+
+# Donuts
+
+* Donuts are delicious
+* Multiple studies confirm this
+
+# Soup
+
+* Soup is reportedly not as delicious as donuts`,
+			"donuts",
+			`* Donuts are delicious
+* Multiple studies confirm this`,
+			nil,
+		},
+		{
+			"finds topic when it is at the end of an entry",
+			`# Kittens
+
+* Adopted 17 kittens
+* Named all of them mittens
+
+# Soup
+
+* Soup is reportedly not as delicious as donuts
+
+# Donuts
+
+* Donuts are delicious
+* Multiple studies confirm this`,
+			"donuts",
+			`* Donuts are delicious
+* Multiple studies confirm this`,
+			nil,
+		},
+		{
+			"finds topic when it's a hyperlink",
+			`# [Donuts](https://donutpalace.com)
+
+* Donuts are delicious
+* Multiple studies confirm this
+
+# Soup
+
+* Soup is reportedly not as delicious as donuts`,
+			"donuts",
+			`* Donuts are delicious
+* Multiple studies confirm this`,
+			nil,
+		},
+		{
+			"canonicalizes multi-word topic",
+			`# Kittens
+
+* Adopted 17 kittens
+* Named all of them mittens
+
+# Donut Updates
+
+* Donuts are delicious
+* Multiple studies confirm this
+
+# Soup
+
+* Soup is reportedly not as delicious as donuts`,
+			"donut-updates",
+			`* Donuts are delicious
+* Multiple studies confirm this`,
+			nil,
+		},
 	}
 
 	for _, tt := range tests {

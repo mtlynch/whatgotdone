@@ -5,15 +5,16 @@
     <template v-if="entriesLoaded && topicBodies.length > 0">
       <div v-for="item in topicBodies" :key="item.key">
         <p>
-          For the week ending on
           <b>{{ item.date | moment('utc', 'dddd, ll') }}</b>
         </p>
-        <vue-markdown
-          :linkify="false"
-          :html="false"
-          :anchorAttributes="{rel: 'ugc'}"
-          :source="item.markdown"
-        ></vue-markdown>
+        <div class="journal">
+          <vue-markdown
+            :linkify="false"
+            :html="false"
+            :anchorAttributes="{rel: 'ugc'}"
+            :source="item.markdown"
+          ></vue-markdown>
+        </div>
       </div>
     </template>
 
@@ -102,11 +103,39 @@ h2 {
   margin-bottom: 30px;
 }
 
-.no-bio-message {
-  font-style: italic;
+div.journal {
+  border: 1px solid rgb(26, 0, 68);
+  padding: 10px;
+  margin-bottom: 60px;
+  background-color: #4e5d6c;
+  overflow: auto;
 }
 
-.no-entries-message {
+@media screen and (min-width: 768px) {
+  div.journal {
+    padding: 15px;
+    margin-bottom: 40px;
+    overflow: visible;
+  }
+}
+
+.header {
   font-style: italic;
+  margin-bottom: 15px;
+}
+
+.journal-entry {
+  padding: 4px 5px;
+}
+
+@media screen and (min-width: 768px) {
+  .journal-entry {
+    padding: 20px 20px 0px 20px;
+  }
+}
+
+.journal-body {
+  text-align: left;
+  margin-bottom: 50px;
 }
 </style>
