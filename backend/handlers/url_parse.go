@@ -27,6 +27,6 @@ func dateFromRequestPath(r *http.Request) (string, error) {
 	return date, nil
 }
 
-func topicFromRequestPath(r *http.Request) (string, error) {
-	return mux.Vars(r)["topic"], nil
+func projectFromRequestPath(r *http.Request) (string, error) {
+	return mux.Vars(r)["project"], nil
 }

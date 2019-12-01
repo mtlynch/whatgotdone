@@ -9,7 +9,7 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/handlers/entry"
 )
 
-func (s *defaultServer) topicGet() http.HandlerFunc {
+func (s *defaultServer) projectGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)
 		if err != nil {
@@ -18,10 +18,10 @@ func (s *defaultServer) topicGet() http.HandlerFunc {
 			return
 		}
 
-		topic, err := topicFromRequestPath(r)
+		project, err := projectFromRequestPath(r)
 		if err != nil {
-			log.Printf("Failed to retrieve topic from request path: %s", err)
-			http.Error(w, "Invalid topic", http.StatusBadRequest)
+			log.Printf("Failed to retrieve project from request path: %s", err)
+			http.Error(w, "Invalid project", http.StatusBadRequest)
 			return
 		}
 
@@ -32,29 +32,34 @@ func (s *defaultServer) topicGet() http.HandlerFunc {
 			return
 		}
 
-		type topicBody struct {
+		type projectBody struct {
 			Date     string `json:"date"`
 			Markdown string `json:"markdown"`
 		}
 
-		topicBodies := []topicBody{}
+		projectBodies := []projectBody{}
 		for _, e := range entries {
-			body, err := entry.ReadProject(e.Markdown, topic)
-			if err != nil || body == "" {
+			body, err := entry.ReadProject(e.Markdown, project)
+			if _, ok := err.(entry.ProjectNotFoundError); ok {
+				continue
+			} else if err != nil {
+				log.Printf("Failed to retrieve project from entry: %s", err)
+				continue
+			} else if body == "" {
 				continue
 			}
-			topicBodies = append(topicBodies, topicBody{
+			projectBodies = append(projectBodies, projectBody{
 				Markdown: body,
 				Date:     e.Date,
 			})
 		}
 
-		if err := json.NewEncoder(w).Encode(topicBodies); err != nil {
+		if err := json.NewEncoder(w).Encode(projectBodies); err != nil {
 			panic(err)
 		}
 	}
 }
 
-func (s *defaultServer) topicOptions() http.HandlerFunc {
+func (s *defaultServer) projectOptions() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {}
 }
