@@ -39,7 +39,7 @@ func (s *defaultServer) topicGet() http.HandlerFunc {
 
 		topicBodies := []topicBody{}
 		for _, e := range entries {
-			body, err := entry.ReadTopic(e.Markdown, topic)
+			body, err := entry.ReadProject(e.Markdown, topic)
 			if err != nil || body == "" {
 				continue
 			}
