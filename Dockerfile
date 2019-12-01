@@ -13,6 +13,7 @@ COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY ./backend/auth /app/backend/auth
 COPY ./backend/datastore /app/backend/datastore
 COPY ./backend/handlers /app/backend/handlers
+COPY ./backend/handlers/entry /app/backend/handlers/entry
 COPY ./backend/types /app/backend/types
 COPY ./backend/*.go /app/backend
 COPY ./go.mod /app/go.mod
