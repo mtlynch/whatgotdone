@@ -152,6 +152,22 @@ print('Hello, world!')
 * Named all of them mittens`, "'''", "```"),
 			nil,
 		},
+		{
+			"returns ProjectNotFoundError when no project matches",
+			`# Donuts
+
+* Donuts are delicious
+* Multiple studies confirm this
+
+# Soup
+
+* Soup is reportedly not as delicious as donuts`,
+			"pineapples",
+			"",
+			ProjectNotFoundError{
+				Project: "pineapples",
+			},
+		},
 	}
 
 	for _, tt := range tests {
