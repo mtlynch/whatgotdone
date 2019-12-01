@@ -23,6 +23,9 @@ jobs:
           name: Download npm packages
           command: npm --prefix ./frontend install
       - run:
+          name: Check JavaScript formatting
+          command: npm --prefix ./frontend run check-format
+      - run:
           name: Lint client
           command: npm --prefix ./frontend run lint
       - run:
