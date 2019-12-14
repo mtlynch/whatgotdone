@@ -46,15 +46,11 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import moment from 'moment';
 import Journal from '../components/Journal.vue';
 import Reactions from '../components/Reactions.vue';
 import Username from '../components/Username.vue';
-import Pagination from 'bootstrap-vue/es/components/pagination';
 import {thisFriday} from '../controllers/EntryDates.js';
-
-Vue.use(Pagination);
 
 export default {
   name: 'ViewEntry',
