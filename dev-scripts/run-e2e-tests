@@ -1,6 +1,16 @@
 #!/bin/bash
 
-set -xe
+# Exit build script on first failure
+set -e
+
+# Echo commands to stdout.
+set -x
+
+if [ "$1" = "--skip-build" ]; then
+  flags=""
+else
+  flags="--build"
+fi
 
 cd e2e
 docker-compose up --exit-code-from cypress --abort-on-container-exit --build
