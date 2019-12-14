@@ -11,10 +11,20 @@ Cypress.Commands.add('login', (username, password, options = {}) => {
 it('loads the homepage', () => {
   cy.visit('/')
 
+  // Verify <head> metadata.
+  cy.title().should('include', 'What Got Done')
+  cy.get('meta[name="description"]')
+    .should('have.attr', 'content', 'The simple, easy way to share progress with your teammates.')
+  cy.get('meta[property="og:type"]')
+    .should('have.attr', 'content', 'website')
+  cy.get('meta[property="og:title"]')
+    .should('have.attr', 'content', 'What Got Done')
+  cy.get('meta[property="og:description"]')
+    .should('have.attr', 'content', 'The simple, easy way to share progress with your teammates.')
+
   cy.get('h1')
     .should('contain', 'What did you get done this week?')
 })
-
 
 it('clicking "Post Update" before authenticating prompts login', () => {
   cy.visit('/')
@@ -51,6 +61,52 @@ it('logs in and posts an update', () => {
   cy.get('form').submit()
 
   cy.url().should('include', '/staging_jimmy/')
+  // Reload the page to fetch the new HTML rather than using what the front-end
+  // generated client-side.
+  cy.reload()
+
+  // Verify <head> metadata.
+  cy.title().should('include', 'staging_jimmy\'s What Got Done for the week of')
+  cy.get('meta[property="og:type"]')
+    .should('have.attr', 'content', 'article')
+  cy.get('.journal-body')
+    .should('contain', entryText)
+})
+
+it('logs in and backdates an update from a previous week', () => {
+  cy.server()
+  cy.route('/api/draft/*').as('getDraft')
+
+  cy.login('staging_jimmy', 'password')
+
+  // Wait for page to pull down any previous entry.
+  cy.wait('@getDraft')
+
+  cy.visit('/entry/edit/2019-12-13')
+
+  const entryText = 'Posted an update at ' + new Date().toISOString();
+
+  cy.get('.journal-markdown')
+    .clear()
+    .type(entryText)
+  cy.get('form').submit()
+
+  cy.url().should('include', '/staging_jimmy/2019-12-13')
+  // Reload the page to fetch the new HTML rather than using what the front-end
+  // generated client-side.
+  cy.reload()
+
+  // Verify <head> metadata.
+  cy.title().should('include', 'staging_jimmy\'s What Got Done for the week of 2019-12-13')
+  cy.get('meta[name="description"]')
+    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-13')
+  cy.get('meta[property="og:type"]')
+    .should('have.attr', 'content', 'article')
+  cy.get('meta[property="og:title"]')
+    .should('have.attr', 'content', 'staging_jimmy\'s What Got Done for the week of 2019-12-13')
+  cy.get('meta[property="og:description"]')
+    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-13')
+
   cy.get('.journal-body')
     .should('contain', entryText)
 })

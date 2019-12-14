@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -28,7 +29,7 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 			return
 		} else if err != nil {
 			log.Printf("Failed to retrieve the file %s from the file system: %s", r.URL.Path, err)
-			http.Error(w, "Failed to find file: " + r.URL.Path, http.StatusInternalServerError)
+			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusInternalServerError)
 			return
 		}
 		defer file.Close()
@@ -36,7 +37,7 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 		stat, err := file.Stat()
 		if err != nil {
 			log.Printf("Failed to retrieve the information of %s from the file system: %s", r.URL.Path, err)
-			http.Error(w, "Failed to serve: " + r.URL.Path, http.StatusInternalServerError)
+			http.Error(w, "Failed to serve: "+r.URL.Path, http.StatusInternalServerError)
 			return
 		}
 		if stat.IsDir() {
@@ -54,15 +55,19 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 // golang templating engine.
 func serveIndexPage(w http.ResponseWriter, r *http.Request) {
 	type page struct {
-		Title     string
-		CsrfToken string
+		Title         string
+		Description   string
+		CsrfToken     string
+		OpenGraphType string
 	}
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
 	indexTemplate := template.Must(template.New(frontendIndexFilename).Delims("[[", "]]").
-			ParseFiles(path.Join(frontendRootDir, frontendIndexFilename)))
+		ParseFiles(path.Join(frontendRootDir, frontendIndexFilename)))
 	if err := indexTemplate.ExecuteTemplate(w, frontendIndexFilename, page{
-		CsrfToken: csrf.Token(r),
-		Title:     getPageTitle(r),
+		CsrfToken:     csrf.Token(r),
+		Title:         getPageTitle(r),
+		Description:   getDescription(r),
+		OpenGraphType: getOpenGraphType(r),
 	}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -74,15 +79,46 @@ func serveIndexPage(w http.ResponseWriter, r *http.Request) {
 func getPageTitle(r *http.Request) string {
 	t := "What Got Done"
 
-	entryAuthor, err := usernameFromRequestPath(r)
-	if err == nil {
-		t = entryAuthor + "'s " + t
+	username, err := usernameFromRequestPath(r)
+	if err != nil {
+		return t
 	}
 
 	date, err := dateFromRequestPath(r)
-	if err == nil {
-		t += " for the week of " + date
+	if err != nil {
+		return t
 	}
 
-	return t
+	return fmt.Sprintf("%s's What Got Done for the week of %s", username, date)
+}
+
+func getOpenGraphType(r *http.Request) string {
+	t := "website"
+
+	_, err := usernameFromRequestPath(r)
+	if err != nil {
+		return t
+	}
+
+	_, err = dateFromRequestPath(r)
+	if err != nil {
+		return t
+	}
+
+	return "article"
+}
+
+func getDescription(r *http.Request) string {
+	t := "The simple, easy way to share progress with your teammates."
+
+	username, err := usernameFromRequestPath(r)
+	if err != nil {
+		return t
+	}
+
+	date, err := dateFromRequestPath(r)
+	if err != nil {
+		return t
+	}
+	return fmt.Sprintf("Find out what %s accomplished for the week of %s", username, date)
 }
