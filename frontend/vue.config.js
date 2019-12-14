@@ -11,14 +11,10 @@ module.exports = {
   //
   chainWebpack: config => {
     config
-      .plugin('html').init((Plugin, args) => {
-        const newArgs = {
-            ...args[0],
-        };
-        if (newArgs.minify) {
-          newArgs.minify.removeAttributeQuotes = false;
-        }
-        return new Plugin(newArgs);
-    });
+      .plugin('html')
+      .tap(args => {
+          args[0].minify.removeAttributeQuotes = false;
+          return args;
+      })
   }
 }
