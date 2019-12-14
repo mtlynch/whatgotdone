@@ -1,4 +1,4 @@
-FROM node:10.15.3 AS frontend_builder
+FROM circleci/node:9.11.2-stretch AS frontend_builder
 
 COPY ./frontend /app/frontend
 WORKDIR /app/frontend

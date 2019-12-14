@@ -34,6 +34,9 @@ jobs:
       - run:
           name: Build production frontend
           command: npm --prefix ./frontend run build
+      - run:
+          name: Print built index
+          command: cat ./frontend/index.html
       - persist_to_workspace:
           root: ./
           paths:
