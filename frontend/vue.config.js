@@ -13,8 +13,10 @@ module.exports = {
     config
       .plugin('html')
       .tap(args => {
+        if (args[0].minify) {
           args[0].minify.removeAttributeQuotes = false;
-          return args;
+        }
+        return args;
       })
   }
 }
