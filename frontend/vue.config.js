@@ -15,7 +15,9 @@ module.exports = {
         const newArgs = {
             ...args[0],
         };
-        newArgs.minify.removeAttributeQuotes = false;
+        if (newArgs.minify) {
+          newArgs.minify.removeAttributeQuotes = false;
+        }
         return new Plugin(newArgs);
     });
   }
