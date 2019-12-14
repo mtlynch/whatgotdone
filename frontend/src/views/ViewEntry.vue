@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import moment from 'moment';
 import Journal from '../components/Journal.vue';
 import Reactions from '../components/Reactions.vue';
