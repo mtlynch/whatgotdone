@@ -82,7 +82,6 @@ func getPageTitle(r *http.Request) string {
 	username, err := usernameFromRequestPath(r)
 	if err != nil {
 		return t
-
 	}
 
 	date, err := dateFromRequestPath(r)

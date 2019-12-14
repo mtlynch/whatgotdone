@@ -26,7 +26,6 @@ it('loads the homepage', () => {
     .should('contain', 'What did you get done this week?')
 })
 
-
 it('clicking "Post Update" before authenticating prompts login', () => {
   cy.visit('/')
 
@@ -62,6 +61,11 @@ it('logs in and posts an update', () => {
   cy.get('form').submit()
 
   cy.url().should('include', '/staging_jimmy/')
+  // Reload the page to fetch the new HTML rather than using what the front-end
+  // generated client-side.
+  cy.reload()
+
+  // Verify <head> metadata.
   cy.title().should('include', 'staging_jimmy\'s What Got Done for the week of')
   cy.get('meta[property="og:type"]')
     .should('have.attr', 'content', 'article')
@@ -75,10 +79,10 @@ it('logs in and backdates an update from a previous week', () => {
 
   cy.login('staging_jimmy', 'password')
 
-  cy.url().should('include', '/entry/edit')
-
   // Wait for page to pull down any previous entry.
   cy.wait('@getDraft')
+
+  cy.visit('/entry/edit/2019-12-13')
 
   const entryText = 'Posted an update at ' + new Date().toISOString();
 
@@ -87,18 +91,21 @@ it('logs in and backdates an update from a previous week', () => {
     .type(entryText)
   cy.get('form').submit()
 
-  cy.url().should('include', '/staging_jimmy/')
+  cy.url().should('include', '/staging_jimmy/2019-12-13')
+  // Reload the page to fetch the new HTML rather than using what the front-end
+  // generated client-side.
+  cy.reload()
 
   // Verify <head> metadata.
-  cy.title().should('include', 'staging_jimmy\'s What Got Done for the week of 2019-12-12')
+  cy.title().should('include', 'staging_jimmy\'s What Got Done for the week of 2019-12-13')
   cy.get('meta[name="description"]')
-    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-12')
+    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-13')
   cy.get('meta[property="og:type"]')
     .should('have.attr', 'content', 'article')
   cy.get('meta[property="og:title"]')
-    .should('have.attr', 'content', 'staging_jimmy\'s What Got Done for the week of 2019-12-12')
+    .should('have.attr', 'content', 'staging_jimmy\'s What Got Done for the week of 2019-12-13')
   cy.get('meta[property="og:description"]')
-    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-12')
+    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-13')
 
   cy.get('.journal-body')
     .should('contain', entryText)
