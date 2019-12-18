@@ -7,7 +7,7 @@ ARG NPM_BUILD_MODE="development"
 RUN npm install
 RUN npm run build -- --mode "$NPM_BUILD_MODE"
 
-FROM golang:1.11.8
+FROM golang:1.13.5-buster
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY ./backend/auth /app/backend/auth
