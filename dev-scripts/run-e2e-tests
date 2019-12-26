@@ -13,4 +13,4 @@ else
 fi
 
 cd e2e
-docker-compose up --exit-code-from cypress --abort-on-container-exit --build
+docker-compose up --exit-code-from cypress --abort-on-container-exit "$flags"
