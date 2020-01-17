@@ -29,7 +29,6 @@ func dummyCsrfMiddleware() httpMiddlewareHandler {
 	}
 }
 
-
 func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
 	ds := mockDatastore{
 		reactions: []types.Reaction{},

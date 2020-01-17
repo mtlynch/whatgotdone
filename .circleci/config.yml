@@ -48,6 +48,9 @@ jobs:
       - run:
           name: Test go packages
           command: go test -v ./...
+      - run:
+          name: Verify golang formatting
+          command: dev-scripts/check-go-formatting
   integration:
     machine: true
     steps:
