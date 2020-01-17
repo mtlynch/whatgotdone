@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"text/template"
+	"time"
 
 	"github.com/gorilla/csrf"
 )
@@ -75,7 +76,8 @@ func serveIndexPage(w http.ResponseWriter, r *http.Request) {
 
 // getPageTitle returns the <title> value of the page. By default it's
 // "What Got Done" but if the date or username are available, we prepend those
-// to the title, so that it can be "username's What Got Done for the week of YYYY-MM-DD".
+// to the title, so that it can be "username's What Got Done for the week of
+// MMM. D, YYYY".
 func getPageTitle(r *http.Request) string {
 	t := "What Got Done"
 
@@ -84,12 +86,21 @@ func getPageTitle(r *http.Request) string {
 		return t
 	}
 
-	date, err := dateFromRequestPath(r)
+	dateString, err := dateFromRequestPath(r)
 	if err != nil {
 		return t
 	}
 
-	return fmt.Sprintf("%s's What Got Done for the week of %s", username, date)
+	date, err := time.Parse("2006-01-02", dateString)
+	if err != nil {
+		return t
+	}
+
+	formattedDate := date.Format("Jan. 2, 2006")
+
+	log.Printf("printing date as %s", formattedDate)
+
+	return fmt.Sprintf("%s's What Got Done for the week of %s", username, formattedDate)
 }
 
 func getOpenGraphType(r *http.Request) string {
@@ -116,9 +127,17 @@ func getDescription(r *http.Request) string {
 		return t
 	}
 
-	date, err := dateFromRequestPath(r)
+	dateString, err := dateFromRequestPath(r)
 	if err != nil {
 		return t
 	}
-	return fmt.Sprintf("Find out what %s accomplished for the week of %s", username, date)
+
+	date, err := time.Parse("2006-01-02", dateString)
+	if err != nil {
+		return t
+	}
+
+	formattedDate := date.Format("January 2, 2006")
+
+	return fmt.Sprintf("Find out what %s accomplished for the week ending on %s", username, formattedDate)
 }
