@@ -99,13 +99,13 @@ it('logs in and backdates an update from a previous week', () => {
   // Verify <head> metadata.
   cy.title().should('include', 'staging_jimmy\'s What Got Done for the week of 2019-12-13')
   cy.get('meta[name="description"]')
-    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-13')
+    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week ending on December 13, 2019')
   cy.get('meta[property="og:type"]')
     .should('have.attr', 'content', 'article')
   cy.get('meta[property="og:title"]')
-    .should('have.attr', 'content', 'staging_jimmy\'s What Got Done for the week of 2019-12-13')
+    .should('have.attr', 'content', 'staging_jimmy\'s What Got Done for the week of Dec. 13, 2019')
   cy.get('meta[property="og:description"]')
-    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week of 2019-12-13')
+    .should('have.attr', 'content', 'Find out what staging_jimmy accomplished for the week ending on December 13, 2019')
 
   cy.get('.journal-body')
     .should('contain', entryText)
