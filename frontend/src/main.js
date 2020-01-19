@@ -19,10 +19,13 @@ Vue.use(VueMoment);
 Vue.prototype.moment = VueMoment;
 
 if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID.length > 1) {
-  Vue.use(VueGtag, {
-    id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID,
-    router,
-  });
+  Vue.use(
+    VueGtag,
+    {
+      config: {id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID},
+    },
+    router
+  );
 }
 
 // This callback runs before every route change, including on page load.
