@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
-import VueAnalytics from 'vue-analytics';
+import VueGtag from 'vue-gtag';
 import VueAxios from 'vue-axios';
 import VueMoment from 'vue-moment';
 import BootstrapVue from 'bootstrap-vue';
@@ -19,10 +19,13 @@ Vue.use(VueMoment);
 Vue.prototype.moment = VueMoment;
 
 if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID.length > 1) {
-  Vue.use(VueAnalytics, {
-    id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID,
-    router,
-  });
+  Vue.use(
+    VueGtag,
+    {
+      config: {id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID},
+    },
+    router
+  );
 }
 
 // This callback runs before every route change, including on page load.
