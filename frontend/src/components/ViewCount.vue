@@ -15,13 +15,10 @@ export default {
   },
   methods: {
     loadViewCount: function() {
-      console.log('in loadViewCount');
       if (!this.path) {
-        console.log('path is empty, returning');
         return;
       }
       const url = `${process.env.VUE_APP_BACKEND_URL}/api/pageViews`;
-      console.log(`About to make request to ${url}`);
       this.$http
         .get(url, {
           params: {
@@ -29,18 +26,16 @@ export default {
           },
         })
         .then(result => {
-          console.log('Got view count');
-          this.viewCount = result.data.views;
+          if (result.data) {
+            this.viewCount = result.data.views;
+          }
         })
-        .catch(e => {
-          console.log('Failed to get view count');
-          console.log(e);
+        .catch(() => {
           // Ignore error for view count, as it's non-essential.
         });
     },
   },
   created() {
-    console.log('created ViewCount');
     this.loadViewCount();
   },
 };
