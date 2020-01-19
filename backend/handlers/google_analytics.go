@@ -32,7 +32,7 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 		}
 		if !isPathForJournalEntry(path, users) {
 			log.Printf("path is not a journal entry: %s", path)
-			http.Error(w, "Request is missing path query parameter", http.StatusBadRequest)
+			http.Error(w, "path parameter must specify a journal entry", http.StatusBadRequest)
 			return
 		}
 
