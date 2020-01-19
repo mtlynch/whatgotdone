@@ -68,7 +68,13 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			http.Error(w, "Google Analytics fetcher is not loaded", http.StatusInternalServerError)
 			return
 		}
-		// TODO: Verify the request came from AppEngine.
+		// Verify the request came from AppEngine.
+		cronHeader := r.Header.Get("X-Appengine-Cron")
+		if cronHeader == "" {
+			http.Error(w, "Refreshes of Google Analytics data must come from within AppEngine", http.StatusBadRequest)
+			return
+		}
+
 		pvcs, err := (*s.googleAnalyticsFetcher).PageViewsByPath("2019-01-01", "today")
 		if err != nil {
 			log.Printf("failed to refresh Google Analytics data: %v", err)
