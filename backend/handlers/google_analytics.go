@@ -6,8 +6,10 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
+	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 )
 
 func (s *defaultServer) pageViewsOptions() http.HandlerFunc {
@@ -16,16 +18,23 @@ func (s *defaultServer) pageViewsOptions() http.HandlerFunc {
 
 func (s defaultServer) pageViewsGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		// if only one expected
 		path := r.URL.Query().Get("path")
 		if path == "" {
-			log.Printf("Request is missing path query parameter")
+			log.Print("Request is missing path query parameter")
 			http.Error(w, "Request is missing path query parameter", http.StatusBadRequest)
 			return
 		}
 
-		// TODO: Validate the path.
+		users, err := s.datastore.Users()
+		if err != nil {
+			log.Printf("Failed to retrieve users from datastore: %v", err)
+			http.Error(w, "Failed to retrieve pageviews", http.StatusInternalServerError)
+		}
+		if !isPathForJournalEntry(path, users) {
+			log.Printf("path is not a journal entry: %s", path)
+			http.Error(w, "Request is missing path query parameter", http.StatusBadRequest)
+			return
+		}
 
 		// TODO: Handle missing entry in datastore.
 		views, err := s.datastore.GetPageViews(path)
@@ -63,7 +72,9 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			http.Error(w, "Failed to refresh Google Analytics data", http.StatusInternalServerError)
 			return
 		}
-		for _, pvc := range coalescePageViews(pvcs) {
+		pvcs = coalescePageViews(pvcs)
+		pvcs = s.filterNonEntries(pvcs)
+		for _, pvc := range pvcs {
 			if err := s.datastore.InsertPageViews(pvc.Path, pvc.Views); err != nil {
 				log.Printf("failed to store pageviews in datastore %v: %v", pvc, err)
 			}
@@ -92,4 +103,48 @@ func coalescePageViews(pvcs []ga.PageViewCount) []ga.PageViewCount {
 		coalesced = append(coalesced, ga.PageViewCount{p, c})
 	}
 	return coalesced
+}
+
+func (s defaultServer) filterNonEntries(pvcs []ga.PageViewCount) []ga.PageViewCount {
+	filtered := []ga.PageViewCount{}
+	users, err := s.datastore.Users()
+	if err != nil {
+		return filtered
+	}
+	for _, pvc := range pvcs {
+		if isPathForJournalEntry(pvc.Path, users) {
+			filtered = append(filtered, pvc)
+		}
+	}
+	return filtered
+}
+
+func isPathForJournalEntry(path string, users []string) bool {
+	pathParts := strings.Split(path, "/")
+	if len(pathParts) != 3 {
+		return false
+	}
+	// Path should start with a forward slash, so the first part is empty.
+	if pathParts[0] != "" {
+		return false
+	}
+
+	user := pathParts[1]
+	if !isStringInSlice(user, users) {
+		return false
+	}
+	entryDate := pathParts[2]
+	if !validate.EntryDate(entryDate) {
+		return false
+	}
+	return true
+}
+
+func isStringInSlice(s string, ss []string) bool {
+	for _, x := range ss {
+		if s == x {
+			return true
+		}
+	}
+	return false
 }
