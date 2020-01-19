@@ -43,6 +43,14 @@ func (ds mockDatastore) InsertDraft(username string, j types.JournalEntry) error
 	return nil
 }
 
+func (ds mockDatastore) InsertPageViews(path string, pageViews int) error {
+	return nil
+}
+
+func (ds mockDatastore) GetPageViews(path string) (int, error) {
+	return 0, nil
+}
+
 func (ds mockDatastore) Close() error {
 	return nil
 }

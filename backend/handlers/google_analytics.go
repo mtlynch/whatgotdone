@@ -25,6 +25,8 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			return
 		}
 
+		// TODO: Validate the path.
+
 		// TODO: Handle missing entry in datastore.
 		views, err := s.datastore.GetPageViews(path)
 		if err != nil {
