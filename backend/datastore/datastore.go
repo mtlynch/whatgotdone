@@ -35,6 +35,10 @@ type Datastore interface {
 	// AddReaction saves a reader reaction associated with a published entry,
 	// overwriting any existing reaction.
 	AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error
+	// InsertPageViews stores the count of pageviews for a given What Got Done route.
+	InsertPageViews(path string, pageViews int) error
+	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
+	GetPageViews(path string) (int, error)
 }
 
 // DraftNotFoundError occurs when no draft exists for a user with a given date.

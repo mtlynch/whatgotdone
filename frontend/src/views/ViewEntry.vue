@@ -30,6 +30,7 @@
     <p v-if="backendError" class="error">
       Failed to connect to backend: {{ backendError }}
     </p>
+    <ViewCount path="$route.path" />
     <b-button
       v-if="canEdit"
       :to="'/entry/edit/' + this.entryDate"
@@ -50,6 +51,7 @@ import moment from 'moment';
 import Journal from '../components/Journal.vue';
 import Reactions from '../components/Reactions.vue';
 import Username from '../components/Username.vue';
+import ViewCount from '../components/ViewCount.vue';
 import {thisFriday} from '../controllers/EntryDates.js';
 
 export default {
@@ -58,6 +60,7 @@ export default {
     Journal,
     Reactions,
     Username,
+    ViewCount,
   },
   data() {
     return {

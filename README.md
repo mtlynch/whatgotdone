@@ -6,20 +6,20 @@
 
 ### Overview
 
-![What Got Done Architecture](https://docs.google.com/drawings/d/e/2PACX-1vTolxqMjEtz6ujaM1a3ThkG3Tb1sJbv2O66TGRKVhaqNBoXtFdZjQaf3gS7l-pXbFlg02lPfM9c4foI/pub?w=917&amp;h=696)
+![What Got Done Architecture](https://docs.google.com/drawings/d/e/2PACX-1vTolxqMjEtz6ujaM1a3ThkG3Tb1sJbv2O66TGRKVhaqNBoXtFdZjQaf3gS7l-pXbFlg02lPfM9c4foI/pub?w=917&h=696)
 
 What Got Done has a simple architecture consisting of the following parts:
 
-* **What Got Done Backend**: A Go HTTP service (running on AppEngine) that handles all HTTP requests, datastore requests, and user authentication (via UserKit).
-* **What Got Done Frontend**: A Vue2 app that renders pages in the user's browser.
-* [**Cloud Firestore**](https://cloud.google.com/firestore/): What Got Done's storage provider.
-* [**UserKit**](https://userkit.io): A third-party service that manages What Got Done's user authentication.
+- **What Got Done Backend**: A Go HTTP service (running on AppEngine) that handles all HTTP requests, datastore requests, and user authentication (via UserKit).
+- **What Got Done Frontend**: A Vue2 app that renders pages in the user's browser.
+- [**Cloud Firestore**](https://cloud.google.com/firestore/): What Got Done's storage provider.
+- [**UserKit**](https://userkit.io): A third-party service that manages What Got Done's user authentication.
 
 ### Page Rendering Flow
 
 What Got Done uses a somewhat unusual system for rendering pages. The Go backend first pre-renders the page server-side to populate tags related to SEO or social media that need to be set server-side. The Vue2 frontend renders the remainder of the page client-side. To avoid conflicts between the two systems' template syntax, Go uses `[[`, `]]` delimiters, while Vue uses `{{`, `}}` delimiters.
 
-![What Got Done Render Flow](https://docs.google.com/drawings/d/e/2PACX-1vRqxoblMAAhrmI2xY_BEFmN3TRry7QdKvBOAK-1muJ79EJlJWwk1jS5t13vpjB7Kwbaf711ROMxG_cY/pub?w=1127&amp;h=1262)
+![What Got Done Render Flow](https://docs.google.com/drawings/d/e/2PACX-1vRqxoblMAAhrmI2xY_BEFmN3TRry7QdKvBOAK-1muJ79EJlJWwk1jS5t13vpjB7Kwbaf711ROMxG_cY/pub?w=1127&h=1262)
 
 The Go backend handles all of What Got Done's `/api/*` routes. These routes are What Got Done's RESTful interface between the frontend and the backend. These routes never send HTML, and instead only send JSON back and forth.
 
@@ -37,8 +37,8 @@ Only the What Got Done backend can access the Firestore database. Specifically, 
 
 What Got Done's end-to-end tests use Cypress and follow the testing pattern defined in the article [End-to-End Testing Web Apps: The Painless Way](https://mtlynch.io/painless-web-app-testing/). The testing architecture consists of two Docker containers (see [docker-compose.yml](https://github.com/mtlynch/whatgotdone/blob/master/e2e/docker-compose.yml)):
 
-* What Got Done container
-* Cypress container
+- What Got Done container
+- Cypress container
 
 The Cypress container runs a browser to exercise What Got Done's critical functionality. It uses an independent environment and credentials from the production app so that nothing in the E2E tests affect state on production UserKit or Google Cloud Platform.
 
@@ -64,9 +64,9 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 
 ### 0. Pre-requisites
 
-* [Node.js](https://nodejs.org/) (8.x or higher)
-* [Go](https://golang.org/dl/) (1.11 or higher)
-* [Docker](https://www.docker.com/) (for E2E tests)
+- [Node.js](https://nodejs.org/) (8.x or higher)
+- [Go](https://golang.org/dl/) (1.11 or higher)
+- [Docker](https://www.docker.com/) (for E2E tests)
 
 ### 1. Start a Firestore emulator
 
@@ -125,10 +125,10 @@ A hot-reloading Vue server will run on port [http://localhost:8085](http://local
 
 Because the production What Got Done server runs both the frontend and the backend on a single port, there are a few hacks to make a development version work:
 
-* CORS is enabled in dev mode so that the frontend can make CORS requests to the backend from a different HTTP port.
-* CSRF protection is disabled in dev mode because the Vue dev server doesn't know how to render the `<meta name="csrf-token" />` tag.
-* Page titles don't work properly in dev mode because the Vue dev server doesn't know how to render the `<title>` tag.
-* The Content Security Policy header in dev mode needs `unsafe-eval` and `unsafe-inline`, whereas we disable this in production.
+- CORS is enabled in dev mode so that the frontend can make CORS requests to the backend from a different HTTP port.
+- CSRF protection is disabled in dev mode because the Vue dev server doesn't know how to render the `<meta name="csrf-token" />` tag.
+- Page titles don't work properly in dev mode because the Vue dev server doesn't know how to render the `<title>` tag.
+- The Content Security Policy header in dev mode needs `unsafe-eval` and `unsafe-inline`, whereas we disable this in production.
 
 ### Optional: Run backend unit tests
 
@@ -145,6 +145,7 @@ Integration tests run all components together using a local Firestore emulator a
 ```bash
 dev-scripts/run-integration-tests
 ```
+
 ### Optional: Run E2E tests
 
 The E2E tests are a subset of the integration tests, but they use a real GCP Firestore instance instead of a local emulator.
@@ -162,3 +163,16 @@ dev-scripts/run-e2e-tests
 Integration tests have the advantage of running faster because they have fewer remote dependencies. It's also possible for third-party developers to run them because they require no secrets (this also allows CI to run them on third-party pull requests).
 
 E2E tests are more likely to catch real-world bugs because their configuration more closely matches production infrastructure.
+
+### Optional: Enable public analytics from Google Analytics
+
+What Got Done supports pulling metrics from Google Analytics into the page content. To enable this:
+
+1. Enable the [Google Analytics Reporting API](https://console.cloud.google.com/apis/library/analyticsreporting.googleapis.com) in your Google Cloud Platform project.
+1. Create a [service account](https://console.cloud.google.com/iam-admin/serviceaccounts) in Google Cloud Platform console for your What Got Done project.
+   1. Assign the service account no permissions/roles, but save its private key as JSON.
+   1. Click "Create Key" to create a private key and save it in JSON format as `google-analytics-service-account.json` in the What Got Done root directory.
+1. In Google Analytics, open Admin > View > View User Management and add the email address of the service account you just created (it will have an email like `[name]@[project ID].iam.gserviceaccount.com`.
+   1. Grant the user only "Read & Analyze" permissions.
+1. In Google Analytics, open Admin > View > View Settings
+  1. Save the View ID as an environment variable like `export GOOGLE_ANALYTICS_VIEW_ID=12345789`
