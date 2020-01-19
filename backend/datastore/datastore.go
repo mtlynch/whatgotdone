@@ -60,3 +60,13 @@ type UserProfileNotFoundError struct {
 func (f UserProfileNotFoundError) Error() string {
 	return fmt.Sprintf("No user profile found for username %s", f.Username)
 }
+
+// PageViewsNotFoundError occurs when no page view data is present in the
+// datastore for the given URL path.
+type PageViewsNotFoundError struct {
+	Path string
+}
+
+func (f PageViewsNotFoundError) Error() string {
+	return fmt.Sprintf("No page view count found for path %s", f.Path)
+}

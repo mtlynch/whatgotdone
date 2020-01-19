@@ -1,0 +1,4 @@
+cron:
+  - description: "refresh Google Analytics stats"
+    url: /api/tasks/refreshGoogleAnalytics
+    schedule: every 10 minutes

@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 )
@@ -36,9 +37,11 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			return
 		}
 
-		// TODO: Handle missing entry in datastore.
 		views, err := s.datastore.GetPageViews(path)
-		if err != nil {
+		if _, ok := err.(datastore.PageViewsNotFoundError); ok {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		} else if err != nil {
 			log.Printf("failed to retrieve pageviews from datastore for path %s: %v", path, err)
 			http.Error(w, fmt.Sprintf("Failed to retrieve pageviews for path %s", path), http.StatusInternalServerError)
 		}
