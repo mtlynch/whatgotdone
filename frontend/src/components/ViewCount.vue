@@ -38,5 +38,12 @@ export default {
   created() {
     this.loadViewCount();
   },
+  watch: {
+    $route(to) {
+      this.viewCount = null;
+      this.path = to.path;
+      this.loadViewCount();
+    },
+  },
 };
 </script>
