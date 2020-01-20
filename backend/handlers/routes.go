@@ -29,7 +29,7 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/user", s.userPost()).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/logout", s.logoutOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/logout", s.logoutPost()).Methods(http.MethodPost)
-	s.router.HandleFunc("/api/tasks/refreshGoogleAnalytics", s.refreshGoogleAnalytics()).Methods(http.MethodPost)
+	s.router.HandleFunc("/api/tasks/refreshGoogleAnalytics", s.refreshGoogleAnalytics()).Methods(http.MethodGet)
 
 	// Catchall for when no API route matches.
 	s.router.PathPrefix("/api").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
