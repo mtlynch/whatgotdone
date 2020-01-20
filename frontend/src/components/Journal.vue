@@ -8,9 +8,11 @@
         :anchorAttributes="{rel: 'ugc'}"
         :source="entry.markdown"
       ></vue-markdown>
-      <ViewCount class="view-count" />
-      <div class="last-modified-date">
-        Last modified {{ entry.lastModified | moment('lll') }}
+      <div class="metadata">
+        <ViewCount class="view-count" />
+        <div class="last-modified-date">
+          Last modified {{ entry.lastModified | moment('lll') }}
+        </div>
       </div>
     </div>
   </div>
@@ -47,28 +49,19 @@ export default {
   overflow: visible;
 }
 
+.metadata {
+  font-style: italic;
+  margin-top: 40px;
+}
+
+@media screen and (min-width: 768px) {
+  .metadata {
+    text-align: right;
+    margin-top: 5px;
+  }
+}
+
 .view-count {
   display: block;
-  font-style: italic;
-  margin-top: 40px;
-}
-
-@media screen and (min-width: 768px) {
-  .view-count {
-    text-align: right;
-    margin-top: 5px;
-  }
-}
-
-.last-modified-date {
-  font-style: italic;
-  margin-top: 40px;
-}
-
-@media screen and (min-width: 768px) {
-  .last-modified-date {
-    text-align: right;
-    margin-top: 5px;
-  }
 }
 </style>
