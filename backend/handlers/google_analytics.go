@@ -71,7 +71,7 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 		// Verify the request came from AppEngine so that external users can't
 		// force the server to exceed Google Analytics rate limits.
 		if !isAppEngineInternalRequest(r) {
-			http.Error(w, "Refreshes of Google Analytics data must come from within AppEngine", http.StatusBadRequest)
+			http.Error(w, "Refreshes of Google Analytics data must come from within AppEngine", http.StatusForbidden)
 			return
 		}
 
@@ -159,5 +159,10 @@ func isStringInSlice(s string, ss []string) bool {
 }
 
 func isAppEngineInternalRequest(r *http.Request) bool {
-	return r.Header.Get("X-Appengine-Cron") == "true"
+	cronHeader := r.Header.Get("X-Appengine-Cron")
+	if cronHeader != "true" {
+		log.Printf("X-Appengine-Cron=[%v]", cronHeader)
+		return false
+	}
+	return true
 }
