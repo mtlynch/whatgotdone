@@ -67,14 +67,12 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 
 func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Print("starting Google Analytics stat refresh")
 		if s.googleAnalyticsFetcher == nil {
 			log.Print("Can't refresh Google Analytics because fetcher is not loaded")
 			http.Error(w, "Google Analytics fetcher is not loaded", http.StatusInternalServerError)
 			return
 		}
 
-		log.Print("verifying authenticity of request")
 		// Verify the request came from AppEngine so that external users can't
 		// force the server to exceed Google Analytics rate limits.
 		if !isAppEngineInternalRequest(r) {
@@ -82,7 +80,6 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			return
 		}
 
-		log.Print("starting Google Analytics query")
 		pvcs, err := (*s.googleAnalyticsFetcher).PageViewsByPath("2019-01-01", "today")
 		if err != nil {
 			log.Printf("failed to refresh Google Analytics data: %v", err)
@@ -96,7 +93,6 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 				log.Printf("failed to store pageviews in datastore %v: %v", pvc, err)
 			}
 		}
-		log.Print("sending Google Analytics success")
 		if err := json.NewEncoder(w).Encode(true); err != nil {
 			panic(err)
 		}
