@@ -145,6 +145,7 @@ Integration tests run all components together using a local Firestore emulator a
 ```bash
 dev-scripts/run-integration-tests
 ```
+
 ### Optional: Run E2E tests
 
 The E2E tests are a subset of the integration tests, but they use a real GCP Firestore instance instead of a local emulator.
@@ -162,3 +163,16 @@ dev-scripts/run-e2e-tests
 Integration tests have the advantage of running faster because they have fewer remote dependencies. It's also possible for third-party developers to run them because they require no secrets (this also allows CI to run them on third-party pull requests).
 
 E2E tests are more likely to catch real-world bugs because their configuration more closely matches production infrastructure.
+
+### Optional: Enable public analytics from Google Analytics
+
+What Got Done supports pulling metrics from Google Analytics into the page content. To enable this:
+
+1. Enable the [Google Analytics Reporting API](https://console.cloud.google.com/apis/library/analyticsreporting.googleapis.com) in your Google Cloud Platform project.
+1. Create a [service account](https://console.cloud.google.com/iam-admin/serviceaccounts) in Google Cloud Platform console for your What Got Done project.
+   1. Assign the service account no permissions/roles, but save its private key as JSON.
+   1. Click "Create Key" to create a private key and save it in JSON format as `google-analytics-service-account.json` in the What Got Done root directory.
+1. In Google Analytics, open Admin > View > View User Management and add the email address of the service account you just created (it will have an email like `[name]@[project ID].iam.gserviceaccount.com`.
+   1. Grant the user only "Read & Analyze" permissions.
+1. In Google Analytics, open Admin > View > View Settings
+  1. Save the View ID as an environment variable like `export GOOGLE_ANALYTICS_VIEW_ID=12345789`

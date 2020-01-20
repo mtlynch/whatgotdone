@@ -27,6 +27,11 @@ type (
 		Reactions []types.Reaction `firestore:"reactions,omitempty"`
 	}
 
+	pageViewsDocument struct {
+		Path  string `firestore:"path"`
+		Views int    `firestore:"views"`
+	}
+
 	entryReactionsDocument struct {
 		entryAuthor string `firestore:"entryAuthor,omitempty"`
 		entryDate   string `firestore:"entryDate,omitempty"`
@@ -38,6 +43,7 @@ const (
 	perUserEntriesKey   = "entries"
 	draftsRootKey       = "journalDrafts"
 	perUserDraftsKey    = "drafts"
+	pageViewsRootKey    = "pageViews"
 	reactionsRootKey    = "reactions"
 	perUserReactionsKey = "perUserReactions"
 	secretsRootKey      = "secrets"

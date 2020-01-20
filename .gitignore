@@ -6,7 +6,7 @@ bin/
 *.sw?
 
 # GCP service account credentials
-service-account-creds*.json
+*service-account*.json
 
 # Holds secret environment variables in prod
 env_variables.yaml

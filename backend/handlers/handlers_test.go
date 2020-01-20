@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -14,6 +15,7 @@ type mockDatastore struct {
 	journalDrafts  []types.JournalEntry
 	users          []string
 	reactions      []types.Reaction
+	pageViewCounts []ga.PageViewCount
 	userProfile    types.UserProfile
 }
 

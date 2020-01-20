@@ -8,6 +8,7 @@
         :anchorAttributes="{rel: 'ugc'}"
         :source="entry.markdown"
       ></vue-markdown>
+      <ViewCount class="view-count" />
       <div class="last-modified-date">
         Last modified {{ entry.lastModified | moment('lll') }}
       </div>
@@ -19,6 +20,7 @@
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
 import JournalHeader from './JournalHeader.vue';
+import ViewCount from '../components/ViewCount.vue';
 
 Vue.use(VueMarkdown);
 
@@ -29,6 +31,7 @@ export default {
   },
   components: {
     JournalHeader,
+    ViewCount,
     VueMarkdown,
   },
 };
@@ -42,6 +45,19 @@ export default {
 
 @media screen and (min-width: 768px) {
   overflow: visible;
+}
+
+.view-count {
+  display: block;
+  font-style: italic;
+  margin-top: 40px;
+}
+
+@media screen and (min-width: 768px) {
+  .view-count {
+    text-align: right;
+    margin-top: 5px;
+  }
 }
 
 .last-modified-date {

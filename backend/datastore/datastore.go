@@ -35,6 +35,10 @@ type Datastore interface {
 	// AddReaction saves a reader reaction associated with a published entry,
 	// overwriting any existing reaction.
 	AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error
+	// InsertPageViews stores the count of pageviews for a given What Got Done route.
+	InsertPageViews(path string, pageViews int) error
+	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
+	GetPageViews(path string) (int, error)
 }
 
 // DraftNotFoundError occurs when no draft exists for a user with a given date.
@@ -55,4 +59,14 @@ type UserProfileNotFoundError struct {
 
 func (f UserProfileNotFoundError) Error() string {
 	return fmt.Sprintf("No user profile found for username %s", f.Username)
+}
+
+// PageViewsNotFoundError occurs when no page view data is present in the
+// datastore for the given URL path.
+type PageViewsNotFoundError struct {
+	Path string
+}
+
+func (f PageViewsNotFoundError) Error() string {
+	return fmt.Sprintf("No page view count found for path %s", f.Path)
 }
