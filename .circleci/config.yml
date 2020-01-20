@@ -124,6 +124,9 @@ jobs:
       - run:
           name: Deploy to AppEngine
           command: gcloud --quiet app deploy --promote
+      - run:
+          name: Deploy cron jobs to AppEngine
+          command: gcloud --quiet app deploy cron.yaml --promote
 workflows:
   version: 2
   test-deploy:

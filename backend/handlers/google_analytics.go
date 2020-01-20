@@ -68,9 +68,9 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			http.Error(w, "Google Analytics fetcher is not loaded", http.StatusInternalServerError)
 			return
 		}
-		// Verify the request came from AppEngine.
-		cronHeader := r.Header.Get("X-Appengine-Cron")
-		if cronHeader == "" {
+		// Verify the request came from AppEngine so that external users can't
+		// force the server to exceed Google Analytics rate limits.
+		if !isAppEngineInternalRequest(r) {
 			http.Error(w, "Refreshes of Google Analytics data must come from within AppEngine", http.StatusBadRequest)
 			return
 		}
@@ -156,4 +156,8 @@ func isStringInSlice(s string, ss []string) bool {
 		}
 	}
 	return false
+}
+
+func isAppEngineInternalRequest(r *http.Request) bool {
+	return r.Header.Get("X-Appengine-Cron") == "true"
 }
