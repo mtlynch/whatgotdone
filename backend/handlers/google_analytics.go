@@ -35,6 +35,7 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Failed to retrieve users from datastore: %v", err)
 			http.Error(w, "Failed to retrieve pageviews", http.StatusInternalServerError)
+			return
 		}
 		if !isPathForJournalEntry(path, users) {
 			log.Printf("path is not a journal entry: %s", path)
@@ -44,11 +45,13 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 
 		views, err := s.datastore.GetPageViews(path)
 		if _, ok := err.(datastore.PageViewsNotFoundError); ok {
-			w.WriteHeader(http.StatusNotFound)
+			log.Printf("No pageviews found for %s", path)
+			http.Error(w, "Path has no pageview data", http.StatusNotFound)
 			return
 		} else if err != nil {
 			log.Printf("failed to retrieve pageviews from datastore for path %s: %v", path, err)
 			http.Error(w, fmt.Sprintf("Failed to retrieve pageviews for path %s", path), http.StatusInternalServerError)
+			return
 		}
 
 		response := pageViewResponse{
@@ -64,10 +67,14 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 
 func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Print("starting Google Analytics stat refresh")
 		if s.googleAnalyticsFetcher == nil {
+			log.Print("Can't refresh Google Analytics because fetcher is not loaded")
 			http.Error(w, "Google Analytics fetcher is not loaded", http.StatusInternalServerError)
 			return
 		}
+
+		log.Print("verifying authenticity of request")
 		// Verify the request came from AppEngine so that external users can't
 		// force the server to exceed Google Analytics rate limits.
 		if !isAppEngineInternalRequest(r) {
@@ -75,6 +82,7 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			return
 		}
 
+		log.Print("starting Google Analytics query")
 		pvcs, err := (*s.googleAnalyticsFetcher).PageViewsByPath("2019-01-01", "today")
 		if err != nil {
 			log.Printf("failed to refresh Google Analytics data: %v", err)
@@ -88,6 +96,7 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 				log.Printf("failed to store pageviews in datastore %v: %v", pvc, err)
 			}
 		}
+		log.Print("sending Google Analytics success")
 		if err := json.NewEncoder(w).Encode(true); err != nil {
 			panic(err)
 		}
