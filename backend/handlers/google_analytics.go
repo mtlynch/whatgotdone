@@ -13,6 +13,11 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 )
 
+type pageViewResponse struct {
+	Path  string `json:"path"`
+	Views int    `json:"views"`
+}
+
 func (s *defaultServer) pageViewsOptions() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {}
 }
@@ -33,7 +38,7 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 		}
 		if !isPathForJournalEntry(path, users) {
 			log.Printf("path is not a journal entry: %s", path)
-			http.Error(w, "path parameter must specify a journal entry", http.StatusBadRequest)
+			http.Error(w, "path parameter must specify a journal entry", http.StatusForbidden)
 			return
 		}
 
@@ -44,11 +49,6 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 		} else if err != nil {
 			log.Printf("failed to retrieve pageviews from datastore for path %s: %v", path, err)
 			http.Error(w, fmt.Sprintf("Failed to retrieve pageviews for path %s", path), http.StatusInternalServerError)
-		}
-
-		type pageViewResponse struct {
-			Path  string `json:"path"`
-			Views int    `json:"views"`
 		}
 
 		response := pageViewResponse{

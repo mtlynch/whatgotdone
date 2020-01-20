@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -14,6 +15,7 @@ type mockDatastore struct {
 	journalDrafts  []types.JournalEntry
 	users          []string
 	reactions      []types.Reaction
+	pageViewCounts []ga.PageViewCount
 	userProfile    types.UserProfile
 }
 
@@ -41,14 +43,6 @@ func (ds mockDatastore) InsertEntry(username string, j types.JournalEntry) error
 
 func (ds mockDatastore) InsertDraft(username string, j types.JournalEntry) error {
 	return nil
-}
-
-func (ds mockDatastore) InsertPageViews(path string, pageViews int) error {
-	return nil
-}
-
-func (ds mockDatastore) GetPageViews(path string) (int, error) {
-	return 0, nil
 }
 
 func (ds mockDatastore) Close() error {
