@@ -107,7 +107,7 @@ jobs:
           name: Retrieve Google Analytics service account client secret from CircleCI
           command: |
             echo "$GOOGLE_ANALYTICS_SERVICE_ACCOUNT_PROD" | \
-              base64 --decode > "${HOME}/google-analytics-service-account.json"
+              base64 --decode > "google-analytics-service-account.json"
       - run:
           name: Retrieve client secret from CircleCI
           command: |
