@@ -36,6 +36,7 @@
           variant="success"
           v-b-toggle.nav-collapse
           :to="'/entry/edit/' + this.thisFriday"
+          v-if="!isOnEntryEditPage"
           >Post Update</b-button
         >
       </b-navbar-nav>
@@ -56,6 +57,9 @@ export default {
   computed: {
     username() {
       return this.$store.state.username;
+    },
+    isOnEntryEditPage() {
+      return this.$route.path.startsWith('/entry/edit/');
     },
   },
 };
