@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <h2>Share Updates Your Way</h2>
+    <h2>Share updates your way</h2>
 
     <div class="flex-grid">
       <div class="col">
@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <h2>Contact Us</h2>
+    <h2>Contact us</h2>
     <p>
       If you have questions or feature requests for What Got Done, we'd love to
       speak to you. Send an email to
