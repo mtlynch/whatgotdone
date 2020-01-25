@@ -41,6 +41,17 @@ it('clicking "Post Update" before authenticating prompts login', () => {
   cy.location("pathname").should("eq", "/login");
 });
 
+it("back button should work if the user decides not to login/sign up", () => {
+  cy.visit("/");
+  cy.get("nav .post-update").click();
+
+  cy.location("pathname").should("eq", "/login");
+
+  cy.go(-1);
+
+  cy.location("pathname").should("eq", "/");
+});
+
 it("reaction buttons should not appear when the post is missing", () => {
   cy.visit("/staging_jimmy/2000-01-07");
 
