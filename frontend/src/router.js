@@ -16,6 +16,7 @@ import MissingPage from './views/404.vue';
 Vue.use(VueRouter);
 
 const routes = [
+  {path: '/about', component: Home},
   {path: '/recent', component: Recent},
   {path: '/entry/edit/:date', component: EditEntry},
   {path: '/login', component: Login},

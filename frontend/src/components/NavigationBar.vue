@@ -3,7 +3,10 @@
     toggleable="md"
     class="navbar navbar-expand-lg navbar-light bg-light"
   >
-    <b-navbar-brand v-b-toggle.nav-collapse class="navbar-brand" to="/"
+    <b-navbar-brand
+      v-b-toggle.nav-collapse
+      class="navbar-brand"
+      :to="logoLinkTarget"
       >What Got Done</b-navbar-brand
     >
 
@@ -11,7 +14,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item to="/">About</b-nav-item>
+        <b-nav-item to="/about">About</b-nav-item>
         <b-nav-item to="/recent">Recent</b-nav-item>
         <b-nav-item href="https://github.com/mtlynch/whatgotdone"
           >Contribute</b-nav-item
@@ -35,7 +38,7 @@
           class="post-update"
           variant="success"
           v-b-toggle.nav-collapse
-          :to="'/entry/edit/' + this.thisFriday"
+          :to="editCurrentWeekUrl"
           v-if="!isOnEntryEditPage"
           >Post Update</b-button
         >
@@ -51,7 +54,7 @@ export default {
   name: 'NavigationBar',
   data() {
     return {
-      thisFriday: thisFriday(),
+      editCurrentWeekUrl: '/entry/edit/' + thisFriday(),
     };
   },
   computed: {
@@ -60,6 +63,12 @@ export default {
     },
     isOnEntryEditPage() {
       return this.$route.path.startsWith('/entry/edit/');
+    },
+    logoLinkTarget() {
+      if (!this.username) {
+        return '/about';
+      }
+      return this.editCurrentWeekUrl;
     },
   },
 };
