@@ -1,4 +1,4 @@
-import { mutations } from '@/store';
+import {mutations} from '@/store';
 
 describe('mutations', () => {
   test('setUsername sets a username', () => {
