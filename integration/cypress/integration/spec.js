@@ -65,7 +65,7 @@ it("logs in and posts an update", () => {
     .type(entryText);
   cy.get("form").submit();
 
-  cy.location("pathname").should("eq", "/staging_jimmy/");
+  cy.location("pathname").should("include", "/staging_jimmy/");
   // Reload the page to fetch the new HTML rather than using what the front-end
   // generated client-side.
   cy.reload();
