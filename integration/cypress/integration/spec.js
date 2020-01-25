@@ -43,6 +43,7 @@ it('clicking "Post Update" before authenticating prompts login', () => {
 
 it("back button should work if the user decides not to login/sign up", () => {
   cy.visit("/");
+  cy.get("nav .post-update").click();
 
   cy.location("pathname").should("eq", "/login");
 
