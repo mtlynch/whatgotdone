@@ -38,7 +38,7 @@ it('clicking "Post Update" before authenticating prompts login', () => {
 
   cy.get("nav .post-update").click();
 
-  cy.url().should("include", "/login");
+  cy.location("pathname").should("eq", "/login");
 });
 
 it("reaction buttons should not appear when the post is missing", () => {
@@ -53,7 +53,7 @@ it("logs in and posts an update", () => {
 
   cy.login("staging_jimmy", "password");
 
-  cy.url().should("include", "/entry/edit");
+  cy.location("pathname").should("eq", "/entry/edit");
 
   // Wait for page to pull down any previous entry.
   cy.wait("@getDraft");
@@ -65,7 +65,7 @@ it("logs in and posts an update", () => {
     .type(entryText);
   cy.get("form").submit();
 
-  cy.url().should("include", "/staging_jimmy/");
+  cy.location("pathname").should("eq", "/staging_jimmy/");
   // Reload the page to fetch the new HTML rather than using what the front-end
   // generated client-side.
   cy.reload();
@@ -94,7 +94,7 @@ it("logs in and backdates an update from a previous week", () => {
     .type(entryText);
   cy.get("form").submit();
 
-  cy.url().should("include", "/staging_jimmy/2019-12-13");
+  cy.location("pathname").should("eq", "/staging_jimmy/2019-12-13");
   // Reload the page to fetch the new HTML rather than using what the front-end
   // generated client-side.
   cy.reload();
@@ -131,7 +131,7 @@ it("logs in and saves a draft", () => {
 
   cy.login("staging_jimmy", "password");
 
-  cy.url().should("include", "/entry/edit");
+  cy.location("pathname").should("eq", "/entry/edit");
 
   // Wait for page to pull down any previous entry.
   cy.wait("@getDraft");
@@ -147,7 +147,7 @@ it("logs in and saves a draft", () => {
   cy.wait("@postDraft");
 
   // User should stay on the same page after saving a draft.
-  cy.url().should("include", "/entry/edit");
+  cy.location("pathname").should("eq", "/entry/edit");
 
   cy.visit("/recent");
 
@@ -161,13 +161,13 @@ it("logs in and views profile", () => {
   cy.get(".account-dropdown").click();
   cy.get(".profile-link a").click();
 
-  cy.url().should("include", "/staging_jimmy");
+  cy.location("pathname").should("eq", "/staging_jimmy");
 });
 
 it("logs in and signs out", () => {
   cy.login("staging_jimmy", "password");
 
-  cy.url().should("include", "/entry/edit");
+  cy.location("pathname").should("eq", "/entry/edit");
 
   cy.visit("/logout");
   cy.location("pathname").should("eq", "/");
@@ -187,7 +187,7 @@ it("logs in updates profile", () => {
 
   cy.login("staging_jimmy", "password");
 
-  cy.url().should("include", "/entry/edit");
+  cy.location("pathname").should("eq", "/entry/edit");
 
   cy.visit("/staging_jimmy");
   cy.get(".edit-btn").click();
@@ -208,7 +208,7 @@ it("logs in updates profile", () => {
     .type("jack");
 
   cy.get("#save-profile").click();
-  cy.url().should("include", "/staging_jimmy");
+  cy.location("pathname").should("eq", "/staging_jimmy");
 
   cy.get(".user-bio").should("contain", "Hello, my name is staging_jimmy!");
   cy.get(".email-address").should("contain", "staging_jimmy@example.com");
