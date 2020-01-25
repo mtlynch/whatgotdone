@@ -80,12 +80,17 @@
       </div>
     </div>
 
-    <h2>Contact us</h2>
-    <p>
-      If you have questions or feature requests for What Got Done, we'd love to
-      speak to you. Send an email to
-      <a href="mailto:contact@whatgotdone.com">contact@whatgotdone.com</a>.
-    </p>
+    <div class="contact-us">
+      <h2>Contact us</h2>
+      <p>
+        If you have questions or feature requests for What Got Done, we'd love
+        to speak to you.
+      </p>
+      <p>
+        Send an email to
+        <a href="mailto:contact@whatgotdone.com">contact@whatgotdone.com</a>.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -192,5 +197,11 @@ a {
 
 #example-freeform {
   border: 1px solid black;
+}
+
+@media (min-width: 768px) {
+  .contact-us {
+    max-width: 570px;
+  }
 }
 </style>
