@@ -53,7 +53,7 @@ it("logs in and posts an update", () => {
 
   cy.login("staging_jimmy", "password");
 
-  cy.location("pathname").should("eq", "/entry/edit");
+  cy.location("pathname").should("include", "/entry/edit");
 
   // Wait for page to pull down any previous entry.
   cy.wait("@getDraft");
@@ -131,7 +131,7 @@ it("logs in and saves a draft", () => {
 
   cy.login("staging_jimmy", "password");
 
-  cy.location("pathname").should("eq", "/entry/edit");
+  cy.location("pathname").should("include", "/entry/edit");
 
   // Wait for page to pull down any previous entry.
   cy.wait("@getDraft");
@@ -147,7 +147,7 @@ it("logs in and saves a draft", () => {
   cy.wait("@postDraft");
 
   // User should stay on the same page after saving a draft.
-  cy.location("pathname").should("eq", "/entry/edit");
+  cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/recent");
 
@@ -167,7 +167,7 @@ it("logs in and views profile", () => {
 it("logs in and signs out", () => {
   cy.login("staging_jimmy", "password");
 
-  cy.location("pathname").should("eq", "/entry/edit");
+  cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/logout");
   cy.location("pathname").should("eq", "/");
@@ -187,7 +187,7 @@ it("logs in updates profile", () => {
 
   cy.login("staging_jimmy", "password");
 
-  cy.location("pathname").should("eq", "/entry/edit");
+  cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/staging_jimmy");
   cy.get(".edit-btn").click();
