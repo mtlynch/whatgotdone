@@ -180,7 +180,8 @@ it("logs in and signs out", () => {
 
   cy.location("pathname").should("include", "/entry/edit");
 
-  cy.visit("/logout");
+  cy.get(".account-dropdown").click();
+  cy.get(".sign-out-link a").click();
   cy.location("pathname").should("eq", "/");
 
   cy.get("nav .account-dropdown").should("not.exist");
@@ -224,4 +225,34 @@ it("logs in updates profile", () => {
   cy.get(".user-bio").should("contain", "Hello, my name is staging_jimmy!");
   cy.get(".email-address").should("contain", "staging_jimmy@example.com");
   cy.get(".twitter-handle").should("contain", "jack");
+});
+
+it("bare route should redirect authenticated user to their edit entry page", () => {
+  cy.visit("/");
+  cy.location("pathname").should("eq", "/");
+
+  // Clicking the navbar brand should point to /about page.
+  cy.get(".navbar .navbar-brand").click();
+  cy.location("pathname").should("eq", "/about");
+
+  cy.login("staging_jimmy", "password");
+
+  // Navigating back to bare route should redirect to edit entry page.
+  cy.visit("/");
+  cy.location("pathname").should("contain", "/entry/edit/");
+
+  // Clicking navbar brand should point to edit entry page.
+  cy.get(".navbar .navbar-brand").click();
+  cy.location("pathname").should("contain", "/entry/edit/");
+
+  // Log out
+  cy.get(".account-dropdown").click();
+  cy.get(".sign-out-link a").click();
+
+  // Post-logout, user should be on bare route.
+  cy.location("pathname").should("eq", "/");
+
+  // Clicking navbar brand should point to bare route.
+  cy.get(".navbar .navbar-brand").click();
+  cy.location("pathname").should("eq", "/");
 });

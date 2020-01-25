@@ -32,7 +32,9 @@
           <b-dropdown-item :to="'/' + username" class="profile-link"
             >Profile</b-dropdown-item
           >
-          <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
+          <b-dropdown-item to="/logout" class="sign-out-link"
+            >Sign Out</b-dropdown-item
+          >
         </b-nav-item-dropdown>
         <b-button
           class="post-update"
