@@ -10,13 +10,7 @@ RUN npm run build -- --mode "$NPM_BUILD_MODE"
 FROM golang:1.13.5-buster
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
-COPY ./backend/auth /app/backend/auth
-COPY ./backend/datastore /app/backend/datastore
-COPY ./backend/google_analytics /app/backend/google_analytics
-COPY ./backend/handlers /app/backend/handlers
-COPY ./backend/handlers/entry /app/backend/handlers/entry
-COPY ./backend/types /app/backend/types
-COPY ./backend/*.go /app/backend
+COPY ./backend /app/backend
 COPY ./go.mod /app/go.mod
 COPY ./go.sum /app/go.sum
 
