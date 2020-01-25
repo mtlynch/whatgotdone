@@ -93,7 +93,7 @@ it("logs in and posts an empty update (deleting the update)", () => {
   cy.get(".journal-markdown").clear();
   cy.get("form").submit();
 
-  cy.location("pathname").should("eq", "/staging_jimmy/");
+  cy.location("pathname").should("include", "/staging_jimmy/");
   cy.get(".missing-entry").should("be.visible");
 });
 
