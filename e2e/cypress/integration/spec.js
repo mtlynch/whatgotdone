@@ -176,11 +176,15 @@ it("logs in and reacts to an entry", () => {
 });
 
 it("logs in and signs out", () => {
+  cy.server();
+  cy.route("/api/user/me").as("getUsername");
   cy.login("staging_jimmy", "password");
 
   cy.location("pathname").should("include", "/entry/edit");
+  cy.wait("@getUsername");
 
-  cy.visit("/logout");
+  cy.get(".account-dropdown").click();
+  cy.get(".sign-out-link a").click();
   cy.location("pathname").should("eq", "/");
 
   cy.get("nav .account-dropdown").should("not.exist");
