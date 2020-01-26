@@ -104,6 +104,17 @@ export default {
       thisFriday: thisFriday(),
     };
   },
+  computed: {
+    username() {
+      return this.$store.state.username;
+    },
+  },
+  created() {
+    if (this.$route.path === '/' && this.username) {
+      this.$router.push('/entry/edit/' + this.thisFriday);
+      return;
+    }
+  },
 };
 </script>
 
