@@ -4,6 +4,10 @@ import VueGtag from 'vue-gtag';
 import VueAxios from 'vue-axios';
 import VueMoment from 'vue-moment';
 import BootstrapVue from 'bootstrap-vue';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {faTwitter} from '@fortawesome/free-brands-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+
 import App from './App.vue';
 import store from './store.js';
 import router from './router.js';
@@ -14,6 +18,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
+
+library.add(faTwitter);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(VueMoment);
 Vue.prototype.moment = VueMoment;

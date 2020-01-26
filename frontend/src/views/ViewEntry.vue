@@ -30,17 +30,26 @@
     <p v-if="backendError" class="error">
       Failed to connect to backend: {{ backendError }}
     </p>
-    <b-button
-      v-if="canEdit"
-      :to="'/entry/edit/' + this.entryDate"
-      variant="primary"
-      class="float-right edit-btn"
-      >Edit</b-button
-    >
+    <div class="author-controls" v-if="canEdit">
+      <b-button
+        :href="twitterShareUrl"
+        title="Share on Twitter"
+        class="twitter"
+        variant="info"
+        ><font-awesome-icon :icon="['fab', 'twitter']" class="mr-3" /> Share on
+        Twitter</b-button
+      >
+      <b-button
+        :to="'/entry/edit/' + this.entryDate"
+        variant="primary"
+        class="float-right edit-btn"
+        >Edit</b-button
+      >
+    </div>
     <Reactions
       :entryAuthor="entryAuthor"
       :entryDate="entryDate"
-      v-if="currentEntry"
+      v-if="currentEntry && !canEdit"
     />
   </div>
 </template>
@@ -126,6 +135,13 @@ export default {
         this.loggedInUsername && this.loggedInUsername === this.entryAuthor
       );
     },
+    twitterShareUrl: function() {
+      const permalink =
+        location.protocol + '//' + location.host + this.$route.fullPath;
+      const text =
+        encodeURIComponent("Here's what I got done this week ") + permalink;
+      return `https://twitter.com/intent/tweet?text=${text}`;
+    },
     entryAuthor: function() {
       return this.$route.params.username;
     },
@@ -158,11 +174,30 @@ export default {
 </script>
 
 <style scoped>
-.edit-btn {
-  margin: 25px 0px;
-}
-
 .show-empty {
   margin: 10px 0px 25px 0px;
+}
+
+.author-controls {
+  margin: 25px 0px;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+@media screen and (min-width: 768px) {
+  .author-controls {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.author-controls .btn:first-of-type {
+  margin-top: 25px;
+}
+
+@media screen and (min-width: 768px) {
+  .author-controls .btn:first-of-type {
+    margin: 0px;
+  }
 }
 </style>

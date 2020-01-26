@@ -142,7 +142,7 @@ it("logs in and reacts to an entry", () => {
   cy.route("POST", "https://api.userkit.io/v1/widget/login").as(
     "postUserKitLogin"
   );
-  cy.login("staging_jimmy", "password");
+  cy.login("reacting_tommy", "password");
   cy.wait("@postUserKitLogin");
 
   cy.visit("/staging_jimmy/2019-06-28")
@@ -167,7 +167,7 @@ it("logs in and reacts to an entry", () => {
           // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
           cy.get(".reaction").then(element => {
             expect(element.text().replace(/\s+/g, " ")).to.equal(
-              "staging_jimmy reacted with a 👍"
+              "reacting_tommy reacted with a 👍"
             );
           });
         });
