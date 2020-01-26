@@ -228,6 +228,9 @@ it("logs in updates profile", () => {
 });
 
 it("bare route should redirect authenticated user to their edit entry page", () => {
+  cy.server();
+  cy.route("/api/user/me").as("getUsername");
+
   cy.visit("/");
   cy.location("pathname").should("eq", "/");
 
@@ -237,6 +240,7 @@ it("bare route should redirect authenticated user to their edit entry page", () 
 
   cy.login("staging_jimmy", "password");
   cy.location("pathname").should("include", "/entry/edit");
+  cy.wait("@getUsername");
 
   // Navigating back to bare route should redirect to edit entry page.
   cy.visit("/");
