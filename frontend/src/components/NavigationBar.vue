@@ -68,7 +68,7 @@ export default {
     },
     logoLinkTarget() {
       if (!this.username) {
-        return '/about';
+        return '/';
       }
       return this.editCurrentWeekUrl;
     },

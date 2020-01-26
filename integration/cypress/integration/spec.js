@@ -233,12 +233,14 @@ it("bare route should redirect authenticated user to their edit entry page", () 
 
   // Clicking the navbar brand should point to /about page.
   cy.get(".navbar .navbar-brand").click();
-  cy.location("pathname").should("eq", "/about");
+  cy.location("pathname").should("eq", "/");
 
   cy.login("staging_jimmy", "password");
+  cy.location("pathname").should("include", "/entry/edit");
 
   // Navigating back to bare route should redirect to edit entry page.
   cy.visit("/");
+  cy.reload();
   cy.location("pathname").should("contain", "/entry/edit/");
 
   // Clicking navbar brand should point to edit entry page.
