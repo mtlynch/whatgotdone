@@ -6,7 +6,7 @@
 
 <script>
 import getCsrfToken from '../controllers/CsrfToken.js';
-import {logoutUserKit} from '../controllers/UserKit.js';
+import {clearLoginState} from '../controllers/LoginState.js';
 
 export default {
   name: 'Logout',
@@ -16,7 +16,7 @@ export default {
     this.$http
       .post(url, {}, {headers: {'X-CSRF-Token': getCsrfToken()}})
       .then(() => {
-        logoutUserKit();
+        clearLoginState();
         window.location.href = '/';
       })
       .finally(() => {
