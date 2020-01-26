@@ -42,7 +42,6 @@ function loadWidgetJs(appId) {
   userKitScript.setAttribute('src', widgetJsUrl);
   userKitScript.setAttribute('data-app-id', appId);
   userKitScript.setAttribute('data-show-on-load', 'login');
-  userKitScript.setAttribute('data-login-dismiss', 'false');
   document.head.appendChild(userKitScript);
 }
 
