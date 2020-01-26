@@ -56,7 +56,8 @@ it("login widget disappears when user clicks outside of modal window", () => {
   cy.visit("/");
   cy.get("nav .post-update").click();
 
-  cy.location("pathname").should("eq", "/login");
+  // Modal login widget should appear.
+  cy.get(".vex .vex-dialog-message").should("contain", "Login");
 
   // Click outside the modal login widget.
   cy.get(".navbar .navbar-brand").click({ force: true });
