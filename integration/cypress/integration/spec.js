@@ -52,20 +52,6 @@ it("back button should work if the user decides not to login/sign up", () => {
   cy.location("pathname").should("eq", "/");
 });
 
-it("login widget disappears when user clicks outside of modal window", () => {
-  cy.visit("/");
-  cy.get("nav .post-update").click();
-
-  // Modal login widget should appear.
-  cy.get(".vex .vex-dialog-message").should("contain", "Login");
-
-  // Click outside the modal login widget.
-  cy.get(".navbar .navbar-brand").click({ force: true });
-
-  // Modal login widget should disappear.
-  cy.get(".vex .vex-content").should("not.exist");
-});
-
 it("reaction buttons should not appear when the post is missing", () => {
   cy.visit("/staging_jimmy/2000-01-07");
 
