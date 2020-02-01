@@ -8,13 +8,17 @@
       v-bind:entry="item"
       v-for="item in recentEntries"
     />
+
+    <b-button variant="secondary" v-on:click="onLoadMore"
+      >More Entries</b-button
+    >
   </div>
 </template>
 
 <script>
 import PartialJournal from '../components/PartialJournal.vue';
 
-import refreshRecent from '../controllers/Recent.js';
+import {refreshRecent, extendRecent} from '../controllers/Recent.js';
 
 export default {
   name: 'Recent',
@@ -24,6 +28,11 @@ export default {
   computed: {
     recentEntries() {
       return this.$store.state.recentEntries;
+    },
+  },
+  methods: {
+    onLoadMore() {
+      return extendRecent();
     },
   },
   created() {

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -36,7 +37,7 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/recentEntries", nil)
+	req, err := http.NewRequest("GET", "/api/recentEntries?start=0&limit=15", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +93,7 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/recentEntries", nil)
+	req, err := http.NewRequest("GET", "/api/recentEntries?start=0&limit=15", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -124,6 +125,132 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	}
 }
 
+func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
+	entries := []types.JournalEntry{
+		types.JournalEntry{Date: "2019-05-10", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
+		types.JournalEntry{Date: "2019-05-03", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
+		types.JournalEntry{Date: "2019-04-26", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
+		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
+		types.JournalEntry{Date: "2019-04-12", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
+		types.JournalEntry{Date: "2019-04-05", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
+	}
+	ds := mockDatastore{
+		journalEntries: entries,
+		users: []string{
+			"bob",
+		},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+	var tests = []struct {
+		explanation     string
+		start           string
+		limit           string
+		statusExpected  int
+		entriesExpected []recentEntry
+	}{
+		{
+			"observes valid start and limit values",
+			"1",
+			"3",
+			http.StatusOK,
+			[]recentEntry{
+				recentEntry{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
+				recentEntry{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
+				recentEntry{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
+			},
+		},
+		{
+			"accepts large ranges",
+			"0",
+			"500",
+			http.StatusOK,
+			[]recentEntry{
+				recentEntry{Author: "bob", Date: "2019-05-10", Markdown: "Read the news today... Oh boy!"},
+				recentEntry{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
+				recentEntry{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
+				recentEntry{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
+				recentEntry{Author: "bob", Date: "2019-04-12", Markdown: "Ate some crackers in a bathtub"},
+				recentEntry{Author: "bob", Date: "2019-04-05", Markdown: "Rode the bus and saw a movie about ghosts"},
+			},
+		},
+		{
+			"returns empty for start beyond size of total response",
+			"500",
+			"5",
+			http.StatusOK,
+			[]recentEntry{},
+		},
+		{
+			"rejects invalid start",
+			"invalid-start-value",
+			"3",
+			http.StatusBadRequest,
+			[]recentEntry{},
+		},
+		{
+			"rejects negative start",
+			"-5",
+			"3",
+			http.StatusBadRequest,
+			[]recentEntry{},
+		},
+		{
+			"rejects invalid limit value",
+			"2",
+			"invalid-limit-value",
+			http.StatusBadRequest,
+			[]recentEntry{},
+		},
+		{
+			"rejects negative limit",
+			"2",
+			"-10",
+			http.StatusBadRequest,
+			[]recentEntry{},
+		},
+		{
+			"rejects zero limit",
+			"2",
+			"0",
+			http.StatusBadRequest,
+			[]recentEntry{},
+		},
+	}
+	for _, tt := range tests {
+		req, err := http.NewRequest("GET", fmt.Sprintf("/api/recentEntries?start=%s&limit=%s", tt.start, tt.limit), nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		w := httptest.NewRecorder()
+		s.router.ServeHTTP(w, req)
+
+		if status := w.Code; status != tt.statusExpected {
+			t.Fatalf("handler returned wrong status code: got %v want %v",
+				status, tt.statusExpected)
+		}
+		if tt.statusExpected != http.StatusOK {
+			continue
+		}
+
+		var response []recentEntry
+		err = json.Unmarshal(w.Body.Bytes(), &response)
+		if err != nil {
+			t.Fatalf("Response is not valid JSON: %v", w.Body.String())
+		}
+
+		if !reflect.DeepEqual(response, tt.entriesExpected) {
+			t.Fatalf("%s: Unexpected response: got %v want %v", tt.explanation, response, tt.entriesExpected)
+		}
+	}
+}
+
 func TestRecentEntriesHandlerReturnsEmptyArrayWhenDatastoreIsEmpty(t *testing.T) {
 	ds := mockDatastore{}
 	router := mux.NewRouter()
@@ -134,7 +261,7 @@ func TestRecentEntriesHandlerReturnsEmptyArrayWhenDatastoreIsEmpty(t *testing.T)
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/recentEntries", nil)
+	req, err := http.NewRequest("GET", "/api/recentEntries?start=0&limit=15", nil)
 	if err != nil {
 		t.Fatal(err)
 	}

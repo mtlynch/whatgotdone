@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"sort"
+	"strconv"
 )
 
 type recentEntry struct {
@@ -17,6 +19,17 @@ type recentEntry struct {
 
 func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		start, err := parseStart(r.URL.Query().Get("start"))
+		if err != nil {
+			http.Error(w, "Invalid start parameter", http.StatusBadRequest)
+			return
+		}
+		limit, err := parseLimit(r.URL.Query().Get("limit"))
+		if err != nil {
+			http.Error(w, "Invalid limit parameter", http.StatusBadRequest)
+			return
+		}
+
 		users, err := s.datastore.Users()
 		if err != nil {
 			log.Printf("Failed to retrieve users: %s", err)
@@ -63,13 +76,41 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			entries[i], entries[opp] = entries[opp], entries[i]
 		}
 
-		const maxEntries = 15
-		if len(entries) > maxEntries {
-			entries = entries[:maxEntries]
-		}
+		start = min(len(entries), start)
+		end := min(len(entries), start+limit)
+		entries = entries[start:end]
 
 		if err := json.NewEncoder(w).Encode(entries); err != nil {
 			panic(err)
 		}
 	}
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func parseStart(s string) (int, error) {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, err
+	}
+	if i < 0 {
+		return 0, errors.New("start value can't be negative")
+	}
+	return i, nil
+}
+
+func parseLimit(s string) (int, error) {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, err
+	}
+	if i < 1 {
+		return 0, errors.New("limit value must be positive")
+	}
+	return i, nil
 }
