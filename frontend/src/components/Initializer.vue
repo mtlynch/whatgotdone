@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import refreshRecent from '../controllers/Recent.js';
+import {refreshRecent} from '../controllers/Recent.js';
 import updateLoginState from '../controllers/LoginState.js';
 
 export default {
