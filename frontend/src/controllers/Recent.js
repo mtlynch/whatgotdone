@@ -12,14 +12,10 @@ export function refreshRecent() {
 
 export function extendRecent() {
   let recentEntries = store.state.recentEntries;
-  getRecent(
-    recentEntries.length,
-    recentEntries.length + updateSize,
-    newEntries => {
-      recentEntries.push(...newEntries);
-      store.commit('setRecent', recentEntries);
-    }
-  );
+  getRecent(recentEntries.length, updateSize, newEntries => {
+    recentEntries.push(...newEntries);
+    store.commit('setRecent', recentEntries);
+  });
 }
 
 export function getRecent(start, limit, callback) {
