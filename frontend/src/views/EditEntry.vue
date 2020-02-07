@@ -17,7 +17,9 @@
       ></textarea-autosize>
       <p>
         (You can use
-        <a href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>)
+        <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank"
+          >Markdown</a
+        >)
       </p>
       <div class="d-flex justify-content-end">
         <button
