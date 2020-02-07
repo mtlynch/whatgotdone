@@ -13,4 +13,5 @@ set -u
 
 go test -v ./...
 
+go build -o /dev/null --tags 'dev' backend/main.go
 go build -o /dev/null backend/main.go
