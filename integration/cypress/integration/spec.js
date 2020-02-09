@@ -262,3 +262,11 @@ it("bare route should redirect authenticated user to their edit entry page", () 
   cy.get(".navbar .navbar-brand").click();
   cy.location("pathname").should("eq", "/");
 });
+
+it("gets the sitemap", () => {
+  cy.request("/sitemap.xml");
+});
+
+it("gets the robots.txt file", () => {
+  cy.request("/robots.txt");
+});
