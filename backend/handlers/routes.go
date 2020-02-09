@@ -36,6 +36,8 @@ func (s *defaultServer) routes() {
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	})
 
+	s.router.HandleFunc("/sitemap.xml", s.sitemapGet()).Methods(http.MethodGet)
+
 	// Serve index.html, the base page HTML before Vue rendering happens, and
 	// render certain page elements server-side.
 	s.router.PathPrefix("/{username}/{date}").HandlerFunc(s.enableCsp(s.serveStaticResource())).Methods(http.MethodGet)
