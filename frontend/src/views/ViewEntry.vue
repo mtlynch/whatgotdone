@@ -36,11 +36,8 @@
         title="Share on Twitter"
         class="twitter"
         variant="info"
-        ><font-awesome-icon
-          :icon="['fab', 'twitter']"
-          class="twitter-icon mr-3"
-        />
-        Share on Twitter</b-button
+        ><font-awesome-icon :icon="['fab', 'twitter']" class="mr-3" /> Share on
+        Twitter</b-button
       >
       <b-button
         :to="'/entry/edit/' + this.entryDate"
@@ -202,9 +199,5 @@ export default {
   .author-controls .btn:first-of-type {
     margin: 0px;
   }
-}
-
-.twitter-icon {
-  height: 16px;
 }
 </style>
