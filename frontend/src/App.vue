@@ -24,6 +24,8 @@ export default {
 </script>
 
 <style>
+@import '~@fortawesome/fontawesome-svg-core/styles.css';
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
