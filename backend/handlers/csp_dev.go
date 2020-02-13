@@ -11,5 +11,5 @@ func extraScriptSrcSources() []string {
 }
 
 func extraStyleSrcSources() []string {
-	return []string{"'unsafe-inline'"}
+	return []string{}
 }
