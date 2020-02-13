@@ -17,6 +17,7 @@ func contentSecurityPolicy() string {
 			"https://api.userkit.io",
 			"https://www.google.com/recaptcha/",
 			"https://www.gstatic.com/recaptcha/",
+			"https://apis.google.com/js/platform.js",
 		},
 		"style-src": []string{
 			"'self'",
