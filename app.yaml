@@ -3,3 +3,8 @@ runtime: go113
 includes:
   - env_variables.yaml
 main: ./backend
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
+    redirect_http_response_code: 301
