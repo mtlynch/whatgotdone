@@ -25,6 +25,8 @@ func contentSecurityPolicy() string {
 			"https://widget.userkit.io/css/",
 			"https://fonts.googleapis.com",
 			"https://fonts.gstatic.com",
+			// Google auth requires this, and I can't figure out any way to avoid it.
+			"'unsafe-inline'",
 		},
 		"frame-src": []string{
 			// URLs for /login route (UserKit)
