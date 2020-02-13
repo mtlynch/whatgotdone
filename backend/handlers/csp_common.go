@@ -29,6 +29,7 @@ func contentSecurityPolicy() string {
 		"frame-src": []string{
 			// URLs for /login route (UserKit)
 			"https://www.google.com/recaptcha/",
+			"https://accounts.google.com",
 		},
 		"img-src": []string{
 			"'self'",
