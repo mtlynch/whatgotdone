@@ -39,6 +39,8 @@ func contentSecurityPolicy() string {
 			"data:",
 			// For Google Analytics
 			"https://www.google-analytics.com",
+			// For Google Sign In
+			"https://*.googleusercontent.com",
 		},
 	}
 	directives["script-src"] = append(directives["script-src"], extraScriptSrcSources()...)
