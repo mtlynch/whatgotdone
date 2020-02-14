@@ -30,7 +30,7 @@
     <p v-if="backendError" class="error">
       Failed to connect to backend: {{ backendError }}
     </p>
-    <div class="author-controls" v-if="canEdit">
+    <div class="author-controls mb-4" v-if="canEdit">
       <b-button
         :href="twitterShareUrl"
         title="Share on Twitter"
@@ -49,7 +49,7 @@
     <Reactions
       :entryAuthor="entryAuthor"
       :entryDate="entryDate"
-      v-if="currentEntry && !canEdit"
+      v-if="currentEntry"
     />
   </div>
 </template>
