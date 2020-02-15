@@ -175,6 +175,22 @@ it("logs in and reacts to an entry", () => {
     });
 });
 
+it("reacting to an entry prompts login and redirects back to the entry", () => {
+  cy.server();
+  cy.route("POST", "https://api.userkit.io/v1/widget/login").as(
+    "postUserKitLogin"
+  );
+
+  cy.visit("/staging_jimmy/2019-06-28");
+
+  cy.get(".reaction-buttons .btn:first-of-type").click();
+
+  cy.login("reacting_tommy", "password");
+  cy.wait("@postUserKitLogin");
+
+  cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
+});
+
 it("logs in and signs out", () => {
   cy.server();
   cy.route("/api/user/me").as("getUsername");
