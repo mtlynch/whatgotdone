@@ -100,7 +100,7 @@ export default {
     },
     handleReaction: function(reactionSymbol) {
       if (!this.loggedInUsername) {
-        this.$router.push('/login');
+        this.$router.replace('/login');
         return;
       }
       if (this.selectedReaction == reactionSymbol) {
