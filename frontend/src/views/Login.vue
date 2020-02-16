@@ -17,8 +17,8 @@ export default {
   },
   methods: {
     goBackOrGoHome: function() {
-      if (this.previousRoute && this.previousRoute.path != '/') {
-        this.$router.back();
+      if (this.previousRoute && this.previousRoute.path) {
+        this.$router.replace(this.previousRoute.path);
       } else {
         this.$router.replace('/');
       }

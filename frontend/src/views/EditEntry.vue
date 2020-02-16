@@ -124,7 +124,7 @@ export default {
   },
   created() {
     if (!this.username) {
-      this.$router.replace('/login');
+      this.$router.push('/login');
       return;
     }
     if (this.$route.params.date && isValidEntryDate(this.$route.params.date)) {
