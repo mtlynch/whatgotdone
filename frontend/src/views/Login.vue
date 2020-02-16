@@ -17,8 +17,8 @@ export default {
   },
   methods: {
     goBackOrGoHome: function() {
-      if (this.previousRoute && this.previousRoute.path) {
-        this.$router.replace(this.previousRoute.path);
+      if (this.previousRoute) {
+        this.$router.replace(this.previousRoute);
       } else {
         this.$router.replace('/');
       }
@@ -26,7 +26,9 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.previousRoute = from;
+      if (from.path) {
+        vm.previousRoute = from.path;
+      }
     });
   },
   mounted() {
