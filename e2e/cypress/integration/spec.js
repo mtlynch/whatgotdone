@@ -189,6 +189,7 @@ it("reacting to an entry prompts login and redirects back to the entry", () => {
   cy.get("#userkit_username").type("reacting_tommy");
   cy.get("#userkit_password").type("password");
   cy.get("form").submit();
+  cy.wait("@postUserKitLogin");
 
   cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
 });
