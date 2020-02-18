@@ -27,10 +27,10 @@
       </div>
     </div>
 
-    <h2>"Where did the whole week go?"</h2>
+    <div class="feature">
+      <h2>"Where did the whole week go?"</h2>
 
-    <div class="flex-grid">
-      <div class="col">
+      <div class="text">
         <p>
           Have you ever ended a week wondering where all the time went? Take a
           step back and remember what got done.
@@ -41,29 +41,25 @@
           accomplishments.
         </p>
       </div>
-      <div class="col">
-        <img id="typing-update" src="/images/typing-update.gif" />
-      </div>
+      <img src="/images/typing-update.gif" />
     </div>
 
-    <h2>Share progress with your teammates</h2>
+    <div class="feature">
+      <h2>Share progress with your teammates</h2>
 
-    <div class="flex-grid">
-      <div class="col">
+      <div class="text">
         <p>
           When you're done, share a clean summary of your week of work with your
           teammates.
         </p>
       </div>
-      <div class="col">
-        <img id="example-rendered" src="/images/example-rendered.jpg" />
-      </div>
+      <img class="border-white" src="/images/example-rendered.jpg" />
     </div>
 
-    <h2>Share updates your way</h2>
+    <div class="feature">
+      <h2>Share updates your way</h2>
 
-    <div class="flex-grid">
-      <div class="col">
+      <div class="text">
         <p>
           To-do lists are great for managing what you will do, but they do a
           poor job of communicating what you accomplished.
@@ -75,9 +71,7 @@
           checkboxes.
         </p>
       </div>
-      <div class="col">
-        <img id="example-freeform" src="/images/example-freeform.jpg" />
-      </div>
+      <img class="border-black" src="/images/example-freeform.jpg" />
     </div>
 
     <div class="contact-us">
@@ -148,6 +142,7 @@ a {
 
 .jumbotron {
   padding-bottom: 40px;
+  margin-bottom: 100px;
 }
 
 .jumbotron-footer {
@@ -176,37 +171,64 @@ a {
   margin-right: 0px;
 }
 
-.flex-grid {
-  display: block;
+.feature {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-gap: 1rem;
+  margin-bottom: 100px;
 }
 
-@media (min-width: 768px) {
-  .flex-grid {
-    display: flex;
-  }
+.feature h2 {
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  margin-top: 0;
 }
 
-.col {
-  flex: 1;
-  padding: 0px;
-}
-
-.col img {
-  margin-top: 28px;
+.feature img {
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
   max-width: 100%;
 }
 
-@media (min-width: 768px) {
-  .col img {
-    margin-left: 50px;
+.feature .text {
+  grid-row: 3 / 4;
+  grid-column: 1 / 2;
+}
+
+@media screen and (min-width: 768px) {
+  .feature {
+    grid-template-columns: 1fr 500px;
+    grid-template-rows: auto 1fr;
+  }
+
+  .feature h2 {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+  }
+
+  .feature img {
+    grid-row: 1 / 3;
+    grid-column: 2 / 3;
+    max-width: 100%;
+  }
+
+  .feature .text {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    padding-right: 50px;
+  }
+
+  .feature .text p {
+    margin-top: 0;
   }
 }
 
-#example-rendered {
+.border-white {
   border: 1px solid white;
 }
 
-#example-freeform {
+.border-black {
   border: 1px solid black;
 }
 
