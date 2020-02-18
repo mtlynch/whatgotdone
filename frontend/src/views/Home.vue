@@ -180,14 +180,14 @@ a {
 }
 
 .feature h2 {
-  grid-row: 1 / 2;
-  grid-column: 1 / 2;
+  grid-row: 1;
+  grid-column: 1;
   margin-top: 0;
 }
 
 .feature img {
-  grid-row: 2 / 3;
-  grid-column: 1 / 2;
+  grid-row: 2;
+  grid-column: 1;
   max-width: 100%;
 }
 
@@ -203,24 +203,20 @@ a {
   }
 
   .feature h2 {
-    grid-row: 1 / 2;
-    grid-column: 1 / 2;
+    grid-row: 1;
+    grid-column: 1;
   }
 
   .feature img {
     grid-row: 1 / 3;
-    grid-column: 2 / 3;
+    grid-column: 2;
     max-width: 100%;
   }
 
   .feature .text {
-    grid-row: 2 / 3;
-    grid-column: 1 / 2;
+    grid-row: 2;
+    grid-column: 1;
     padding-right: 50px;
-  }
-
-  .feature .text p {
-    margin-top: 0;
   }
 }
 
