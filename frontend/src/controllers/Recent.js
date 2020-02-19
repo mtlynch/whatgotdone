@@ -10,11 +10,12 @@ export function refreshRecent() {
   });
 }
 
-export function extendRecent() {
+export function extendRecent(callback) {
   let recentEntries = store.state.recentEntries;
   getRecent(recentEntries.length, updateSize, newEntries => {
     recentEntries.push(...newEntries);
     store.commit('setRecent', recentEntries);
+    callback();
   });
 }
 
