@@ -52,7 +52,10 @@ jobs:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
   integration:
-    machine: true
+    machine:
+      # Choose an explicit machine image so that we get the latest version of
+      # docker-compose.
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       - run:
