@@ -3,18 +3,13 @@
     <h1>Recent Entries</h1>
     <p>Check out what other users got done this week:</p>
 
-    <PartialJournal
-      v-bind:key="item.key"
-      v-bind:entry="item"
-      v-for="item in recentEntries"
-    />
+    <PartialJournal v-bind:key="item.key" v-bind:entry="item" v-for="item in recentEntries" />
 
     <b-button
       variant="secondary"
       v-bind:disabled="requestInProgress"
       v-on:click="onLoadMore"
-      >More Entries</b-button
-    >
+    >More Entries</b-button>
   </div>
 </template>
 
