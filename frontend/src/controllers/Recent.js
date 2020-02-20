@@ -13,14 +13,11 @@ export function refreshRecent() {
 export function extendRecent(callback) {
   let recentEntries = store.state.recentEntries;
   getRecent(recentEntries.length, updateSize, newEntries => {
-    // recentEntries.push(...newEntries);
+    // Extract keys from recentEntries array
+    const recentEntriesKeySet = getRecentEntriesKey(recentEntries);
     // Loop through new entries and add to recentEntries store only if key doesn't exist
     newEntries.forEach(newEntry => {
-      const matchedEntry = recentEntries.find(
-        recentEntry => recentEntry.key === newEntry.key
-      );
-
-      if (!matchedEntry) {
+      if (!recentEntriesKeySet.has(newEntry.key)) {
         recentEntries.push(newEntry);
       }
     });
@@ -48,4 +45,15 @@ function processEntry(entry) {
     date: new Date(entry.date),
     markdown: entry.markdown,
   };
+}
+
+//Loop through all entries and put entry key in Set
+function getRecentEntriesKey(recentEntries) {
+  const entriesKeySet = new Set();
+
+  recentEntries.forEach(recentEntry => {
+    entriesKeySet.add(recentEntry.key);
+  });
+
+  return entriesKeySet;
 }
