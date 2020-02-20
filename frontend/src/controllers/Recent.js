@@ -13,7 +13,14 @@ export function refreshRecent() {
 export function extendRecent(callback) {
   let recentEntries = store.state.recentEntries;
   getRecent(recentEntries.length, updateSize, newEntries => {
-    recentEntries.push(...newEntries);
+    // Extract keys from recentEntries array
+    const recentEntriesKeySet = getRecentEntriesKey(recentEntries);
+    // Loop through new entries and add to recentEntries store only if key doesn't exist
+    newEntries.forEach(newEntry => {
+      if (!recentEntriesKeySet.has(newEntry.key)) {
+        recentEntries.push(newEntry);
+      }
+    });
     store.commit('setRecent', recentEntries);
     callback();
   });
@@ -22,10 +29,10 @@ export function extendRecent(callback) {
 export function getRecent(start, limit, callback) {
   const url = `${process.env.VUE_APP_BACKEND_URL}/api/recentEntries?start=${start}&limit=${limit}`;
   axios.get(url).then(result => {
-    const recentEntries = [];
-    for (const entry of result.data) {
-      recentEntries.push(processEntry(entry));
-    }
+    // Transform each response data into entry object
+    const recentEntries = result.data.map(rawEntry => {
+      return processEntry(rawEntry);
+    });
     callback(recentEntries);
   });
 }
@@ -38,4 +45,15 @@ function processEntry(entry) {
     date: new Date(entry.date),
     markdown: entry.markdown,
   };
+}
+
+//Loop through all entries and put entry key in Set
+function getRecentEntriesKey(recentEntries) {
+  const entriesKeySet = new Set();
+
+  recentEntries.forEach(recentEntry => {
+    entriesKeySet.add(recentEntry.key);
+  });
+
+  return entriesKeySet;
 }
