@@ -23,7 +23,7 @@
 <script>
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
-import JournalHeader from './JournalHeader.vue';
+import JournalHeader from '@/components/JournalHeader.vue';
 
 Vue.use(VueMarkdown);
 

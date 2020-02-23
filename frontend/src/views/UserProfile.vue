@@ -65,7 +65,7 @@
 <script>
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
-import PartialJournal from '../components/PartialJournal.vue';
+import PartialJournal from '@/components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
 

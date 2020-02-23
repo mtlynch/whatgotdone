@@ -56,10 +56,10 @@
 
 <script>
 import moment from 'moment';
-import Journal from '../components/Journal.vue';
-import Reactions from '../components/Reactions.vue';
-import Username from '../components/Username.vue';
-import {thisFriday} from '../controllers/EntryDates.js';
+import Journal from '@/components/Journal.vue';
+import Reactions from '@/components/Reactions.vue';
+import Username from '@/components/Username.vue';
+import {thisFriday} from '@/controllers/EntryDates.js';
 
 export default {
   name: 'ViewEntry',

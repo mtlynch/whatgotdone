@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import Initializer from './components/Initializer';
-import Footer from './components/Footer';
-import NavigationBar from './components/NavigationBar';
+import Initializer from '@/components/Initializer';
+import Footer from '@/components/Footer';
+import NavigationBar from '@/components/NavigationBar';
 export default {
   name: 'app',
   components: {

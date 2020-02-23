@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import Username from './Username.vue';
-import getCsrfToken from '../controllers/CsrfToken.js';
+import Username from '@/components/Username.vue';
+import getCsrfToken from '@/controllers/CsrfToken.js';
 
 export default {
   name: 'Reactions',

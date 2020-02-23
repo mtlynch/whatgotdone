@@ -21,8 +21,8 @@
 <script>
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
-import JournalHeader from './JournalHeader.vue';
-import ViewCount from '../components/ViewCount.vue';
+import JournalHeader from '@/components/JournalHeader.vue';
+import ViewCount from '@/components/ViewCount.vue';
 
 Vue.use(VueMarkdown);
 

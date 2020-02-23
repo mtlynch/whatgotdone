@@ -40,9 +40,9 @@
 import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import _ from 'lodash';
-import JournalPreview from '../components/JournalPreview.vue';
-import getCsrfToken from '../controllers/CsrfToken.js';
-import {isValidEntryDate, thisFriday} from '../controllers/EntryDates.js';
+import JournalPreview from '@/components/JournalPreview.vue';
+import getCsrfToken from '@/controllers/CsrfToken.js';
+import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
 
 Vue.use(VueTextareaAutosize);
 

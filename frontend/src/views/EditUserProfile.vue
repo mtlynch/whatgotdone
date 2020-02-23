@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import getCsrfToken from '../controllers/CsrfToken.js';
+import getCsrfToken from '@/controllers/CsrfToken.js';
 
 export default {
   name: 'EditUserProfile',

@@ -8,9 +8,9 @@ import {config, library} from '@fortawesome/fontawesome-svg-core';
 import {faTwitter} from '@fortawesome/free-brands-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
-import App from './App.vue';
-import store from './store.js';
-import router from './router.js';
+import App from '@/App.vue';
+import store from '@/store.js';
+import router from '@/router.js';
 
 import 'bootswatch/dist/superhero/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
