@@ -37,13 +37,17 @@
       </ul>
     </template>
 
-    <b-button
-      v-if="canEdit"
-      to="/profile/edit"
-      variant="primary"
-      class="edit-btn float-right"
-      >Edit</b-button
-    >
+    <div class="float-right">
+      <b-button v-if="canEdit" to="/profile/edit" variant="primary"
+        >Edit</b-button
+      >
+      <b-button v-if="canFollow" variant="primary" v-on:click="onFollow"
+        >Follow</b-button
+      >
+      <b-button v-if="canUnfollow" variant="primary" v-on:click="onUnfollow"
+        >Unfollow</b-button
+      >
+    </div>
 
     <h2>Recent entries</h2>
 
@@ -65,7 +69,10 @@
 <script>
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
-import PartialJournal from '@/components/PartialJournal.vue';
+
+import getCsrfToken from '@/controllers/CsrfToken.js';
+
+import PartialJournal from '../components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
 
@@ -94,6 +101,18 @@ export default {
     },
     canEdit: function() {
       return this.loggedInUsername && this.loggedInUsername === this.username;
+    },
+    isFollowing: function() {
+      if (!this.loggedInUsername) {
+        return false;
+      }
+      return this.$store.state.following.has(this.username);
+    },
+    canFollow: function() {
+      return this.loggedInUsername && !this.isFollowing;
+    },
+    canUnfollow: function() {
+      return this.loggedInUsername && this.isFollowing;
     },
   },
   methods: {
@@ -139,6 +158,37 @@ export default {
         this.recentEntries.sort((a, b) => b.date - a.date);
         this.entriesLoaded = true;
       });
+    },
+    onFollow: function() {
+      this.$http
+        .put(
+          `${process.env.VUE_APP_BACKEND_URL}/api/follow/${this.username}`,
+          {},
+          {
+            withCredentials: true,
+            headers: {'X-CSRF-Token': getCsrfToken()},
+          }
+        )
+        .then(() => {
+          let following = new Set(this.$store.state.following);
+          following.add(this.username);
+          this.$store.commit('setFollowing', Array.from(following));
+        });
+    },
+    onUnfollow: function() {
+      this.$http
+        .delete(
+          `${process.env.VUE_APP_BACKEND_URL}/api/follow/${this.username}`,
+          {
+            withCredentials: true,
+            headers: {'X-CSRF-Token': getCsrfToken()},
+          }
+        )
+        .then(() => {
+          let following = new Set(this.$store.state.following);
+          following.delete(this.username);
+          this.$store.commit('setFollowing', Array.from(following));
+        });
     },
   },
   created() {

@@ -18,12 +18,19 @@ export const mutations = {
   setRecent(state, entries) {
     state.recentEntries = entries;
   },
+  setFollowing(state, following) {
+    state.following = following;
+  },
+  clearFollowing(state) {
+    state.following = new Set();
+  },
 };
 
 export default new Vuex.Store({
   state: {
     username: null,
     recentEntries: null,
+    following: new Set(),
   },
   mutations,
   plugins: [vuexLocal.plugin],

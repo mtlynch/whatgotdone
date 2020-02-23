@@ -8,6 +8,13 @@ function clearCachedAuthInformation() {
   logoutUserKit();
 }
 
+function updateFollowing(username) {
+  const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/${username}/following`;
+  axios.get(url).then(result => {
+    store.commit('setFollowing', result.data.following);
+  });
+}
+
 export default function updateLoginState(attempts, callback) {
   if (attempts <= 0) {
     return;
@@ -15,6 +22,7 @@ export default function updateLoginState(attempts, callback) {
   getUserSelfMetadata()
     .then(metadata => {
       store.commit('setUsername', metadata.username);
+      updateFollowing(metadata.username);
       if (typeof callback === 'function') {
         callback();
       }

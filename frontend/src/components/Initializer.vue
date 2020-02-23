@@ -12,6 +12,9 @@ import updateLoginState from '@/controllers/LoginState.js';
 
 export default {
   name: 'Initializer',
+  methods: {
+    refreshFollowing: function() {},
+  },
   created() {
     updateLoginState(5);
     getRecent(/*start=*/ 0).then(recentEntries => {

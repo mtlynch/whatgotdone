@@ -12,6 +12,7 @@ export default {
   name: 'Logout',
   created() {
     this.$store.commit('clearUsername');
+    this.$store.commit('clearFollowing');
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/logout`;
     this.$http
       .post(url, {}, {headers: {'X-CSRF-Token': getCsrfToken()}})

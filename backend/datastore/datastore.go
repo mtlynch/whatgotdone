@@ -39,6 +39,12 @@ type Datastore interface {
 	InsertPageViews(path string, pageViews int) error
 	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
 	GetPageViews(path string) (int, error)
+	// InsertFollow adds a following relationship to the datastore.
+	InsertFollow(leader, follower string) error
+	// DeleteFollow removes a following relationship from the datastore.
+	DeleteFollow(leader, follower string) error
+	// Followers returns all the users the specified user is following.
+	Following(follower string) ([]string, error)
 }
 
 // DraftNotFoundError occurs when no draft exists for a user with a given date.
@@ -69,4 +75,13 @@ type PageViewsNotFoundError struct {
 
 func (f PageViewsNotFoundError) Error() string {
 	return fmt.Sprintf("No page view count found for path %s", f.Path)
+}
+
+type FollowAlreadyExistsError struct {
+	Leader   string
+	Follower string
+}
+
+func (f FollowAlreadyExistsError) Error() string {
+	return fmt.Sprintf("Cannot create a follow from %s -> %s because the follow already exists", f.Follower, f.Leader)
 }

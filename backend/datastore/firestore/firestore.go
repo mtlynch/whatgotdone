@@ -6,6 +6,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"cloud.google.com/go/firestore"
 
@@ -36,6 +37,11 @@ type (
 		entryAuthor string `firestore:"entryAuthor,omitempty"`
 		entryDate   string `firestore:"entryDate,omitempty"`
 	}
+
+	followDocument struct {
+		Follower     string    `firestore:"follower"`
+		LastModified time.Time `firestore:"lastModified"`
+	}
 )
 
 const (
@@ -49,6 +55,8 @@ const (
 	secretsRootKey      = "secrets"
 	secretUserKitDocKey = "userKitKey"
 	userProfilesRootKey = "userProfiles"
+	followingRootKey    = "following"
+	perUserFollowingKey = "perUserFollowers"
 )
 
 func getGoogleCloudProjectID() string {

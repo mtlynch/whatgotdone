@@ -137,3 +137,19 @@ func profileFromRequest(r *http.Request) (types.UserProfile, error) {
 		TwitterHandle: pur.TwitterHandle,
 	}, nil
 }
+
+func (s defaultServer) userExists(username string) (bool, error) {
+	// BUG: Will only detect users who have published an entry. Ideally, we'd be
+	// able to tell if the username exists in UserKit, but the UserKit API
+	// currently does not offer lookup by username.
+	users, err := s.datastore.Users()
+	if err != nil {
+		return false, err
+	}
+	for _, u := range users {
+		if u == username {
+			return true, nil
+		}
+	}
+	return false, nil
+}
