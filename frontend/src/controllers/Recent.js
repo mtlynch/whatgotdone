@@ -1,5 +1,5 @@
 import axios from 'axios';
-import store from '../store.js';
+import store from '@/store.js';
 
 // Number of entries to request from the server on each request;
 const updateSize = 15;

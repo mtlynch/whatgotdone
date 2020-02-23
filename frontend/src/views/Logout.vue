@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import getCsrfToken from '../controllers/CsrfToken.js';
-import {logoutUserKit} from '../controllers/UserKit.js';
+import getCsrfToken from '@/controllers/CsrfToken.js';
+import {logoutUserKit} from '@/controllers/UserKit.js';
 
 export default {
   name: 'Logout',

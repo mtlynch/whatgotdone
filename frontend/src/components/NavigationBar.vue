@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import {thisFriday} from '../controllers/EntryDates.js';
+import {thisFriday} from '@/controllers/EntryDates.js';
 
 export default {
   name: 'NavigationBar',

@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import updateLoginState from '../controllers/LoginState.js';
-import loadUserKit from '../controllers/UserKit.js';
+import updateLoginState from '@/controllers/LoginState.js';
+import loadUserKit from '@/controllers/UserKit.js';
 
 export default {
   name: 'Login',

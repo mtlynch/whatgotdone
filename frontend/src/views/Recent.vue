@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import PartialJournal from '../components/PartialJournal.vue';
+import PartialJournal from '@/components/PartialJournal.vue';
 
-import {refreshRecent, extendRecent} from '../controllers/Recent.js';
+import {refreshRecent, extendRecent} from '@/controllers/Recent.js';
 
 export default {
   name: 'Recent',

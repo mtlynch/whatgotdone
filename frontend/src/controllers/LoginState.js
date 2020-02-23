@@ -1,6 +1,6 @@
 import axios from 'axios';
-import store from '../store.js';
-import {logoutUserKit} from '../controllers/UserKit.js';
+import store from '@/store.js';
+import {logoutUserKit} from '@/controllers/UserKit.js';
 
 function clearCachedAuthInformation() {
   store.commit('clearUsername');

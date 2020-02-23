@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import Username from './Username.vue';
+import Username from '@/components/Username.vue';
+
 export default {
   name: 'JournalHeader',
   props: {

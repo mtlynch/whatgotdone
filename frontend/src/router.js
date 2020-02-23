@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Home from './views/Home.vue';
-import Login from './views/Login.vue';
-import Logout from './views/Logout.vue';
-import PrivacyPolicy from './views/PrivacyPolicy.vue';
-import Recent from './views/Recent.vue';
-import EditEntry from './views/EditEntry.vue';
-import ViewEntry from './views/ViewEntry.vue';
-import ViewProject from './views/ViewProject.vue';
-import EditUserProfile from './views/EditUserProfile.vue';
-import UserProfile from './views/UserProfile.vue';
-import MissingPage from './views/404.vue';
+import Home from '@/views/Home.vue';
+import Login from '@/views/Login.vue';
+import Logout from '@/views/Logout.vue';
+import PrivacyPolicy from '@/views/PrivacyPolicy.vue';
+import Recent from '@/views/Recent.vue';
+import EditEntry from '@/views/EditEntry.vue';
+import ViewEntry from '@/views/ViewEntry.vue';
+import ViewProject from '@/views/ViewProject.vue';
+import EditUserProfile from '@/views/EditUserProfile.vue';
+import UserProfile from '@/views/UserProfile.vue';
+import MissingPage from '@/views/404.vue';
 
 Vue.use(VueRouter);
 

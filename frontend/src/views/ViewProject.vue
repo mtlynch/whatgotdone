@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import Username from '../components/Username.vue';
-import ProjectEntry from '../components/ProjectEntry.vue';
+import Username from '@/components/Username.vue';
+import ProjectEntry from '@/components/ProjectEntry.vue';
 
 export default {
   name: 'ViewProject',
