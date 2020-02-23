@@ -11,7 +11,7 @@
 
     <b-button
       variant="secondary"
-      v-bind:disabled="requestInProgress"
+      v-bind:disabled="loadMoreInProgress"
       v-on:click="onLoadMore"
       >More Entries</b-button
     >
@@ -21,7 +21,7 @@
 <script>
 import PartialJournal from '@/components/PartialJournal.vue';
 
-import {refreshRecent, extendRecent} from '@/controllers/Recent.js';
+import {getRecent, mergeEntryArrays} from '@/controllers/Recent.js';
 
 export default {
   name: 'Recent',
@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      requestInProgress: false,
+      loadMoreInProgress: false,
     };
   },
   computed: {
@@ -40,17 +40,26 @@ export default {
   },
   methods: {
     onLoadMore() {
-      /**
-       * To prevent muliple click, disable button while api call is in progress
-       */
-      this.requestInProgress = true; // Set the flag true before fetch call
-      return extendRecent(() => {
-        this.requestInProgress = false; // Reset the flag in callback
-      });
+      this.loadMoreInProgress = true;
+      return getRecent(this.recentEntries.length)
+        .then(newEntries => {
+          this.$store.commit(
+            'setRecent',
+            mergeEntryArrays(this.recentEntries, newEntries)
+          );
+        })
+        .finally(() => {
+          this.loadMoreInProgress = false;
+        });
     },
   },
   created() {
-    refreshRecent();
+    getRecent(/*start=*/ 0).then(recentEntries => {
+      this.$store.commit(
+        'setRecent',
+        mergeEntryArrays(this.recentEntries, recentEntries)
+      );
+    });
   },
 };
 </script>

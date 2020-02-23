@@ -5,14 +5,18 @@
 </template>
 
 <script>
-import {refreshRecent} from '@/controllers/Recent.js';
+import store from '@/store.js';
+
+import {getRecent} from '@/controllers/Recent.js';
 import updateLoginState from '@/controllers/LoginState.js';
 
 export default {
   name: 'Initializer',
   created() {
     updateLoginState(5);
-    refreshRecent();
+    getRecent(/*start=*/ 0).then(recentEntries => {
+      store.commit('setRecent', recentEntries);
+    });
   },
 };
 </script>
