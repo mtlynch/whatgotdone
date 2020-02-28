@@ -45,6 +45,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
+      - restore_cache:
+          keys:
+            - go-v1-{{ checksum "go.sum" }}
       - run:
           name: Test go packages
           command: go test -v ./...
@@ -56,8 +59,8 @@ jobs:
           command: |
             mkdir -p cache
             mv /go/pkg/mod cache/go-modules
-      - persist_to_workspace:
-          root: ./
+      - save_cache:
+          key: go-v1-{{ checksum "go.sum" }}
           paths:
             - cache/go-modules
   integration:
@@ -69,6 +72,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
+      - restore_cache:
+          keys:
+            - go-v1-{{ checksum "go.sum" }}
       - run:
           name: Perform integration tests.
           command: dev-scripts/run-integration-tests
@@ -119,9 +125,7 @@ workflows:
     jobs:
       - build-frontend
       - test-backend
-      - integration:
-          requires:
-            - test-backend
+      - integration
       - deploy:
           requires:
             - build-frontend
