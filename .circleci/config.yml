@@ -19,6 +19,15 @@ jobs:
       - image: circleci/node:9.11.2-stretch
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "frontend/package-lock.json" }}
+      - run:
+          name: Restore node modules
+          command: |
+            if [[ -d cache/node-modules ]]; then
+              mv cache/node-modules frontend/node_modules
+            fi
       - run:
           name: Download npm packages
           command: npm --prefix ./frontend install
@@ -38,6 +47,13 @@ jobs:
           root: ./
           paths:
             - ./frontend/dist
+      - run:
+          name: Save go modules
+          command: mv frontend/node_modules cache/node-modules
+      - save_cache:
+          key: node-v1-{{ checksum "frontend/package-lock.json" }}
+          paths:
+            - cache/node-modules
   test-backend:
     docker:
       - image: circleci/golang:1.13
@@ -64,7 +80,6 @@ jobs:
       - run:
           name: Save go modules
           command: |
-            mkdir -p cache
             mv "${GOPATH}/pkg/mod" cache/go-modules
       - save_cache:
           key: go-v1-{{ checksum "go.sum" }}
@@ -82,12 +97,19 @@ jobs:
       - restore_cache:
           keys:
             - go-v1-{{ checksum "go.sum" }}
+            - node-v1-{{ checksum "frontend/package-lock.json" }}
       - run:
           name: Restore go modules
           command: |
             if [[ -d cache/go-modules ]]; then
               mkdir -p "${GOPATH}/pkg"
               mv cache/go-modules "${GOPATH}/pkg/mod"
+            fi
+      - run:
+          name: Restore node modules
+          command: |
+            if [[ -d cache/node-modules ]]; then
+              mv cache/node-modules frontend/node_modules
             fi
       - run:
           name: Perform integration tests.

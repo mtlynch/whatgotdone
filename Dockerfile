@@ -1,6 +1,7 @@
 FROM node:10.15.3-alpine AS frontend_builder
 
 COPY ./frontend /app/frontend
+COPY ./cache/node-modules/ /app/frontend/node_modules
 WORKDIR /app/frontend
 
 ARG NPM_BUILD_MODE="development"
