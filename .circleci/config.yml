@@ -49,6 +49,12 @@ jobs:
           keys:
             - go-v1-{{ checksum "go.sum" }}
       - run:
+          name: Restore go modules
+          command: |
+            if [[ -d cache/go-modules ]]; then
+              mv cache/go-modules /go/pkg/mod
+            fi
+      - run:
           name: Test go packages
           command: go test -v ./...
       - run:
@@ -75,6 +81,12 @@ jobs:
       - restore_cache:
           keys:
             - go-v1-{{ checksum "go.sum" }}
+      - run:
+          name: Restore go modules
+          command: |
+            if [[ -d cache/go-modules ]]; then
+              mv cache/go-modules /go/pkg/mod
+            fi
       - run:
           name: Perform integration tests.
           command: dev-scripts/run-integration-tests
