@@ -25,10 +25,8 @@ jobs:
       - run:
           name: Restore node modules
           command: |
-            if [[ -d cache/node-modules ]]; then
-              mv cache/node-modules frontend/node_modules
-              ls frontend/node_modules
-            fi
+            mv cache/node-modules frontend/node_modules
+            ls frontend/node_modules
       - run:
           name: Download npm packages
           command: npm --prefix ./frontend install
@@ -70,11 +68,9 @@ jobs:
       - run:
           name: Restore go modules
           command: |
-            if [[ -d cache/go-modules ]]; then
-              mkdir -p "${GOPATH}/pkg"
-              mv cache/go-modules "${GOPATH}/pkg/mod"
-              ls "${GOPATH}/pkg/mod"
-            fi
+            mkdir -p "${GOPATH}/pkg"
+            mv cache/go-modules "${GOPATH}/pkg/mod"
+            ls "${GOPATH}/pkg/mod"
       - run:
           name: Test go packages
           command: go test -v ./...
@@ -106,18 +102,14 @@ jobs:
       - run:
           name: Restore go modules
           command: |
-            if [[ -d cache/go-modules ]]; then
-              mkdir -p "${GOPATH}/pkg"
-              mv cache/go-modules "${GOPATH}/pkg/mod"
-              ls "${GOPATH}/pkg/mod"
-            fi
+            mkdir -p "${GOPATH}/pkg"
+            mv cache/go-modules "${GOPATH}/pkg/mod"
+            ls "${GOPATH}/pkg/mod"
       - run:
           name: Restore node modules
           command: |
-            if [[ -d cache/node-modules ]]; then
-              mv cache/node-modules frontend/node_modules
-              ls frontend/node_modules
-            fi
+            mv cache/node-modules frontend/node_modules
+            ls frontend/node_modules
       - run:
           name: Perform integration tests.
           command: dev-scripts/run-integration-tests
