@@ -1,5 +1,7 @@
 FROM node:10.15.3-alpine AS frontend_builder
 
+RUN ls -l ./
+
 COPY ./frontend /app/frontend
 COPY ./cache/node-modules/ /app/frontend/node_modules
 WORKDIR /app/frontend
@@ -9,6 +11,8 @@ RUN npm install
 RUN npm run build -- --mode "$NPM_BUILD_MODE"
 
 FROM golang:1.13.5-buster
+
+RUN ls -l ./
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY ./backend /app/backend
