@@ -49,8 +49,10 @@ jobs:
           paths:
             - ./frontend/dist
       - run:
-          name: Save go modules
-          command: mv frontend/node_modules cache/node-modules
+          name: Save node modules
+          command: |
+            mv frontend/node_modules cache/node-modules
+            ls cache/node-modules
       - save_cache:
           key: node-v1-{{ checksum "frontend/package-lock.json" }}
           paths:
@@ -83,6 +85,7 @@ jobs:
           name: Save go modules
           command: |
             mv "${GOPATH}/pkg/mod" cache/go-modules
+            ls cache/go-modules
       - save_cache:
           key: go-v1-{{ checksum "go.sum" }}
           paths:
