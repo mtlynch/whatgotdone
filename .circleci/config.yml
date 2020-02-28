@@ -127,7 +127,6 @@ workflows:
             - build-frontend
             - test-backend
             - integration
-            - e2e
           filters:
             branches:
               only: master
