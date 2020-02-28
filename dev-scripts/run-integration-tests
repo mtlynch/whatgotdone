@@ -11,6 +11,6 @@ if [ "$1" = "--skip-build" ]; then
 else
   flags="--build"
 fi
-
+ls -l # debug
 cd integration
 docker-compose up --exit-code-from cypress --abort-on-container-exit $flags
