@@ -100,17 +100,6 @@ jobs:
             - go-v1-{{ checksum "go.sum" }}
             - node-v1-{{ checksum "frontend/package-lock.json" }}
       - run:
-          name: Restore go modules
-          command: |
-            mkdir -p "${GOPATH}/pkg"
-            mv cache/go-modules "${GOPATH}/pkg/mod"
-            ls "${GOPATH}/pkg/mod"
-      - run:
-          name: Restore node modules
-          command: |
-            mv cache/node-modules frontend/node_modules
-            ls frontend/node_modules
-      - run:
           name: Perform integration tests.
           command: dev-scripts/run-integration-tests
       - store_artifacts:
