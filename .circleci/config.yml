@@ -52,7 +52,8 @@ jobs:
           name: Restore go modules
           command: |
             if [[ -d cache/go-modules ]]; then
-              mv cache/go-modules /go/pkg/mod
+              mkdir -p "${GOPATH}/pkg"
+              mv cache/go-modules "${GOPATH}/pkg/mod"
             fi
       - run:
           name: Test go packages
@@ -64,7 +65,7 @@ jobs:
           name: Save go modules
           command: |
             mkdir -p cache
-            mv /go/pkg/mod cache/go-modules
+            mv "${GOPATH}/pkg/mod" cache/go-modules
       - save_cache:
           key: go-v1-{{ checksum "go.sum" }}
           paths:
@@ -85,7 +86,8 @@ jobs:
           name: Restore go modules
           command: |
             if [[ -d cache/go-modules ]]; then
-              mv cache/go-modules /go/pkg/mod
+              mkdir -p "${GOPATH}/pkg"
+              mv cache/go-modules "${GOPATH}/pkg/mod"
             fi
       - run:
           name: Perform integration tests.
