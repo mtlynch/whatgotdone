@@ -13,6 +13,7 @@ COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY ./backend /app/backend
 COPY ./go.mod /app/go.mod
 COPY ./go.sum /app/go.sum
+COPY ./cache/go-modules/ /go/pkg/mod
 
 WORKDIR /app
 
