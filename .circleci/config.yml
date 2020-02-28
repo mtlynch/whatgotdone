@@ -27,6 +27,7 @@ jobs:
           command: |
             if [[ -d cache/node-modules ]]; then
               mv cache/node-modules frontend/node_modules
+              ls frontend/node_modules
             fi
       - run:
           name: Download npm packages
@@ -70,6 +71,7 @@ jobs:
             if [[ -d cache/go-modules ]]; then
               mkdir -p "${GOPATH}/pkg"
               mv cache/go-modules "${GOPATH}/pkg/mod"
+              ls "${GOPATH}/pkg/mod"
             fi
       - run:
           name: Test go packages
@@ -104,12 +106,14 @@ jobs:
             if [[ -d cache/go-modules ]]; then
               mkdir -p "${GOPATH}/pkg"
               mv cache/go-modules "${GOPATH}/pkg/mod"
+              ls "${GOPATH}/pkg/mod"
             fi
       - run:
           name: Restore node modules
           command: |
             if [[ -d cache/node-modules ]]; then
               mv cache/node-modules frontend/node_modules
+              ls frontend/node_modules
             fi
       - run:
           name: Perform integration tests.
