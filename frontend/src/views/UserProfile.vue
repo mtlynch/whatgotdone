@@ -103,10 +103,10 @@ export default {
       return this.loggedInUsername && this.loggedInUsername === this.username;
     },
     isFollowing: function() {
-      if (!this.loggedInUsername) {
+      if (!this.$store.state.following) {
         return false;
       }
-      return this.$store.state.following.has(this.username);
+      return this.$store.state.following.includes(this.username);
     },
     canFollow: function() {
       return this.loggedInUsername && !this.isFollowing;
@@ -170,9 +170,9 @@ export default {
           }
         )
         .then(() => {
-          let following = new Set(this.$store.state.following);
-          following.add(this.username);
-          this.$store.commit('setFollowing', Array.from(following));
+          let following = this.$store.state.following;
+          following.push(this.username);
+          this.$store.commit('setFollowing', following);
         });
     },
     onUnfollow: function() {
@@ -185,9 +185,13 @@ export default {
           }
         )
         .then(() => {
-          let following = new Set(this.$store.state.following);
-          following.delete(this.username);
-          this.$store.commit('setFollowing', Array.from(following));
+          let following = this.$store.state.following;
+          const index = this.following.indexOf(this.username);
+          if (index < 0) {
+            return;
+          }
+          following.splice(index, 1);
+          this.$store.commit('setFollowing', following);
         });
     },
   },

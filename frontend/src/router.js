@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Feed from './views/Feed.vue';
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Logout from './views/Logout.vue';
+import PersonalizedFeed from './views/PersonalizedFeed.vue';
 import PrivacyPolicy from './views/PrivacyPolicy.vue';
 import Recent from './views/Recent.vue';
 import EditEntry from './views/EditEntry.vue';
@@ -18,7 +18,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {path: '/about', component: Home},
-  {path: '/feed', component: Feed},
+  {path: '/feed', component: PersonalizedFeed},
   {path: '/recent', component: Recent},
   {path: '/entry/edit/:date', component: EditEntry},
   {path: '/login', component: Login},

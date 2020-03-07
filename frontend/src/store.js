@@ -22,7 +22,7 @@ export const mutations = {
     state.following = following;
   },
   clearFollowing(state) {
-    state.following = new Set();
+    state.following = [];
   },
 };
 
@@ -30,7 +30,7 @@ export default new Vuex.Store({
   state: {
     username: null,
     recentEntries: null,
-    following: new Set(),
+    following: [],
   },
   mutations,
   plugins: [vuexLocal.plugin],
