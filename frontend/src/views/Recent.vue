@@ -3,54 +3,41 @@
     <h1>Recent Entries</h1>
     <p>Check out what other users got done this week:</p>
 
-    <PartialJournal
-      v-bind:key="item.key"
-      v-bind:entry="item"
-      v-for="item in recentEntries"
+    <EntryFeed
+      :readEntriesFromServer="readEntriesFromServer"
+      :readEntriesFromStore="readEntriesFromStore"
+      :writeEntriesToStore="writeEntriesToStore"
     />
-
-    <b-button
-      variant="secondary"
-      v-bind:disabled="loadMoreInProgress"
-      v-on:click="onLoadMore"
-      >More Entries</b-button
-    >
   </div>
 </template>
 
 <script>
-import PartialJournal from '@/components/PartialJournal.vue';
+import EntryFeed from '@/components/EntryFeed.vue';
 
 import {getRecent, mergeEntryArrays} from '@/controllers/Recent.js';
 
 export default {
   name: 'Recent',
   components: {
-    PartialJournal,
+    EntryFeed,
   },
   data() {
     return {
       loadMoreInProgress: false,
     };
   },
-  computed: {
-    recentEntries() {
+  methods: {
+    readEntriesFromServer(start) {
+      return getRecent(start);
+    },
+    readEntriesFromStore() {
       return this.$store.state.recentEntries;
     },
-  },
-  methods: {
-    onLoadMore() {
-      this.loadMoreInProgress = true;
-      return getRecent(this.recentEntries.length)
-        .then(newEntries => {
-          this.$store.commit(
-            'setRecent',
-            mergeEntryArrays(this.recentEntries, newEntries)
-          );
-        })
-        .finally(() => {
-          this.loadMoreInProgress = false;
-        });
+    writeEntriesToStore(newEntries) {
+      this.$store.commit(
+        'setRecent',
+        mergeEntryArrays(this.$store.state.recentEntries, newEntries)
+      );
     },
   },
   created() {
