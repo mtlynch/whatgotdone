@@ -26,11 +26,6 @@ export default {
       loadMoreInProgress: false,
     };
   },
-  computed: {
-    recentEntries() {
-      return this.$store.state.recentEntries;
-    },
-  },
   methods: {
     readEntriesFromServer(start) {
       return getRecent(start);
