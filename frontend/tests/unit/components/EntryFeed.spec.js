@@ -1,6 +1,6 @@
 import {shallowMount, createLocalVue} from '@vue/test-utils';
 
-import BootstrapVue, {BButton} from 'bootstrap-vue';
+import BootstrapVue from 'bootstrap-vue';
 
 import EntryFeed from '@/components/EntryFeed.vue';
 import PartialJournal from '@/components/PartialJournal.vue';
