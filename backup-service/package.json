@@ -7,7 +7,7 @@
     "node": "10.x.x"
   },
   "scripts": {
-    "deploy": "gcloud app deploy --quiet app.yaml cron.yaml",
+    "deploy": "gcloud app deploy --quiet app.yaml",
     "start": "node app.js"
   },
   "author": "Google, Inc.",

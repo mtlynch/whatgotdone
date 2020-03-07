@@ -27,5 +27,5 @@ This is not set up to auto-deploy with the regular site because deployments are 
 To deploy this service manually:
 
 ```bash
-gcloud app deploy app.yaml cron.yaml
+gcloud app deploy app.yaml
 ```
