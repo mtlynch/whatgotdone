@@ -16,3 +16,6 @@ go test -v ./...
 go build -o /dev/null --tags 'dev' backend/main.go
 go build -o /dev/null --tags 'staging' backend/main.go
 go build -o /dev/null backend/main.go
+
+cd frontend
+npm run lint
