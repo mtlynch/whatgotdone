@@ -5,10 +5,6 @@ import (
 	"time"
 )
 
-func (s defaultServer) logoutOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
-
 func (s defaultServer) logoutPost() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, &http.Cookie{

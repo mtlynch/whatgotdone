@@ -4,30 +4,36 @@ import (
 	"net/http"
 )
 
+// A no-op function that tells the router to accept the OPTIONS method for a
+// particular route.
+func allowOptions() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {}
+}
+
 func (s *defaultServer) routes() {
 	s.router.Use(s.enableCors)
 	s.router.Use(s.enableCsrf)
 
 	// Handle routes that require backend logic.
 	s.router.HandleFunc("/api/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/entries/{username}/project/{project}", s.projectOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/entries/{username}/project/{project}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/entries/{username}/project/{project}", s.projectGet()).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/entry/{date}", s.entryOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/entry/{date}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/entry/{date}", s.entryPost()).Methods(http.MethodPost)
-	s.router.HandleFunc("/api/draft/{date}", s.draftOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/draft/{date}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/draft/{date}", s.draftGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/draft/{date}", s.draftPost()).Methods(http.MethodPost)
-	s.router.HandleFunc("/api/pageViews", s.pageViewsOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/pageViews", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/pageViews", s.pageViewsGet()).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/reactions/entry/{username}/{date}", s.reactionsOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/reactions/entry/{username}/{date}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/reactions/entry/{username}/{date}", s.reactionsGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/reactions/entry/{username}/{date}", s.reactionsPost()).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user/me", s.userMeGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user/{username}", s.userGet()).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/user", s.userOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/user", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/user", s.userPost()).Methods(http.MethodPost)
-	s.router.HandleFunc("/api/logout", s.logoutOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/logout", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/logout", s.logoutPost()).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/tasks/refreshGoogleAnalytics", s.refreshGoogleAnalytics()).Methods(http.MethodGet)
 

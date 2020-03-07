@@ -59,7 +59,3 @@ func (s *defaultServer) projectGet() http.HandlerFunc {
 		}
 	}
 }
-
-func (s *defaultServer) projectOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
