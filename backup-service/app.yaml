@@ -1,4 +1,4 @@
 runtime: nodejs10
-service: cloud-firestore-admin
+service: firestore-daily-backup
 env_variables:
   BUCKET_NAME: whatgotdone-firestore-backup
