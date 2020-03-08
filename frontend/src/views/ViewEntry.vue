@@ -56,10 +56,13 @@
 
 <script>
 import moment from 'moment';
+
+import {getEntriesFromUser} from '@/controllers/Entries.js';
+import {thisFriday} from '@/controllers/EntryDates.js';
+
 import Journal from '@/components/Journal.vue';
 import Reactions from '@/components/Reactions.vue';
 import Username from '@/components/Username.vue';
-import {thisFriday} from '@/controllers/EntryDates.js';
 
 export default {
   name: 'ViewEntry',
@@ -78,23 +81,9 @@ export default {
   methods: {
     loadJournalEntries: function() {
       this.journalEntries = [];
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.entryAuthor}`;
-      this.$http
-        .get(url)
-        .then(result => {
-          for (const entry of result.data) {
-            this.journalEntries.push({
-              key: entry.date,
-              author: this.entryAuthor,
-              date: new Date(entry.date),
-              lastModified: new Date(entry.lastModified),
-              markdown: entry.markdown,
-            });
-          }
-          if (this.journalEntries.length == 0) {
-            return;
-          }
-          this.journalEntries.sort((a, b) => a.date - b.date);
+      getEntriesFromUser(this.entryAuthor)
+        .then(entries => {
+          this.journalEntries = entries;
         })
         .catch(error => {
           this.backendError = error;
