@@ -15,8 +15,12 @@ export default function updateLoginState(attempts) {
     }
     getUserSelfMetadata()
       .then(metadata => {
+<<<<<<< HEAD
         store.commit('setUsername', metadata.username);
         resolve();
+=======
+        resolve(metadata.username);
+>>>>>>> Adjusting to resolve the full metadata
       })
       .catch(error => {
         // If checking user information fails, the cached authentication information
