@@ -1,8 +1,8 @@
-Cypress.Commands.add("login", (username, password, options = {}) => {
+Cypress.Commands.add("login", (username, options = {}) => {
   cy.visit("/login");
 
   cy.get("#userkit_username").type(username);
-  cy.get("#userkit_password").type(password);
+  cy.get("#userkit_password").type("password");
   cy.get("form").submit();
 });
 
@@ -61,7 +61,7 @@ it("logs in and posts an update", () => {
   cy.server();
   cy.route("/api/draft/*").as("getDraft");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -83,7 +83,7 @@ it("logs in and posts an empty update (deleting the update)", () => {
   cy.server();
   cy.route("/api/draft/*").as("getDraft");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -102,7 +102,7 @@ it("logs in and saves a draft", () => {
   cy.route("GET", "/api/draft/*").as("getDraft");
   cy.route("POST", "/api/draft/*").as("postDraft");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -129,7 +129,7 @@ it("logs in and saves a draft", () => {
 });
 
 it("logs in and views profile", () => {
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.get(".account-dropdown").click();
   cy.get(".profile-link a").click();
@@ -142,7 +142,7 @@ it("logs in and reacts to an entry", () => {
   cy.route("POST", "https://api.userkit.io/v1/widget/login").as(
     "postUserKitLogin"
   );
-  cy.login("reacting_tommy", "password");
+  cy.login("reacting_tommy");
   cy.wait("@postUserKitLogin");
 
   cy.visit("/staging_jimmy/2019-06-28")
@@ -197,7 +197,7 @@ it("reacting to an entry prompts login and redirects back to the entry", () => {
 it("logs in and signs out", () => {
   cy.server();
   cy.route("/api/user/me").as("getUsername");
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
   cy.wait("@getUsername");
@@ -219,7 +219,7 @@ it("logs in updates profile", () => {
   cy.server();
   cy.route("/api/user/staging_jimmy").as("getUserProfile");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
