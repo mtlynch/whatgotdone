@@ -64,19 +64,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			}
 		}
 
-		sort.Sort(entries)
-
-		// Reverse the order of entries.
-		for i := len(entries)/2 - 1; i >= 0; i-- {
-			opp := len(entries) - 1 - i
-			entries[i], entries[opp] = entries[opp], entries[i]
-		}
-
-		start = min(len(entries), start)
-		end := min(len(entries), start+limit)
-		entries = entries[start:end]
-
-		if err := json.NewEncoder(w).Encode(entries); err != nil {
+		if err := json.NewEncoder(w).Encode(sortAndSliceEntries(entries, start, limit)); err != nil {
 			panic(err)
 		}
 	}
@@ -125,27 +113,32 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 			}
 		}
 
-		sort.Sort(entries)
-		// Reverse the order of entries.
-		for i := len(entries)/2 - 1; i >= 0; i-- {
-			opp := len(entries) - 1 - i
-			entries[i], entries[opp] = entries[opp], entries[i]
-		}
-
-		start = min(len(entries), start)
-		end := min(len(entries), start+limit)
-		entries = entries[start:end]
-
 		type response struct {
 			Entries []entryPublic `json:"entries"`
 		}
 		resp := response{
-			Entries: entries,
+			Entries: sortAndSliceEntries(entries, start, limit),
 		}
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
 			panic(err)
 		}
 	}
+}
+
+func sortAndSliceEntries(entries entriesPublic, start, limit int) entriesPublic {
+	sorted := make(entriesPublic, len(entries))
+	copy(sorted, entries)
+
+	sort.Sort(sorted)
+	// Reverse the order of entries.
+	for i := len(sorted)/2 - 1; i >= 0; i-- {
+		opp := len(sorted) - 1 - i
+		sorted[i], sorted[opp] = sorted[opp], sorted[i]
+	}
+
+	start = min(len(sorted), start)
+	end := min(len(sorted), start+limit)
+	return sorted[start:end]
 }
 
 func (e entriesPublic) Len() int {
