@@ -32,10 +32,6 @@ func (s *defaultServer) entriesGet() http.HandlerFunc {
 	}
 }
 
-func (s *defaultServer) entryOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
-
 // entryPost handles HTTP POST requests for users to create new What Got
 // Done updates. The updates can be new versions of previously published
 // updates (in which case, we'll update the existing entries in the datastore)

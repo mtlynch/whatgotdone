@@ -18,10 +18,6 @@ type pageViewResponse struct {
 	Views int    `json:"views"`
 }
 
-func (s *defaultServer) pageViewsOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
-
 func (s defaultServer) pageViewsGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Query().Get("path")

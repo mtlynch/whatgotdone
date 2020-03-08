@@ -10,10 +10,6 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (s defaultServer) draftOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
-
 func (s defaultServer) draftGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := s.loggedInUser(r)

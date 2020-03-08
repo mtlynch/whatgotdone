@@ -11,10 +11,6 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (s defaultServer) userOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
-
 func (s defaultServer) userGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)

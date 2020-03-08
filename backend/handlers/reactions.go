@@ -11,10 +11,6 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (s defaultServer) reactionsOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
-
 func (s defaultServer) reactionsGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		date, err := dateFromRequestPath(r)
