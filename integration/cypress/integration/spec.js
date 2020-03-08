@@ -289,7 +289,7 @@ it("follows a user", () => {
   cy.visit("/feed");
 
   // Verify the personalized feed is empty.
-  cy.get("alert").should("contain", "You're not following anyone yet.");
+  cy.get(".alert").should("contain", "You're not following anyone yet.");
   cy.get(".journal").should("not.exist");
 
   cy.visit("/leader_lenny");
