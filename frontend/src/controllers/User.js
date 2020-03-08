@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import getCsrfToken from '@/controllers/CsrfToken.js';
+
 export function getUserSelfMetadata() {
   return new Promise(function(resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
@@ -29,6 +31,23 @@ export function getUserMetadata(username) {
         } else {
           reject(error);
         }
+      });
+  });
+}
+
+export function setUserMetadata(metadata) {
+  return new Promise(function(resolve, reject) {
+    const url = `${process.env.VUE_APP_BACKEND_URL}/api/user`;
+    axios
+      .post(url, metadata, {
+        withCredentials: true,
+        headers: {'X-CSRF-Token': getCsrfToken()},
+      })
+      .then(() => {
+        resolve();
+      })
+      .catch(error => {
+        reject(error);
       });
   });
 }

@@ -8,7 +8,7 @@
       <label for="user-bio">Bio</label>
       <textarea
         id="user-bio"
-        v-model="aboutMarkdown"
+        v-model="profile.aboutMarkdown"
         :disabled="!profileLoaded"
         class="form-control"
         maxlength="300"
@@ -20,7 +20,7 @@
       <label for="email-address">Public email address</label>
       <input
         type="email"
-        v-model="emailAddress"
+        v-model="profile.emailAddress"
         class="form-control"
         id="email-address"
         :disabled="!profileLoaded"
@@ -32,7 +32,7 @@
       <label for="twitter-handle">Twitter handle</label>
       <input
         type="text"
-        v-model="twitterHandle"
+        v-model="profile.twitterHandle"
         class="form-control"
         id="twitter-handle"
         :disabled="!profileLoaded"
@@ -54,16 +54,17 @@
 </template>
 
 <script>
-import getCsrfToken from '@/controllers/CsrfToken.js';
-import {getUserMetadata} from '@/controllers/User.js';
+import {getUserMetadata, setUserMetadata} from '@/controllers/User.js';
 
 export default {
   name: 'EditUserProfile',
   data() {
     return {
-      aboutMarkdown: '',
-      twitterHandle: '',
-      emailAddress: '',
+      profile: {
+        aboutMarkdown: '',
+        twitterHandle: '',
+        emailAddress: '',
+      },
       profileLoaded: false,
       formError: null,
     };
@@ -76,28 +77,14 @@ export default {
   methods: {
     loadProfile: function() {
       getUserMetadata(this.loggedInUsername).then(metadata => {
-        this.aboutMarkdown = metadata.aboutMarkdown;
-        this.twitterHandle = metadata.twitterHandle;
-        this.emailAddress = metadata.emailAddress;
+        this.profile = metadata;
         this.profileLoaded = true;
       });
     },
     handleSave: function() {
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/user`;
-      this.$http
-        .post(
-          url,
-          {
-            aboutMarkdown: this.aboutMarkdown,
-            twitterHandle: this.twitterHandle,
-            emailAddress: this.emailAddress,
-          },
-          {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
-        )
-        .then(result => {
-          if (result.data.ok) {
-            this.$router.push(`/${this.loggedInUsername}`);
-          }
+      setUserMetadata(this.profile)
+        .then(() => {
+          this.$router.push(`/${this.loggedInUsername}`);
         })
         .catch(error => {
           if (error.response && error.response.data) {
