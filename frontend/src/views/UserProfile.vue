@@ -162,7 +162,7 @@ export default {
     },
     loadRecentEntries: function() {
       this.recentEntries = [];
-      getEntriesFromUser.then(entries => {
+      getEntriesFromUser(this.username).then(entries => {
         this.recentEntries = entries;
         this.entriesLoaded = true;
       });
