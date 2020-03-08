@@ -22,7 +22,7 @@ export function getDraft(entryDate) {
 
 export function saveDraft(entryDate, entryContent) {
   return new Promise(function(resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${entryDate}`;
+    const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${entryDate}`;
     axios
       .post(
         url,
