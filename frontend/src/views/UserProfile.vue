@@ -82,6 +82,7 @@
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
 
+import {getEntriesFromUser} from '@/controllers/Entries.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 
 import PartialJournal from '../components/PartialJournal.vue';
@@ -161,19 +162,8 @@ export default {
     },
     loadRecentEntries: function() {
       this.recentEntries = [];
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.username}`;
-      this.$http.get(url).then(result => {
-        for (const entry of result.data) {
-          this.recentEntries.push({
-            key: `${this.username}/${entry.date}`,
-            author: this.username,
-            date: new Date(entry.date),
-            lastModified: new Date(entry.lastModified),
-            markdown: entry.markdown,
-          });
-        }
-        // Sort newest to oldest.
-        this.recentEntries.sort((a, b) => b.date - a.date);
+      getEntriesFromUser(this.username).then(entries => {
+        this.recentEntries = entries;
         this.entriesLoaded = true;
       });
     },
