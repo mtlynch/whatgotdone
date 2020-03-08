@@ -10,12 +10,15 @@
       variant="secondary"
       v-bind:disabled="loadMoreInProgress"
       v-on:click="onLoadMore"
+      v-if="serverHasMore"
       >More Entries</b-button
     >
   </div>
 </template>
 
 <script>
+import {mergeEntryArrays} from '@/controllers/Recent.js';
+
 import PartialJournal from '@/components/PartialJournal.vue';
 
 export default {
@@ -31,6 +34,7 @@ export default {
   data() {
     return {
       loadMoreInProgress: false,
+      serverHasMore: true,
     };
   },
   computed: {
@@ -43,7 +47,13 @@ export default {
       this.loadMoreInProgress = true;
       return this.readEntriesFromServer(this.entries.length)
         .then(newEntries => {
-          this.writeEntriesToStore(newEntries);
+          if (newEntries.length === 0) {
+            this.serverHasMore = false;
+            return;
+          }
+          this.writeEntriesToStore(
+            mergeEntryArrays(this.readEntriesFromStore(), newEntries)
+          );
         })
         .finally(() => {
           this.loadMoreInProgress = false;
@@ -57,13 +67,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-h1 {
-  text-align: left;
-}
-
-p {
-  text-align: left;
-}
-</style>

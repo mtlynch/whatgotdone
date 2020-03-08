@@ -14,7 +14,7 @@
 <script>
 import EntryFeed from '@/components/EntryFeed.vue';
 
-import {getRecent, mergeEntryArrays} from '@/controllers/Recent.js';
+import {getRecent} from '@/controllers/Recent.js';
 
 export default {
   name: 'Recent',
@@ -34,19 +34,8 @@ export default {
       return this.$store.state.recentEntries;
     },
     writeEntriesToStore(newEntries) {
-      this.$store.commit(
-        'setRecent',
-        mergeEntryArrays(this.$store.state.recentEntries, newEntries)
-      );
+      this.$store.commit('setRecent', newEntries);
     },
-  },
-  created() {
-    getRecent(/*start=*/ 0).then(recentEntries => {
-      this.$store.commit(
-        'setRecent',
-        mergeEntryArrays(this.recentEntries, recentEntries)
-      );
-    });
   },
 };
 </script>
