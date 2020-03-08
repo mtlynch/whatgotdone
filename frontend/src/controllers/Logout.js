@@ -17,6 +17,7 @@ export function logout() {
       .post(url, {}, {headers: {'X-CSRF-Token': getCsrfToken()}})
       .then(() => {
         logoutUserKit();
+        resolve();
       })
       .catch(error => {
         reject(error);
