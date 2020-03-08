@@ -293,17 +293,17 @@ it("follows a user", () => {
   cy.get(".journal").should("not.exist");
 
   cy.visit("/leader_lenny");
-  cy.get("follow-btn").click();
-  cy.get("unfollow-btn").should("exist");
-  cy.get("follow-btn").should("not.exist");
+  cy.get(".follow-btn").click();
+  cy.get(".unfollow-btn").should("exist");
+  cy.get(".follow-btn").should("not.exist");
 
   cy.visit("/feed");
   cy.get(".journal").should("exist");
 
   cy.visit("/leader_lenny");
-  cy.get("unfollow-btn").click();
-  cy.get("follow-btn").should("exist");
-  cy.get("unfollow-btn").should("not.exist");
+  cy.get(".unfollow-btn").click();
+  cy.get(".follow-btn").should("exist");
+  cy.get(".unfollow-btn").should("not.exist");
 });
 
 it("gets the sitemap", () => {
