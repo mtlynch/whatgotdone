@@ -1,7 +1,7 @@
 <template>
   <div>
     <PartialJournal
-      v-bind:key="entry.key"
+      v-bind:key="entry.permalink"
       v-bind:entry="entry"
       v-for="entry in entries"
     />

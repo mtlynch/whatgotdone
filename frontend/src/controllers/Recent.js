@@ -40,16 +40,16 @@ export function getRecentFollowing(start) {
   });
 }
 
-// Merges two arrays of entries so that there are no duplicate keys.
+// Merges two arrays of entries so that there are no duplicate entries.
 export function mergeEntryArrays(a, b) {
   let merged = Array.from(a);
   let keySet = new Set();
   a.forEach(entry => {
-    keySet.add(entry.key);
+    keySet.add(entry.permalink);
   });
 
   b.forEach(newEntry => {
-    if (!keySet.has(newEntry.key)) {
+    if (!keySet.has(newEntry.permalink)) {
       merged.push(newEntry);
     }
   });
@@ -60,7 +60,7 @@ export function mergeEntryArrays(a, b) {
 function processEntry(entry) {
   const formattedDate = new Date(entry.date).toISOString().slice(0, 10);
   return {
-    key: `/${entry.author}/${formattedDate}`,
+    permalink: `/${entry.author}/${formattedDate}`,
     author: entry.author,
     date: new Date(entry.date),
     markdown: entry.markdown,
