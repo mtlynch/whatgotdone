@@ -1,8 +1,8 @@
-Cypress.Commands.add("login", (username, password, options = {}) => {
+Cypress.Commands.add("login", (username, options = {}) => {
   cy.visit("/login");
 
   cy.get("#userkit_username").type(username);
-  cy.get("#userkit_password").type(password);
+  cy.get("#userkit_password").type("password");
   cy.get("form").submit();
 });
 
@@ -62,7 +62,7 @@ it("logs in and posts an update", () => {
   cy.server();
   cy.route("/api/draft/*").as("getDraft");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -91,7 +91,7 @@ it("logs in and backdates an update from a previous week", () => {
   cy.server();
   cy.route("/api/draft/*").as("getDraft");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   // Wait for page to pull down any previous entry.
   cy.wait("@getDraft");
@@ -140,7 +140,7 @@ it("logs in and saves a draft", () => {
   cy.route("GET", "/api/draft/*").as("getDraft");
   cy.route("POST", "/api/draft/*").as("postDraft");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -167,7 +167,7 @@ it("logs in and saves a draft", () => {
 });
 
 it("logs in and views profile", () => {
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.get(".account-dropdown").click();
   cy.get(".profile-link a").click();
@@ -176,7 +176,7 @@ it("logs in and views profile", () => {
 });
 
 it("logs in and signs out", () => {
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -197,7 +197,7 @@ it("logs in updates profile", () => {
   cy.server();
   cy.route("/api/user/staging_jimmy").as("getUserProfile");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -238,7 +238,7 @@ it("bare route should redirect authenticated user to their edit entry page", () 
   cy.get(".navbar .navbar-brand").click();
   cy.location("pathname").should("eq", "/");
 
-  cy.login("staging_jimmy", "password");
+  cy.login("staging_jimmy");
   cy.location("pathname").should("include", "/entry/edit");
   cy.wait("@getUsername");
 
@@ -269,7 +269,7 @@ it("follows a user", () => {
   cy.route("POST", "/api/logout").as("logout");
 
   // Log in as a leader user and create an entry.
-  cy.login("leader_lenny", "password");
+  cy.login("leader_lenny");
   cy.location("pathname").should("include", "/entry/edit");
   cy.wait("@getDraft");
 
@@ -283,7 +283,7 @@ it("follows a user", () => {
   cy.wait("@logout");
 
   // Log in as a follow user to follow.
-  cy.login("follower_frank", "password");
+  cy.login("follower_frank");
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/feed");
