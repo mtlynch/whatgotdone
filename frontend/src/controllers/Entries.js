@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import getCsrfToken from '@/controllers/CsrfToken.js';
+
 export function getEntriesFromUser(username) {
   return new Promise(function(resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${username}`;
@@ -19,6 +21,26 @@ export function getEntriesFromUser(username) {
         // Sort newest to oldest.
         entries.sort((a, b) => b.date - a.date);
         resolve(entries);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+}
+
+export function saveEntry(entryDate, entryContent) {
+  return new Promise(function(resolve, reject) {
+    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${entryDate}`;
+    axios
+      .post(
+        url,
+        {
+          entryContent: entryContent,
+        },
+        {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
+      )
+      .then(result => {
+        resolve(result.data);
       })
       .catch(error => {
         reject(error);

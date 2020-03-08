@@ -40,9 +40,12 @@
 import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import _ from 'lodash';
-import JournalPreview from '@/components/JournalPreview.vue';
+
 import getCsrfToken from '@/controllers/CsrfToken.js';
+import {saveEntry} from '@/controllers/Entries.js';
 import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
+
+import JournalPreview from '@/components/JournalPreview.vue';
 
 Vue.use(VueTextareaAutosize);
 
@@ -106,20 +109,9 @@ export default {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${this.date}`;
-      this.$http
-        .post(
-          url,
-          {
-            entryContent: this.entryContent,
-          },
-          {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
-        )
-        .then(result => {
-          if (result.data.ok) {
-            this.$router.push(result.data.path);
-          }
-        });
+      saveEntry(this.date, this.entryContent).then(result => {
+        this.$router.push(result.path);
+      });
     },
   },
   created() {
