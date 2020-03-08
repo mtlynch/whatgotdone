@@ -52,9 +52,9 @@ func contentSecurityPolicy() string {
 	return strings.Join(policyParts, "; ")
 }
 
-func (s defaultServer) enableCsp(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func enableCsp(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Security-Policy", contentSecurityPolicy())
-		h(w, r)
-	}
+		next.ServeHTTP(w, r)
+	})
 }
