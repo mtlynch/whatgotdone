@@ -42,7 +42,7 @@ export default {
         }
       },
       () => {
-        updateLoginState(/*attempts=*/ 5, () => {
+        updateLoginState(/*attempts=*/ 5).then(() => {
           this.goBackOrGoHome();
         });
       }
