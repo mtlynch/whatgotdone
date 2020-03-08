@@ -9,12 +9,16 @@ describe('mutations', () => {
     expect(state.username).toBe('testUser123');
   });
 
-  test('clearLoginState clears the username', () => {
+  test('clearLoginState clears the local user state variables', () => {
     const state = {
       username: 'testUser123',
+      following: ['alice', 'bob', 'charlie'],
+      recentFollowingEntries: [{dummyEntry: true}, {dummyEntry: true}],
     };
     mutations.clearLoginState(state);
     expect(state.username).toBe(null);
+    expect(state.following).toBe([]);
+    expect(state.recentFollowingEntries).toBe([]);
   });
 
   test('setRecent adds recent entries', () => {
