@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     loadProfile: function() {
-      getUserMetadata(this.username).then(metadata => {
+      getUserMetadata(this.loggedInUsername).then(metadata => {
         this.aboutMarkdown = metadata.aboutMarkdown;
         this.twitterHandle = metadata.twitterHandle;
         this.emailAddress = metadata.emailAddress;

@@ -17,7 +17,7 @@ export function getUserSelfMetadata() {
 export function getUserMetadata(username) {
   return new Promise(function(resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/${username}`;
-    this.$http
+    axios
       .get(url)
       .then(result => {
         resolve(result.data);
