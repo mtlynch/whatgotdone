@@ -70,7 +70,7 @@
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
 
-import getCsrfToken from '@/controllers/CsrfToken.js';
+import {follow, unfollow} from '@/controllers/Follow.js';
 
 import PartialJournal from '../components/PartialJournal.vue';
 
@@ -166,39 +166,22 @@ export default {
       });
     },
     onFollow: function() {
-      this.$http
-        .put(
-          `${process.env.VUE_APP_BACKEND_URL}/api/follow/${this.username}`,
-          {},
-          {
-            withCredentials: true,
-            headers: {'X-CSRF-Token': getCsrfToken()},
-          }
-        )
-        .then(() => {
-          let following = this.$store.state.following;
-          following.push(this.username);
-          this.$store.commit('setFollowing', following);
-        });
+      follow().then(() => {
+        let following = this.$store.state.following;
+        following.push(this.username);
+        this.$store.commit('setFollowing', following);
+      });
     },
     onUnfollow: function() {
-      this.$http
-        .delete(
-          `${process.env.VUE_APP_BACKEND_URL}/api/follow/${this.username}`,
-          {
-            withCredentials: true,
-            headers: {'X-CSRF-Token': getCsrfToken()},
-          }
-        )
-        .then(() => {
-          let following = this.$store.state.following;
-          const index = this.following.indexOf(this.username);
-          if (index < 0) {
-            return;
-          }
-          following.splice(index, 1);
-          this.$store.commit('setFollowing', following);
-        });
+      unfollow().then(() => {
+        let following = this.$store.state.following;
+        const index = this.following.indexOf(this.username);
+        if (index < 0) {
+          return;
+        }
+        following.splice(index, 1);
+        this.$store.commit('setFollowing', following);
+      });
     },
   },
   created() {
