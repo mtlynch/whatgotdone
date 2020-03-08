@@ -2,25 +2,24 @@
   <div>
     <h1><Username :username="username" />'s updates for {{ project }}</h1>
 
-    <template v-if="entriesLoaded && projectBodies.length > 0">
+    <template v-if="entriesLoaded && entries.length > 0">
       <ProjectEntry
         class="project-entry"
-        v-bind:entry="item"
-        v-for="item in projectBodies"
-        :key="item.key"
+        v-bind:entry="entry"
+        v-bind:key="entry.key"
+        v-for="entry in entries"
       />
     </template>
 
-    <p
-      v-if="entriesLoaded && projectBodies.length === 0"
-      class="no-entries-message"
-    >
+    <p v-if="entriesLoaded && entries.length === 0" class="no-entries-message">
       This user has not submitted any recent updates.
     </p>
   </div>
 </template>
 
 <script>
+import {getEntriesFromUser} from '@/controllers/Entries.js';
+
 import Username from '@/components/Username.vue';
 import ProjectEntry from '@/components/ProjectEntry.vue';
 
@@ -32,7 +31,7 @@ export default {
   },
   data() {
     return {
-      projectBodies: [],
+      entries: [],
       entriesLoaded: false,
     };
   },
@@ -46,37 +45,19 @@ export default {
   },
   methods: {
     clear: function() {
-      this.projectBodies = [];
+      this.entries = [];
       this.entriesLoaded = false;
     },
-    loadProjectBodies: function() {
-      this.projectBodies = [];
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${this.username}/project/${this.project}`;
-      this.$http.get(url).then(result => {
-        for (const entry of result.data) {
-          this.projectBodies.push({
-            key: `${entry.date}`,
-            date: new Date(entry.date),
-            markdown: entry.markdown,
-            sourceUrl: `/${this.username}/${entry.date}`,
-          });
-        }
-        // Sort newest to oldest.
-        this.projectBodies.sort((a, b) => b.date - a.date);
+    loadEntries: function() {
+      this.entries = [];
+      getEntriesFromUser(this.username, this.project).then(entries => {
+        this.entries = entries;
         this.entriesLoaded = true;
       });
     },
   },
   created() {
-    this.loadProjectBodies();
-  },
-  watch: {
-    $route(to, from) {
-      if (to.params.username != from.params.username) {
-        this.clear();
-        this.loadprojectBodies();
-      }
-    },
+    this.loadEntries();
   },
 };
 </script>

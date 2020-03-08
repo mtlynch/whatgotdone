@@ -2,9 +2,12 @@ import axios from 'axios';
 
 import getCsrfToken from '@/controllers/CsrfToken.js';
 
-export function getEntriesFromUser(username) {
+export function getEntriesFromUser(username, project = null) {
   return new Promise(function(resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${username}`;
+    let url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${username}`;
+    if (project) {
+      url += `/project/${project}`;
+    }
     axios
       .get(url)
       .then(result => {

@@ -3,7 +3,7 @@
     <p class="date">
       For the week ending
       <strong>
-        <router-link :to="entry.sourceUrl">{{
+        <router-link :to="entry.permalink">{{
           entry.date | moment('utc', 'dddd, ll')
         }}</router-link></strong
       >
