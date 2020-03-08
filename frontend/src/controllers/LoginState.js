@@ -1,5 +1,6 @@
-import axios from 'axios';
 import store from '@/store.js';
+
+import {getUserSelfMetadata} from '@/controllers/User.js';
 import {logoutUserKit} from '@/controllers/UserKit.js';
 
 function clearCachedAuthInformation() {
@@ -11,11 +12,9 @@ export default function updateLoginState(attempts, callback) {
   if (attempts <= 0) {
     return;
   }
-  const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
-  axios
-    .get(url, {withCredentials: true})
-    .then(result => {
-      store.commit('setUsername', result.data.username);
+  getUserSelfMetadata()
+    .then(metadata => {
+      store.commit('setUsername', metadata.username);
       if (typeof callback === 'function') {
         callback();
       }
