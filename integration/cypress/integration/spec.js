@@ -269,7 +269,7 @@ it("follows a user", () => {
   cy.route("POST", "/api/logout").as("logout");
 
   // Log in as a leader user and create an entry.
-  cy.login("leader_lenny", "password");
+  cy.login("leader_lenny");
   cy.location("pathname").should("include", "/entry/edit");
   cy.wait("@getDraft");
 
@@ -283,7 +283,7 @@ it("follows a user", () => {
   cy.wait("@logout");
 
   // Log in as a follow user to follow.
-  cy.login("follower_frank", "password");
+  cy.login("follower_frank");
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/feed");
