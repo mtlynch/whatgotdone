@@ -24,7 +24,8 @@
 
 <script>
 import Username from '@/components/Username.vue';
-import getCsrfToken from '@/controllers/CsrfToken.js';
+
+import {getReactions, setReaction} from '@/controllers/Reactions.js';
 
 export default {
   name: 'Reactions',
@@ -53,11 +54,9 @@ export default {
       }
       const reactions = [];
       let newSelectedReaction = '';
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.entryAuthor}/${this.entryDate}`;
-      this.$http
-        .get(url)
-        .then(result => {
-          for (const reaction of result.data) {
+      getReactions(this.entryAuthor, this.entryDate)
+        .then(fetchedReactions => {
+          for (const reaction of fetchedReactions) {
             if (reaction.username == this.loggedInUsername) {
               if (this.selectedReaction == '') {
                 newSelectedReaction = reaction.symbol;
@@ -108,14 +107,7 @@ export default {
       } else {
         this.selectedReaction = reactionSymbol;
       }
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${this.entryAuthor}/${this.entryDate}`;
-      this.$http.post(
-        url,
-        {
-          reactionSymbol: this.selectedReaction,
-        },
-        {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
-      );
+      setReaction(this.entryAuthor, this.entryDate, this.selectedReaction);
       this.updateReactions();
     },
     updateReactions: function() {
