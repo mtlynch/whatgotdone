@@ -8,12 +8,6 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
 
-func followOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Methods", "PUT, DELETE")
-	}
-}
-
 func (s defaultServer) followPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		follower, err := s.loggedInUser(r)

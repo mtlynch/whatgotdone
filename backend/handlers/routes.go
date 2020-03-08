@@ -21,7 +21,7 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/entries/{username}/project/{project}", s.projectGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/entry/{date}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/entry/{date}", s.entryPost()).Methods(http.MethodPost)
-	s.router.HandleFunc("/api/follow/{username}", followOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/follow/{username}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/follow/{username}", s.followPut()).Methods(http.MethodPut)
 	s.router.HandleFunc("/api/follow/{username}", s.followDelete()).Methods(http.MethodDelete)
 	s.router.HandleFunc("/api/draft/{date}", allowOptions()).Methods(http.MethodOptions)

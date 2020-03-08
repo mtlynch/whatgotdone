@@ -21,6 +21,7 @@ func (s defaultServer) enableCors(h http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Origin", origin)
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Csrf-Token")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 		h.ServeHTTP(w, r)
 	})
 }
