@@ -83,6 +83,7 @@ import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
 
 import {follow, unfollow} from '@/controllers/Follow.js';
+import {getUserMetadata} from '@/controllers/User.js';
 
 import PartialJournal from '../components/PartialJournal.vue';
 
@@ -143,21 +144,12 @@ export default {
       this.entriesLoaded = false;
     },
     loadProfile: function() {
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/${this.username}`;
-      this.$http
-        .get(url)
-        .then(result => {
-          this.aboutMarkdown = result.data.aboutMarkdown;
-          this.twitterHandle = result.data.twitterHandle;
-          this.emailAddress = result.data.emailAddress;
-          this.profileLoaded = true;
-        })
-        .catch(error => {
-          if (error.response && error.response.status == 404) {
-            // A 404 for a user profile is equivalent to retrieving an empty profile.
-            this.profileLoaded = true;
-          }
-        });
+      getUserMetadata(this.username).then(metadata => {
+        this.aboutMarkdown = metadata.aboutMarkdown;
+        this.twitterHandle = metadata.twitterHandle;
+        this.emailAddress = metadata.emailAddress;
+        this.profileLoaded = true;
+      });
     },
     loadRecentEntries: function() {
       this.recentEntries = [];
