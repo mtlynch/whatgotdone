@@ -11,7 +11,7 @@ export function getEntriesFromUser(username) {
         let entries = [];
         for (const entry of result.data) {
           entries.push({
-            key: entry.date,
+            key: `/${username}/${entry.date}`,
             author: username,
             date: new Date(entry.date),
             lastModified: new Date(entry.lastModified),
