@@ -83,6 +83,8 @@ export default {
       this.journalEntries = [];
       getEntriesFromUser(this.entryAuthor)
         .then(entries => {
+          // Sort oldest to newest.
+          entries.sort((a, b) => a.date - b.date);
           this.journalEntries = entries;
         })
         .catch(error => {
@@ -94,9 +96,11 @@ export default {
     pages: function() {
       let pages = [];
       for (const date of this.entryDates) {
+        const m = moment(date).utc();
+        const linkFormattedDate = m.format('YYYY-MM-DD');
         pages.push({
-          link: `/${this.entryAuthor}/${date}`,
-          text: new moment(date).format('MMM. D').replace('May.', 'May'),
+          link: `/${this.entryAuthor}/${linkFormattedDate}`,
+          text: m.format('MMM. D').replace('May.', 'May'),
         });
       }
       return pages;
@@ -104,14 +108,14 @@ export default {
     entryDates: function() {
       let dates = [];
       if (this.showEmptyEntries) {
-        let d = moment(this.journalEntries[0].key);
+        let d = moment(this.journalEntries[0].date.toISOString());
         while (d <= moment(thisFriday())) {
-          dates.push(d.format('YYYY-MM-DD'));
+          dates.push(d.toISOString());
           d = d.add(1, 'weeks');
         }
       } else {
         for (const entry of this.journalEntries) {
-          dates.push(entry.key);
+          dates.push(entry.date.toISOString());
         }
       }
       return dates;
@@ -142,7 +146,8 @@ export default {
         return null;
       }
       for (const entry of this.journalEntries) {
-        if (this.entryDate === entry.key) {
+        const entryLink = `/${this.entryAuthor}/${this.entryDate}`;
+        if (entryLink === entry.key) {
           return entry;
         }
       }
