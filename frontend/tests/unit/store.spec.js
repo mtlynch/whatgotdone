@@ -17,8 +17,8 @@ describe('mutations', () => {
     };
     mutations.clearLoginState(state);
     expect(state.username).toBe(null);
-    expect(state.following).toBe([]);
-    expect(state.recentFollowingEntries).toBe([]);
+    expect(state.following).toEqual([]);
+    expect(state.recentFollowingEntries).toEqual([]);
   });
 
   test('setRecent adds recent entries', () => {
