@@ -15,6 +15,7 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-nav-item to="/about">About</b-nav-item>
+        <b-nav-item v-if="isLoggedIn" to="/feed">Feed</b-nav-item>
         <b-nav-item to="/recent">Recent</b-nav-item>
         <b-nav-item href="https://github.com/mtlynch/whatgotdone"
           >Contribute</b-nav-item
@@ -24,7 +25,7 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown
-          v-if="username"
+          v-if="isLoggedIn"
           text="Account"
           class="account-dropdown"
           right
@@ -62,6 +63,12 @@ export default {
   computed: {
     username() {
       return this.$store.state.username;
+    },
+    isLoggedIn() {
+      if (this.username) {
+        return true;
+      }
+      return false;
     },
     isOnEntryEditPage() {
       return this.$route.path.startsWith('/entry/edit/');

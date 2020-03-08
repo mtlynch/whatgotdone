@@ -1,10 +1,11 @@
 import store from '@/store.js';
 
+import {getFollowing} from '@/controllers/Follow.js';
 import {getUserSelfMetadata} from '@/controllers/User.js';
 import {logoutUserKit} from '@/controllers/UserKit.js';
 
 function clearCachedAuthInformation() {
-  store.commit('clearUsername');
+  store.commit('clearLoginState');
   logoutUserKit();
 }
 
@@ -15,6 +16,10 @@ export default function updateLoginState(attempts, callback) {
   getUserSelfMetadata()
     .then(metadata => {
       store.commit('setUsername', metadata.username);
+      // TODO: Move this
+      getFollowing(metadata.username).then(following => {
+        store.commit('setFollowing', following);
+      });
       if (typeof callback === 'function') {
         callback();
       }

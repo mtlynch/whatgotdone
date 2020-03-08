@@ -15,11 +15,15 @@ func (s *defaultServer) routes() {
 	s.router.Use(s.enableCsrf)
 
 	// Handle routes that require backend logic.
+	s.router.HandleFunc("/api/entries/following", s.entriesFollowingGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/entries/{username}/project/{project}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/entries/{username}/project/{project}", s.projectGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/entry/{date}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/entry/{date}", s.entryPost()).Methods(http.MethodPost)
+	s.router.HandleFunc("/api/follow/{username}", allowOptions()).Methods(http.MethodOptions)
+	s.router.HandleFunc("/api/follow/{username}", s.followPut()).Methods(http.MethodPut)
+	s.router.HandleFunc("/api/follow/{username}", s.followDelete()).Methods(http.MethodDelete)
 	s.router.HandleFunc("/api/draft/{date}", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/draft/{date}", s.draftGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/draft/{date}", s.draftPost()).Methods(http.MethodPost)
@@ -31,6 +35,7 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user/me", s.userMeGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user/{username}", s.userGet()).Methods(http.MethodGet)
+	s.router.HandleFunc("/api/user/{username}/following", s.userFollowingGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/user", s.userPost()).Methods(http.MethodPost)
 	s.router.HandleFunc("/api/logout", allowOptions()).Methods(http.MethodOptions)

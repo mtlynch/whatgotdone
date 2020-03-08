@@ -37,13 +37,29 @@
       </ul>
     </template>
 
-    <b-button
-      v-if="canEdit"
-      to="/profile/edit"
-      variant="primary"
-      class="edit-btn float-right"
-      >Edit</b-button
-    >
+    <div class="float-right">
+      <b-button
+        class="edit-btn"
+        v-if="canEdit"
+        to="/profile/edit"
+        variant="primary"
+        >Edit</b-button
+      >
+      <b-button
+        class="follow-btn"
+        v-if="canFollow"
+        variant="primary"
+        v-on:click="onFollow"
+        >Follow</b-button
+      >
+      <b-button
+        class="unfollow-btn"
+        v-if="canUnfollow"
+        variant="primary"
+        v-on:click="onUnfollow"
+        >Unfollow</b-button
+      >
+    </div>
 
     <h2>Recent entries</h2>
 
@@ -65,7 +81,10 @@
 <script>
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
-import PartialJournal from '@/components/PartialJournal.vue';
+
+import {follow, unfollow} from '@/controllers/Follow.js';
+
+import PartialJournal from '../components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
 
@@ -94,6 +113,24 @@ export default {
     },
     canEdit: function() {
       return this.loggedInUsername && this.loggedInUsername === this.username;
+    },
+    isFollowing: function() {
+      if (!this.$store.state.following) {
+        return false;
+      }
+      return this.$store.state.following.includes(this.username);
+    },
+    isSelf: function() {
+      if (!this.loggedInUsername) {
+        return false;
+      }
+      return this.loggedInUsername == this.username;
+    },
+    canFollow: function() {
+      return this.loggedInUsername && !this.isFollowing && !this.isSelf;
+    },
+    canUnfollow: function() {
+      return this.loggedInUsername && this.isFollowing && !this.isSelf;
     },
   },
   methods: {
@@ -138,6 +175,20 @@ export default {
         // Sort newest to oldest.
         this.recentEntries.sort((a, b) => b.date - a.date);
         this.entriesLoaded = true;
+      });
+    },
+    onFollow: function() {
+      follow(this.username).then(() => {
+        let following = this.$store.state.following;
+        following.push(this.username);
+        this.$store.commit('setFollowing', following);
+      });
+    },
+    onUnfollow: function() {
+      unfollow(this.username).then(() => {
+        let following = new Set(this.$store.state.following);
+        following.delete(this.username);
+        this.$store.commit('setFollowing', Array.from(following));
       });
     },
   },

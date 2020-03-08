@@ -19,6 +19,27 @@ export function getRecent(start) {
   });
 }
 
+// Retrieve recent entries from users that the logged-in user is following.
+export function getRecentFollowing(start) {
+  return new Promise(function(resolve, reject) {
+    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/following?start=${start}&limit=${updateSize}`;
+    axios
+      .get(url, {withCredentials: true})
+      .then(result => {
+        if (!result.data.entries) {
+          resolve([]);
+          return;
+        }
+        // Transform each response data into entry object
+        const entries = result.data.entries.map(rawEntry => {
+          return processEntry(rawEntry);
+        });
+        resolve(entries);
+      })
+      .catch(err => reject(err));
+  });
+}
+
 // Merges two arrays of entries so that there are no duplicate keys.
 export function mergeEntryArrays(a, b) {
   let merged = Array.from(a);

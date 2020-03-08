@@ -50,7 +50,7 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 			status, http.StatusOK)
 	}
 
-	var response []recentEntry
+	var response []entryPublic
 	err = json.Unmarshal(w.Body.Bytes(), &response)
 	if err != nil {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
@@ -58,14 +58,14 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 
 	// For simplicity of the test, all users have username "bob," but in
 	// practice, these updates would come from different users.
-	expected := []recentEntry{
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
-		recentEntry{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
-		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
-		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
+	expected := []entryPublic{
+		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
+		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
+		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
+		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
+		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
+		entryPublic{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
+		entryPublic{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
@@ -106,7 +106,7 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 			status, http.StatusOK)
 	}
 
-	var response []recentEntry
+	var response []entryPublic
 	err = json.Unmarshal(w.Body.Bytes(), &response)
 	if err != nil {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
@@ -114,11 +114,11 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 
 	// For simplicity of the test, all users have username "bob," but in
 	// practice, these updates would come from different users.
-	expected := []recentEntry{
-		recentEntry{Author: "bob", Date: "2019-09-20", Markdown: "High fived a platypus when the apple hits the pie."},
-		recentEntry{Author: "bob", Date: "2019-09-20", Markdown: "Attended an Indie Hackers meetup"},
-		recentEntry{Author: "bob", Date: "2019-09-06", Markdown: "Ate an apple in a single bite of choclate"},
-		recentEntry{Author: "bob", Date: "2019-05-17", Markdown: "Made a hat out of donuts from the cloud in the sky"},
+	expected := []entryPublic{
+		entryPublic{Author: "bob", Date: "2019-09-20", Markdown: "High fived a platypus when the apple hits the pie."},
+		entryPublic{Author: "bob", Date: "2019-09-20", Markdown: "Attended an Indie Hackers meetup"},
+		entryPublic{Author: "bob", Date: "2019-09-06", Markdown: "Ate an apple in a single bite of choclate"},
+		entryPublic{Author: "bob", Date: "2019-05-17", Markdown: "Made a hat out of donuts from the cloud in the sky"},
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
@@ -152,17 +152,17 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 		start           string
 		limit           string
 		statusExpected  int
-		entriesExpected []recentEntry
+		entriesExpected []entryPublic
 	}{
 		{
 			"observes valid start and limit values",
 			"1",
 			"3",
 			http.StatusOK,
-			[]recentEntry{
-				recentEntry{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
-				recentEntry{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
-				recentEntry{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
+			[]entryPublic{
+				entryPublic{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
+				entryPublic{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
+				entryPublic{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
 			},
 		},
 		{
@@ -170,13 +170,13 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 			"0",
 			"500",
 			http.StatusOK,
-			[]recentEntry{
-				recentEntry{Author: "bob", Date: "2019-05-10", Markdown: "Read the news today... Oh boy!"},
-				recentEntry{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
-				recentEntry{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
-				recentEntry{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
-				recentEntry{Author: "bob", Date: "2019-04-12", Markdown: "Ate some crackers in a bathtub"},
-				recentEntry{Author: "bob", Date: "2019-04-05", Markdown: "Rode the bus and saw a movie about ghosts"},
+			[]entryPublic{
+				entryPublic{Author: "bob", Date: "2019-05-10", Markdown: "Read the news today... Oh boy!"},
+				entryPublic{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
+				entryPublic{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
+				entryPublic{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
+				entryPublic{Author: "bob", Date: "2019-04-12", Markdown: "Ate some crackers in a bathtub"},
+				entryPublic{Author: "bob", Date: "2019-04-05", Markdown: "Rode the bus and saw a movie about ghosts"},
 			},
 		},
 		{
@@ -184,42 +184,42 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 			"500",
 			"5",
 			http.StatusOK,
-			[]recentEntry{},
+			[]entryPublic{},
 		},
 		{
 			"rejects invalid start",
 			"invalid-start-value",
 			"3",
 			http.StatusBadRequest,
-			[]recentEntry{},
+			[]entryPublic{},
 		},
 		{
 			"rejects negative start",
 			"-5",
 			"3",
 			http.StatusBadRequest,
-			[]recentEntry{},
+			[]entryPublic{},
 		},
 		{
 			"rejects invalid limit value",
 			"2",
 			"invalid-limit-value",
 			http.StatusBadRequest,
-			[]recentEntry{},
+			[]entryPublic{},
 		},
 		{
 			"rejects negative limit",
 			"2",
 			"-10",
 			http.StatusBadRequest,
-			[]recentEntry{},
+			[]entryPublic{},
 		},
 		{
 			"rejects zero limit",
 			"2",
 			"0",
 			http.StatusBadRequest,
-			[]recentEntry{},
+			[]entryPublic{},
 		},
 	}
 	for _, tt := range tests {
@@ -239,7 +239,7 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 			continue
 		}
 
-		var response []recentEntry
+		var response []entryPublic
 		err = json.Unmarshal(w.Body.Bytes(), &response)
 		if err != nil {
 			t.Fatalf("Response is not valid JSON: %v", w.Body.String())

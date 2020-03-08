@@ -45,6 +45,18 @@ func (ds mockDatastore) InsertDraft(username string, j types.JournalEntry) error
 	return nil
 }
 
+func (ds mockDatastore) InsertFollow(leader, follower string) error {
+	return errors.New("not implemented")
+}
+
+func (ds mockDatastore) DeleteFollow(leader, follower string) error {
+	return errors.New("not implemented")
+}
+
+func (ds mockDatastore) Following(follower string) ([]string, error) {
+	return []string{}, errors.New("not implemented")
+}
+
 func (ds mockDatastore) Close() error {
 	return nil
 }
