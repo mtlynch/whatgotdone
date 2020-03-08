@@ -3,19 +3,23 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"sort"
 	"strconv"
 )
 
-type recentEntry struct {
+type entryPublic struct {
 	Author string `json:"author"`
 	Date   string `json:"date"`
-	// Skip JSON serialization for lastModified as clients don't need this field.
+	// Skip JSON serialization for lastModified as clients don't need this field,
+	// but we need it internally for sorting lists of entries.
 	lastModified string
 	Markdown     string `json:"markdown"`
 }
+
+type entriesPublic []entryPublic
 
 func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +41,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			return
 		}
 
-		entries := []recentEntry{}
+		entries := entriesPublic{}
 		for _, username := range users {
 			userEntries, err := s.datastore.GetEntries(username)
 			if err != nil {
@@ -51,7 +55,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 				if len(entry.Markdown) < minimumRelevantLength {
 					continue
 				}
-				entries = append(entries, recentEntry{
+				entries = append(entries, entryPublic{
 					Author:       username,
 					Date:         entry.Date,
 					lastModified: entry.LastModified,
@@ -60,15 +64,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			}
 		}
 
-		sort.Slice(entries, func(i, j int) bool {
-			if entries[i].Date < entries[j].Date {
-				return true
-			}
-			if entries[i].Date > entries[j].Date {
-				return false
-			}
-			return entries[i].lastModified < entries[j].lastModified
-		})
+		sort.Sort(entries)
 
 		// Reverse the order of entries.
 		for i := len(entries)/2 - 1; i >= 0; i-- {
@@ -84,6 +80,90 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			panic(err)
 		}
 	}
+}
+
+func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username, err := s.loggedInUser(r)
+		if err != nil {
+			http.Error(w, "You must log in to retrieve your personalized feed", http.StatusForbidden)
+			return
+		}
+		start, err := parseStart(r.URL.Query().Get("start"))
+		if err != nil {
+			http.Error(w, "Invalid start parameter", http.StatusBadRequest)
+			return
+		}
+		limit, err := parseLimit(r.URL.Query().Get("limit"))
+		if err != nil {
+			http.Error(w, "Invalid limit parameter", http.StatusBadRequest)
+			return
+		}
+
+		following, err := s.datastore.Following(username)
+		if err != nil {
+			log.Printf("failed to retrieve user's follow list %s: %v", username, err)
+			http.Error(w, "Failed to retrieve your personalized feed", http.StatusInternalServerError)
+			return
+		}
+
+		var entries entriesPublic
+		for _, followedUsername := range following {
+			userEntries, err := s.datastore.GetEntries(followedUsername)
+			if err != nil {
+				log.Printf("Failed to retrieve entries for user %s: %v", followedUsername, err)
+				http.Error(w, fmt.Sprintf("Failed to retrieve entries for %s", followedUsername), http.StatusInternalServerError)
+				return
+			}
+			for _, entry := range userEntries {
+				entries = append(entries, entryPublic{
+					Author:       followedUsername,
+					Date:         entry.Date,
+					lastModified: entry.LastModified,
+					Markdown:     entry.Markdown,
+				})
+			}
+		}
+
+		sort.Sort(entries)
+		// Reverse the order of entries.
+		for i := len(entries)/2 - 1; i >= 0; i-- {
+			opp := len(entries) - 1 - i
+			entries[i], entries[opp] = entries[opp], entries[i]
+		}
+
+		start = min(len(entries), start)
+		end := min(len(entries), start+limit)
+		entries = entries[start:end]
+
+		type response struct {
+			Entries []entryPublic `json:"entries"`
+		}
+		resp := response{
+			Entries: entries,
+		}
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			panic(err)
+		}
+	}
+}
+
+func (e entriesPublic) Len() int {
+	return len(e)
+}
+
+func (e entriesPublic) Swap(i, j int) {
+	e[i], e[j] = e[j], e[i]
+}
+
+func (e entriesPublic) Less(i, j int) bool {
+	if e[i].Date < e[j].Date {
+		return true
+	}
+	if e[i].Date > e[j].Date {
+		return false
+	}
+	return e[i].lastModified < e[j].lastModified
 }
 
 func min(a, b int) int {

@@ -1,18 +1,12 @@
 import store from '@/store.js';
 
+import {getFollowing} from '@/controllers/Follow.js';
 import {getUserSelfMetadata} from '@/controllers/User.js';
 import {logoutUserKit} from '@/controllers/UserKit.js';
 
 function clearCachedAuthInformation() {
-  store.commit('clearUsername');
+  store.commit('clearLoginState');
   logoutUserKit();
-}
-
-function updateFollowing(username) {
-  const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/${username}/following`;
-  axios.get(url).then(result => {
-    store.commit('setFollowing', result.data.following);
-  });
 }
 
 export default function updateLoginState(attempts, callback) {
@@ -22,7 +16,10 @@ export default function updateLoginState(attempts, callback) {
   getUserSelfMetadata()
     .then(metadata => {
       store.commit('setUsername', metadata.username);
-      updateFollowing(metadata.username);
+      // TODO: Move this
+      getFollowing(metadata.username).then(following => {
+        store.commit('setFollowing', following);
+      });
       if (typeof callback === 'function') {
         callback();
       }

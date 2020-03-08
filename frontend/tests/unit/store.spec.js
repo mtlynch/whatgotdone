@@ -9,11 +9,11 @@ describe('mutations', () => {
     expect(state.username).toBe('testUser123');
   });
 
-  test('clearUsername clears the username', () => {
+  test('clearLoginState clears the username', () => {
     const state = {
       username: 'testUser123',
     };
-    mutations.clearUsername(state);
+    mutations.clearLoginState(state);
     expect(state.username).toBe(null);
   });
 

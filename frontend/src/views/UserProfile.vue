@@ -108,11 +108,17 @@ export default {
       }
       return this.$store.state.following.includes(this.username);
     },
+    isSelf: function() {
+      if (!this.loggedInUsername) {
+        return false;
+      }
+      return this.loggedInUsername == this.username;
+    },
     canFollow: function() {
-      return this.loggedInUsername && !this.isFollowing;
+      return this.loggedInUsername && !this.isFollowing && !this.isSelf;
     },
     canUnfollow: function() {
-      return this.loggedInUsername && this.isFollowing;
+      return this.loggedInUsername && this.isFollowing && !this.isSelf;
     },
   },
   methods: {

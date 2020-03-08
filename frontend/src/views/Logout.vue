@@ -11,8 +11,7 @@ import {logoutUserKit} from '@/controllers/UserKit.js';
 export default {
   name: 'Logout',
   created() {
-    this.$store.commit('clearUsername');
-    this.$store.commit('clearFollowing');
+    this.$store.commit('clearLoginState');
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/logout`;
     this.$http
       .post(url, {}, {headers: {'X-CSRF-Token': getCsrfToken()}})
