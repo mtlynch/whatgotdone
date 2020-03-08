@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import axios from 'axios';
 import VueGtag from 'vue-gtag';
-import VueAxios from 'vue-axios';
 import VueMoment from 'vue-moment';
 import BootstrapVue from 'bootstrap-vue';
 import {config, library} from '@fortawesome/fontawesome-svg-core';
@@ -16,7 +14,6 @@ import 'bootswatch/dist/superhero/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 Vue.config.productionTip = false;
-Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
 
 // Need to prevent FontAwesome from auto-adding CSS otherwise it violates

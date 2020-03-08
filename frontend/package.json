@@ -22,7 +22,6 @@
     "core-js": "^2.6.11",
     "lodash": "^4.17.15",
     "vue": "^2.6.11",
-    "vue-axios": "^2.1.5",
     "vue-gtag": "^1.1.2",
     "vue-markdown": "^2.2.4",
     "vue-moment": "^4.0.0",
