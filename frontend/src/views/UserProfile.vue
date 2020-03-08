@@ -64,9 +64,9 @@
     <h2>Recent entries</h2>
 
     <PartialJournal
-      v-bind:key="item.key"
-      v-bind:entry="item"
-      v-for="item in recentEntries"
+      v-bind:key="entry.permalink"
+      v-bind:entry="entry"
+      v-for="entry in recentEntries"
     />
 
     <p

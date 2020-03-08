@@ -24,13 +24,13 @@ describe('mutations', () => {
   test('setRecent adds recent entries', () => {
     const entries = [
       {
-        key: '/testUser321/2019-09-27',
+        permalink: '/testUser321/2019-09-27',
         author: 'testUser321',
         date: new Date(2019, 9, 27),
         markdown: 'I went to the zoo today',
       },
       {
-        key: '/testUser456/2019-09-27',
+        permalink: '/testUser456/2019-09-27',
         author: 'testUser456',
         date: new Date(2019, 9, 27),
         markdown: 'I ate an ice-cream sandwich yesterday',

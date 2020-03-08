@@ -14,7 +14,7 @@
         ></vue-markdown>
       </div>
       <div class="text-center">
-        <b-button variant="primary" :to="entry.key">More</b-button>
+        <b-button variant="primary" :to="entry.permalink">More</b-button>
       </div>
     </div>
   </div>

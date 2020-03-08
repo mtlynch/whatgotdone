@@ -146,8 +146,7 @@ export default {
         return null;
       }
       for (const entry of this.journalEntries) {
-        const entryLink = `/${this.entryAuthor}/${this.entryDate}`;
-        if (entryLink === entry.key) {
+        if (this.$route.path === entry.permalink) {
           return entry;
         }
       }
