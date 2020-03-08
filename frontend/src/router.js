@@ -11,6 +11,7 @@ import EditEntry from '@/views/EditEntry.vue';
 import ViewEntry from '@/views/ViewEntry.vue';
 import ViewProject from '@/views/ViewProject.vue';
 import EditUserProfile from '@/views/EditUserProfile.vue';
+import UserPreferences from '@/views/UserPreferences.vue';
 import UserProfile from '@/views/UserProfile.vue';
 import MissingPage from '@/views/404.vue';
 
@@ -23,6 +24,7 @@ const routes = [
   {path: '/entry/edit/:date', component: EditEntry},
   {path: '/login', component: Login},
   {path: '/logout', component: Logout},
+  {path: '/preferences', component: UserPreferences},
   {path: '/privacy-policy', component: PrivacyPolicy},
   {
     path: '/:username',

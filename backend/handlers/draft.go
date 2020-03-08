@@ -24,14 +24,27 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		prefs, _ := s.datastore.GetPreferences(username)
+		log.Printf("prefs = %+v", prefs)
+
 		j, err := s.datastore.GetDraft(username, date)
+		log.Printf("check for draft = %v -> %+v", err, j)
 		if _, ok := err.(datastore.DraftNotFoundError); ok {
-			w.WriteHeader(http.StatusNotFound)
-			return
+			log.Printf("no draft, checking for preferences")
+			if err != nil {
+				j.Markdown = prefs.EntryTemplate
+			} else {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
 		} else if err != nil {
 			log.Printf("Failed to retrieve draft entry: %s", err)
 			http.Error(w, "Failed to retrieve draft entry", http.StatusInternalServerError)
 			return
+		}
+
+		if j.Markdown == "" {
+			j.Markdown = prefs.EntryTemplate
 		}
 
 		if err := json.NewEncoder(w).Encode(j); err != nil {
