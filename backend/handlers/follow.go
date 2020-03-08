@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -53,11 +54,9 @@ func (s defaultServer) followPut() http.HandlerFunc {
 		type response struct {
 			Ok bool `json:"ok"`
 		}
-
 		resp := response{
 			Ok: true,
 		}
-
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
 			panic(err)
 		}
@@ -89,11 +88,9 @@ func (s defaultServer) followDelete() http.HandlerFunc {
 		type response struct {
 			Ok bool `json:"ok"`
 		}
-
 		resp := response{
 			Ok: true,
 		}
-
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
 			panic(err)
 		}
@@ -112,7 +109,7 @@ func (s defaultServer) userFollowingGet() http.HandlerFunc {
 		leaders, err := s.datastore.Following(follower)
 		if err != nil {
 			log.Printf("failed to find following list for %s: %v", follower, err)
-			http.Error(w, "Invalid profile update request", http.StatusBadRequest)
+			http.Error(w, fmt.Sprintf("Failed to retrieve users %s is following", follower), http.StatusInternalServerError)
 			return
 		}
 

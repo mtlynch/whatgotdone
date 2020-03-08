@@ -35,7 +35,6 @@ func (s *defaultServer) routes() {
 	s.router.HandleFunc("/api/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user/me", s.userMeGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user/{username}", s.userGet()).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/user/{username}/following", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/user/{username}/following", s.userFollowingGet()).Methods(http.MethodGet)
 	s.router.HandleFunc("/api/user", allowOptions()).Methods(http.MethodOptions)
 	s.router.HandleFunc("/api/user", s.userPost()).Methods(http.MethodPost)
