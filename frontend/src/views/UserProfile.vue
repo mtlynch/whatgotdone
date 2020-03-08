@@ -38,13 +38,25 @@
     </template>
 
     <div class="float-right">
-      <b-button v-if="canEdit" to="/profile/edit" variant="primary"
+      <b-button
+        class="edit-btn"
+        v-if="canEdit"
+        to="/profile/edit"
+        variant="primary"
         >Edit</b-button
       >
-      <b-button v-if="canFollow" variant="primary" v-on:click="onFollow"
+      <b-button
+        class="follow-btn"
+        v-if="canFollow"
+        variant="primary"
+        v-on:click="onFollow"
         >Follow</b-button
       >
-      <b-button v-if="canUnfollow" variant="primary" v-on:click="onUnfollow"
+      <b-button
+        class="unfollow-btn"
+        v-if="canUnfollow"
+        variant="primary"
+        v-on:click="onUnfollow"
         >Unfollow</b-button
       >
     </div>
@@ -166,21 +178,17 @@ export default {
       });
     },
     onFollow: function() {
-      follow().then(() => {
+      follow(this.username).then(() => {
         let following = this.$store.state.following;
         following.push(this.username);
         this.$store.commit('setFollowing', following);
       });
     },
     onUnfollow: function() {
-      unfollow().then(() => {
-        let following = this.$store.state.following;
-        const index = this.following.indexOf(this.username);
-        if (index < 0) {
-          return;
-        }
-        following.splice(index, 1);
-        this.$store.commit('setFollowing', following);
+      unfollow(this.username).then(() => {
+        let following = new Set(this.$store.state.following);
+        following.delete(this.username);
+        this.$store.commit('setFollowing', Array.from(following));
       });
     },
   },

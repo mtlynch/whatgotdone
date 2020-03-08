@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {getCsrfToken} from '@/controllers/CsrfToken.js';
+import getCsrfToken from '@/controllers/CsrfToken.js';
 
 export function getFollowing(username) {
   return new Promise(function(resolve, reject) {
@@ -37,14 +37,10 @@ export function unfollow(username) {
   return new Promise(function(resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/follow/${username}`;
     axios
-      .delete(
-        url,
-        {},
-        {
-          withCredentials: true,
-          headers: {'X-CSRF-Token': getCsrfToken()},
-        }
-      )
+      .delete(url, {
+        withCredentials: true,
+        headers: {'X-CSRF-Token': getCsrfToken()},
+      })
       .then(() => {
         resolve();
       })
