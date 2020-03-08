@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import {getPageViews} from '@/controllers/PageViews.js';
+
 export default {
   name: 'ViewCount',
   data() {
@@ -18,16 +20,10 @@ export default {
       if (!this.path) {
         return;
       }
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/pageViews`;
-      this.$http
-        .get(url, {
-          params: {
-            path: this.path,
-          },
-        })
-        .then(result => {
-          if (result.data) {
-            this.viewCount = result.data.views;
+      getPageViews(this.path)
+        .then(viewCount => {
+          if (viewCount) {
+            this.viewCount = viewCount;
           }
         })
         .catch(() => {
