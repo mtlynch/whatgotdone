@@ -41,7 +41,7 @@ import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import _ from 'lodash';
 
-import getCsrfToken from '@/controllers/CsrfToken.js';
+import {getDraft, saveDraft} from '@/controllers/Drafts.js';
 import {saveEntry} from '@/controllers/Entries.js';
 import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
 
@@ -72,34 +72,16 @@ export default {
       if (this.date.length == 0 || !this.username) {
         return;
       }
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${this.date}`;
-      this.$http
-        .get(url, {withCredentials: true})
-        .then(result => {
-          this.entryContent = result.data.markdown;
-        })
-        .catch(error => {
-          if (error.response.status == 404) {
-            this.entryContent = '';
-          }
-        });
+      getDraft(this.date).then(content => {
+        this.entryContent = content;
+      });
     },
     handleSaveDraft() {
       this.saveLabel = 'Saving';
-      const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${this.date}`;
-      this.$http
-        .post(
-          url,
-          {
-            entryContent: this.entryContent,
-          },
-          {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
-        )
-        .then(result => {
-          if (result.data.ok) {
-            this.changesSaved = true;
-            this.saveLabel = 'Changes Saved';
-          }
+      saveDraft(this.date, this.entryContent)
+        .then(() => {
+          this.changesSaved = true;
+          this.saveLabel = 'Changes Saved';
         })
         .catch(() => {
           this.changesSaved = false;
