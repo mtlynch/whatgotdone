@@ -7,7 +7,9 @@ const url = `${process.env.VUE_APP_BACKEND_URL}/api/preferences`;
 export function getPreferences() {
   return new Promise(function(resolve, reject) {
     axios
-      .get(url)
+      .get(url, {
+        withCredentials: true,
+      })
       .then(result => {
         resolve(result.data);
       })

@@ -6,15 +6,19 @@
         class="form-control"
         v-model="preferences.entryTemplate"
         name="entry-template"
+        @input="onEntryTemplateChanged"
         :min-height="250"
         :max-height="650"
         placeholder="Enter boilerplate to structure each of your weekly updates"
       ></textarea-autosize>
       <div class="d-flex justify-content-end">
-        <b-button :to="'/' + username" class="btn btn-cancel">
-          Cancel
-        </b-button>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="preferencesSaved"
+        >
+          Save
+        </button>
       </div>
     </b-form>
   </div>
@@ -35,6 +39,8 @@ export default {
       preferences: {
         entryTemplate: '',
       },
+      savingPreferences: false,
+      preferencesSaved: true,
     };
   },
   computed: {
@@ -44,16 +50,22 @@ export default {
   },
   methods: {
     loadPreferences() {
-      getPreferences.then(preferences => {
+      getPreferences().then(preferences => {
         this.preferences = preferences;
       });
     },
+    onEntryTemplateChanged() {
+      this.preferencesSaved = false;
+    },
     handleSubmit() {
-      console.log('saving preferences');
-      console.log(this.preferences);
-      savePreferences(this.preferences).then(() => {
-        this.$router.push(`/${this.username}`);
-      });
+      this.savingPreferences = true;
+      savePreferences(this.preferences)
+        .then(() => {
+          this.preferencesSaved = true;
+        })
+        .finally(() => {
+          this.savingPreferences = false;
+        });
     },
   },
   created() {
