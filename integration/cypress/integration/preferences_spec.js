@@ -11,5 +11,5 @@ it("/preferences allows authenticated users to stay on page", () => {
 
   cy.visit("/preferences");
 
-  cy.location("pathname").should("eq", "/login");
+  cy.get("h1").should("contain", "Preferences");
 });
