@@ -33,6 +33,9 @@
           <b-dropdown-item :to="'/' + username" class="profile-link"
             >Profile</b-dropdown-item
           >
+          <b-dropdown-item to="/preferences" class="preferences-link"
+            >Preferences</b-dropdown-item
+          >
           <b-dropdown-item to="/logout" class="sign-out-link"
             >Sign Out</b-dropdown-item
           >

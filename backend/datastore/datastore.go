@@ -45,6 +45,10 @@ type Datastore interface {
 	DeleteFollow(leader, follower string) error
 	// Followers returns all the users the specified user is following.
 	Following(follower string) ([]string, error)
+	// GetPreferences retrieves the user's preferences for using the site.
+	GetPreferences(username string) (types.Preferences, error)
+	// SetPreferences saves the user's preferences for using the site.
+	SetPreferences(username string, prefs types.Preferences) error
 }
 
 // DraftNotFoundError occurs when no draft exists for a user with a given date.
@@ -84,4 +88,14 @@ type FollowAlreadyExistsError struct {
 
 func (f FollowAlreadyExistsError) Error() string {
 	return fmt.Sprintf("Cannot create a follow from %s -> %s because the follow already exists", f.Follower, f.Leader)
+}
+
+// PreferencesNotFoundError occurs when no profile exists for the given
+// username. The user might exist, but they have not set preferences.
+type PreferencesNotFoundError struct {
+	Username string
+}
+
+func (f PreferencesNotFoundError) Error() string {
+	return fmt.Sprintf("No user preferences found for username %s", f.Username)
 }

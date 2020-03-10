@@ -50,6 +50,7 @@ const (
 	draftsRootKey       = "journalDrafts"
 	perUserDraftsKey    = "drafts"
 	pageViewsRootKey    = "pageViews"
+	preferencesRootKey  = "preferences"
 	reactionsRootKey    = "reactions"
 	perUserReactionsKey = "perUserReactions"
 	secretsRootKey      = "secrets"
