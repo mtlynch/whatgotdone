@@ -19,8 +19,7 @@
             '# Project 1\n\n*Update 1\n*Update 2\n\n# Project 2\n\n* Update 1'
           "
         ></textarea-autosize>
-        ></b-form-group
-      >
+      </b-form-group>
 
       <div class="d-flex justify-content-end">
         <button
