@@ -106,6 +106,10 @@ export default {
     },
   },
   created() {
+    if (!this.$store.state.username) {
+      this.$router.replace('/login');
+      return;
+    }
     this.loadPreferences();
   },
 };
