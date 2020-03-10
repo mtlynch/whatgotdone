@@ -2,23 +2,44 @@
   <div class="preferences">
     <h1>Preferences</h1>
     <b-form @submit.prevent="handleSubmit">
-      <textarea-autosize
-        class="form-control"
-        v-model="preferences.entryTemplate"
-        name="entry-template"
-        @input="onEntryTemplateChanged"
-        :min-height="250"
-        :max-height="650"
-        placeholder="Enter boilerplate to structure each of your weekly updates"
-      ></textarea-autosize>
+      <h2>Entry template</h2>
+      <b-form-group
+        label="Create a template for your weekly What Got Done entries. Every new update you create will start with this text."
+        label-for="entry-template-input"
+      >
+        <textarea-autosize
+          class="form-control"
+          id="entry-template-input"
+          v-model="preferences.entryTemplate"
+          name="entry-template"
+          @input="onEntryTemplateChanged"
+          :min-height="250"
+          :max-height="650"
+          :placeholder="
+            '# Project 1\n\n*Update 1\n*Update 2\n\n# Project 2\n\n* Update 1'
+          "
+        ></textarea-autosize>
+        ></b-form-group
+      >
+
       <div class="d-flex justify-content-end">
         <button
           type="submit"
           class="btn btn-primary"
-          :disabled="preferencesSaved"
+          :disabled="!preferencesChanged"
         >
           Save
         </button>
+      </div>
+      <div class="d-flex justify-content-end">
+        <b-alert
+          variant="success"
+          class="mt-2"
+          dismissible
+          fade
+          :show="preferencesSaved"
+          >Preferences saved</b-alert
+        >
       </div>
     </b-form>
   </div>
@@ -39,8 +60,10 @@ export default {
       preferences: {
         entryTemplate: '',
       },
+      preferencesFromServer: null,
       savingPreferences: false,
-      preferencesSaved: true,
+      preferencesChanged: false,
+      preferencesSaved: false,
     };
   },
   computed: {
@@ -50,18 +73,32 @@ export default {
   },
   methods: {
     loadPreferences() {
-      getPreferences().then(preferences => {
-        this.preferences = preferences;
-      });
+      getPreferences()
+        .then(preferences => {
+          this.preferencesFromServer = Object.assign({}, preferences);
+          this.preferences = Object.assign({}, preferences);
+        })
+        .catch(error => {
+          if (error.response.status == 404) {
+            this.preferencesFromServer = Object.assign({}, this.preferences);
+          }
+        });
     },
     onEntryTemplateChanged() {
-      this.preferencesSaved = false;
+      if (
+        this.preferencesFromServer &&
+        this.preferencesFromServer.entryTemplate !=
+          this.preferences.entryTemplate
+      ) {
+        this.preferencesChanged = true;
+      }
     },
     handleSubmit() {
       this.savingPreferences = true;
       savePreferences(this.preferences)
         .then(() => {
           this.preferencesSaved = true;
+          this.preferencesChanged = false;
         })
         .finally(() => {
           this.savingPreferences = false;
@@ -77,5 +114,9 @@ export default {
 <style scoped>
 * {
   text-align: left;
+}
+
+.preferences h2 {
+  font-size: 1.4em;
 }
 </style>

@@ -24,30 +24,25 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		prefs, _ := s.datastore.GetPreferences(username)
-		log.Printf("prefs = %+v", prefs)
 
-		j, err := s.datastore.GetDraft(username, date)
-		log.Printf("check for draft = %v -> %+v", err, j)
-		if _, ok := err.(datastore.DraftNotFoundError); ok {
-			log.Printf("no draft, checking for preferences")
-			if err != nil {
-				j.Markdown = prefs.EntryTemplate
-			} else {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-		} else if err != nil {
+		draftMarkdown, err := s.savedDraftOrEntryTemplate(username, date)
+		if err != nil {
 			log.Printf("Failed to retrieve draft entry: %s", err)
 			http.Error(w, "Failed to retrieve draft entry", http.StatusInternalServerError)
 			return
 		}
-
-		if j.Markdown == "" {
-			j.Markdown = prefs.EntryTemplate
+		if draftMarkdown == "" {
+			http.Error(w, "No draft found for this entry", http.StatusNotFound)
+			return
 		}
 
-		if err := json.NewEncoder(w).Encode(j); err != nil {
+		type response struct {
+			Markdown string `json:"markdown"`
+		}
+		resp := response{
+			Markdown: draftMarkdown,
+		}
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
 			panic(err)
 		}
 	}
@@ -102,4 +97,27 @@ func (s defaultServer) draftPost() http.HandlerFunc {
 			panic(err)
 		}
 	}
+}
+
+func (s defaultServer) savedDraftOrEntryTemplate(username, date string) (string, error) {
+	// First, check if there's a saved draft.
+	d, err := s.datastore.GetDraft(username, date)
+	if err == nil && d.Markdown != "" {
+		return d.Markdown, nil
+	}
+	if _, ok := err.(datastore.DraftNotFoundError); ok {
+		err = nil
+	} else if err != nil {
+		return "", err
+	}
+
+	// If there's no saved draft, try using the user's entry template.
+	prefs, err := s.datastore.GetPreferences(username)
+	if _, ok := err.(datastore.PreferencesNotFoundError); ok {
+		return "", nil
+	}
+	if err != nil {
+		return "", err
+	}
+	return prefs.EntryTemplate, nil
 }

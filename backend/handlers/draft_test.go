@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -110,14 +109,17 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
-	var response types.JournalEntry
-	err = json.Unmarshal(w.Body.Bytes(), &response)
+	type response struct {
+		Markdown string `json:"markdown"`
+	}
+	var resp response
+	err = json.Unmarshal(w.Body.Bytes(), &resp)
 	if err != nil {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
 
-	if !reflect.DeepEqual(response, drafts[0]) {
-		t.Fatalf("Unexpected response: got %v want %v", response, drafts[0])
+	if resp.Markdown != drafts[0].Markdown {
+		t.Fatalf("Unexpected response: got %v want %v", resp.Markdown, drafts[0].Markdown)
 	}
 }
 

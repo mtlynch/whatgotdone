@@ -57,6 +57,16 @@ func (ds mockDatastore) Following(follower string) ([]string, error) {
 	return []string{}, errors.New("not implemented")
 }
 
+func (ds mockDatastore) GetPreferences(username string) (types.Preferences, error) {
+	return types.Preferences{}, datastore.PreferencesNotFoundError{
+		Username: username,
+	}
+}
+
+func (ds mockDatastore) SetPreferences(username string, prefs types.Preferences) error {
+	return errors.New("not implemented")
+}
+
 func (ds mockDatastore) Close() error {
 	return nil
 }
