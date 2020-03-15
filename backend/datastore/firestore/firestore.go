@@ -5,11 +5,12 @@ package firestore
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
 	"cloud.google.com/go/firestore"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
+	fc "github.com/mtlynch/whatgotdone/backend/datastore/firestore/client"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -60,10 +61,16 @@ const (
 	perUserFollowingKey = "perUserFollowers"
 )
 
-func getGoogleCloudProjectID() string {
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	if projectID == "" {
-		log.Fatalf("GOOGLE_CLOUD_PROJECT environment variable must be set")
+// New creates a new Datastore instance.
+func New() datastore.Datastore {
+	ctx := context.Background()
+
+	c, err := fc.New(ctx)
+	if err != nil {
+		log.Fatalln(err)
 	}
-	return projectID
+	return &client{
+		firestoreClient: c,
+		ctx:             ctx,
+	}
 }
