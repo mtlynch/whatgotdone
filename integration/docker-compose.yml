@@ -15,10 +15,8 @@ services:
       # test_data_manager's logs are too noisy
       driver: none
     environment:
-      - GOOGLE_CLOUD_PROJECT=wanderjest-dev
+      - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
       - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
-      - PRIVATE_GCS_BUCKET=wanderjest-private-integration
-      - PUBLIC_GCS_BUCKET=wanderjest-public-integration
       - PORT=5200
     command:
       ["-source", "/app/test-data-manager/integration-data.yaml", "-keepAlive"]
