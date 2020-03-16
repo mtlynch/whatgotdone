@@ -46,6 +46,7 @@ services:
       - whatgotdone
     environment:
       - CYPRESS_baseUrl=http://whatgotdone:3123
+      - CYPRESS_testDataManagerUrl=http://test_data_manager:5200
       # Uncomment the following line for verbose Cypress debugging output.
       #- DEBUG=cypress:server:request,cypress:server:server,cypress:server:proxy,cypress:network:agent,cypress:server:browsers
 
