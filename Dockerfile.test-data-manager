@@ -1,0 +1,14 @@
+FROM golang:1.13.5-buster
+
+COPY ./backend /app/backend
+COPY ./test-data-manager /app/test-data-manager
+COPY ./go.mod /app/go.mod
+COPY ./go.sum /app/go.sum
+
+WORKDIR /app
+
+ARG GO_BUILD_TAGS="dev"
+RUN cd test-data-manager && \
+    go build --tags "$GO_BUILD_TAGS" -o /app/main .
+
+ENTRYPOINT ["/app/main"]

@@ -1,0 +1,26 @@
+perUserEntries:
+  - username: staging_jimmy
+    drafts:
+      - date: 2020-03-13
+        lastModified: "2020-03-11T00:00:00.000000Z"
+        markdown: |2-
+          Today was a productive day. I created a test data manager for What Got
+          Done!
+      - date: 2020-03-06
+        lastModified: "2020-03-06T00:00:00.000000Z"
+        markdown: |2-
+          * Went fishing.
+          * Ate an entire pizza in one bite.
+          * Saw the movie *Knives Out*.
+    entries:
+      - date: 2020-03-13
+        lastModified: "2020-03-11T00:00:00.000000Z"
+        markdown: |2-
+          Today was a productive day. I created a test data manager for What Got
+          Done!
+      - date: 2020-03-06
+        lastModified: "2020-03-06T00:00:00.000000Z"
+        markdown: |2-
+          * Went fishing.
+          * Ate an entire pizza in one bite.
+          * Saw the movie *Knives Out*.

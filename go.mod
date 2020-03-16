@@ -15,4 +15,5 @@ require (
 	golang.org/x/tools/gopls v0.1.7 // indirect
 	google.golang.org/api v0.3.2
 	google.golang.org/grpc v1.19.0
+	gopkg.in/yaml.v2 v2.2.1
 )

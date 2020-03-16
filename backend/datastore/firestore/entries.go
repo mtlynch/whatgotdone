@@ -1,6 +1,7 @@
 package firestore
 
 import (
+	"log"
 	"strings"
 
 	"google.golang.org/api/iterator"
@@ -33,6 +34,7 @@ func (c client) GetEntries(username string) ([]types.JournalEntry, error) {
 // InsertEntry saves an entry to the datastore, overwriting any existing entry
 // with the same name and username.
 func (c client) InsertEntry(username string, j types.JournalEntry) error {
+	log.Printf("adding new entry for %s: %+v", username, j)
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(entriesRootKey).Doc(username).Set(c.ctx, userDocument{
 		Username:     username,

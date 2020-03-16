@@ -1,0 +1,14 @@
+perUserEntries:
+  - username: staging_jimmy
+    drafts:
+      - date: 2019-06-28
+        lastModified: "2019-06-28T00:00:00.000000Z"
+        markdown: |2-
+          Today was a productive day. I created a test data manager for What Got
+          Done!
+    entries:
+      - date: 2019-06-28
+        lastModified: "2019-06-28T00:00:00.000000Z"
+        markdown: |2-
+          Today was a productive day. I created a test data manager for What Got
+          Done!

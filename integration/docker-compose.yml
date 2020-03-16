@@ -5,6 +5,23 @@ services:
     environment:
       - FIRESTORE_PROJECT_ID=dummy-local-gcp-project
       - PORT=8080
+  test_data_manager:
+    build:
+      context: ../
+      dockerfile: Dockerfile.test-data-manager
+      args:
+        GO_BUILD_TAGS: "dev"
+    logging:
+      # test_data_manager's logs are too noisy
+      driver: none
+    environment:
+      - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
+      - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
+      - PORT=5200
+    command:
+      ["-source", "/app/test-data-manager/integration-data.yaml", "-keepAlive"]
+    depends_on:
+      - firestore_emulator
   whatgotdone:
     build:
       context: ../
@@ -29,6 +46,7 @@ services:
       - whatgotdone
     environment:
       - CYPRESS_baseUrl=http://whatgotdone:3123
+      - CYPRESS_testDataManagerUrl=http://test_data_manager:5200
       # Uncomment the following line for verbose Cypress debugging output.
       #- DEBUG=cypress:server:request,cypress:server:server,cypress:server:proxy,cypress:network:agent,cypress:server:browsers
 

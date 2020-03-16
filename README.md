@@ -99,6 +99,7 @@ pushd frontend && \
 To run the Go backend server, run the following command:
 
 ```bash
+export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
 export USERKIT_SECRET="dummy.dummy"
 export FIRESTORE_EMULATOR_HOST="localhost:8080"
 mkdir bin
@@ -115,11 +116,20 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 If you're making changes to the Vue code, you'll probably want to run the standard Vue HTTP server with hot reloading. Keep the backend running, and in a separate shell session, run the following command:
 
 ```bash
-cd frontend && \
-  npm run serve
+cd frontend
+npm run serve
 ```
 
 A hot-reloading Vue server will run on port [http://localhost:8085](http://localhost:8085). It will communicate with the What Got Done backend at port 3001.
+
+### Optional: Pre-populate the datastore
+
+```bash
+export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
+export FIRESTORE_EMULATOR_HOST="localhost:8080"
+cd test-data-manager
+go run --tags "dev" .
+```
 
 #### Quirks of the dev environment
 
@@ -175,4 +185,4 @@ What Got Done supports pulling metrics from Google Analytics into the page conte
 1. In Google Analytics, open Admin > View > View User Management and add the email address of the service account you just created (it will have an email like `[name]@[project ID].iam.gserviceaccount.com`.
    1. Grant the user only "Read & Analyze" permissions.
 1. In Google Analytics, open Admin > View > View Settings
-  1. Save the View ID as an environment variable like `export GOOGLE_ANALYTICS_VIEW_ID=12345789`
+   1. Save the View ID as an environment variable like `export GOOGLE_ANALYTICS_VIEW_ID=12345789`
