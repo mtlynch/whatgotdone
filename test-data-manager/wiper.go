@@ -1,4 +1,4 @@
-// +build dev integration
+// +build dev staging
 
 package main
 
@@ -41,14 +41,14 @@ const (
 
 func (w *wiper) Wipe() {
 	rootKeys := []string{
-		entriesRootKey      ,
-		draftsRootKey       ,
-		pageViewsRootKey    ,
-		preferencesRootKey  ,
-		reactionsRootKey    ,
-		secretsRootKey      ,
-		userProfilesRootKey ,
-		followingRootKey    ,
+		entriesRootKey,
+		draftsRootKey,
+		pageViewsRootKey,
+		preferencesRootKey,
+		reactionsRootKey,
+		secretsRootKey,
+		userProfilesRootKey,
+		followingRootKey,
 	}
 	for _, collectionKey := range rootKeys {
 		if err := w.deleteCollection(collectionKey); err != nil {

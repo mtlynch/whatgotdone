@@ -1,4 +1,4 @@
-// +build dev integration
+// +build dev staging
 
 package main
 

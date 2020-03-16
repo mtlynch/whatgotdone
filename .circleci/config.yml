@@ -65,31 +65,6 @@ jobs:
           path: integration/cypress/videos
       - store_artifacts:
           path: integration/cypress/screenshots
-  e2e:
-    machine:
-      # Choose an explicit machine image so that we get the latest version of
-      # docker-compose.
-      image: ubuntu-1604:201903-01
-    steps:
-      - early_return_for_forked_pull_requests
-      - checkout
-      - run:
-          name: Retrieve staging GCP credentials from CircleCI
-          command: |
-            echo "$SERVICE_ACCOUNT_STAGING" | \
-              base64 --decode > service-account-creds-staging.json
-      - run:
-          name: Retrieve staging UserKit secret key from CircleCI
-          command: |
-            echo "USERKIT_SECRET=${USERKIT_SECRET_STAGING}" \
-              > e2e/staging-secrets.env
-      - run:
-          name: Perform end-to-end tests.
-          command: dev-scripts/run-e2e-tests
-      - store_artifacts:
-          path: e2e/cypress/videos
-      - store_artifacts:
-          path: e2e/cypress/screenshots
   deploy:
     docker:
       - image: google/cloud-sdk:265.0.0
@@ -134,13 +109,11 @@ workflows:
       - build-frontend
       - test-backend
       - integration
-      - e2e
       - deploy:
           requires:
             - build-frontend
             - test-backend
             - integration
-            - e2e
           filters:
             branches:
               only: master

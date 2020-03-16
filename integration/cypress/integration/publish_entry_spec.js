@@ -74,3 +74,22 @@ it("logs in and backdates an update from a previous week", () => {
 
   cy.get(".journal-body").should("contain", entryText);
 });
+
+it("logs in and posts an empty update (deleting the update)", () => {
+  cy.server();
+  cy.route("GET", "/api/draft/2019-06-28").as("getDraft");
+
+  cy.login("staging_jimmy");
+
+  cy.location("pathname").should("include", "/entry/edit");
+  cy.visit("/entry/edit/2019-06-28");
+
+  // Wait for page to pull down the previous entry.
+  cy.wait("@getDraft");
+
+  cy.get(".journal-markdown").clear();
+  cy.get("form").submit();
+
+  cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
+  cy.get(".missing-entry").should("be.visible");
+});

@@ -1,4 +1,4 @@
-// +build dev integration
+// +build dev staging
 
 package main
 
@@ -11,16 +11,15 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-
 type (
 	userEntries struct {
-		Username string `yaml:"username"`
-		Drafts []types.JournalEntry `yaml:"drafts"`
-		Entries []types.JournalEntry `yaml:"entries"`
+		Username string               `yaml:"username"`
+		Drafts   []types.JournalEntry `yaml:"drafts"`
+		Entries  []types.JournalEntry `yaml:"entries"`
 	}
 
 	initData struct {
-		PerUserEntries   []userEntries   `yaml:"perUserEntries"`
+		PerUserEntries []userEntries `yaml:"perUserEntries"`
 	}
 )
 
