@@ -33,16 +33,18 @@ What Got Done uses [Google Cloud Firestore](https://firebase.google.com/docs/fir
 
 Only the What Got Done backend can access the Firestore database. Specifically, the `datastore` package manages all interactions with Firestore.
 
-### E2E tests
+### Integration tests
 
-What Got Done's end-to-end tests use Cypress and follow the testing pattern defined in the article [End-to-End Testing Web Apps: The Painless Way](https://mtlynch.io/painless-web-app-testing/). The testing architecture consists of two Docker containers (see [docker-compose.yml](https://github.com/mtlynch/whatgotdone/blob/master/e2e/docker-compose.yml)):
+What Got Done's integration tests use Cypress and follow the testing pattern defined in the article [End-to-End Testing Web Apps: The Painless Way](https://mtlynch.io/painless-web-app-testing/). The testing architecture consists of four Docker containers (see [docker-compose.yml](https://github.com/mtlynch/whatgotdone/blob/master/integration/docker-compose.yml)):
 
+* Cloud Firestore emulator
 * What Got Done container
 * Cypress container
+* Test data manager
 
-The Cypress container runs a browser to exercise What Got Done's critical functionality. It uses an independent environment and credentials from the production app so that nothing in the E2E tests affect state on production UserKit or Google Cloud Platform.
+The integration test is entirely self-contained, so nothing that happens during testing affects anything outside of the docker-compose environment.
 
-To run the E2E tests yourself, see the [section below](#optional-run-e2e-tests).
+To run the integration tests yourself, see the [section below](#optional-run-integration-tests).
 
 ## Contributing to What Got Done
 
@@ -124,11 +126,10 @@ A hot-reloading Vue server will run on port [http://localhost:8085](http://local
 
 ### Optional: Pre-populate the datastore
 
+What Got Done can run fine with an empty datastore, but if you want to populate it with some test data, run the following command to pre-populate the Firestore emulator:
+
 ```bash
-export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
-export FIRESTORE_EMULATOR_HOST="localhost:8080"
-cd test-data-manager
-go run --tags "dev" .
+./dev-scripts/reset-datastore
 ```
 
 #### Quirks of the dev environment
@@ -155,24 +156,6 @@ Integration tests run all components together using a local Firestore emulator a
 ```bash
 dev-scripts/run-integration-tests
 ```
-
-### Optional: Run E2E tests
-
-The E2E tests are a subset of the integration tests, but they use a real GCP Firestore instance instead of a local emulator.
-
-To run the end to end tests, you'll need to create a dedicated GCP project. Specify the GCP project in `e2e/docker-compose.yml` under `GOOGLE_CLOUD_PROJECT`.
-
-Then, run the E2E tests as follows:
-
-```bash
-dev-scripts/run-e2e-tests
-```
-
-## Integration tests vs. E2E tests
-
-Integration tests have the advantage of running faster because they have fewer remote dependencies. It's also possible for third-party developers to run them because they require no secrets (this also allows CI to run them on third-party pull requests).
-
-E2E tests are more likely to catch real-world bugs because their configuration more closely matches production infrastructure.
 
 ### Optional: Enable public analytics from Google Analytics
 
