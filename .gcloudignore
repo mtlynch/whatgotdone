@@ -10,7 +10,7 @@ README.md
 *_staging.go
 *.vue
 dev-scripts/
-/e2e
+/integration
 # TODO(mtlynch): Remove this when we've figured out how to remove everything but the
 # /frontend/dist directory. This is just a test.
 /frontend/src
