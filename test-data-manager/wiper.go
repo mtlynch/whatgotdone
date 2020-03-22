@@ -40,33 +40,33 @@ const (
 )
 
 func (w *wiper) Wipe() {
-	rootKeys := []string{
-		entriesRootKey,
-		draftsRootKey,
-		pageViewsRootKey,
-		preferencesRootKey,
-		reactionsRootKey,
-		secretsRootKey,
-		userProfilesRootKey,
-		followingRootKey,
-	}
-	for _, collectionKey := range rootKeys {
-		if err := w.deleteCollection(collectionKey); err != nil {
-			log.Printf("failed to delete %s", collectionKey)
-		}
-	}
+	w.deleteAllCollections()
 }
 
-func (w *wiper) deleteCollection(collectionKey string) error {
-	ref := w.firestoreClient.Collection(collectionKey)
+func (w *wiper) deleteAllCollections() error {
+	iter := w.firestoreClient.Collections(w.ctx)
 	for {
-		iter := ref.Limit(50).Documents(w.ctx)
+		collection, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		err = w.deleteCollection(collection)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (w *wiper) deleteCollection(collection *firestore.CollectionRef) error {
+	for {
+		iter := collection.Limit(50).Documents(w.ctx)
 		numDeleted := 0
 
-		// Iterate through the documents, adding
-		// a delete operation for each one to a
-		// WriteBatch.
-		batch := w.firestoreClient.Batch()
 		for {
 			doc, err := iter.Next()
 			if err == iterator.Done {
@@ -76,19 +76,37 @@ func (w *wiper) deleteCollection(collectionKey string) error {
 				return err
 			}
 
-			batch.Delete(doc.Ref)
+			err = w.recursiveDeleteDocument(doc.Ref)
+			if err != nil {
+				return err
+			}
 			numDeleted++
 		}
 
-		// If there are no documents to delete,
-		// the process is over.
+		// If there are no documents to delete, the process is over.
 		if numDeleted == 0 {
 			return nil
 		}
+	}
+}
 
-		_, err := batch.Commit(w.ctx)
+func (w *wiper) recursiveDeleteDocument(doc *firestore.DocumentRef) error {
+	iter := doc.Collections(w.ctx)
+	for {
+		collection, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		err = w.deleteCollection(collection)
 		if err != nil {
 			return err
 		}
 	}
+
+	_, err := doc.Delete(w.ctx)
+	return err
 }

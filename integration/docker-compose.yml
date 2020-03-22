@@ -11,9 +11,6 @@ services:
       dockerfile: Dockerfile.test-data-manager
       args:
         GO_BUILD_TAGS: "dev"
-    logging:
-      # test_data_manager's logs are too noisy
-      driver: none
     environment:
       - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
       - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
