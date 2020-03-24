@@ -7,14 +7,11 @@
         <span class="end-date">{{ date | moment('dddd, ll') }}</span
         >.
       </p>
-      <textarea-autosize
+      <EntryEditor
         class="form-control journal-markdown"
         v-model="entryContent"
-        name="markdown"
         @input="debouncedSaveDraft"
-        :min-height="250"
-        :max-height="650"
-      ></textarea-autosize>
+      />
       <p>
         (You can use
         <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank"
@@ -45,6 +42,7 @@ import {getDraft, saveDraft} from '@/controllers/Drafts.js';
 import {saveEntry} from '@/controllers/Entries.js';
 import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
 
+import EntryEditor from '@/components/EntryEditor.vue';
 import JournalPreview from '@/components/JournalPreview.vue';
 
 Vue.use(VueTextareaAutosize);
@@ -52,6 +50,7 @@ Vue.use(VueTextareaAutosize);
 export default {
   name: 'EditEntry',
   components: {
+    EntryEditor,
     JournalPreview,
   },
   data() {
