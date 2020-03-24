@@ -1,6 +1,7 @@
 <template>
   <textarea-autosize
     v-model="contents"
+    ref="editor"
     :min-height="250"
     :max-height="650"
     @input="onInput"
@@ -31,40 +32,35 @@ export default {
     onPaste(evt) {
       console.log('on paste', evt.clipboardData.items);
       for (const item of evt.clipboardData.items) {
-        console.log(item);
         if (item.type.indexOf('image') < 0) continue;
         const imgFile = item.getAsFile();
         console.log(imgFile);
-        this.insertSomething('[](/uploads/adfang.jpg)');
+        // TODO: upload file to What Got Done.
+        this.insertTextAtCursorPosition('[](/uploads/todo.jpg)');
       }
     },
-    insertSomething: function(insert) {
-      const self = this;
-      var tArea = this.$refs.entryText;
-      // filter:
-      if (0 == insert) {
-        return;
-      }
-      if (0 == cursorPos) {
+    insertTextAtCursorPosition: function(text) {
+      const element = this.$refs.editor.$el;
+      if (!text) {
         return;
       }
 
-      // get cursor's position:
-      var startPos = tArea.selectionStart,
-        endPos = tArea.selectionEnd,
-        cursorPos = startPos,
-        tmpStr = tArea.value;
+      // get cursor's position
+      const startPos = element.selectionStart;
+      const endPos = element.selectionEnd;
+      let cursorPos = startPos;
+      const tmpStr = element.value;
 
-      // insert:
-      self.entryContent =
+      // insert
+      this.contents =
         tmpStr.substring(0, startPos) +
-        insert +
+        text +
         tmpStr.substring(endPos, tmpStr.length);
 
-      // move cursor:
+      // move cursor
       setTimeout(() => {
-        cursorPos += insert.length;
-        tArea.selectionStart = tArea.selectionEnd = cursorPos;
+        cursorPos += text.length;
+        element.selectionStart = element.selectionEnd = cursorPos;
       }, 10);
     },
   },
