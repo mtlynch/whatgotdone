@@ -1,6 +1,8 @@
 package firestore
 
 import (
+	"log"
+
 	"google.golang.org/api/iterator"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
@@ -33,6 +35,7 @@ func (c client) GetDraft(username string, date string) (types.JournalEntry, erro
 // InsertDraft saves an entry draft to the datastore, overwriting any existing
 // entry with the same name and username.
 func (c client) InsertDraft(username string, j types.JournalEntry) error {
+	log.Printf("adding new draft for %s: %+v", username, j)
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(draftsRootKey).Doc(username).Set(c.ctx, userDocument{
 		Username:     username,
