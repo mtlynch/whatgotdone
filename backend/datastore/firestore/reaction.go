@@ -1,6 +1,8 @@
 package firestore
 
 import (
+	"log"
+
 	"google.golang.org/api/iterator"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -33,8 +35,9 @@ func (c client) AddReaction(entryAuthor string, entryDate string, reaction types
 		entryAuthor: entryAuthor,
 		entryDate:   entryDate,
 	})
-
-	_, err := c.firestoreClient.Collection(reactionsRootKey).Doc(getEntryReactionsKey(entryAuthor, entryDate)).Collection(perUserReactionsKey).Doc(reaction.Username).Set(c.ctx, reaction)
+	key := getEntryReactionsKey(entryAuthor, entryDate)
+	log.Printf("adding reaction to datastore: %s -> %+v", key, reaction)
+	_, err := c.firestoreClient.Collection(reactionsRootKey).Doc(key).Collection(perUserReactionsKey).Doc(reaction.Username).Set(c.ctx, reaction)
 
 	return err
 }
