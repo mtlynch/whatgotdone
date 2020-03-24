@@ -9,6 +9,7 @@
       </p>
       <EntryEditor
         class="form-control journal-markdown"
+        ref="entryText"
         v-model="entryContent"
         @input="debouncedSaveDraft"
       />
