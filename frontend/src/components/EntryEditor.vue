@@ -28,5 +28,10 @@ export default {
       this.$emit('input', newValue);
     },
   },
+  watch: {
+    value: function(newValue) {
+      this.contents = newValue;
+    },
+  },
 };
 </script>
