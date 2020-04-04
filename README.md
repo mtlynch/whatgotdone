@@ -104,12 +104,11 @@ To run the Go backend server, run the following command:
 export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
 export USERKIT_SECRET="dummy.dummy"
 export FIRESTORE_EMULATOR_HOST="localhost:8080"
-mkdir bin
-go build --tags 'dev' -o ./bin/main backend/main.go && \
-  ./bin/main
+env GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
+modd
 ```
 
-What Got Done is now running on [http://localhost:3001](http://localhost:3001).
+What Got Done is now running on [http://localhost:3001](http://localhost:3001). [Modd](https://github.com/cortesi/modd) is a hot reloading tool that will automatically rebuild and restart the server upon changes to any `.go` files.
 
 Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username using the password `password`.
 

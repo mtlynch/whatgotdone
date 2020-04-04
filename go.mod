@@ -8,6 +8,7 @@ require (
 	cloud.google.com/go/pubsub v1.3.1 // indirect
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
+	github.com/cortesi/modd v0.0.0-20191202231957-98a770274f90 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/csrf v1.6.0
