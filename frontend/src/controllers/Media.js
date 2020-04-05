@@ -2,11 +2,11 @@ import axios from 'axios';
 
 import getCsrfToken from '@/controllers/CsrfToken.js';
 
-export function uploadImage(image) {
+export function uploadMedia(media) {
   return new Promise(function(resolve, reject) {
     let formData = new FormData();
-    formData.append('file', image);
-    let url = `${process.env.VUE_APP_BACKEND_URL}/api/images`;
+    formData.append('file', media);
+    let url = `${process.env.VUE_APP_BACKEND_URL}/api/media`;
     axios
       .put(url, formData, {
         withCredentials: true,

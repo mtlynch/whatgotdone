@@ -5,7 +5,6 @@
     :min-height="250"
     :max-height="650"
     @input="onInput"
-    @change.native="onChange"
     @paste.native="onPaste"
   ></textarea-autosize>
 </template>
@@ -14,7 +13,7 @@
 import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 
-import {uploadImage} from '@/controllers/Images';
+import {uploadMedia} from '@/controllers/Media';
 
 Vue.use(VueTextareaAutosize);
 
@@ -35,6 +34,10 @@ export default {
     onPaste(evt) {
       for (const item of evt.clipboardData.items) {
         if (item.type.indexOf('image') < 0) continue;
+        const pastedFile = item.getAsFile();
+        if (!pastedFile) {
+          return;
+        }
         let selectedText = this.getSelectedText();
         if (!selectedText) {
           selectedText = 'image';
@@ -43,7 +46,7 @@ export default {
           `[${selectedText}](uploading...)`,
           true
         );
-        uploadImage(item.getAsFile())
+        uploadMedia(pastedFile)
           .then(url => {
             this.insertTextAtCursorPosition(`[${selectedText}](${url})`, false);
           })

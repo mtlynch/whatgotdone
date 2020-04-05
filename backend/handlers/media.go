@@ -11,38 +11,38 @@ import (
 	"time"
 )
 
-func (s *defaultServer) imagesPut() http.HandlerFunc {
+func (s *defaultServer) mediaPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if s.gcsClient == nil {
-			log.Printf("can't accept image upload because image uploads are disabled")
-			http.Error(w, fmt.Sprintf("Image uploading is disabled"), http.StatusBadRequest)
+			log.Printf("can't accept media upload because media uploads are disabled")
+			http.Error(w, fmt.Sprintf("Media uploading is disabled"), http.StatusBadRequest)
 			return
 		}
 
 		username, err := s.loggedInUser(r)
 		if err != nil {
-			http.Error(w, "You must be logged in to upload an image", http.StatusForbidden)
+			http.Error(w, "You must be logged in to upload an image or video", http.StatusForbidden)
 			return
 		}
 
-		imageFile, contentType, err := imageFileFromRequest(w, r)
+		mediaFile, contentType, err := mediaFileFromRequest(w, r)
 		if err != nil {
-			log.Printf("failed to read image from request: %v", err)
-			http.Error(w, fmt.Sprintf("Image upload failed: %v", err), http.StatusBadRequest)
+			log.Printf("failed to read media from request: %v", err)
+			http.Error(w, fmt.Sprintf("Media upload failed: %v", err), http.StatusBadRequest)
 			return
 		}
 
-		path, err := imagePath(contentType, username)
+		path, err := mediaPath(contentType, username)
 		if err != nil {
-			log.Printf("failed to generate image path: %v", err)
-			http.Error(w, fmt.Sprintf("Image upload failed: %v", err), http.StatusInternalServerError)
+			log.Printf("failed to generate media path: %v", err)
+			http.Error(w, fmt.Sprintf("Media upload failed: %v", err), http.StatusInternalServerError)
 			return
 		}
 
-		url, err := s.gcsClient.UploadFile(imageFile, path, contentType)
+		url, err := s.gcsClient.UploadFile(mediaFile, path, contentType)
 		if err != nil {
-			log.Printf("failed to read image from request: %v", err)
-			http.Error(w, fmt.Sprintf("Image upload failed: %v", err), http.StatusBadRequest)
+			log.Printf("failed to read media from request: %v", err)
+			http.Error(w, fmt.Sprintf("Media upload failed: %v", err), http.StatusBadRequest)
 			return
 		}
 
@@ -58,10 +58,10 @@ func (s *defaultServer) imagesPut() http.HandlerFunc {
 	}
 }
 
-const maxImageSize = 20971520 // 20 MB
+const maxMediaSize = 20971520 // 20 MB
 
-func imageFileFromRequest(w http.ResponseWriter, r *http.Request) (io.Reader, string, error) {
-	r.Body = http.MaxBytesReader(w, r.Body, maxImageSize)
+func mediaFileFromRequest(w http.ResponseWriter, r *http.Request) (io.Reader, string, error) {
+	r.Body = http.MaxBytesReader(w, r.Body, maxMediaSize)
 	r.ParseMultipartForm(32 << 20)
 	file, metadata, err := r.FormFile("file")
 	if err != nil {
@@ -69,12 +69,12 @@ func imageFileFromRequest(w http.ResponseWriter, r *http.Request) (io.Reader, st
 	}
 	contentType := metadata.Header.Get("Content-Type")
 	if contentType != "image/jpeg" && contentType != "image/png" {
-		return nil, "", errors.New("invalid image format")
+		return nil, "", errors.New("invalid media format")
 	}
 	return file, contentType, nil
 }
 
-func imagePath(contentType, username string) (string, error) {
+func mediaPath(contentType, username string) (string, error) {
 	timestamp := thisFriday().Format("20060102")
 	extension := "png"
 	if contentType == "image/jpeg" {
