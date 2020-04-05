@@ -6,10 +6,12 @@ require (
 	cloud.google.com/go v0.55.0 // indirect
 	cloud.google.com/go/firestore v1.1.1
 	cloud.google.com/go/pubsub v1.3.1 // indirect
+	cloud.google.com/go/storage v1.6.0
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/cortesi/modd v0.0.0-20191202231957-98a770274f90 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
+	github.com/google/uuid v1.1.1
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/csrf v1.6.0
 	github.com/gorilla/handlers v1.4.0
@@ -22,6 +24,7 @@ require (
 	golang.org/x/sys v0.0.0-20200321134203-328b4cd54aae // indirect
 	golang.org/x/tools v0.0.0-20200321014904-268ba720d32c // indirect
 	google.golang.org/api v0.20.0
+	google.golang.org/appengine v1.6.5 // indirect
 	google.golang.org/genproto v0.0.0-20200319113533-08878b785e9c // indirect
 	google.golang.org/grpc v1.28.0
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect

@@ -168,3 +168,15 @@ What Got Done supports pulling metrics from Google Analytics into the page conte
    1. Grant the user only "Read & Analyze" permissions.
 1. In Google Analytics, open Admin > View > View Settings
    1. Save the View ID as an environment variable like `export GOOGLE_ANALYTICS_VIEW_ID=12345789`
+
+### Optional: Enable image uploads
+
+What Got Done optionally allows image uploads from users. To enable this:
+
+1. Create a Google Cloud Storage bucket
+1. Choose uniform permissions for the bucket
+1. Add to the bucket permissions for the `allUsers` user with role "Storage Object Viewer"
+  * This makes all images in the bucket world-readable.
+1. When launching What Got Done, set the environment varialbe `PUBLIC_GCS_BUCKET` to the name of your GCS bucket.
+
+When users paste images into their What Got Done entries, they will upload to your GCS bucket and auto-link from the entry editor.

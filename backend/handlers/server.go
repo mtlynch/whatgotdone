@@ -8,6 +8,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/auth"
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/gcs"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 )
 
@@ -26,9 +27,18 @@ func New() Server {
 	} else {
 		fetcher = &f
 	}
+
+	gcsClient, err := gcs.New()
+	if err != nil {
+		log.Printf("Failed to load Google Cloud Storage client: %s", err)
+		log.Printf("File upload functionality will be disabled")
+		gcsClient = nil
+	}
+
 	s := defaultServer{
 		authenticator:          auth.New(),
 		datastore:              newDatastore(),
+		gcsClient:              gcsClient,
 		router:                 mux.NewRouter(),
 		csrfMiddleware:         newCsrfMiddleware(),
 		googleAnalyticsFetcher: fetcher,
@@ -42,6 +52,7 @@ type httpMiddlewareHandler func(http.Handler) http.Handler
 type defaultServer struct {
 	authenticator          auth.Authenticator
 	datastore              datastore.Datastore
+	gcsClient              *gcs.Client
 	router                 *mux.Router
 	csrfMiddleware         httpMiddlewareHandler
 	googleAnalyticsFetcher *ga.MetricFetcher
