@@ -32,11 +32,7 @@ export default {
     onInput(newValue) {
       this.$emit('input', newValue);
     },
-    onChange(newValue) {
-      console.log('onChange', newValue);
-    },
     onPaste(evt) {
-      console.log('paste', evt);
       for (const item of evt.clipboardData.items) {
         if (item.type.indexOf('image') < 0) continue;
         let selectedText = this.getSelectedText();
@@ -47,9 +43,16 @@ export default {
           `[${selectedText}](uploading...)`,
           true
         );
-        uploadImage(item.getAsFile()).then(url => {
-          this.insertTextAtCursorPosition(`[${selectedText}](${url})`, false);
-        });
+        uploadImage(item.getAsFile())
+          .then(url => {
+            this.insertTextAtCursorPosition(`[${selectedText}](${url})`, false);
+          })
+          .catch(err => {
+            this.insertTextAtCursorPosition(
+              `[${selectedText}](upload failed: ${err})`,
+              false
+            );
+          });
       }
     },
     getSelectedText: function() {
