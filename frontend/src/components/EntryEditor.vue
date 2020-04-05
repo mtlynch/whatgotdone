@@ -5,6 +5,7 @@
     :min-height="250"
     :max-height="650"
     @input="onInput"
+    @change.native="onChange"
     @paste.native="onPaste"
   ></textarea-autosize>
 </template>
@@ -12,6 +13,8 @@
 <script>
 import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
+
+import {uploadImage} from '@/controllers/Images';
 
 Vue.use(VueTextareaAutosize);
 
@@ -29,39 +32,57 @@ export default {
     onInput(newValue) {
       this.$emit('input', newValue);
     },
+    onChange(newValue) {
+      console.log('onChange', newValue);
+    },
     onPaste(evt) {
-      console.log('on paste', evt.clipboardData.items);
+      console.log('paste', evt);
       for (const item of evt.clipboardData.items) {
         if (item.type.indexOf('image') < 0) continue;
-        const imgFile = item.getAsFile();
-        console.log(imgFile);
-        // TODO: upload file to What Got Done.
-        this.insertTextAtCursorPosition('[](/uploads/todo.jpg)');
+        let selectedText = this.getSelectedText();
+        if (!selectedText) {
+          selectedText = 'image';
+        }
+        this.insertTextAtCursorPosition(
+          `[${selectedText}](uploading...)`,
+          true
+        );
+        uploadImage(item.getAsFile()).then(url => {
+          this.insertTextAtCursorPosition(`[${selectedText}](${url})`, false);
+        });
       }
     },
-    insertTextAtCursorPosition: function(text) {
-      const element = this.$refs.editor.$el;
+    getSelectedText: function() {
+      const textarea = this.$refs.editor.$el;
+      return textarea.value.slice(
+        textarea.selectionStart,
+        textarea.selectionEnd
+      );
+    },
+    insertTextAtCursorPosition: function(text, highlight) {
+      const textarea = this.$refs.editor.$el;
       if (!text) {
         return;
       }
 
-      // get cursor's position
-      const startPos = element.selectionStart;
-      const endPos = element.selectionEnd;
-      let cursorPos = startPos;
-      const tmpStr = element.value;
-
-      // insert
-      this.contents =
-        tmpStr.substring(0, startPos) +
+      let cursorPos = textarea.selectionStart;
+      textarea.value =
+        textarea.value.substring(0, textarea.selectionStart) +
         text +
-        tmpStr.substring(endPos, tmpStr.length);
+        textarea.value.substring(textarea.selectionEnd, this.contents.length);
 
-      // move cursor
-      setTimeout(() => {
-        cursorPos += text.length;
-        element.selectionStart = element.selectionEnd = cursorPos;
-      }, 10);
+      this.$emit('input', textarea.value);
+
+      this.$nextTick(function() {
+        if (highlight) {
+          textarea.selectionStart = cursorPos;
+          textarea.selectionEnd = cursorPos + text.length;
+        } else {
+          cursorPos += text.length;
+          textarea.selectionStart = cursorPos;
+          textarea.selectionEnd = cursorPos;
+        }
+      });
     },
   },
   watch: {
