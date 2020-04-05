@@ -23,6 +23,8 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/follow/{username}", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/follow/{username}", s.followPut()).Methods(http.MethodPut)
 	api.HandleFunc("/follow/{username}", s.followDelete()).Methods(http.MethodDelete)
+	api.HandleFunc("/images", allowOptions()).Methods(http.MethodOptions)
+	api.HandleFunc("/images", s.imagesPut()).Methods(http.MethodPut)
 	api.HandleFunc("/draft/{date}", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/draft/{date}", s.draftGet()).Methods(http.MethodGet)
 	api.HandleFunc("/draft/{date}", s.draftPost()).Methods(http.MethodPost)
