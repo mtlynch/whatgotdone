@@ -14,6 +14,7 @@
 import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 
+import {getIssueMetadata} from '@/controllers/Github';
 import {uploadImage} from '@/controllers/Images';
 
 Vue.use(VueTextareaAutosize);
@@ -37,6 +38,27 @@ export default {
     },
     onPaste(evt) {
       console.log('paste', evt);
+      const clipboardText = evt.clipboardData.getData('text');
+      evt.preventDefault();
+      if (
+        clipboardText &&
+        (this.isGithubIssueUrl(clipboardText) ||
+          this.isGithubPrUrl(clipboardText))
+      ) {
+        console.log('getting issue metadata');
+        getIssueMetadata(clipboardText)
+          .then(meta => {
+            console.log('in then');
+            this.insertTextAtCursorPosition(
+              `[#${meta.number}: ${meta.title}](${clipboardText})`
+            );
+          })
+          .catch(err => {
+            console.log('caught error', err);
+            this.insertTextAtCursorPosition(clipboardText);
+          });
+        return;
+      }
       for (const item of evt.clipboardData.items) {
         if (item.type.indexOf('image') < 0) continue;
         let selectedText = this.getSelectedText();
@@ -51,6 +73,12 @@ export default {
           this.insertTextAtCursorPosition(`[${selectedText}](${url})`, false);
         });
       }
+    },
+    isGithubIssueUrl: function(url) {
+      return url.match(/github.com\/.+\/.+\/issues\/[0-9]+/);
+    },
+    isGithubPrUrl: function(url) {
+      return url.match(/github.com\/.+\/.+\/pull\/[0-9]+/);
     },
     getSelectedText: function() {
       const textarea = this.$refs.editor.$el;
