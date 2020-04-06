@@ -1,6 +1,10 @@
 package validate
 
-import "time"
+import (
+	"time"
+
+	"github.com/mtlynch/whatgotdone/backend/dates"
+)
 
 // EntryDate validates that the given date is valid for a journal entry. To be
 // valid, the date must be:
@@ -21,16 +25,8 @@ func EntryDate(date string) bool {
 	if t.Weekday() != time.Friday {
 		return false
 	}
-	if t.After(thisFriday()) {
+	if t.After(dates.ThisFriday()) {
 		return false
 	}
 	return true
-}
-
-func thisFriday() time.Time {
-	t := time.Now()
-	for t.Weekday() != time.Friday {
-		t = t.AddDate(0, 0, 1)
-	}
-	return t
 }

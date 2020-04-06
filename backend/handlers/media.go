@@ -8,7 +8,8 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"time"
+
+	"github.com/mtlynch/whatgotdone/backend/dates"
 )
 
 func (s *defaultServer) mediaPut() http.HandlerFunc {
@@ -75,7 +76,7 @@ func mediaFileFromRequest(w http.ResponseWriter, r *http.Request) (io.Reader, st
 }
 
 func mediaPath(contentType, username string) (string, error) {
-	timestamp := thisFriday().Format("20060102")
+	timestamp := dates.ThisFriday().Format("20060102")
 	extension := "png"
 	if contentType == "image/jpeg" {
 		extension = "jpg"
@@ -91,13 +92,4 @@ func randomKey() string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
-}
-
-// TODO: Remove duplicate version of this function.
-func thisFriday() time.Time {
-	t := time.Now()
-	for t.Weekday() != time.Friday {
-		t = t.AddDate(0, 0, 1)
-	}
-	return t
 }
