@@ -6,7 +6,7 @@
 
 <script>
 import updateLoginState from '@/controllers/LoginState.js';
-import loadUserKit from '@/controllers/UserKit.js';
+import {loadUserKit} from '@/controllers/UserKit.js';
 
 export default {
   name: 'Login',
@@ -32,21 +32,13 @@ export default {
     });
   },
   mounted() {
-    loadUserKit(
-      process.env.VUE_APP_USERKIT_APP_ID,
-      (userKit, userKitWidget) => {
-        if (userKit.isLoggedIn() === true) {
-          this.goBackOrGoHome();
-        } else {
-          userKitWidget.open('login');
-        }
-      },
-      () => {
-        updateLoginState(/*attempts=*/ 5, () => {
+    loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then(userKit => {
+      userKit.authenticate().then(() => {
+        updateLoginState().then(() => {
           this.goBackOrGoHome();
         });
-      }
-    );
+      });
+    });
   },
 };
 </script>

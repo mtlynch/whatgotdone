@@ -9,28 +9,24 @@ function clearCachedAuthInformation() {
   logoutUserKit();
 }
 
-export default function updateLoginState(attempts, callback) {
-  if (attempts <= 0) {
-    return;
-  }
-  getUserSelfMetadata()
-    .then(metadata => {
-      store.commit('setUsername', metadata.username);
-      // TODO: Move this
-      getFollowing(metadata.username).then(following => {
-        store.commit('setFollowing', following);
+export default function updateLoginState() {
+  return new Promise(function(resolve, reject) {
+    getUserSelfMetadata()
+      .then(metadata => {
+        store.commit('setUsername', metadata.username);
+        // TODO: Move this
+        getFollowing(metadata.username).then(following => {
+          store.commit('setFollowing', following);
+        });
+        resolve(metadata);
+      })
+      .catch(error => {
+        // If checking user information fails, the cached authentication information
+        // is no longer correct, so we need to clear it.
+        if (error.response && error.response.status === 403) {
+          clearCachedAuthInformation();
+        }
+        reject(error);
       });
-      if (typeof callback === 'function') {
-        callback();
-      }
-    })
-    .catch(error => {
-      // If checking user information fails, the cached authentication information
-      // is no longer correct, so we need to clear it.
-      if (error.response && error.response.status === 403) {
-        clearCachedAuthInformation();
-        return;
-      }
-      updateLoginState(attempts - 1, callback);
-    });
+  });
 }
