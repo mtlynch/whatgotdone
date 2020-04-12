@@ -20,7 +20,9 @@ it("back button should work if the user decides not to login/sign up", () => {
 });
 
 it("logs in and signs out", () => {
-  cy.login("staging_jimmy");
+  cy.visit("/");
+  cy.get("nav .post-update").click();
+  cy.completeLoginForm("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
 
@@ -29,6 +31,16 @@ it("logs in and signs out", () => {
   cy.location("pathname").should("eq", "/");
 
   cy.get("nav .account-dropdown").should("not.exist");
+
+  // Try signing in again.
+  cy.get("nav .post-update").click();
+  cy.completeLoginForm("staging_jimmy");
+
+  cy.location("pathname").should("include", "/entry/edit");
+
+  cy.get(".account-dropdown").click();
+  cy.get(".sign-out-link a").click();
+  cy.location("pathname").should("eq", "/");
 });
 
 it("bare route should redirect authenticated user to their edit entry page", () => {
