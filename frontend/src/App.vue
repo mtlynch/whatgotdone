@@ -5,20 +5,32 @@
       <router-view></router-view>
     </div>
     <Footer />
-    <Initializer />
   </div>
 </template>
 
 <script>
-import Initializer from '@/components/Initializer';
+import {getRecent} from '@/controllers/Recent.js';
+import updateLoginState from '@/controllers/LoginState.js';
+import {loadUserKit} from '@/controllers/UserKit.js';
+
 import Footer from '@/components/Footer';
 import NavigationBar from '@/components/NavigationBar';
+
 export default {
   name: 'app',
   components: {
-    Initializer,
     Footer,
     NavigationBar,
+  },
+  created() {
+    loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then(userKit => {
+      if (userKit.isLoggedIn() === true) {
+        updateLoginState();
+      }
+    });
+    getRecent(/*start=*/ 0).then(recentEntries => {
+      this.$store.commit('setRecent', recentEntries);
+    });
   },
 };
 </script>
