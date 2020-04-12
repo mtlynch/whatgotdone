@@ -35,7 +35,11 @@ export function loadUserKit(appId) {
       document.addEventListener('UserKitInit', function onUserKitInit() {
         resolve(new UserKitWrapper(window.UserKit, window.UserKitWidget));
       });
-      if (window.UserKit && window.UserKitWidget && window.UserKitWidget.isInitialized) {
+      if (
+        window.UserKit &&
+        window.UserKitWidget &&
+        window.UserKitWidget.isInitialized
+      ) {
         resolve(new UserKitWrapper(window.UserKit, window.UserKitWidget));
       }
       return;
