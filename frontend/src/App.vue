@@ -24,7 +24,7 @@ export default {
   },
   created() {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then(userKit => {
-      if (userKit.isLoggedIn() === true) {
+      if (userKit.isLoggedIn() !== true) {
         updateLoginState();
       }
     });
