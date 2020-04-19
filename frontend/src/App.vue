@@ -24,8 +24,10 @@ export default {
   },
   created() {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then(userKit => {
-      if (userKit.isLoggedIn() !== true) {
+      if (userKit.isLoggedIn() === true) {
         updateLoginState();
+      } else {
+        this.$store.commit('clearLoginState');
       }
     });
     getRecent(/*start=*/ 0).then(recentEntries => {
