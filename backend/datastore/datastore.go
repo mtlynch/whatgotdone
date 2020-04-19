@@ -20,6 +20,8 @@ type Datastore interface {
 	GetUserProfile(username string) (types.UserProfile, error)
 	// SetUserProfile updates the given user's profile.
 	SetUserProfile(username string, profile types.UserProfile) error
+	// GetEntry returns the published entry for the given date.
+	GetEntry(username string, date string) (types.JournalEntry, error)
 	// GetEntries returns all published entries for the given user.
 	GetEntries(username string) ([]types.JournalEntry, error)
 	// GetDraft returns an entry draft for the given user for the given date.
@@ -49,6 +51,16 @@ type Datastore interface {
 	GetPreferences(username string) (types.Preferences, error)
 	// SetPreferences saves the user's preferences for using the site.
 	SetPreferences(username string, prefs types.Preferences) error
+}
+
+// EntryNotFoundError occurs when no published exists for a user with a given date.
+type EntryNotFoundError struct {
+	Username string
+	Date     string
+}
+
+func (f EntryNotFoundError) Error() string {
+	return fmt.Sprintf("Could not find published entry for user %s on date %s", f.Username, f.Date)
 }
 
 // DraftNotFoundError occurs when no draft exists for a user with a given date.
