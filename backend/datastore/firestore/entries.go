@@ -6,8 +6,32 @@ import (
 
 	"google.golang.org/api/iterator"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
+
+// GetEntry returns the published entry for the given date.
+func (c client) GetEntry(username string, date string) (types.JournalEntry, error) {
+	iter := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Documents(c.ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return types.JournalEntry{}, err
+		}
+		var j types.JournalEntry
+		doc.DataTo(&j)
+		if j.Date == date {
+			return j, nil
+		}
+	}
+	return types.JournalEntry{}, datastore.EntryNotFoundError{
+		Username: username,
+		Date:     date,
+	}
+}
 
 // GetEntries returns all published entries for the given user.
 func (c client) GetEntries(username string) ([]types.JournalEntry, error) {

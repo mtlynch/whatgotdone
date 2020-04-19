@@ -10,6 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (ds mockDatastore) InsertPageViews(path string, pageViews int) error {
@@ -23,6 +24,10 @@ func (ds mockDatastore) GetPageViews(path string) (int, error) {
 		}
 	}
 	return 0, errors.New("no pageview results found")
+}
+
+func (ds mockDatastore) GetEntry(username string, date string) (types.JournalEntry, error) {
+	return types.JournalEntry{}, errors.New("not implemented")
 }
 
 func TestPageViewsGet(t *testing.T) {

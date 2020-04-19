@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
@@ -33,7 +34,8 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			http.Error(w, "Failed to retrieve pageviews", http.StatusInternalServerError)
 			return
 		}
-		if !isPathForJournalEntry(path, users) {
+		user, entryDate, ok := parseJournalEntryPath(path, users)
+		if !ok {
 			log.Printf("path is not a journal entry: %s", path)
 			http.Error(w, "path parameter must specify a journal entry", http.StatusForbidden)
 			return
@@ -41,9 +43,14 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 
 		views, err := s.datastore.GetPageViews(path)
 		if _, ok := err.(datastore.PageViewsNotFoundError); ok {
-			log.Printf("No pageviews found for %s", path)
-			http.Error(w, "Path has no pageview data", http.StatusNotFound)
-			return
+			if s.wasEntryPublishedRecently(user, entryDate) {
+				views = 1
+				err = nil
+			} else {
+				log.Printf("No pageviews found for %s", path)
+				http.Error(w, "Path has no pageview data", http.StatusNotFound)
+				return
+			}
 		} else if err != nil {
 			log.Printf("failed to retrieve pageviews from datastore for path %s: %v", path, err)
 			http.Error(w, fmt.Sprintf("Failed to retrieve pageviews for path %s", path), http.StatusInternalServerError)
@@ -59,6 +66,18 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			panic(err)
 		}
 	}
+}
+
+func (s defaultServer) wasEntryPublishedRecently(username, entryDate string) bool {
+	entry, err := s.datastore.GetEntry(username, entryDate)
+	if err != nil {
+		return false
+	}
+	t, err := time.Parse(time.RFC3339, entry.LastModified)
+	if err != nil {
+		return false
+	}
+	return time.Now().Sub(t).Minutes() < 15
 }
 
 func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
@@ -122,32 +141,32 @@ func (s defaultServer) filterNonEntries(pvcs []ga.PageViewCount) []ga.PageViewCo
 		return filtered
 	}
 	for _, pvc := range pvcs {
-		if isPathForJournalEntry(pvc.Path, users) {
+		if _, _, ok := parseJournalEntryPath(pvc.Path, users); !ok {
 			filtered = append(filtered, pvc)
 		}
 	}
 	return filtered
 }
 
-func isPathForJournalEntry(path string, users []string) bool {
+func parseJournalEntryPath(path string, users []string) (string, string, bool) {
 	pathParts := strings.Split(path, "/")
 	if len(pathParts) != 3 {
-		return false
+		return "", "", false
 	}
 	// Path should start with a forward slash, so the first part is empty.
 	if pathParts[0] != "" {
-		return false
+		return "", "", false
 	}
 
 	user := pathParts[1]
 	if !isStringInSlice(user, users) {
-		return false
+		return "", "", false
 	}
 	entryDate := pathParts[2]
 	if !validate.EntryDate(entryDate) {
-		return false
+		return "", "", false
 	}
-	return true
+	return user, entryDate, true
 }
 
 func isStringInSlice(s string, ss []string) bool {

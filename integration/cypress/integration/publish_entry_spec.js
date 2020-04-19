@@ -11,9 +11,7 @@ it("logs in and posts an update", () => {
 
   const entryText = "Posted an update at " + new Date().toISOString();
 
-  cy.get(".journal-markdown")
-    .clear()
-    .type(entryText);
+  cy.get(".journal-markdown").clear().type(entryText);
   cy.get("form").submit();
 
   cy.location("pathname").should("include", "/staging_jimmy/");
@@ -24,7 +22,9 @@ it("logs in and posts an update", () => {
   // Verify <head> metadata.
   cy.title().should("include", "staging_jimmy's What Got Done for the week of");
   cy.get('meta[property="og:type"]').should("have.attr", "content", "article");
+
   cy.get(".journal-body").should("contain", entryText);
+  cy.get(".view-count").should("contain", "Viewed 1 times");
 });
 
 it("logs in and backdates an update from a previous week", () => {
@@ -40,9 +40,7 @@ it("logs in and backdates an update from a previous week", () => {
 
   const entryText = "Posted an update at " + new Date().toISOString();
 
-  cy.get(".journal-markdown")
-    .clear()
-    .type(entryText);
+  cy.get(".journal-markdown").clear().type(entryText);
   cy.get("form").submit();
 
   cy.location("pathname").should("eq", "/staging_jimmy/2019-12-13");
@@ -73,6 +71,7 @@ it("logs in and backdates an update from a previous week", () => {
   );
 
   cy.get(".journal-body").should("contain", entryText);
+  cy.get(".view-count").should("contain", "Viewed 1 times");
 });
 
 it("logs in and posts an empty update (deleting the update)", () => {
