@@ -21,10 +21,14 @@
         <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
       </p>
     </template>
+    <template v-else-if="isLoading">
+      <b-spinner type="grow" label="Spinning"></b-spinner>
+      <p>Loading &nbsp;<Username :username="entryAuthor" />'s update...</p>
+    </template>
     <template v-else>
       <p>
-        <span class="username">{{ entryAuthor }}</span> has not posted any What
-        Got Done updates.
+        <Username :username="entryAuthor" /> has not posted any What Got Done
+        updates.
       </p>
     </template>
     <p v-if="backendError" class="error">
@@ -75,11 +79,13 @@ export default {
     return {
       journalEntries: [],
       showEmptyEntries: false,
+      isLoading: false,
       backendError: null,
     };
   },
   methods: {
     loadJournalEntries: function() {
+      this.isLoading = true;
       this.journalEntries = [];
       getEntriesFromUser(this.entryAuthor)
         .then(entries => {
@@ -89,6 +95,9 @@ export default {
         })
         .catch(error => {
           this.backendError = error;
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
   },
@@ -125,7 +134,9 @@ export default {
     },
     canEdit: function() {
       return (
-        this.loggedInUsername && this.loggedInUsername === this.entryAuthor
+        this.currentEntry &&
+        this.loggedInUsername &&
+        this.loggedInUsername === this.entryAuthor
       );
     },
     twitterShareUrl: function() {
