@@ -20,12 +20,12 @@ type Server interface {
 // New creates a new What Got Done server with all the state it needs to
 // satisfy HTTP requests.
 func New() Server {
-	var fetcher *ga.MetricFetcher
+	var fetcher ga.MetricFetcher
 	f, err := ga.New()
 	if err != nil {
 		log.Printf("Failed to load Google Analytics metrics fetcher: %s", err)
 	} else {
-		fetcher = &f
+		fetcher = f
 	}
 
 	gcsClient, err := gcs.New()
@@ -55,7 +55,7 @@ type defaultServer struct {
 	gcsClient              *gcs.Client
 	router                 *mux.Router
 	csrfMiddleware         httpMiddlewareHandler
-	googleAnalyticsFetcher *ga.MetricFetcher
+	googleAnalyticsFetcher ga.MetricFetcher
 }
 
 // Router returns the underlying router interface for the server.
