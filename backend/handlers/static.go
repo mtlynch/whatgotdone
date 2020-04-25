@@ -98,8 +98,6 @@ func getPageTitle(r *http.Request) string {
 
 	formattedDate := date.Format("Jan. 2, 2006")
 
-	log.Printf("printing date as %s", formattedDate)
-
 	return fmt.Sprintf("%s's What Got Done for the week of %s", username, formattedDate)
 }
 
