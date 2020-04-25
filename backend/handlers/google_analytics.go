@@ -95,7 +95,7 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			return
 		}
 
-		pvcs, err := (*s.googleAnalyticsFetcher).PageViewsByPath("2019-01-01", "today")
+		pvcs, err := s.googleAnalyticsFetcher.PageViewsByPath("2019-01-01", "today")
 		if err != nil {
 			log.Printf("failed to refresh Google Analytics data: %v", err)
 			http.Error(w, "Failed to refresh Google Analytics data", http.StatusInternalServerError)
@@ -104,7 +104,6 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 		pvcs = coalescePageViews(pvcs)
 		pvcs = s.filterNonEntries(pvcs)
 		for _, pvc := range pvcs {
-			log.Printf("saving view count: %s -> %d views", pvc.Path, pvc.Views)
 			if err := s.datastore.InsertPageViews(pvc.Path, pvc.Views); err != nil {
 				log.Printf("failed to store pageviews in datastore %v: %v", pvc, err)
 			}
@@ -115,6 +114,8 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 	}
 }
 
+// coalescePageViews aggregates together path strings with the same path part
+// but different query strings.
 func coalescePageViews(pvcs []ga.PageViewCount) []ga.PageViewCount {
 	totals := map[string]int{}
 	coalesced := []ga.PageViewCount{}
@@ -138,14 +139,16 @@ func coalescePageViews(pvcs []ga.PageViewCount) []ga.PageViewCount {
 	return coalesced
 }
 
+// filterNonEntries removes page counts for paths that are not user entries.
 func (s defaultServer) filterNonEntries(pvcs []ga.PageViewCount) []ga.PageViewCount {
 	filtered := []ga.PageViewCount{}
 	users, err := s.datastore.Users()
 	if err != nil {
+		log.Printf("failed to retrieve user list for pageview filtering: %v", err)
 		return filtered
 	}
 	for _, pvc := range pvcs {
-		if _, _, ok := parseJournalEntryPath(pvc.Path, users); !ok {
+		if _, _, ok := parseJournalEntryPath(pvc.Path, users); ok {
 			filtered = append(filtered, pvc)
 		}
 	}

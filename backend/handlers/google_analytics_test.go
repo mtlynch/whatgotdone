@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"reflect"
+	"sort"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -13,7 +15,11 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (ds mockDatastore) InsertPageViews(path string, pageViews int) error {
+func (ds *mockDatastore) InsertPageViews(path string, pageViews int) error {
+	ds.pageViewCounts = append(ds.pageViewCounts, ga.PageViewCount{
+		Path:  path,
+		Views: pageViews,
+	})
 	return nil
 }
 
@@ -115,5 +121,92 @@ func TestPageViewsGet(t *testing.T) {
 					tt.path, response.Views, tt.viewsExpected)
 			}
 		}
+	}
+}
+
+type mockGoogleAnalyticsFetcher struct {
+	PageViewCounts []ga.PageViewCount
+}
+
+func (f mockGoogleAnalyticsFetcher) PageViewsByPath(_, _ string) ([]ga.PageViewCount, error) {
+	return f.PageViewCounts, nil
+}
+
+func TestRefreshGoogleAnalytics(t *testing.T) {
+	mf := mockGoogleAnalyticsFetcher{
+		PageViewCounts: []ga.PageViewCount{
+			{
+				Path:  "/joe/2020-04-24",
+				Views: 5,
+			},
+			{
+				Path:  "/joe/2020-04-24?fbclid=dummy_facebook_referral_id",
+				Views: 6,
+			},
+			{
+				Path:  "/joe/2020-04-17",
+				Views: 8,
+			},
+			{
+				Path:  "/mary/2020-04-17",
+				Views: 25,
+			},
+			{
+				Path:  "/invalidUser/2020-04-17",
+				Views: 100,
+			},
+			{
+				Path:  "/entry/edit/2020-04-17",
+				Views: 15,
+			},
+			{
+				Path:  "/privacy-policy",
+				Views: 2,
+			},
+		},
+	}
+
+	ds := mockDatastore{
+		users: []string{"joe", "mary"},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		datastore:              &ds,
+		router:                 router,
+		csrfMiddleware:         dummyCsrfMiddleware(),
+		googleAnalyticsFetcher: mf,
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/tasks/refreshGoogleAnalytics", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("X-Appengine-Cron", "true")
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Fatalf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	expected := []ga.PageViewCount{
+		{
+			Path:  "/joe/2020-04-17",
+			Views: 8,
+		},
+		{
+			Path:  "/joe/2020-04-24",
+			Views: 11,
+		},
+		{
+			Path:  "/mary/2020-04-17",
+			Views: 25,
+		},
+	}
+	sort.Slice(ds.pageViewCounts, func(i, j int) bool { return ds.pageViewCounts[i].Path < ds.pageViewCounts[j].Path })
+	if !reflect.DeepEqual(ds.pageViewCounts, expected) {
+		t.Fatalf("Unexpected response: got %v want %v", ds.pageViewCounts, expected)
 	}
 }
