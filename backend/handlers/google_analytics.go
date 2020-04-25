@@ -104,6 +104,7 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 		pvcs = coalescePageViews(pvcs)
 		pvcs = s.filterNonEntries(pvcs)
 		for _, pvc := range pvcs {
+			log.Printf("saving view count: %s -> %d views", pvc.Path, pvc.Views)
 			if err := s.datastore.InsertPageViews(pvc.Path, pvc.Views); err != nil {
 				log.Printf("failed to store pageviews in datastore %v: %v", pvc, err)
 			}
