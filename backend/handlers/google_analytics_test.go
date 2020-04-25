@@ -76,7 +76,10 @@ func TestPageViewsGet(t *testing.T) {
 	ds := mockDatastore{
 		users: []string{"jimmy123"},
 		pageViewCounts: []ga.PageViewCount{
-			ga.PageViewCount{"/jimmy123/2020-01-17", 5},
+			ga.PageViewCount{
+				Path:  "/jimmy123/2020-01-17",
+				Views: 5,
+			},
 		},
 	}
 	router := mux.NewRouter()

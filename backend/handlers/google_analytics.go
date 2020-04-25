@@ -129,8 +129,11 @@ func coalescePageViews(pvcs []ga.PageViewCount) []ga.PageViewCount {
 			totals[u.EscapedPath()] = pvc.Views
 		}
 	}
-	for p, c := range totals {
-		coalesced = append(coalesced, ga.PageViewCount{p, c})
+	for p, v := range totals {
+		coalesced = append(coalesced, ga.PageViewCount{
+			Path:  p,
+			Views: v,
+		})
 	}
 	return coalesced
 }
