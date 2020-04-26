@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -27,6 +28,14 @@ func dummyCsrfMiddleware() httpMiddlewareHandler {
 	return func(h http.Handler) http.Handler {
 		return h
 	}
+}
+
+func mustParseReactionCreationTime(s string) time.Time {
+	t, err := time.Parse(time.RFC3339, s)
+	if err != nil {
+		panic(err)
+	}
+	return t
 }
 
 func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
@@ -66,8 +75,16 @@ func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
 
 func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 	reactions := []types.Reaction{
-		types.Reaction{Username: "dummyUserA", Symbol: "🎉", Timestamp: "2019-07-09T14:56:29-04:00"},
-		types.Reaction{Username: "dummyUserB", Symbol: "👍", Timestamp: "2019-07-09T11:57:02-04:00"},
+		{
+			Username:     "dummyUserA",
+			Symbol:       "🎉",
+			CreationTime: mustParseReactionCreationTime("2019-07-09T14:56:29-04:00"),
+		},
+		{
+			Username:     "dummyUserB",
+			Symbol:       "👍",
+			CreationTime: mustParseReactionCreationTime("2019-07-09T11:57:02-04:00"),
+		},
 	}
 	ds := mockDatastore{
 		reactions: reactions,
