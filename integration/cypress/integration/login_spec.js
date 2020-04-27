@@ -78,3 +78,26 @@ it("bare route should redirect authenticated user to their edit entry page", () 
   cy.get(".navbar .navbar-brand").click();
   cy.location("pathname").should("eq", "/");
 });
+
+it("visiting authenticated page after UserKit token expires should redirect to login", () => {
+  cy.visit("/");
+  cy.get(".post-update").click();
+  cy.completeLoginForm("joe123");
+
+  cy.location("pathname").should("contain", "/entry/edit");
+  cy.get(".account-dropdown").click();
+  cy.get(".preferences-link a").click();
+
+  cy.location("pathname").should("eq", "/preferences");
+
+  // Simulate a UserKit cookie going stale.
+  cy.setCookie("userkit_auth_token", "");
+
+  cy.reload();
+
+  cy.location("pathname").should("eq", "/login");
+  cy.completeLoginForm("joe123");
+
+  // Redirect to where the user was before the redirect.
+  cy.location("pathname").should("eq", "/preferences");
+});
