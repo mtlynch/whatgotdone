@@ -21,10 +21,10 @@ const routes = [
   {path: '/about', component: Home},
   {path: '/feed', component: PersonalizedFeed},
   {path: '/recent', component: Recent},
-  {path: '/entry/edit/:date', component: EditEntry},
+  {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
   {path: '/login', component: Login},
   {path: '/logout', component: Logout},
-  {path: '/preferences', component: UserPreferences},
+  {path: '/preferences', component: UserPreferences, name: 'Preferences'},
   {path: '/privacy-policy', component: PrivacyPolicy},
   {
     path: '/:username',
@@ -35,7 +35,7 @@ const routes = [
       },
     },
   },
-  {path: '/profile/edit', component: EditUserProfile},
+  {path: '/profile/edit', component: EditUserProfile, name: 'EditProfile'},
   {
     path: '/:username/:date',
     component: ViewEntry,
