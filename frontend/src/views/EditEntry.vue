@@ -1,36 +1,43 @@
 <template>
   <div class="submit">
     <h1>What got done this week?</h1>
-    <form @submit.prevent="handleSubmit">
-      <p>
-        Enter your update for the week ending
-        <span class="end-date">{{ date | moment('dddd, ll') }}</span
-        >.
-      </p>
-      <EntryEditor
-        class="form-control journal-markdown"
-        ref="entryText"
-        v-model="entryContent"
-        @input="debouncedSaveDraft"
-      />
-      <p>
-        (You can use
-        <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank"
-          >Markdown</a
-        >)
-      </p>
-      <div class="d-flex justify-content-end">
-        <button
-          @click.prevent="handleSaveDraft"
-          class="btn btn-primary save-draft"
-          :disabled="changesSaved"
-        >
-          {{ saveLabel }}
-        </button>
-        <button type="submit" class="btn btn-primary">Publish</button>
-      </div>
-    </form>
-    <JournalPreview :markdown="entryContent" />
+    <p>
+      Enter your update for the week ending
+      <span class="end-date">{{ date | moment('dddd, ll') }}</span
+      >.
+    </p>
+
+    <template v-if="entryContent === null">
+      <b-spinner type="grow" label="Spinning"></b-spinner>
+      <p>Loading draft...</p>
+    </template>
+    <template v-else>
+      <form @submit.prevent="handleSubmit">
+        <EntryEditor
+          class="form-control journal-markdown"
+          ref="entryText"
+          v-model="entryContent"
+          @input="debouncedSaveDraft"
+        />
+        <p>
+          (You can use
+          <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank"
+            >Markdown</a
+          >)
+        </p>
+        <div class="d-flex justify-content-end">
+          <button
+            @click.prevent="handleSaveDraft"
+            class="btn btn-primary save-draft"
+            :disabled="changesSaved"
+          >
+            {{ saveLabel }}
+          </button>
+          <button type="submit" class="btn btn-primary">Publish</button>
+        </div>
+      </form>
+      <JournalPreview :markdown="entryContent" />
+    </template>
   </div>
 </template>
 
@@ -57,7 +64,7 @@ export default {
   data() {
     return {
       date: '',
-      entryContent: '',
+      entryContent: null,
       changesSaved: true,
       saveLabel: 'Save Draft',
     };
@@ -77,6 +84,9 @@ export default {
       });
     },
     handleSaveDraft() {
+      if (this.entryContent === null) {
+        return;
+      }
       this.saveLabel = 'Saving';
       saveDraft(this.date, this.entryContent)
         .then(() => {
