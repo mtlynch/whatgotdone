@@ -12,9 +12,56 @@ it("logs in and saves a draft", () => {
 
   const entryText = "Saved a private draft at " + new Date().toISOString();
 
-  cy.get(".journal-markdown")
-    .clear()
-    .type(entryText);
+  cy.get(".journal-markdown").clear().type(entryText);
+  cy.get(".save-draft").click();
+
+  // Wait for "save draft" operation to complete.
+  cy.wait("@postDraft");
+
+  // User should stay on the same page after saving a draft.
+  cy.location("pathname").should("include", "/entry/edit");
+
+  cy.visit("/recent");
+
+  // Private drafts should not appear on the recent page
+  cy.get("#app").should("not.contain", entryText);
+});
+
+it("don't overwrite draft until we successfully sync the latest draft from the server", () => {
+  cy.server();
+  cy.route({
+    method: "GET",
+    url: "/api/draft/*",
+    response: {},
+    status: 500,
+  }).as("getDraft");
+
+  cy.login("staging_jimmy");
+
+  cy.location("pathname").should("include", "/entry/edit");
+
+  // Wait for page to fail on its request to pull down the previous draft.
+  cy.wait("@getDraft");
+
+  cy.get(".journal-markdown").should("not.be.visible");
+  cy.get(".save-draft").should("not.be.visible");
+});
+
+it("logs in and saves a draft", () => {
+  cy.server();
+  cy.route("GET", "/api/draft/*").as("getDraft");
+  cy.route("POST", "/api/draft/*").as("postDraft");
+
+  cy.login("staging_jimmy");
+
+  cy.location("pathname").should("include", "/entry/edit");
+
+  // Wait for page to pull down any previous entry.
+  cy.wait("@getDraft");
+
+  const entryText = "Saved a private draft at " + new Date().toISOString();
+
+  cy.get(".journal-markdown").clear().type(entryText);
   cy.get(".save-draft").click();
 
   // Wait for "save draft" operation to complete.
