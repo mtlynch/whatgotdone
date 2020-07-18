@@ -20,7 +20,7 @@
     "bootstrap-vue": "^2.7.0",
     "bootswatch": "^4.4.1",
     "core-js": "^3.6.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "vue": "^2.6.11",
     "vue-gtag": "^1.6.2",
     "vue-markdown": "^2.2.4",
