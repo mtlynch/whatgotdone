@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// Many of these rules come from UserKit:
+// https://docs.userkit.io/docs/content-security-policy
 func contentSecurityPolicy() string {
 	directives := map[string][]string{
 		"script-src": []string{
@@ -15,14 +17,14 @@ func contentSecurityPolicy() string {
 			// URLs for /login route (UserKit)
 			"https://widget.userkit.io",
 			"https://api.userkit.io",
-			"https://www.google.com/recaptcha/",
-			"https://www.gstatic.com/recaptcha/",
+			"https://www.google.com",
+			"https://www.gstatic.com",
 			"https://apis.google.com",
 		},
 		"style-src": []string{
 			"'self'",
 			// URLs for /login route (UserKit)
-			"https://widget.userkit.io/css/",
+			"https://widget.userkit.io",
 			"https://fonts.googleapis.com",
 			"https://fonts.gstatic.com",
 			// Google auth requires this, and I can't figure out any way to avoid it.
@@ -30,7 +32,7 @@ func contentSecurityPolicy() string {
 		},
 		"frame-src": []string{
 			// URLs for /login route (UserKit)
-			"https://www.google.com/recaptcha/",
+			"https://www.google.com",
 			"https://accounts.google.com",
 		},
 		"img-src": []string{
@@ -41,6 +43,8 @@ func contentSecurityPolicy() string {
 			"https://www.google-analytics.com",
 			// For Google Sign In
 			"https://*.googleusercontent.com",
+			// For UserKit
+			"https://widget.userkit.io",
 		},
 	}
 	directives["script-src"] = append(directives["script-src"], extraScriptSrcSources()...)
