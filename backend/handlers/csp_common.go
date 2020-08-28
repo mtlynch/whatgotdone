@@ -17,8 +17,8 @@ func contentSecurityPolicy() string {
 			// URLs for /login route (UserKit)
 			"https://widget.userkit.io",
 			"https://api.userkit.io",
-			"https://www.google.com",
-			"https://www.gstatic.com",
+			"https://www.google.com/recaptcha/",
+			"https://www.gstatic.com/recaptcha/",
 			"https://apis.google.com",
 		},
 		"style-src": []string{
@@ -32,7 +32,7 @@ func contentSecurityPolicy() string {
 		},
 		"frame-src": []string{
 			// URLs for /login route (UserKit)
-			"https://www.google.com",
+			"https://www.google.com/recaptcha/",
 			"https://accounts.google.com",
 		},
 		"img-src": []string{
