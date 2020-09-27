@@ -85,7 +85,18 @@ docker run \
   mtlynch/firestore-emulator
 ```
 
-### 2. Build the frontend
+### 2. Populate the database
+
+To populate the datbase with initial data, run the test data manager:
+
+```bash
+pushd test-data-manager &&
+  go build --tags "dev" -o /tmp/mgr . && \
+  /tmp/mgr
+popd
+```
+
+### 3. Build the frontend
 
 To build the Vue frontend for What Got Done, run the following command:
 
@@ -96,7 +107,7 @@ pushd frontend && \
   popd
 ```
 
-### 3. Run the backend
+### 4. Run the backend
 
 To run the Go backend server, run the following command:
 
@@ -105,7 +116,7 @@ export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
 export USERKIT_SECRET="dummy.dummy"
 export FIRESTORE_EMULATOR_HOST="localhost:8080"
 env GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
-modd
+$GOPATH/bin/modd
 ```
 
 What Got Done is now running on [http://localhost:3001](http://localhost:3001). [Modd](https://github.com/cortesi/modd) is a hot reloading tool that will automatically rebuild and restart the server upon changes to any `.go` files.
