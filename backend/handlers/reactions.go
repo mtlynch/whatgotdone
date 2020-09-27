@@ -83,9 +83,9 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 		}
 
 		reaction := types.Reaction{
-			Username:  username,
-			Timestamp: time.Now().Format(time.RFC3339),
-			Symbol:    reactionSymbol,
+			Username:     username,
+			CreationTime: time.Now(),
+			Symbol:       reactionSymbol,
 		}
 		err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
 		if err != nil {

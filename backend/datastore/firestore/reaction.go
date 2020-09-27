@@ -2,7 +2,6 @@ package firestore
 
 import (
 	"log"
-	"time"
 
 	"google.golang.org/api/iterator"
 
@@ -37,7 +36,6 @@ func (c client) AddReaction(entryAuthor string, entryDate string, reaction types
 		entryDate:   entryDate,
 	})
 
-	reaction.CreationTime = time.Now()
 	key := getEntryReactionsKey(entryAuthor, entryDate)
 	log.Printf("adding reaction to datastore: %s -> %+v", key, reaction)
 	_, err := c.firestoreClient.Collection(reactionsRootKey).Doc(key).Collection(perUserReactionsKey).Doc(reaction.Username).Set(c.ctx, reaction)
