@@ -15,13 +15,13 @@ import (
 
 func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T22:00:00.000Z", Markdown: "Read a pamphlet from The Cat Society"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
+		types.JournalEntry{Date: "2019-05-24", LastModifiedTime: mustParseTime("2019-05-24T00:00:00.000Z"), Markdown: "Rode the bus and saw a movie about ghosts"},
+		types.JournalEntry{Date: "2019-05-24", LastModifiedTime: mustParseTime("2019-05-23T00:00:00.000Z"), Markdown: "Ate some crackers in a bathtub"},
+		types.JournalEntry{Date: "2019-05-17", LastModifiedTime: mustParseTime("2019-05-17T12:00:00.000Z"), Markdown: "Saw a movie about French vanilla"},
+		types.JournalEntry{Date: "2019-05-24", LastModifiedTime: mustParseTime("2019-05-25T00:00:00.000Z"), Markdown: "Read a book about the history of cheese"},
+		types.JournalEntry{Date: "2019-05-24", LastModifiedTime: mustParseTime("2019-05-25T22:00:00.000Z"), Markdown: "Read a pamphlet from The Cat Society"},
+		types.JournalEntry{Date: "2019-05-24", LastModifiedTime: mustParseTime("2019-05-25T06:00:00.000Z"), Markdown: "Read the news today... Oh boy!"},
+		types.JournalEntry{Date: "2019-05-17", LastModifiedTime: mustParseTime("2019-05-16T00:00:00.000Z"), Markdown: "Took a nap and dreamed about chocolate"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,
@@ -74,10 +74,10 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 
 func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-09-28T12:00:00.000Z", Markdown: "Made a hat out of donuts from the cloud in the sky"},
-		types.JournalEntry{Date: "2019-09-20", LastModified: "2019-09-25T00:00:00.000Z", Markdown: "High fived a platypus when the apple hits the pie."},
-		types.JournalEntry{Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of choclate"},
-		types.JournalEntry{Date: "2019-09-20", LastModified: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
+		types.JournalEntry{Date: "2019-05-17", LastModifiedTime: "2019-09-28T12:00:00.000Z", Markdown: "Made a hat out of donuts from the cloud in the sky"},
+		types.JournalEntry{Date: "2019-09-20", LastModifiedTime: "2019-09-25T00:00:00.000Z", Markdown: "High fived a platypus when the apple hits the pie."},
+		types.JournalEntry{Date: "2019-09-06", LastModifiedTime: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of choclate"},
+		types.JournalEntry{Date: "2019-09-20", LastModifiedTime: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,
@@ -127,12 +127,12 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 
 func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-05-10", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
-		types.JournalEntry{Date: "2019-05-03", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
-		types.JournalEntry{Date: "2019-04-26", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
-		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
-		types.JournalEntry{Date: "2019-04-12", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
-		types.JournalEntry{Date: "2019-04-05", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
+		types.JournalEntry{Date: "2019-05-10", LastModifiedTime: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
+		types.JournalEntry{Date: "2019-05-03", LastModifiedTime: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
+		types.JournalEntry{Date: "2019-04-26", LastModifiedTime: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
+		types.JournalEntry{Date: "2019-04-19", LastModifiedTime: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
+		types.JournalEntry{Date: "2019-04-12", LastModifiedTime: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
+		types.JournalEntry{Date: "2019-04-05", LastModifiedTime: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,

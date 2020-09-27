@@ -38,8 +38,8 @@ func (c client) InsertDraft(username string, j types.JournalEntry) error {
 	log.Printf("adding new draft for %s: %+v", username, j)
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(draftsRootKey).Doc(username).Set(c.ctx, userDocument{
-		Username:     username,
-		LastModified: j.LastModified,
+		Username:         username,
+		LastModifiedTime: j.LastModifiedTime,
 	})
 	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Doc(j.Date).Set(c.ctx, j)
 	return err

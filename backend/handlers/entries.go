@@ -65,9 +65,9 @@ func (s *defaultServer) entryPost() http.HandlerFunc {
 		}
 
 		j := types.JournalEntry{
-			Date:         date,
-			LastModified: time.Now().Format(time.RFC3339),
-			Markdown:     t.EntryContent,
+			Date:             date,
+			LastModifiedTime: time.Now(),
+			Markdown:         t.EntryContent,
 		}
 
 		err = s.datastore.InsertDraft(username, j)

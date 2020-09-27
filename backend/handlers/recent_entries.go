@@ -15,8 +15,8 @@ type entryPublic struct {
 	Date   string `json:"date"`
 	// Skip JSON serialization for lastModified as clients don't need this field,
 	// but we need it internally for sorting lists of entries.
-	lastModified string
-	Markdown     string `json:"markdown"`
+	lastModifiedTime string
+	Markdown         string `json:"markdown"`
 }
 
 type entriesPublic []entryPublic
@@ -56,10 +56,10 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 					continue
 				}
 				entries = append(entries, entryPublic{
-					Author:       username,
-					Date:         entry.Date,
-					lastModified: entry.LastModified,
-					Markdown:     entry.Markdown,
+					Author:           username,
+					Date:             entry.Date,
+					lastModifiedTime: entry.LastModifiedTime,
+					Markdown:         entry.Markdown,
 				})
 			}
 		}
@@ -105,10 +105,10 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 			}
 			for _, entry := range userEntries {
 				entries = append(entries, entryPublic{
-					Author:       followedUsername,
-					Date:         entry.Date,
-					lastModified: entry.LastModified,
-					Markdown:     entry.Markdown,
+					Author:           followedUsername,
+					Date:             entry.Date,
+					lastModifiedTime: entry.LastModifiedTime,
+					Markdown:         entry.Markdown,
 				})
 			}
 		}

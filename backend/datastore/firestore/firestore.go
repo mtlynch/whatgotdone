@@ -21,8 +21,8 @@ type (
 	}
 
 	userDocument struct {
-		Username     string `firestore:"username,omitempty"`
-		LastModified string `firestore:"lastModified,omitempty"`
+		Username         string    `firestore:"username,omitempty"`
+		LastModifiedTime time.Time `firestore:"lastModifiedTime,omitempty"`
 	}
 
 	reactionsDocument struct {
@@ -40,8 +40,8 @@ type (
 	}
 
 	followDocument struct {
-		Follower     string    `firestore:"follower"`
-		LastModified time.Time `firestore:"lastModified"`
+		Follower         string    `firestore:"follower"`
+		LastModifiedTime time.Time `firestore:"lastModifiedTime"`
 	}
 )
 

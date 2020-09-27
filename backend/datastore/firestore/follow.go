@@ -15,8 +15,8 @@ import (
 func (c client) InsertFollow(leader, follower string) error {
 	// Create a followDocument so that its children appear in Firestore console.
 	c.firestoreClient.Collection(followingRootKey).Doc(follower).Set(c.ctx, followDocument{
-		Follower:     follower,
-		LastModified: time.Now().UTC(),
+		Follower:         follower,
+		LastModifiedTime: time.Now().UTC(),
 	})
 	f := types.Follow{
 		Leader:   leader,

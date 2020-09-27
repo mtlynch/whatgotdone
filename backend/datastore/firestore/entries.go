@@ -61,8 +61,8 @@ func (c client) InsertEntry(username string, j types.JournalEntry) error {
 	log.Printf("adding new entry for %s: %+v", username, j)
 	// Create a User document so that its children appear in Firestore console.
 	c.firestoreClient.Collection(entriesRootKey).Doc(username).Set(c.ctx, userDocument{
-		Username:     username,
-		LastModified: j.LastModified,
+		Username:         username,
+		LastModifiedTime: j.LastModifiedTime,
 	})
 	_, err := c.firestoreClient.Collection(entriesRootKey).Doc(username).Collection(perUserEntriesKey).Doc(j.Date).Set(c.ctx, j)
 	return err
