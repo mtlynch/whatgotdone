@@ -3,3 +3,6 @@ update_configs:
   - package_manager: "go:modules"
     directory: "/"
     update_schedule: "live"
+  - package_manager: "javascript"
+    directory: "/frontend"
+    update_schedule: "live"
