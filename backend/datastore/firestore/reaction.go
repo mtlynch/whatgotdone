@@ -35,7 +35,6 @@ func (c client) AddReaction(entryAuthor string, entryDate string, reaction types
 		entryAuthor: entryAuthor,
 		entryDate:   entryDate,
 	})
-
 	key := getEntryReactionsKey(entryAuthor, entryDate)
 	log.Printf("adding reaction to datastore: %s -> %+v", key, reaction)
 	_, err := c.firestoreClient.Collection(reactionsRootKey).Doc(key).Collection(perUserReactionsKey).Doc(reaction.Username).Set(c.ctx, reaction)
