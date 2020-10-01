@@ -87,7 +87,7 @@ docker run \
 
 ### 2. Populate the database
 
-To populate the datbase with initial data, run the test data manager:
+To populate the database with initial data, run the test data manager:
 
 ```bash
 pushd test-data-manager &&
@@ -186,8 +186,8 @@ What Got Done optionally allows image uploads from users. To enable this:
 
 1. Create a Google Cloud Storage bucket
 1. Choose uniform permissions for the bucket
-1. Add to the bucket permissions for the `allUsers` user with role "Storage Object Viewer"
+1. Add to the bucket permissions for the `allUsers` user with the role "Storage Object Viewer"
   * This makes all images in the bucket world-readable.
-1. When launching What Got Done, set the environment varialbe `PUBLIC_GCS_BUCKET` to the name of your GCS bucket.
+1. When launching What Got Done, set the environment variable `PUBLIC_GCS_BUCKET` to the name of your GCS bucket.
 
 When users paste images into their What Got Done entries, they will upload to your GCS bucket and auto-link from the entry editor.
