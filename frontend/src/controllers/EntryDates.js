@@ -27,14 +27,9 @@ function thisFriday() {
   const friday = 5;
 
   if (today <= friday) {
-    return moment()
-      .isoWeekday(friday)
-      .format('YYYY-MM-DD');
+    return moment().isoWeekday(friday).format('YYYY-MM-DD');
   } else {
-    return moment()
-      .add(1, 'weeks')
-      .isoWeekday(friday)
-      .format('YYYY-MM-DD');
+    return moment().add(1, 'weeks').isoWeekday(friday).format('YYYY-MM-DD');
   }
 }
 

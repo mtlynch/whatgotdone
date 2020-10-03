@@ -44,18 +44,18 @@ export default {
     };
   },
   methods: {
-    clear: function() {
+    clear: function () {
       this.reactions = [];
       this.selectedReaction = '';
     },
-    loadReactions: function() {
+    loadReactions: function () {
       if (!this.entryAuthor || !this.entryDate) {
         return;
       }
       const reactions = [];
       let newSelectedReaction = '';
       getReactions(this.entryAuthor, this.entryDate)
-        .then(fetchedReactions => {
+        .then((fetchedReactions) => {
           for (const reaction of fetchedReactions) {
             if (reaction.username == this.loggedInUsername) {
               if (this.selectedReaction == '') {
@@ -93,11 +93,11 @@ export default {
           // Ignore error for reactions, as they're non-essential.
         });
     },
-    reloadReactions: function() {
+    reloadReactions: function () {
       this.clear();
       this.loadReactions();
     },
-    handleReaction: function(reactionSymbol) {
+    handleReaction: function (reactionSymbol) {
       if (!this.loggedInUsername) {
         this.$router.push('/login');
         return;
@@ -110,7 +110,7 @@ export default {
       setReaction(this.entryAuthor, this.entryDate, this.selectedReaction);
       this.updateReactions();
     },
-    updateReactions: function() {
+    updateReactions: function () {
       const newReactions = [];
       for (const reaction of this.reactions) {
         if (reaction.username == this.loggedInUsername) {
@@ -128,7 +128,7 @@ export default {
       }
       this.reactions = newReactions;
     },
-    buttonVariant: function(reactionSymbol) {
+    buttonVariant: function (reactionSymbol) {
       if (this.selectedReaction == reactionSymbol) {
         return 'light';
       } else {
@@ -137,7 +137,7 @@ export default {
     },
   },
   computed: {
-    loggedInUsername: function() {
+    loggedInUsername: function () {
       return this.$store.state.username;
     },
   },
@@ -145,10 +145,10 @@ export default {
     this.loadReactions();
   },
   watch: {
-    entryAuthor: function() {
+    entryAuthor: function () {
       this.reloadReactions();
     },
-    entryDate: function() {
+    entryDate: function () {
       this.reloadReactions();
     },
   },

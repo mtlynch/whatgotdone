@@ -46,7 +46,7 @@ export default {
     onLoadMore() {
       this.loadMoreInProgress = true;
       return this.readEntriesFromServer(this.entries.length)
-        .then(newEntries => {
+        .then((newEntries) => {
           if (newEntries.length === 0) {
             this.serverHasMore = false;
             return;
@@ -61,7 +61,7 @@ export default {
     },
   },
   created() {
-    this.readEntriesFromServer(/*start=*/ 0).then(entries => {
+    this.readEntriesFromServer(/*start=*/ 0).then((entries) => {
       this.writeEntriesToStore(entries);
     });
   },

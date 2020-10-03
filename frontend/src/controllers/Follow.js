@@ -3,19 +3,19 @@ import axios from 'axios';
 import getCsrfToken from '@/controllers/CsrfToken.js';
 
 export function getFollowing(username) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/${username}/following`;
     axios
       .get(url)
-      .then(result => {
+      .then((result) => {
         resolve(result.data.following);
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
 }
 
 export function follow(username) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/follow/${username}`;
     axios
       .put(
@@ -29,12 +29,12 @@ export function follow(username) {
       .then(() => {
         resolve();
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
 }
 
 export function unfollow(username) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/follow/${username}`;
     axios
       .delete(url, {
@@ -44,6 +44,6 @@ export function unfollow(username) {
       .then(() => {
         resolve();
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
 }

@@ -4,39 +4,39 @@ import axios from 'axios';
 const updateSize = 15;
 
 export function getRecent(start) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/recentEntries?start=${start}&limit=${updateSize}`;
     axios
       .get(url)
-      .then(result => {
+      .then((result) => {
         // Transform each response data into entry object
-        const recentEntries = result.data.map(rawEntry => {
+        const recentEntries = result.data.map((rawEntry) => {
           return processEntry(rawEntry);
         });
         resolve(recentEntries);
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
 }
 
 // Retrieve recent entries from users that the logged-in user is following.
 export function getRecentFollowing(start) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/following?start=${start}&limit=${updateSize}`;
     axios
       .get(url, {withCredentials: true})
-      .then(result => {
+      .then((result) => {
         if (!result.data.entries) {
           resolve([]);
           return;
         }
         // Transform each response data into entry object
-        const entries = result.data.entries.map(rawEntry => {
+        const entries = result.data.entries.map((rawEntry) => {
           return processEntry(rawEntry);
         });
         resolve(entries);
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
 }
 
@@ -44,11 +44,11 @@ export function getRecentFollowing(start) {
 export function mergeEntryArrays(a, b) {
   let merged = Array.from(a);
   let keySet = new Set();
-  a.forEach(entry => {
+  a.forEach((entry) => {
     keySet.add(entry.permalink);
   });
 
-  b.forEach(newEntry => {
+  b.forEach((newEntry) => {
     if (!keySet.has(newEntry.permalink)) {
       merged.push(newEntry);
     }

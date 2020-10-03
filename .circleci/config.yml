@@ -16,7 +16,7 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:9.11.2-stretch
+      - image: node:12.18.4-alpine
     steps:
       - checkout
       - run:

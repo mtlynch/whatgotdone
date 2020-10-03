@@ -16,7 +16,7 @@ export default {
     };
   },
   methods: {
-    goBackOrGoHome: function() {
+    goBackOrGoHome: function () {
       if (this.previousRoute) {
         this.$router.replace(this.previousRoute);
       } else {
@@ -25,14 +25,14 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
-    next(vm => {
+    next((vm) => {
       if (from.path) {
         vm.previousRoute = from.path;
       }
     });
   },
   mounted() {
-    loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then(userKit => {
+    loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       userKit.authenticate().then(() => {
         updateLoginState().then(() => {
           this.goBackOrGoHome();

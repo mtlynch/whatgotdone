@@ -107,36 +107,36 @@ export default {
     };
   },
   computed: {
-    username: function() {
+    username: function () {
       return this.$route.params.username;
     },
-    loggedInUsername: function() {
+    loggedInUsername: function () {
       return this.$store.state.username;
     },
-    canEdit: function() {
+    canEdit: function () {
       return this.loggedInUsername && this.loggedInUsername === this.username;
     },
-    isFollowing: function() {
+    isFollowing: function () {
       if (!this.$store.state.following) {
         return false;
       }
       return this.$store.state.following.includes(this.username);
     },
-    isSelf: function() {
+    isSelf: function () {
       if (!this.loggedInUsername) {
         return false;
       }
       return this.loggedInUsername == this.username;
     },
-    canFollow: function() {
+    canFollow: function () {
       return this.loggedInUsername && !this.isFollowing && !this.isSelf;
     },
-    canUnfollow: function() {
+    canUnfollow: function () {
       return this.loggedInUsername && this.isFollowing && !this.isSelf;
     },
   },
   methods: {
-    clear: function() {
+    clear: function () {
       this.aboutMarkdown = '';
       this.twitterHandle = null;
       this.emailAddress = null;
@@ -144,29 +144,29 @@ export default {
       this.profileLoaded = false;
       this.entriesLoaded = false;
     },
-    loadProfile: function() {
-      getUserMetadata(this.username).then(metadata => {
+    loadProfile: function () {
+      getUserMetadata(this.username).then((metadata) => {
         this.aboutMarkdown = metadata.aboutMarkdown;
         this.twitterHandle = metadata.twitterHandle;
         this.emailAddress = metadata.emailAddress;
         this.profileLoaded = true;
       });
     },
-    loadRecentEntries: function() {
+    loadRecentEntries: function () {
       this.recentEntries = [];
-      getEntriesFromUser(this.username).then(entries => {
+      getEntriesFromUser(this.username).then((entries) => {
         this.recentEntries = entries;
         this.entriesLoaded = true;
       });
     },
-    onFollow: function() {
+    onFollow: function () {
       follow(this.username).then(() => {
         let following = this.$store.state.following;
         following.push(this.username);
         this.$store.commit('setFollowing', following);
       });
     },
-    onUnfollow: function() {
+    onUnfollow: function () {
       unfollow(this.username).then(() => {
         let following = new Set(this.$store.state.following);
         following.delete(this.username);

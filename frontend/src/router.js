@@ -30,7 +30,7 @@ const routes = [
     path: '/:username',
     component: UserProfile,
     meta: {
-      title: route => {
+      title: (route) => {
         return `${route.params.username} - What Got Done`;
       },
     },
@@ -40,7 +40,7 @@ const routes = [
     path: '/:username/:date',
     component: ViewEntry,
     meta: {
-      title: route => {
+      title: (route) => {
         return `${route.params.username}'s What Got Done for the week of ${route.params.date}`;
       },
     },
@@ -49,7 +49,7 @@ const routes = [
     path: '/:username/project/:project',
     component: ViewProject,
     meta: {
-      title: route => {
+      title: (route) => {
         return `${route.params.username}'s What Got Done | ${route.params.project}`;
       },
     },

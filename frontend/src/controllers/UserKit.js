@@ -8,7 +8,7 @@ class UserKitWrapper {
   authenticate() {
     const userKit = this.userKit;
     const widget = this.widget;
-    return new Promise(function(resolve) {
+    return new Promise(function (resolve) {
       if (userKit.isLoggedIn() === true) {
         resolve();
       } else {
@@ -27,7 +27,7 @@ class UserKitWrapper {
 }
 
 export function loadUserKit(appId) {
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     if (isWidgetJsLoaded()) {
       // Add an event listener in case the <script> tag is added but the
       // UserKitInit event has not yet fired, which would mean that the

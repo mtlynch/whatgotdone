@@ -15,9 +15,7 @@
           @input="onEntryTemplateChanged"
           :min-height="250"
           :max-height="650"
-          :placeholder="
-            '# Project 1\n\n*Update 1\n*Update 2\n\n# Project 2\n\n* Update 1'
-          "
+          :placeholder="'# Project 1\n\n*Update 1\n*Update 2\n\n# Project 2\n\n* Update 1'"
         ></textarea-autosize>
       </b-form-group>
 
@@ -66,18 +64,18 @@ export default {
     };
   },
   computed: {
-    username: function() {
+    username: function () {
       return this.$store.state.username;
     },
   },
   methods: {
     loadPreferences() {
       getPreferences()
-        .then(preferences => {
+        .then((preferences) => {
           this.preferencesFromServer = Object.assign({}, preferences);
           this.preferences = Object.assign({}, preferences);
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status == 404) {
             this.preferencesFromServer = Object.assign({}, this.preferences);
           }

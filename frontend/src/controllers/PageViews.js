@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export function getPageViews(path) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/pageViews`;
     axios
       .get(url, {
@@ -9,14 +9,14 @@ export function getPageViews(path) {
           path: path,
         },
       })
-      .then(result => {
+      .then((result) => {
         if (result.data) {
           resolve(result.data.views);
         } else {
           resolve(null);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error);
       });
   });
