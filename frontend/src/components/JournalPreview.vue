@@ -51,4 +51,8 @@ export default {
 .content {
   padding: 4px 14px;
 }
+
+.content >>> .contains-task-list {
+  list-style-type: none;
+}
 </style>

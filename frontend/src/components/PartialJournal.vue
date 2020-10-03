@@ -85,4 +85,8 @@ div.journal {
   text-align: left;
   margin-bottom: 50px;
 }
+
+.journal-body >>> .contains-task-list {
+  list-style-type: none;
+}
 </style>
