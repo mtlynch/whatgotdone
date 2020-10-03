@@ -75,7 +75,7 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 Run the following command to start a [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) in a Docker container:
 
 ```bash
-export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
+. dev.env
 docker run \
   --detach \
   --env "FIRESTORE_PROJECT_ID=${GOOGLE_CLOUD_PROJECT}" \
@@ -112,9 +112,7 @@ pushd frontend && \
 To run the Go backend server, run the following command:
 
 ```bash
-export GOOGLE_CLOUD_PROJECT="dummy-local-gcp-project"
-export USERKIT_SECRET="dummy.dummy"
-export FIRESTORE_EMULATOR_HOST="localhost:8080"
+. dev.env
 env GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
 $GOPATH/bin/modd
 ```
@@ -128,6 +126,7 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 If you're making changes to the Vue code, you'll probably want to run the standard Vue HTTP server with hot reloading. Keep the backend running, and in a separate shell session, run the following command:
 
 ```bash
+. dev.env
 cd frontend
 npm run serve
 ```
