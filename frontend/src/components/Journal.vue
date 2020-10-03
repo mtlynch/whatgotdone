@@ -45,6 +45,10 @@ export default {
   overflow: auto;
 }
 
+.journal-body >>> .contains-task-list {
+  list-style-type: none;
+}
+
 @media screen and (min-width: 768px) {
   overflow: visible;
 }
