@@ -66,7 +66,7 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 
 ### 0. Pre-requisites
 
-* [Node.js](https://nodejs.org/) (8.x or higher)
+* [Node.js](https://nodejs.org/) (12.x or higher)
 * [Go](https://golang.org/dl/) (1.11 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
 
