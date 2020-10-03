@@ -11,7 +11,7 @@ function deleteCookie(name) {
 
 export function logout() {
   store.commit('clearLoginState');
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/logout`;
     axios
       .post(url, {}, {headers: {'X-CSRF-Token': getCsrfToken()}})
@@ -19,7 +19,7 @@ export function logout() {
         logoutUserKit();
         resolve();
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error);
       })
       .finally(() => {

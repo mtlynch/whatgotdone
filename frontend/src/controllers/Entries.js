@@ -3,14 +3,14 @@ import axios from 'axios';
 import getCsrfToken from '@/controllers/CsrfToken.js';
 
 export function getEntriesFromUser(username, project = null) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     let url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/${username}`;
     if (project) {
       url += `/project/${project}`;
     }
     axios
       .get(url)
-      .then(result => {
+      .then((result) => {
         let entries = [];
         for (const entry of result.data) {
           entries.push({
@@ -25,14 +25,14 @@ export function getEntriesFromUser(username, project = null) {
         entries.sort((a, b) => b.date - a.date);
         resolve(entries);
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error);
       });
   });
 }
 
 export function saveEntry(entryDate, entryContent) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${entryDate}`;
     axios
       .post(
@@ -42,10 +42,10 @@ export function saveEntry(entryDate, entryContent) {
         },
         {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
       )
-      .then(result => {
+      .then((result) => {
         resolve(result.data);
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error);
       });
   });

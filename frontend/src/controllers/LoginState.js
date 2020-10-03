@@ -10,17 +10,17 @@ function clearCachedAuthInformation() {
 }
 
 export default function updateLoginState() {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     getUserSelfMetadata()
-      .then(metadata => {
+      .then((metadata) => {
         store.commit('setUsername', metadata.username);
         // TODO: Move this
-        getFollowing(metadata.username).then(following => {
+        getFollowing(metadata.username).then((following) => {
           store.commit('setFollowing', following);
         });
         resolve(metadata);
       })
-      .catch(error => {
+      .catch((error) => {
         // If checking user information fails, the cached authentication information
         // is no longer correct, so we need to clear it.
         if (error.response && error.response.status === 403) {

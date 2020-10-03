@@ -37,7 +37,7 @@ export default {
     JournalHeader,
   },
   computed: {
-    entrySnippet: function() {
+    entrySnippet: function () {
       const maxLines = 12;
       const entryLines = this.entry.markdown.split('\n');
       if (entryLines.length < maxLines) {

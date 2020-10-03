@@ -3,7 +3,7 @@ import axios from 'axios';
 import getCsrfToken from '@/controllers/CsrfToken.js';
 
 export function uploadMedia(media) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     let formData = new FormData();
     formData.append('file', media);
     let url = `${process.env.VUE_APP_BACKEND_URL}/api/media`;
@@ -15,10 +15,10 @@ export function uploadMedia(media) {
           'Content-Type': 'multipart/form-data',
         },
       })
-      .then(response => {
+      .then((response) => {
         resolve(response.data.url);
       })
-      .catch(err => {
+      .catch((err) => {
         reject(err);
       });
   });

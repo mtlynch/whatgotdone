@@ -31,7 +31,7 @@ export default {
     EntryFeed,
   },
   computed: {
-    isFollowingAnyone: function() {
+    isFollowingAnyone: function () {
       if (!this.$store.state.following) {
         return false;
       }

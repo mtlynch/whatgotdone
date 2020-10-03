@@ -16,12 +16,12 @@ export default {
     };
   },
   methods: {
-    loadViewCount: function() {
+    loadViewCount: function () {
       if (!this.path) {
         return;
       }
       getPageViews(this.path)
-        .then(viewCount => {
+        .then((viewCount) => {
           if (viewCount) {
             this.viewCount = viewCount;
           }

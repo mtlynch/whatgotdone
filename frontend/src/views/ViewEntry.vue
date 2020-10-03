@@ -84,16 +84,16 @@ export default {
     };
   },
   methods: {
-    loadJournalEntries: function() {
+    loadJournalEntries: function () {
       this.isLoading = true;
       this.journalEntries = [];
       getEntriesFromUser(this.entryAuthor)
-        .then(entries => {
+        .then((entries) => {
           // Sort oldest to newest.
           entries.sort((a, b) => a.date - b.date);
           this.journalEntries = entries;
         })
-        .catch(error => {
+        .catch((error) => {
           this.backendError = error;
         })
         .finally(() => {
@@ -102,7 +102,7 @@ export default {
     },
   },
   computed: {
-    pages: function() {
+    pages: function () {
       let pages = [];
       for (const date of this.entryDates) {
         const m = moment(date).utc();
@@ -114,7 +114,7 @@ export default {
       }
       return pages;
     },
-    entryDates: function() {
+    entryDates: function () {
       let dates = [];
       if (this.showEmptyEntries) {
         let d = moment(this.journalEntries[0].date.toISOString());
@@ -129,30 +129,30 @@ export default {
       }
       return dates;
     },
-    loggedInUsername: function() {
+    loggedInUsername: function () {
       return this.$store.state.username;
     },
-    canEdit: function() {
+    canEdit: function () {
       return (
         this.currentEntry &&
         this.loggedInUsername &&
         this.loggedInUsername === this.entryAuthor
       );
     },
-    twitterShareUrl: function() {
+    twitterShareUrl: function () {
       const permalink =
         location.protocol + '//' + location.host + this.$route.fullPath;
       const text =
         encodeURIComponent("Here's what I got done this week ") + permalink;
       return `https://twitter.com/intent/tweet?text=${text}`;
     },
-    entryAuthor: function() {
+    entryAuthor: function () {
       return this.$route.params.username;
     },
-    entryDate: function() {
+    entryDate: function () {
       return this.$route.params.date;
     },
-    currentEntry: function() {
+    currentEntry: function () {
       if (!this.entryDate) {
         return null;
       }

@@ -23,7 +23,7 @@ export default {
     NavigationBar,
   },
   created() {
-    loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then(userKit => {
+    loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       if (userKit.isLoggedIn() === true) {
         updateLoginState();
       } else {
@@ -33,12 +33,12 @@ export default {
         }
       }
     });
-    getRecent(/*start=*/ 0).then(recentEntries => {
+    getRecent(/*start=*/ 0).then((recentEntries) => {
       this.$store.commit('setRecent', recentEntries);
     });
   },
   computed: {
-    routeRequiresLogin: function() {
+    routeRequiresLogin: function () {
       const routeName = this.$router.currentRoute.name;
       if (!routeName) {
         return false;

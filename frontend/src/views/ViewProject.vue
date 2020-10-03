@@ -36,21 +36,21 @@ export default {
     };
   },
   computed: {
-    username: function() {
+    username: function () {
       return this.$route.params.username;
     },
-    project: function() {
+    project: function () {
       return this.$route.params.project;
     },
   },
   methods: {
-    clear: function() {
+    clear: function () {
       this.entries = [];
       this.entriesLoaded = false;
     },
-    loadEntries: function() {
+    loadEntries: function () {
       this.entries = [];
-      getEntriesFromUser(this.username, this.project).then(entries => {
+      getEntriesFromUser(this.username, this.project).then((entries) => {
         this.entries = entries;
         this.entriesLoaded = true;
       });

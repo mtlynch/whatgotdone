@@ -79,7 +79,7 @@ export default {
       if (this.date.length == 0 || !this.username) {
         return;
       }
-      getDraft(this.date).then(content => {
+      getDraft(this.date).then((content) => {
         this.entryContent = content;
       });
     },
@@ -97,11 +97,11 @@ export default {
           this.changesSaved = false;
         });
     },
-    debouncedSaveDraft: _.debounce(function() {
+    debouncedSaveDraft: _.debounce(function () {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
-      saveEntry(this.date, this.entryContent).then(result => {
+      saveEntry(this.date, this.entryContent).then((result) => {
         this.$router.push(result.path);
       });
     },
@@ -118,13 +118,13 @@ export default {
     }
   },
   watch: {
-    date: function() {
+    date: function () {
       this.loadEntryContent();
     },
-    username: function() {
+    username: function () {
       this.loadEntryContent();
     },
-    entryContent: function() {
+    entryContent: function () {
       this.changesSaved = false;
       this.saveLabel = 'Save Draft';
     },

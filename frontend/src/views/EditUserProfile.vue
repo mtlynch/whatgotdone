@@ -70,23 +70,23 @@ export default {
     };
   },
   computed: {
-    loggedInUsername: function() {
+    loggedInUsername: function () {
       return this.$store.state.username;
     },
   },
   methods: {
-    loadProfile: function() {
-      getUserMetadata(this.loggedInUsername).then(metadata => {
+    loadProfile: function () {
+      getUserMetadata(this.loggedInUsername).then((metadata) => {
         this.profile = metadata;
         this.profileLoaded = true;
       });
     },
-    handleSave: function() {
+    handleSave: function () {
       setUserMetadata(this.profile)
         .then(() => {
           this.$router.push(`/${this.loggedInUsername}`);
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response && error.response.data) {
             this.formError = error.response.data;
           } else {

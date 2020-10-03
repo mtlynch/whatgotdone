@@ -2,9 +2,7 @@
   <div class="privacy-policy">
     <h1>Privacy Policy</h1>
     <p>
-      <strong>
-        Last updated May 23, 2019
-      </strong>
+      <strong> Last updated May 23, 2019 </strong>
     </p>
     <p>
       <br />
@@ -449,9 +447,7 @@
       If you would at any time like to review or change the information in your
       account or terminate your account, you can:
     </p>
-    <p>
-      ■ Contact us using the contact information provided.
-    </p>
+    <p>■ Contact us using the contact information provided.</p>
     <p>
       Upon your request to terminate your account, we will deactivate or delete
       your account and information from our active databases. However, some
@@ -484,12 +480,8 @@
       service-related emails that are necessary for the administration and use
       of your account. To otherwise opt-out, you may:
     </p>
-    <p>
-      ■ Note your preferences when you register an account with the site.
-    </p>
-    <p>
-      ■ Access your account settings and update preferences.
-    </p>
+    <p>■ Note your preferences when you register an account with the site.</p>
+    <p>■ Access your account settings and update preferences.</p>
     <br />
     <p id="DNT">
       <strong>11. CONTROLS FOR DO-NOT-TRACK FEATURES</strong>
