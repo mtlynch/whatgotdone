@@ -58,7 +58,6 @@ export default {
   display: inline-block;
   font-style: italic;
 }
-
 .journal-body >>> blockquote:before {
   color: #ccc;
   content: open-quote;
@@ -67,7 +66,6 @@ export default {
   margin-right: 0.25em;
   vertical-align: -0.4em;
 }
-
 .journal-body >>> blockquote p {
   display: inline;
 }
