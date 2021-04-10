@@ -49,6 +49,29 @@ export default {
   list-style-type: none;
 }
 
+.journal-body >>> blockquote {
+  background: #4c5b68;
+  border-left: 5px solid #ccc;
+  margin: 1rem 0.5rem;
+  padding: 0.5em 10px;
+  quotes: '\201C''\201D''\2018''\2019';
+  display: inline-block;
+  font-style: italic;
+}
+
+.journal-body >>> blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+.journal-body >>> blockquote p {
+  display: inline;
+}
+
 .metadata {
   font-style: italic;
   margin-top: 40px;
