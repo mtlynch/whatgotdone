@@ -35,6 +35,7 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
     response: {},
     status: 500,
   }).as("getDraft");
+  cy.route("POST", "/api/draft/*").as("postDraft");
 
   cy.login("staging_jimmy");
 
@@ -45,6 +46,8 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
 
   cy.get(".journal-markdown").should("not.be.visible");
   cy.get(".save-draft").should("not.be.visible");
+
+  cy.routeShouldBeCalled("postDraft", 0);
 });
 
 it("uses the entry template for new drafts", () => {

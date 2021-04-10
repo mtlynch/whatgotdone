@@ -8,3 +8,10 @@ Cypress.Commands.add("login", (username, options = {}) => {
   cy.visit("/login");
   cy.completeLoginForm(username, options);
 });
+
+Cypress.Commands.add("routeShouldBeCalled", (alias, timesCalled) => {
+  expect(
+    cy.state("requests").filter((call) => call.alias === alias),
+    `${alias} should have been called ${timesCalled} times`
+  ).to.have.length(timesCalled);
+});

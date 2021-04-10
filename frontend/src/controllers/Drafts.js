@@ -8,10 +8,21 @@ export function getDraft(entryDate) {
     axios
       .get(url, {withCredentials: true})
       .then((result) => {
+        if (!Object.prototype.hasOwnProperty.call(result, 'data')) {
+          return Promise.reject(
+            new Error('response is missing expected field: data')
+          );
+        }
+        if (!Object.prototype.hasOwnProperty.call(result.data, 'markdown')) {
+          return Promise.reject(
+            new Error('response is missing expected field: data.markdown')
+          );
+        }
         resolve(result.data.markdown);
       })
       .catch((error) => {
-        if (error.response.status == 404) {
+        // A 404 is not an error.
+        if (error?.response?.status === 404) {
           resolve('');
         } else {
           reject(error);
