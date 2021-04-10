@@ -64,6 +64,7 @@ it("bare route should redirect authenticated user to their edit entry page", () 
   cy.location("pathname").should("contain", "/entry/edit/");
 
   // Clicking navbar brand should point to edit entry page.
+  cy.visit("/");
   cy.get(".navbar .navbar-brand").click();
   cy.location("pathname").should("contain", "/entry/edit/");
 
