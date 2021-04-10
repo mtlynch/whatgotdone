@@ -129,9 +129,10 @@
       title="Insert link"
       @ok="handleInsertLink"
       @keydown.native.enter="handleInsertLink"
+      @shown="$refs['url-input'].focus()"
     >
       <b-form @submit="handleInsertLink">
-        <b-form-input v-model="linkUrl"></b-form-input>
+        <b-form-input ref="url-input" v-model="linkUrl"></b-form-input>
       </b-form>
     </b-modal>
   </div>
@@ -219,6 +220,7 @@ export default {
     },
     handleInsertLink() {
       this.editor.commands.link({href: this.linkUrl});
+      this.$refs['insert-link'].hide();
     },
     htmlToMarkdown(html) {
       turndownService.use(gfm);
