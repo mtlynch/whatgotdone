@@ -123,6 +123,13 @@
     <hr />
 
     <editor-content class="editor-content" :editor="editor" />
+    <b-modal ref="insert-link" title="Insert link" @ok="handleInsertLink">
+      <b-form-input v-model="linkText" placeholder="text"></b-form-input>
+      <b-form-input
+        v-model="linkUrl"
+        placeholder="https://whatgotdone.com"
+      ></b-form-input>
+    </b-modal>
   </div>
 </template>
 
@@ -184,6 +191,8 @@ export default {
   data() {
     return {
       inRichTextMode: true,
+      linkText: '',
+      linkUrl: '',
       editor: new Editor({
         extensions: [
           new Blockquote(),
@@ -209,13 +218,21 @@ export default {
     onClickLink() {
       console.log('onClickLink');
       // TODO: Implement a dialog for entering links
+      this.linkText = '';
+      this.linkUrl = '';
+      this.$refs['insert-link'].show();
+    },
+    handleInsertLink() {
+      console.log('handleInsertLink', this.linkText, this.linkUrl);
     },
     htmlToMarkdown(html) {
       console.log('html=', html);
 
       turndownService.use(gfm);
       let markdown = turndownService.turndown(html);
-      // Trim trailing whitespace
+      // Trim trailing spaces.
+      markdown = markdown.replace(/[ \t\r]+\n/g, '\n');
+      // Consolidate multiple whitespace/newlines to just the double newlines.
       markdown = markdown.replace(/\s+\n\n/g, '\n\n');
       debugPrintLine('markdown=' + markdown);
       return markdown;

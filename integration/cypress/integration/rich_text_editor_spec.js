@@ -58,10 +58,36 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".btn-code-block .btn").click();
   cy.get(".editor-content .ProseMirror").type("f = new Frombobulator(){enter}");
   cy.get(".editor-content .ProseMirror").type("f.frombobulate(){ctrl}{enter}");
-  cy.get(".editor-content .ProseMirror").type("Yuck!");
-  // TODO: use bulleted list
-  // TODO: use ordered list
-  // TODO: use blockquote
+  cy.get(".editor-content .ProseMirror").type("Yuck!{enter}");
+
+  cy.get(".editor-content .ProseMirror").type(
+    "These are the things I'm picking up from the supermarket:{enter}"
+  );
+  cy.get(".btn-bulleted-list .btn").click();
+  cy.get(".editor-content .ProseMirror").type("eggs{enter}");
+  cy.get(".editor-content .ProseMirror").type("egg cartons{enter}");
+  cy.get(".editor-content .ProseMirror").type(
+    "egg carton holders{enter}{enter}"
+  );
+
+  cy.get(".editor-content .ProseMirror").type(
+    "And these are my favorite meals:{enter}"
+  );
+  cy.get(".btn-numbered-list .btn").click();
+  cy.get(".editor-content .ProseMirror").type("scrambled eggs{enter}");
+  cy.get(".editor-content .ProseMirror").type("omelettes{enter}");
+  cy.get(".editor-content .ProseMirror").type("fritattas{enter}{enter}");
+
+  cy.get(".editor-content .ProseMirror").type(
+    "When my manager sees me eat lunch every day, he says:{enter}"
+  );
+  cy.get(".btn-blockquote .btn").click();
+  cy.get(".editor-content .ProseMirror").type(
+    "hey jimmy why u eat so much eggs?{enter}{enter}"
+  );
+  cy.get(".editor-content .ProseMirror").type(
+    "And I just tell him I love the protein!"
+  );
 
   cy.get(".switch-mode .btn").click();
 
@@ -82,14 +108,34 @@ Most were in the \`Frombobulator\` component. The typical bad code looks like th
     f = new Frombobulator()
     f.frombobulate()
 
-Yuck!`
+Yuck!
+
+These are the things I'm picking up from the supermarket:
+
+*   eggs
+
+*   egg cartons
+
+*   egg carton holders
+
+And these are my favorite meals:
+
+1.  scrambled eggs
+
+2.  omelettes
+
+3.  fritattas
+
+When my manager sees me eat lunch every day, he says:
+
+> hey jimmy why u eat so much eggs?
+
+And I just tell him I love the protein!`
   );
 
   cy.get("form").submit();
 
   cy.location("pathname").should("include", "/staging_jimmy/");
-
-  // TODO: Check rendered text
 });
 
 it("does not inject HTML comments from renderer into markdown", () => {
