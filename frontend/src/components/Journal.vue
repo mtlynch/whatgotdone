@@ -49,10 +49,6 @@ export default {
   list-style-type: none;
 }
 
-@media screen and (min-width: 768px) {
-  overflow: visible;
-}
-
 .metadata {
   font-style: italic;
   margin-top: 40px;
