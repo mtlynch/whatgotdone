@@ -32,6 +32,7 @@
         <EditorMenuButton
           class="btn-link"
           :class="{'is-active': isActive.link()}"
+          :disabled="editor.selection.from === editor.selection.to"
           tooltip="Link"
           @click="onClickLink"
         >
@@ -123,12 +124,14 @@
     <hr />
 
     <editor-content class="editor-content" :editor="editor" />
-    <b-modal ref="insert-link" title="Insert link" @ok="handleInsertLink">
+    <b-modal
+      ref="insert-link"
+      title="Insert link"
+      @ok="handleInsertLink"
+      @keydown.native.enter="handleInsertLink"
+    >
       <b-form @submit="handleInsertLink">
-        <b-form-input
-          v-model="linkUrl"
-          placeholder="https://whatgotdone.com"
-        ></b-form-input>
+        <b-form-input v-model="linkUrl"></b-form-input>
       </b-form>
     </b-modal>
   </div>
@@ -211,7 +214,7 @@ export default {
   },
   methods: {
     onClickLink() {
-      this.linkUrl = '';
+      this.linkUrl = 'https://';
       this.$refs['insert-link'].show();
     },
     handleInsertLink() {

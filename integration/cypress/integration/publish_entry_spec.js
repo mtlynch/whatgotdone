@@ -74,7 +74,7 @@ it("logs in and backdates an update from a previous week", () => {
   cy.get(".view-count").should("contain", "Viewed 1 times");
 });
 
-it("logs in and posts an empty update (deleting the update)", () => {
+it("logs in and posts an empty update (deleting the existing entry)", () => {
   cy.server();
   cy.route("GET", "/api/draft/2019-06-28").as("getDraft");
 

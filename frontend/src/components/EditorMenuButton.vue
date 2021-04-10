@@ -5,6 +5,7 @@
       class="menubar__button"
       ref="editor-button"
       :class="{'is-active': isActive}"
+      :disabled="disabled"
       @click="onClick"
     >
       <slot></slot>
@@ -24,6 +25,10 @@
 export default {
   props: {
     isActive: Boolean,
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     tooltip: String,
   },
   methods: {
