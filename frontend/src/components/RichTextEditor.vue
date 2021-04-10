@@ -124,11 +124,12 @@
 
     <editor-content class="editor-content" :editor="editor" />
     <b-modal ref="insert-link" title="Insert link" @ok="handleInsertLink">
-      <b-form-input v-model="linkText" placeholder="text"></b-form-input>
-      <b-form-input
-        v-model="linkUrl"
-        placeholder="https://whatgotdone.com"
-      ></b-form-input>
+      <b-form @submit="handleInsertLink">
+        <b-form-input
+          v-model="linkUrl"
+          placeholder="https://whatgotdone.com"
+        ></b-form-input>
+      </b-form>
     </b-modal>
   </div>
 </template>
@@ -190,8 +191,6 @@ export default {
   },
   data() {
     return {
-      inRichTextMode: true,
-      linkText: '',
       linkUrl: '',
       editor: new Editor({
         extensions: [
@@ -216,14 +215,11 @@ export default {
   },
   methods: {
     onClickLink() {
-      console.log('onClickLink');
-      // TODO: Implement a dialog for entering links
-      this.linkText = '';
       this.linkUrl = '';
       this.$refs['insert-link'].show();
     },
     handleInsertLink() {
-      console.log('handleInsertLink', this.linkText, this.linkUrl);
+      this.editor.commands.link({href: this.linkUrl});
     },
     htmlToMarkdown(html) {
       console.log('html=', html);
