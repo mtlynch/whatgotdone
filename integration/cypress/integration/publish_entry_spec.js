@@ -11,7 +11,7 @@ it("logs in and posts an update", () => {
 
   const entryText = "Posted an update at " + new Date().toISOString();
 
-  cy.get(".journal-markdown").clear().type(entryText);
+  cy.get(".editor-content .ProseMirror").clear().type(entryText);
   cy.get("form").submit();
 
   cy.location("pathname").should("include", "/staging_jimmy/");
@@ -40,7 +40,7 @@ it("logs in and backdates an update from a previous week", () => {
 
   const entryText = "Posted an update at " + new Date().toISOString();
 
-  cy.get(".journal-markdown").clear().type(entryText);
+  cy.get(".editor-content .ProseMirror").clear().type(entryText);
   cy.get("form").submit();
 
   cy.location("pathname").should("eq", "/staging_jimmy/2019-12-13");
@@ -86,7 +86,7 @@ it("logs in and posts an empty update (deleting the update)", () => {
   // Wait for page to pull down the previous entry.
   cy.wait("@getDraft");
 
-  cy.get(".journal-markdown").clear();
+  cy.get(".editor-content .ProseMirror").clear();
   cy.get("form").submit();
 
   cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");

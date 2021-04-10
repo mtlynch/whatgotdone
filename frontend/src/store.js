@@ -17,6 +17,9 @@ export const mutations = {
     state.following = [];
     state.recentFollowingEntries = [];
   },
+  setRichTextEditorChoice(state, useRichTextEditor) {
+    state.useRichTextEditor = useRichTextEditor;
+  },
   setRecent(state, entries) {
     state.recentEntries = entries;
   },
@@ -31,6 +34,7 @@ export const mutations = {
 export default new Vuex.Store({
   state: {
     username: null,
+    useRichTextEditor: true,
     recentEntries: [],
     recentFollowingEntries: [],
     following: [],

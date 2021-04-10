@@ -1,12 +1,25 @@
 <template>
-  <textarea-autosize
-    v-model="contents"
-    ref="editor"
-    :min-height="250"
-    :max-height="650"
-    @input="onInput"
-    @paste.native="onPaste"
-  ></textarea-autosize>
+  <div class="editor markdown-editor">
+    <textarea-autosize
+      v-model="contents"
+      ref="editor"
+      class="editor-textarea form-control"
+      :min-height="250"
+      :max-height="650"
+      @input="onInput"
+      @paste.native="onPaste"
+    ></textarea-autosize>
+    <p>
+      (You can use
+      <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank"
+        >Markdown</a
+      >
+      or switch to the
+      <a class="switch-mode" href="#" @click="$emit('change-mode')"
+        >rich text editor</a
+      >)
+    </p>
+  </div>
 </template>
 
 <script>
@@ -18,7 +31,6 @@ import {uploadMedia} from '@/controllers/Media';
 Vue.use(VueTextareaAutosize);
 
 export default {
-  name: 'EntryEditor',
   props: {
     value: String,
   },
@@ -98,3 +110,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.editor-textarea {
+  border: 0;
+}
+</style>
