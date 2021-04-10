@@ -2,7 +2,7 @@
   <div class="submit">
     <h1>What got done this week?</h1>
     <template v-if="entryContent !== null">
-      <form @submit.prevent="handleSubmit">
+      <form class="entry-form" @submit.prevent="handleSubmit">
         <p>
           Enter your update for the week ending
           <span class="end-date">{{ date | moment('dddd, ll') }}</span

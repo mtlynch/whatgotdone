@@ -52,7 +52,7 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".editor-content .ProseMirror").type("Frombobulator");
   cy.get(".btn-inline-code .btn").click();
   cy.get(".editor-content .ProseMirror").type(
-    "component. The typical bad code looks like this:{enter}"
+    " component. The typical bad code looks like this:{enter}"
   );
 
   cy.get(".btn-code-block .btn").click();
@@ -68,15 +68,20 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".markdown-editor textarea").should(
     "have.value",
     `# Project A
+
 ## Subproject B
+
 ### Topic 1
+
 This week was **very difficult**!
 
 I _discovered_ ~11~ 22 new bugs.
 
 Most were in the \`Frombobulator\` component. The typical bad code looks like this:
+
     f = new Frombobulator()
     f.frombobulate()
+
 Yuck!`
   );
 
@@ -87,7 +92,7 @@ Yuck!`
   // TODO: Check rendered text
 });
 
-it("does not inject HTML comments", () => {
+it("does not inject HTML comments from renderer into markdown", () => {
   cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");
@@ -97,5 +102,5 @@ it("does not inject HTML comments", () => {
 
   cy.get(".switch-mode .btn").click();
 
-  cy.get(".editor-textarea").should("have.value", "*    a\n\nb");
+  cy.get(".editor-textarea").should("have.value", "*   a\n\nb");
 });

@@ -48,8 +48,7 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
   cy.get(".save-draft").should("not.exist");
 
   cy.routeShouldBeCalled("postDraft", 0);
-  cy.get(".editor-content .ProseMirror").should("not.be.visible");
-  cy.get(".save-draft").should("not.be.visible");
+  cy.get(".entry-form").should("not.exist");
 });
 
 it("uses the entry template for new drafts", () => {
@@ -84,7 +83,7 @@ it("uses the entry template for new drafts", () => {
 
   cy.wait("@getDraft");
   cy.get(".switch-mode .btn").click();
-  cy.get(".editor-content .ProseMirror").should(
+  cy.get(".markdown-editor .editor-textarea").should(
     "have.value",
     "# Example project\n\n* Item A\n* Item B"
   );
