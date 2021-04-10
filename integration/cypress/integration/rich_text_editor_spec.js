@@ -62,7 +62,6 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".editor-content .ProseMirror").setSelection("wiki");
   cy.get(".btn-link .btn").click();
   cy.get(".modal-dialog input").type("example.com/wiki{enter}");
-  cy.get(".editor-content .ProseMirror").type("{rightarrow}"); // TODO: Fix
   cy.get(".editor-content .ProseMirror").type(".{enter}{enter}");
 
   cy.get(".editor-content .ProseMirror").type("Most were in the ");
@@ -164,9 +163,15 @@ it("supports undo", () => {
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.get(".editor-content .ProseMirror").type("Hello, world!");
-  cy.wait(1000); // TODO: fix
-  cy.get(".editor-content .ProseMirror").setSelection("world");
-  cy.get(".editor-content .ProseMirror").type("universe");
+
+  // Wait for auto-save to complete
+  cy.get(".save-draft").should("contain", "Changes Saved");
+  cy.reload();
+
+  // Delete content
+  cy.get(".editor-content .ProseMirror").type("{selectall}{del}");
+
+  // Undo
   cy.get(".editor-content .ProseMirror").type("{ctrl}z");
   cy.get(".switch-mode .btn").click();
   cy.get(".editor-textarea").should("have.value", "Hello, world!");

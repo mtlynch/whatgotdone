@@ -223,10 +223,14 @@ export default {
     },
     handleInsertLink() {
       this.editor.commands.link({href: this.linkUrl});
+      // Unselect the text so the user can continue typing.
+      this.editor.setSelection(
+        this.editor.selection.to,
+        this.editor.selection.to
+      );
       this.$refs['insert-link'].hide();
     },
     onLinkModalHide() {
-      console.log('modal hidden!');
       this.editor.focus();
     },
     htmlToMarkdown(html) {
