@@ -13,6 +13,19 @@ it("writes an entry without formatting", () => {
   cy.get(".journal-body").should("contain", entryText);
 });
 
+it("canonicalizes newlines after bulleted list", () => {
+  cy.login("staging_jimmy");
+
+  cy.location("pathname").should("include", "/entry/edit");
+
+  cy.get(".btn-bulleted-list .btn").click();
+  cy.get(".editor-content .ProseMirror").type("a{enter}{enter}b");
+
+  cy.get(".switch-mode .btn").click();
+
+  cy.get(".editor-textarea").should("have.value", "*   a\n\nb");
+});
+
 it("writes an entry with every type of formatting", () => {
   cy.login("staging_jimmy");
 
@@ -45,7 +58,12 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".btn-strikethrough .btn").click();
   cy.get(".editor-content .ProseMirror").type(" 22 new bugs.{enter}{enter}");
 
-  // TODO: use link
+  cy.get(".editor-content .ProseMirror").type("Full report is on the wiki");
+  cy.get(".editor-content .ProseMirror").setSelection("wiki");
+  cy.get(".btn-link .btn").click();
+  cy.get(".modal-dialog input").type("example.com/wiki{enter}");
+  cy.get(".editor-content .ProseMirror").type("{rightarrow}"); // TODO: Fix
+  cy.get(".editor-content .ProseMirror").type(".{enter}{enter}");
 
   cy.get(".editor-content .ProseMirror").type("Most were in the ");
   cy.get(".btn-inline-code .btn").click();
@@ -103,6 +121,8 @@ This week was **very difficult**!
 
 I _discovered_ ~11~ 22 new bugs.
 
+Full report is on the [wiki](https://example.com/wiki).
+
 Most were in the \`Frombobulator\` component. The typical bad code looks like this:
 
     f = new Frombobulator()
@@ -138,7 +158,21 @@ And I just tell him I love the protein!`
   cy.location("pathname").should("include", "/staging_jimmy/");
 });
 
-it("does not inject HTML comments from renderer into markdown", () => {
+it("supports undo", () => {
+  cy.login("staging_jimmy");
+
+  cy.location("pathname").should("include", "/entry/edit");
+
+  cy.get(".editor-content .ProseMirror").type("Hello, world!");
+  cy.wait(1000); // TODO: fix
+  cy.get(".editor-content .ProseMirror").setSelection("world");
+  cy.get(".editor-content .ProseMirror").type("universe");
+  cy.get(".editor-content .ProseMirror").type("{ctrl}z");
+  cy.get(".switch-mode .btn").click();
+  cy.get(".editor-textarea").should("have.value", "Hello, world!");
+});
+
+it("canonicalizes newlines after bulleted list", () => {
   cy.login("staging_jimmy");
 
   cy.location("pathname").should("include", "/entry/edit");

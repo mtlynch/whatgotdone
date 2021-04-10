@@ -130,8 +130,9 @@
       @ok="handleInsertLink"
       @keydown.native.enter="handleInsertLink"
       @shown="$refs['url-input'].focus()"
+      @hidden="onLinkModalHide"
     >
-      <b-form @submit="handleInsertLink">
+      <b-form @submit="handleInsertLink" @submit.stop.prevent>
         <b-form-input ref="url-input" v-model="linkUrl"></b-form-input>
       </b-form>
     </b-modal>
@@ -157,6 +158,7 @@ import {
   Italic,
   Link,
   Strike,
+  History,
 } from 'tiptap-extensions';
 import showdown from 'showdown';
 import TurndownService from 'turndown';
@@ -205,6 +207,7 @@ export default {
           new Code(),
           new Italic(),
           new Strike(),
+          new History(),
         ],
         content: showdownService.makeHtml(this.value),
         onUpdate: ({getHTML}) => {
@@ -221,6 +224,10 @@ export default {
     handleInsertLink() {
       this.editor.commands.link({href: this.linkUrl});
       this.$refs['insert-link'].hide();
+    },
+    onLinkModalHide() {
+      console.log('modal hidden!');
+      this.editor.focus();
     },
     htmlToMarkdown(html) {
       turndownService.use(gfm);
