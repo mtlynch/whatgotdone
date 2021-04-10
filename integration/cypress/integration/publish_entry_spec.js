@@ -89,9 +89,11 @@ it("logs in and posts an empty update (deleting the update)", () => {
   cy.get(".journal-markdown").clear();
   cy.get("form").submit();
 
+  cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
+
   // HACK: Make sure we don't run into a timing issue where we're still seeing
   // the cached entry.
   cy.reload();
-  cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
+
   cy.get(".missing-entry").should("be.visible");
 });
