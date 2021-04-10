@@ -98,7 +98,6 @@ export default {
       }
       getDraft(this.date)
         .then((content) => {
-          console.log('saved draft=', content);
           this.entryContent = content;
         })
         .catch((error) => {
@@ -129,8 +128,6 @@ export default {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
-      console.log('handleSubmit');
-      //if (true) return;
       saveEntry(this.date, this.entryContent).then((result) => {
         this.$router.push(result.path);
       });

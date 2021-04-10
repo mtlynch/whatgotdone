@@ -176,10 +176,6 @@ const showdownService = new showdown.Converter({
 
 const turndownService = new TurndownService({headingStyle: 'atx'});
 
-function debugPrintLine(line) {
-  console.log(line.replace(/\n/g, '\\n'));
-}
-
 export default {
   components: {
     EditorContent,
@@ -222,15 +218,12 @@ export default {
       this.editor.commands.link({href: this.linkUrl});
     },
     htmlToMarkdown(html) {
-      console.log('html=', html);
-
       turndownService.use(gfm);
       let markdown = turndownService.turndown(html);
       // Trim trailing spaces.
       markdown = markdown.replace(/[ \t\r]+\n/g, '\n');
       // Consolidate multiple whitespace/newlines to just the double newlines.
       markdown = markdown.replace(/\s+\n\n/g, '\n\n');
-      debugPrintLine('markdown=' + markdown);
       return markdown;
     },
   },
