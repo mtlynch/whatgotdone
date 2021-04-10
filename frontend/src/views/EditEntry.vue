@@ -1,13 +1,13 @@
 <template>
   <div class="submit">
     <h1>What got done this week?</h1>
-    <form @submit.prevent="handleSubmit">
-      <p>
-        Enter your update for the week ending
-        <span class="end-date">{{ date | moment('dddd, ll') }}</span
-        >.
-      </p>
-      <template v-if="entryContent !== null">
+    <template v-if="entryContent !== null">
+      <form @submit.prevent="handleSubmit">
+        <p>
+          Enter your update for the week ending
+          <span class="end-date">{{ date | moment('dddd, ll') }}</span
+          >.
+        </p>
         <template v-if="inRichEditMode">
           <RichTextEditor
             ref="entryText"
@@ -24,22 +24,33 @@
             @change-mode="onChangeMode"
           />
         </template>
-      </template>
-      <div class="d-flex justify-content-end">
-        <button
-          @click.prevent="handleSaveDraft"
-          class="btn btn-primary save-draft"
-          :disabled="changesSaved"
-        >
-          {{ saveLabel }}
-        </button>
-        <button type="submit" class="btn btn-primary">Publish</button>
-      </div>
-    </form>
-    <JournalPreview
-      :markdown="entryContent"
-      v-if="!inRichEditMode && entryContent !== null"
-    />
+        <div class="d-flex justify-content-end">
+          <button
+            @click.prevent="handleSaveDraft"
+            class="btn btn-primary save-draft"
+            :disabled="changesSaved"
+          >
+            {{ saveLabel }}
+          </button>
+          <button type="submit" class="btn btn-primary">Publish</button>
+        </div>
+      </form>
+      <JournalPreview
+        :markdown="entryContent"
+        v-if="!inRichEditMode && entryContent !== null"
+      />
+    </template>
+    <template v-else-if="errorMessage">
+      <b-alert show variant="warning"
+        ><h3>Failed to load entry draft</h3>
+        <p>{{ errorMessage }}</p>
+        <p>Please reload the page to try again.</p>
+      </b-alert>
+    </template>
+    <template v-else>
+      <b-spinner type="grow" label="Spinning"></b-spinner>
+      <p>Loading draft...</p>
+    </template>
   </div>
 </template>
 

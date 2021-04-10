@@ -168,6 +168,10 @@ const showdownService = new showdown.Converter({
 
 const turndownService = new TurndownService({headingStyle: 'atx'});
 
+function debugPrintLine(line) {
+  console.log(line.replace(/\n/g, '\\n'));
+}
+
 export default {
   components: {
     EditorContent,
@@ -212,8 +216,8 @@ export default {
       turndownService.use(gfm);
       let markdown = turndownService.turndown(html);
       // Trim trailing whitespace
-      markdown = markdown.replace(/\s+\n/g, '\n');
-      console.log('markdown=', {x: markdown});
+      markdown = markdown.replace(/\s+\n\n/g, '\n\n');
+      debugPrintLine('markdown=' + markdown);
       return markdown;
     },
   },
