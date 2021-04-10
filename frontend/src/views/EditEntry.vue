@@ -85,20 +85,14 @@ export default {
       if (this.date.length == 0 || !this.username) {
         return;
       }
-<<<<<<< HEAD
       getDraft(this.date)
         .then((content) => {
+          console.log('saved draft=', content);
           this.entryContent = content;
         })
         .catch((error) => {
           this.errorMessage = error;
         });
-=======
-      getDraft(this.date).then((content) => {
-        console.log('saved draft=', content);
-        this.entryContent = content;
-      });
->>>>>>> Add WYSIWYG editor
     },
     onContentChanged() {
       this.changesSaved = false;
