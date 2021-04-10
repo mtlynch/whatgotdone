@@ -13,9 +13,9 @@ it("logs in and saves a draft", () => {
   const entryText = "Saved a private draft at " + new Date().toISOString();
 
   cy.get(".journal-markdown").clear().type(entryText);
-  cy.get(".save-draft").click();
 
-  // Wait for "save draft" operation to complete.
+  // Wait for auto-save to complete.
+  cy.get(".save-draft").should("contain", "Changes Saved");
   cy.wait("@postDraft");
 
   // User should stay on the same page after saving a draft.
