@@ -7,12 +7,8 @@
       >.
     </p>
 
-    <template v-if="entryContent === null">
-      <b-spinner type="grow" label="Spinning"></b-spinner>
-      <p>Loading draft...</p>
-    </template>
-    <template v-else>
-      <form @submit.prevent="handleSubmit">
+    <template v-if="entryContent !== null"
+      ><form @submit.prevent="handleSubmit">
         <EntryEditor
           class="form-control journal-markdown"
           ref="entryText"
@@ -37,6 +33,17 @@
         </div>
       </form>
       <JournalPreview :markdown="entryContent" />
+    </template>
+    <template v-else-if="errorMessage">
+      <b-alert show variant="warning"
+        ><h3>Failed to load entry draft</h3>
+        <p>{{ errorMessage }}</p>
+        <p>Please reload the page to try again.</p>
+      </b-alert>
+    </template>
+    <template v-else>
+      <b-spinner type="grow" label="Spinning"></b-spinner>
+      <p>Loading draft...</p>
     </template>
   </div>
 </template>
@@ -65,6 +72,7 @@ export default {
     return {
       date: '',
       entryContent: null,
+      errorMessage: null,
       changesSaved: true,
       saveLabel: 'Save Draft',
     };
@@ -79,9 +87,13 @@ export default {
       if (this.date.length == 0 || !this.username) {
         return;
       }
-      getDraft(this.date).then((content) => {
-        this.entryContent = content;
-      });
+      getDraft(this.date)
+        .then((content) => {
+          this.entryContent = content;
+        })
+        .catch((error) => {
+          this.errorMessage = error;
+        });
     },
     handleSaveDraft() {
       if (this.entryContent === null) {
