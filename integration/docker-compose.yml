@@ -39,6 +39,10 @@ services:
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/integration
+      # Cache build resources to speed up testing.
+      - ./cache/go:/go
+      - ./cache/frontend/dist:/app/frontend/dist
+      - ./cache/frontend/node_modules:/app/frontend/node_modules
   cypress:
     image: "cypress/included:7.0.1"
     command: ["--browser", "chrome"]

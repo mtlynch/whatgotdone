@@ -58,6 +58,12 @@ jobs:
       image: ubuntu-2004:202010-01
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - go-v1-{{ checksum "go.sum" }}
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "frontend/package-lock.json" }}
       - run:
           name: Perform integration tests.
           command: dev-scripts/run-integration-tests
@@ -65,6 +71,14 @@ jobs:
           path: integration/cypress/videos
       - store_artifacts:
           path: integration/cypress/screenshots
+      - save_cache:
+          key: go-v1-{{ checksum "go.sum" }}
+          paths:
+            - integration/cache/go
+      - save_cache:
+          key: node-v1-{{ checksum "frontend/package-lock.json" }}
+          paths:
+            - integration/cache/frontend
   deploy:
     docker:
       - image: google/cloud-sdk:335.0.0
