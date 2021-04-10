@@ -40,7 +40,7 @@ services:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/integration
   cypress:
-    image: "cypress/included:5.2.0"
+    image: "cypress/included:7.0.1"
     command: ["--browser", "chrome"]
     depends_on:
       - whatgotdone
