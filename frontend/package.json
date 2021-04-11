@@ -21,8 +21,6 @@
     "bootswatch": "^4.6.0",
     "core-js": "^3.10.1",
     "lodash": "^4.17.21",
-    "node-sass": "^4.13.1",
-    "sass-loader": "^8.0.2",
     "showdown": "^1.9.1",
     "tiptap": "^1.32.2",
     "tiptap-extensions": "^1.35.2",
