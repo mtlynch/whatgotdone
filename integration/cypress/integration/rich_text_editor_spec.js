@@ -78,7 +78,7 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".editor-content .ProseMirror").type("Yuck!{enter}");
 
   cy.get(".editor-content .ProseMirror").type(
-    "These are the things I'm picking up from the supermarket:{enter}"
+    "These are the things I picked up from the supermarket:{enter}"
   );
   cy.get(".btn-bulleted-list .btn").click();
   cy.get(".editor-content .ProseMirror").type("eggs{enter}");
@@ -88,7 +88,7 @@ it("writes an entry with every type of formatting", () => {
   );
 
   cy.get(".editor-content .ProseMirror").type(
-    "And these are my favorite meals:{enter}"
+    "And I prepared these meals (in order):{enter}"
   );
   cy.get(".btn-numbered-list .btn").click();
   cy.get(".editor-content .ProseMirror").type("scrambled eggs{enter}");
@@ -129,7 +129,7 @@ Most were in the \`Frombobulator\` component. The typical bad code looks like th
 
 Yuck!
 
-These are the things I'm picking up from the supermarket:
+These are the things I picked up from the supermarket:
 
 *   eggs
 
@@ -137,7 +137,7 @@ These are the things I'm picking up from the supermarket:
 
 *   egg carton holders
 
-And these are my favorite meals:
+And I prepared these meals (in order):
 
 1.  scrambled eggs
 
