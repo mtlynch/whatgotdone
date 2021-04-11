@@ -12,7 +12,7 @@ it("logs in and saves a draft", () => {
 
   const entryText = "Saved a private draft at " + new Date().toISOString();
 
-  cy.get(".journal-markdown").clear().type(entryText);
+  cy.get(".editor-content .ProseMirror").clear().type(entryText);
 
   // Wait for auto-save to complete.
   cy.get(".save-draft").should("contain", "Changes Saved");
@@ -48,6 +48,7 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
   cy.get(".save-draft").should("not.exist");
 
   cy.routeShouldBeCalled("postDraft", 0);
+  cy.get(".entry-form").should("not.exist");
 });
 
 it("uses the entry template for new drafts", () => {
@@ -64,7 +65,7 @@ it("uses the entry template for new drafts", () => {
   // Wait for page to pull down any previous entry.
   cy.wait("@getDraft");
 
-  cy.get(".journal-markdown").should("have.value", "");
+  cy.get(".editor-content .ProseMirror").should("have.value", "");
 
   // Set an entry template on the preferences page.
   cy.visit("/preferences");
@@ -81,7 +82,8 @@ it("uses the entry template for new drafts", () => {
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.wait("@getDraft");
-  cy.get(".journal-markdown").should(
+  cy.get(".switch-mode .btn").click();
+  cy.get(".markdown-editor .editor-textarea").should(
     "have.value",
     "# Example project\n\n* Item A\n* Item B"
   );
