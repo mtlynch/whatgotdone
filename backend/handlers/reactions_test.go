@@ -66,8 +66,8 @@ func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
 
 func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 	reactions := []types.Reaction{
-		types.Reaction{Username: "dummyUserA", Symbol: "🎉", Timestamp: "2019-07-09T14:56:29-04:00"},
-		types.Reaction{Username: "dummyUserB", Symbol: "👍", Timestamp: "2019-07-09T11:57:02-04:00"},
+		{Username: "dummyUserA", Symbol: "🎉", Timestamp: "2019-07-09T14:56:29-04:00"},
+		{Username: "dummyUserB", Symbol: "👍", Timestamp: "2019-07-09T11:57:02-04:00"},
 	}
 	ds := mockDatastore{
 		reactions: reactions,

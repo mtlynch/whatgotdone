@@ -10,7 +10,7 @@ import (
 // https://docs.userkit.io/docs/content-security-policy
 func contentSecurityPolicy() string {
 	directives := map[string][]string{
-		"script-src": []string{
+		"script-src": {
 			"'self'",
 			"https://www.google-analytics.com",
 			"https://www.googletagmanager.com",
@@ -21,7 +21,7 @@ func contentSecurityPolicy() string {
 			"https://www.gstatic.com/recaptcha/",
 			"https://apis.google.com",
 		},
-		"style-src": []string{
+		"style-src": {
 			"'self'",
 			// URLs for /login route (UserKit)
 			"https://widget.userkit.io",
@@ -30,12 +30,12 @@ func contentSecurityPolicy() string {
 			// Google auth requires this, and I can't figure out any way to avoid it.
 			"'unsafe-inline'",
 		},
-		"frame-src": []string{
+		"frame-src": {
 			// URLs for /login route (UserKit)
 			"https://www.google.com/recaptcha/",
 			"https://accounts.google.com",
 		},
-		"img-src": []string{
+		"img-src": {
 			"'self'",
 			// For bootstrap navbar images
 			"data:",
