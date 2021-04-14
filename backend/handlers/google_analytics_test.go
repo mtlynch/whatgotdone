@@ -82,7 +82,7 @@ func TestPageViewsGet(t *testing.T) {
 	ds := mockDatastore{
 		users: []string{"jimmy123"},
 		pageViewCounts: []ga.PageViewCount{
-			ga.PageViewCount{
+			{
 				Path:  "/jimmy123/2020-01-17",
 				Views: 5,
 			},

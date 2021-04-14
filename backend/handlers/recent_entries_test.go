@@ -15,13 +15,13 @@ import (
 
 func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T22:00:00.000Z", Markdown: "Read a pamphlet from The Cat Society"},
-		types.JournalEntry{Date: "2019-05-24", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
+		{Date: "2019-05-24", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
+		{Date: "2019-05-24", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
+		{Date: "2019-05-17", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
+		{Date: "2019-05-24", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
+		{Date: "2019-05-24", LastModified: "2019-05-25T22:00:00.000Z", Markdown: "Read a pamphlet from The Cat Society"},
+		{Date: "2019-05-24", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
+		{Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,
@@ -59,13 +59,13 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 	// For simplicity of the test, all users have username "bob," but in
 	// practice, these updates would come from different users.
 	expected := []entryPublic{
-		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
-		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
-		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
-		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
-		entryPublic{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
-		entryPublic{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
-		entryPublic{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
+		{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
+		{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
+		{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
+		{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
+		{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
+		{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
+		{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
@@ -74,10 +74,10 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 
 func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-05-17", LastModified: "2019-09-28T12:00:00.000Z", Markdown: "Made a hat out of donuts from the cloud in the sky"},
-		types.JournalEntry{Date: "2019-09-20", LastModified: "2019-09-25T00:00:00.000Z", Markdown: "High fived a platypus when the apple hits the pie."},
-		types.JournalEntry{Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of choclate"},
-		types.JournalEntry{Date: "2019-09-20", LastModified: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
+		{Date: "2019-05-17", LastModified: "2019-09-28T12:00:00.000Z", Markdown: "Made a hat out of donuts from the cloud in the sky"},
+		{Date: "2019-09-20", LastModified: "2019-09-25T00:00:00.000Z", Markdown: "High fived a platypus when the apple hits the pie."},
+		{Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of choclate"},
+		{Date: "2019-09-20", LastModified: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,
@@ -115,10 +115,10 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	// For simplicity of the test, all users have username "bob," but in
 	// practice, these updates would come from different users.
 	expected := []entryPublic{
-		entryPublic{Author: "bob", Date: "2019-09-20", Markdown: "High fived a platypus when the apple hits the pie."},
-		entryPublic{Author: "bob", Date: "2019-09-20", Markdown: "Attended an Indie Hackers meetup"},
-		entryPublic{Author: "bob", Date: "2019-09-06", Markdown: "Ate an apple in a single bite of choclate"},
-		entryPublic{Author: "bob", Date: "2019-05-17", Markdown: "Made a hat out of donuts from the cloud in the sky"},
+		{Author: "bob", Date: "2019-09-20", Markdown: "High fived a platypus when the apple hits the pie."},
+		{Author: "bob", Date: "2019-09-20", Markdown: "Attended an Indie Hackers meetup"},
+		{Author: "bob", Date: "2019-09-06", Markdown: "Ate an apple in a single bite of choclate"},
+		{Author: "bob", Date: "2019-05-17", Markdown: "Made a hat out of donuts from the cloud in the sky"},
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
@@ -127,12 +127,12 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 
 func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-05-10", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
-		types.JournalEntry{Date: "2019-05-03", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
-		types.JournalEntry{Date: "2019-04-26", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
-		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
-		types.JournalEntry{Date: "2019-04-12", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
-		types.JournalEntry{Date: "2019-04-05", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
+		{Date: "2019-05-10", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
+		{Date: "2019-05-03", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
+		{Date: "2019-04-26", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
+		{Date: "2019-04-19", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
+		{Date: "2019-04-12", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
+		{Date: "2019-04-05", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,
@@ -160,9 +160,9 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 			"3",
 			http.StatusOK,
 			[]entryPublic{
-				entryPublic{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
-				entryPublic{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
-				entryPublic{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
+				{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
+				{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
+				{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
 			},
 		},
 		{
@@ -171,12 +171,12 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 			"500",
 			http.StatusOK,
 			[]entryPublic{
-				entryPublic{Author: "bob", Date: "2019-05-10", Markdown: "Read the news today... Oh boy!"},
-				entryPublic{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
-				entryPublic{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
-				entryPublic{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
-				entryPublic{Author: "bob", Date: "2019-04-12", Markdown: "Ate some crackers in a bathtub"},
-				entryPublic{Author: "bob", Date: "2019-04-05", Markdown: "Rode the bus and saw a movie about ghosts"},
+				{Author: "bob", Date: "2019-05-10", Markdown: "Read the news today... Oh boy!"},
+				{Author: "bob", Date: "2019-05-03", Markdown: "Took a nap and dreamed about chocolate"},
+				{Author: "bob", Date: "2019-04-26", Markdown: "Read a book about the history of cheese"},
+				{Author: "bob", Date: "2019-04-19", Markdown: "Saw a movie about French vanilla"},
+				{Author: "bob", Date: "2019-04-12", Markdown: "Ate some crackers in a bathtub"},
+				{Author: "bob", Date: "2019-04-05", Markdown: "Rode the bus and saw a movie about ghosts"},
 			},
 		},
 		{

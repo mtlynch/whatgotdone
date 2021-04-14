@@ -13,9 +13,9 @@ import (
 
 func TestEntriesHandler(t *testing.T) {
 	entries := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-03-22", LastModified: "2019-03-24", Markdown: "Ate some crackers"},
-		types.JournalEntry{Date: "2019-03-15", LastModified: "2019-03-15", Markdown: "Took a nap"},
-		types.JournalEntry{Date: "2019-03-08", LastModified: "2019-03-09", Markdown: "Watched the movie *The Royal Tenenbaums*."},
+		{Date: "2019-03-22", LastModified: "2019-03-24", Markdown: "Ate some crackers"},
+		{Date: "2019-03-15", LastModified: "2019-03-15", Markdown: "Took a nap"},
+		{Date: "2019-03-08", LastModified: "2019-03-09", Markdown: "Watched the movie *The Royal Tenenbaums*."},
 	}
 	ds := mockDatastore{
 		journalEntries: entries,

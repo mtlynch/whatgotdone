@@ -13,7 +13,7 @@ import (
 
 func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 	drafts := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
 	}
 	ds := mockDatastore{
 		journalDrafts: drafts,
@@ -43,7 +43,7 @@ func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 
 func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 	drafts := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
 	}
 	ds := mockDatastore{
 		journalDrafts: drafts,
@@ -78,7 +78,7 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 
 func TestDraftHandlerWhenDateMatches(t *testing.T) {
 	drafts := []types.JournalEntry{
-		types.JournalEntry{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
 	}
 	ds := mockDatastore{
 		journalDrafts: drafts,
