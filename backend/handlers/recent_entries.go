@@ -34,34 +34,26 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			return
 		}
 
-		users, err := s.datastore.Users()
+		entriesFull, err := s.entriesReader.Recent()
 		if err != nil {
-			log.Printf("Failed to retrieve users: %s", err)
-			http.Error(w, "Failed to retrieve users", http.StatusInternalServerError)
+			log.Printf("Failed to retrieve recent entries: %v", err)
+			http.Error(w, "Failed to retrieve recent entries", http.StatusInternalServerError)
 			return
 		}
 
 		entries := entriesPublic{}
-		for _, username := range users {
-			userEntries, err := s.datastore.GetEntries(username)
-			if err != nil {
-				log.Printf("Failed to retrieve entries for user %s: %s", username, err)
-				http.Error(w, "Failed to retrieve users", http.StatusInternalServerError)
-				return
+		for _, entry := range userEntries {
+			// Filter low-effort posts or test posts from the recent list.
+			const minimumRelevantLength = 30
+			if len(entry.Markdown) < minimumRelevantLength {
+				continue
 			}
-			for _, entry := range userEntries {
-				// Filter low-effort posts or test posts from the recent list.
-				const minimumRelevantLength = 30
-				if len(entry.Markdown) < minimumRelevantLength {
-					continue
-				}
-				entries = append(entries, entryPublic{
-					Author:       username,
-					Date:         entry.Date,
-					lastModified: entry.LastModified,
-					Markdown:     entry.Markdown,
-				})
-			}
+			entries = append(entries, entryPublic{
+				Author:       username,
+				Date:         entry.Date,
+				lastModified: entry.LastModified,
+				Markdown:     entry.Markdown,
+			})
 		}
 
 		if err := json.NewEncoder(w).Encode(sortAndSliceEntries(entries, start, limit)); err != nil {
