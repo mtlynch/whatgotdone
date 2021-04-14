@@ -26,8 +26,16 @@ export const mutations = {
   setRecentFollowing(state, entries) {
     state.recentFollowingEntries = entries;
   },
-  setFollowing(state, following) {
-    state.following = following;
+  addFollowedUser(state, followedUser) {
+    if (state.following.includes(followedUser)) {
+      return;
+    }
+    state.following.push(followedUser);
+  },
+  removeFollowedUser(state, followedUser) {
+    this.state.following = this.state.following.filter(
+      (item) => item !== followedUser
+    );
   },
 };
 

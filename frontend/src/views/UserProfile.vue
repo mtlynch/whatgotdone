@@ -161,16 +161,12 @@ export default {
     },
     onFollow: function () {
       follow(this.username).then(() => {
-        let following = this.$store.state.following;
-        following.push(this.username);
-        this.$store.commit('setFollowing', following);
+        this.$store.commit('addFollowedUser', this.username);
       });
     },
     onUnfollow: function () {
       unfollow(this.username).then(() => {
-        let following = new Set(this.$store.state.following);
-        following.delete(this.username);
-        this.$store.commit('setFollowing', Array.from(following));
+        this.$store.commit('removeFollowedUser', this.username);
       });
     },
   },

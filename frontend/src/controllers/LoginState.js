@@ -16,7 +16,9 @@ export default function updateLoginState() {
         store.commit('setUsername', metadata.username);
         // TODO: Move this
         getFollowing(metadata.username).then((following) => {
-          store.commit('setFollowing', following);
+          for (const followedUser of following) {
+            store.commit('addFollowedUser', followedUser);
+          }
         });
         resolve(metadata);
       })
