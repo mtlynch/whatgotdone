@@ -6,6 +6,13 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
+type RecentEntry struct {
+	Author       string
+	Date         string
+	LastModified string
+	Markdown     string
+}
+
 func (r defaultReader) Recent() ([]types.JournalEntry, error) {
 	users, err := r.datastore.Users()
 	if err != nil {
