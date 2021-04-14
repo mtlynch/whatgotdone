@@ -2,11 +2,11 @@ package entries
 
 import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
-	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type Reader interface {
-	Recent() ([]types.JournalEntry, error)
+	Recent(start, limit int) ([]RecentEntry, error)
+	RecentFollowing(username string, start, limit int) ([]RecentEntry, error)
 }
 
 type defaultReader struct {
