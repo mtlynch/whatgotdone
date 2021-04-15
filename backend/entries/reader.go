@@ -1,7 +1,7 @@
 package entries
 
 import (
-	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type Reader interface {
@@ -9,12 +9,22 @@ type Reader interface {
 	RecentFollowing(username string, start, limit int) ([]RecentEntry, error)
 }
 
-type defaultReader struct {
-	datastore datastore.Datastore
+type entrystore interface {
+	// Users returns all the users who have published entries.
+	Users() ([]string, error)
+	// GetEntries returns all published entries for the given user.
+	GetEntries(username string) ([]types.JournalEntry, error)
+	// GetReactions retrieves reader reactions associated with a published entry.
+	// Followers returns all the users the specified user is following.
+	Following(follower string) ([]string, error)
 }
 
-func NewReader(ds datastore.Datastore) Reader {
+type defaultReader struct {
+	store entrystore
+}
+
+func NewReader(store entrystore) Reader {
 	return defaultReader{
-		datastore: ds,
+		store: store,
 	}
 }

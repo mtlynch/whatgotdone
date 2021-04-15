@@ -10,11 +10,12 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/entries"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
-	entries := []types.JournalEntry{
+	journalEntries := []types.JournalEntry{
 		{Date: "2019-05-24", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
 		{Date: "2019-05-24", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
 		{Date: "2019-05-17", LastModified: "2019-05-17T12:00:00.000Z", Markdown: "Saw a movie about French vanilla"},
@@ -24,7 +25,7 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 		{Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
 	}
 	ds := mockDatastore{
-		journalEntries: entries,
+		journalEntries: journalEntries,
 		users: []string{
 			"bob",
 		},
@@ -32,6 +33,7 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:      &ds,
+		entriesReader:  entries.NewReader(&ds),
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
@@ -73,14 +75,14 @@ func TestRecentEntriesHandlerSortsByDateThenByModifedTimeInDescendingOrder(t *te
 }
 
 func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
-	entries := []types.JournalEntry{
+	journalEntries := []types.JournalEntry{
 		{Date: "2019-05-17", LastModified: "2019-09-28T12:00:00.000Z", Markdown: "Made a hat out of donuts from the cloud in the sky"},
 		{Date: "2019-09-20", LastModified: "2019-09-25T00:00:00.000Z", Markdown: "High fived a platypus when the apple hits the pie."},
 		{Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of choclate"},
 		{Date: "2019-09-20", LastModified: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
 	}
 	ds := mockDatastore{
-		journalEntries: entries,
+		journalEntries: journalEntries,
 		users: []string{
 			"bob",
 		},
@@ -88,6 +90,7 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:      &ds,
+		entriesReader:  entries.NewReader(&ds),
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
@@ -126,7 +129,7 @@ func TestRecentEntriesHandlerAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 }
 
 func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
-	entries := []types.JournalEntry{
+	journalEntries := []types.JournalEntry{
 		{Date: "2019-05-10", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
 		{Date: "2019-05-03", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
 		{Date: "2019-04-26", LastModified: "2019-05-25T00:00:00.000Z", Markdown: "Read a book about the history of cheese"},
@@ -135,7 +138,7 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 		{Date: "2019-04-05", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
 	}
 	ds := mockDatastore{
-		journalEntries: entries,
+		journalEntries: journalEntries,
 		users: []string{
 			"bob",
 		},
@@ -143,6 +146,7 @@ func TestRecentEntriesObservesStartAndLimitParameters(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:      &ds,
+		entriesReader:  entries.NewReader(&ds),
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
@@ -256,6 +260,7 @@ func TestRecentEntriesHandlerReturnsEmptyArrayWhenDatastoreIsEmpty(t *testing.T)
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:      &ds,
+		entriesReader:  entries.NewReader(&ds),
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}

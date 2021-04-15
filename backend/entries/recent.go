@@ -15,7 +15,7 @@ type RecentEntry struct {
 type recentEntries []RecentEntry
 
 func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
-	users, err := r.datastore.Users()
+	users, err := r.store.Users()
 	if err != nil {
 		log.Printf("Failed to retrieve users: %s", err)
 		return []RecentEntry{}, err
@@ -23,7 +23,7 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 
 	entries := []RecentEntry{}
 	for _, username := range users {
-		userEntries, err := r.datastore.GetEntries(username)
+		userEntries, err := r.store.GetEntries(username)
 		if err != nil {
 			log.Printf("Failed to retrieve entries for user %s: %s", username, err)
 			return []RecentEntry{}, err
@@ -42,12 +42,12 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 			})
 		}
 	}
-	return entries, nil
+	return sortAndSliceEntries(entries, start, limit), nil
 }
 
 func (r defaultReader) RecentFollowing(username string, start, limit int) ([]RecentEntry, error) {
 
-	following, err := r.datastore.Following(username)
+	following, err := r.store.Following(username)
 	if err != nil {
 		log.Printf("failed to retrieve user's follow list %s: %v", username, err)
 		return []RecentEntry{}, err
@@ -55,7 +55,7 @@ func (r defaultReader) RecentFollowing(username string, start, limit int) ([]Rec
 
 	var entries recentEntries
 	for _, followedUsername := range following {
-		userEntries, err := r.datastore.GetEntries(followedUsername)
+		userEntries, err := r.store.GetEntries(followedUsername)
 		if err != nil {
 			log.Printf("Failed to retrieve entries for user %s: %v", followedUsername, err)
 			return []RecentEntry{}, err
@@ -69,7 +69,7 @@ func (r defaultReader) RecentFollowing(username string, start, limit int) ([]Rec
 			})
 		}
 	}
-	return entries, nil
+	return sortAndSliceEntries(entries, start, limit), nil
 }
 
 func sortAndSliceEntries(entries recentEntries, start, limit int) recentEntries {

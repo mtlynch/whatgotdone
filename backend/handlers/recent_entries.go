@@ -6,15 +6,14 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/mtlynch/whatgotdone/backend/entries"
 )
 
 type entryPublic struct {
-	Author string `json:"author"`
-	Date   string `json:"date"`
-	// Skip JSON serialization for lastModified as clients don't need this field,
-	// but we need it internally for sorting lists of entries.
-	lastModified string
-	Markdown     string `json:"markdown"`
+	Author   string `json:"author"`
+	Date     string `json:"date"`
+	Markdown string `json:"markdown"`
 }
 
 type entriesPublic []entryPublic
@@ -32,23 +31,14 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			return
 		}
 
-		entriesFull, err := s.entriesReader.Recent(start, limit)
+		entries, err := s.entriesReader.Recent(start, limit)
 		if err != nil {
 			log.Printf("Failed to retrieve recent entries: %v", err)
 			http.Error(w, "Failed to retrieve recent entries", http.StatusInternalServerError)
 			return
 		}
 
-		entries := entriesPublic{}
-		for _, entry := range entriesFull {
-			entries = append(entries, entryPublic{
-				Author:   entry.Author,
-				Date:     entry.Date,
-				Markdown: entry.Markdown,
-			})
-		}
-
-		if err := json.NewEncoder(w).Encode(entries); err != nil {
+		if err := json.NewEncoder(w).Encode(recentEntriesToPublicEntries(entries)); err != nil {
 			panic(err)
 		}
 	}
@@ -74,16 +64,16 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 
 		entries, err := s.entriesReader.RecentFollowing(username, start, limit)
 		if err != nil {
-			//log.Printf("Failed to retrieve recent entries: %v", err)
-			//http.Error(w, "Failed to retrieve recent entries", http.StatusInternalServerError)
+			log.Printf("Failed to retrieve recent entries from users %s is following: %v", username, err)
+			http.Error(w, "Failed to retrieve recent entries from followed users", http.StatusInternalServerError)
 			return
 		}
 
 		type response struct {
-			Entries []entryPublic `json:"entries"`
+			Entries entriesPublic `json:"entries"`
 		}
 		resp := response{
-			Entries: entries,
+			Entries: recentEntriesToPublicEntries(entries),
 		}
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
 			panic(err)
@@ -111,4 +101,16 @@ func parseLimit(s string) (int, error) {
 		return 0, errors.New("limit value must be positive")
 	}
 	return i, nil
+}
+
+func recentEntriesToPublicEntries(entries []entries.RecentEntry) entriesPublic {
+	p := entriesPublic{}
+	for _, entry := range entries {
+		p = append(p, entryPublic{
+			Author:   entry.Author,
+			Date:     entry.Date,
+			Markdown: entry.Markdown,
+		})
+	}
+	return p
 }
