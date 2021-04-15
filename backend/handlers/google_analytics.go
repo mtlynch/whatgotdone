@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
@@ -103,13 +104,17 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 		}
 		pvcs = coalescePageViews(pvcs)
 		pvcs = s.filterNonEntries(pvcs)
+		var wg sync.WaitGroup
 		for _, pvc := range pvcs {
+			wg.Add(1)
 			go func(pvc ga.PageViewCount) {
+				defer wg.Done()
 				if err := s.datastore.InsertPageViews(pvc.Path, pvc.Views); err != nil {
 					log.Printf("failed to store pageviews in datastore %v: %v", pvc, err)
 				}
 			}(pvc)
 		}
+		wg.Wait()
 		if err := json.NewEncoder(w).Encode(true); err != nil {
 			panic(err)
 		}
