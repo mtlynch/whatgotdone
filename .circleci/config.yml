@@ -14,6 +14,17 @@ commands:
               circleci step halt
             fi
 jobs:
+  check_whitespace:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout
+      - run:
+          name: Check for trailing whitespace
+          command: ./dev-scripts/check-trailing-whitespace
+      - run:
+          name: Check that all text files end in a trailing newline
+          command: ./dev-scripts/check-trailing-newline
   build-frontend:
     docker:
       - image: node:12.18.4-alpine
@@ -108,6 +119,7 @@ workflows:
   version: 2
   test-deploy:
     jobs:
+      - check_whitespace
       - build-frontend
       - test-backend
       - integration
