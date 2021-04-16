@@ -17,8 +17,6 @@ while read -r line; do
 done < <(git ls-files \
   | xargs grep ".*" \
     --files-with-matches \
-    --binary-files=without-match \
-    --exclude="*.svg" \
-    --exclude="*third-party*")
+    --binary-files=without-match)
 
 exit "${success}"
