@@ -9,9 +9,8 @@ set -x
 # Exit on unset variable.
 set -u
 
+./dev-scripts/run-go-tests
 ./dev-scripts/check-go-formatting
-
-go test -v ./...
 
 go build -o /dev/null --tags 'dev' backend/main.go
 go build -o /dev/null --tags 'staging' backend/main.go
