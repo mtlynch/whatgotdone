@@ -1,78 +1,52 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/mtlynch/whatgotdone/backend/entries"
-	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
-	journalEntries := []types.JournalEntry{
-		{Date: "2019-05-10", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
-	}
-	ds := mockDatastore{
-		journalEntries: journalEntries,
-		users: []string{
-			"bob",
-		},
-	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore:      &ds,
-		entriesReader:  entries.NewReader(&ds),
+		entriesReader:  nil,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
 	s.routes()
 	var tests = []struct {
-		explanation     string
-		start           string
-		limit           string
-		statusExpected  int
-		entriesExpected []entryPublic
+		explanation string
+		start       string
+		limit       string
 	}{
 		{
 			"rejects invalid start",
 			"invalid-start-value",
 			"3",
-			http.StatusBadRequest,
-			[]entryPublic{},
 		},
 		{
 			"rejects negative start",
 			"-5",
 			"3",
-			http.StatusBadRequest,
-			[]entryPublic{},
 		},
 		{
 			"rejects invalid limit value",
 			"2",
 			"invalid-limit-value",
-			http.StatusBadRequest,
-			[]entryPublic{},
 		},
 		{
 			"rejects negative limit",
 			"2",
 			"-10",
-			http.StatusBadRequest,
-			[]entryPublic{},
 		},
 		{
 			"rejects zero limit",
 			"2",
 			"0",
-			http.StatusBadRequest,
-			[]entryPublic{},
 		},
 	}
 	for _, tt := range tests {
@@ -84,32 +58,17 @@ func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
 		w := httptest.NewRecorder()
 		s.router.ServeHTTP(w, req)
 
-		if status := w.Code; status != tt.statusExpected {
+		if status := w.Code; status != http.StatusBadRequest {
 			t.Fatalf("handler returned wrong status code: got %v want %v",
-				status, tt.statusExpected)
-		}
-		if tt.statusExpected != http.StatusOK {
-			continue
-		}
-
-		var response []entryPublic
-		err = json.Unmarshal(w.Body.Bytes(), &response)
-		if err != nil {
-			t.Fatalf("Response is not valid JSON: %v", w.Body.String())
-		}
-
-		if !reflect.DeepEqual(response, tt.entriesExpected) {
-			t.Fatalf("%s: Unexpected response: got %v want %v", tt.explanation, response, tt.entriesExpected)
+				status, http.StatusBadRequest)
 		}
 	}
 }
 
-func TestRecentEntriesHandlerReturnsEmptyArrayWhenDatastoreIsEmpty(t *testing.T) {
-	ds := mockDatastore{}
+func TestRecentEntriesHandlerReturnsEmptyArrayWhenEntriesReaderIsEmpty(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore:      &ds,
-		entriesReader:  entries.NewReader(&ds),
+		entriesReader:  nil,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
