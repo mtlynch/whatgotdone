@@ -8,6 +8,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/auth"
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/entries"
 	"github.com/mtlynch/whatgotdone/backend/gcs"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 )
@@ -34,10 +35,11 @@ func New() Server {
 		log.Printf("File upload functionality will be disabled")
 		gcsClient = nil
 	}
-
+	ds := newDatastore()
 	s := defaultServer{
 		authenticator:          auth.New(),
-		datastore:              newDatastore(),
+		datastore:              ds,
+		entriesReader:          entries.NewReader(ds),
 		gcsClient:              gcsClient,
 		router:                 mux.NewRouter(),
 		csrfMiddleware:         newCsrfMiddleware(),
@@ -52,6 +54,7 @@ type httpMiddlewareHandler func(http.Handler) http.Handler
 type defaultServer struct {
 	authenticator          auth.Authenticator
 	datastore              datastore.Datastore
+	entriesReader          entries.Reader
 	gcsClient              *gcs.Client
 	router                 *mux.Router
 	csrfMiddleware         httpMiddlewareHandler
