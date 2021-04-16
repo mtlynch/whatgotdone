@@ -3,6 +3,7 @@ package entries
 import (
 	"log"
 	"sort"
+	"sync"
 )
 
 // RecentEntry stores data about a journal entry.
@@ -22,13 +23,32 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 		return []RecentEntry{}, err
 	}
 
-	entries := []RecentEntry{}
+	type result struct {
+		entries []RecentEntry
+		err     error
+	}
+	c := make(chan result)
+	var wg sync.WaitGroup
 	for _, username := range users {
-		entriesForUser, err := r.entriesFromUser(username)
-		if err != nil {
-			return recentEntries{}, err
+		wg.Add(1)
+		go func(u string) {
+			defer wg.Done()
+			entriesForUser, err := r.entriesFromUser(u)
+			c <- result{entriesForUser, err}
+		}(username)
+	}
+
+	go func() {
+		wg.Wait()
+		close(c)
+	}()
+
+	entries := []RecentEntry{}
+	for res := range c {
+		if res.err != nil {
+			return []RecentEntry{}, err
 		}
-		for _, entry := range entriesForUser {
+		for _, entry := range res.entries {
 			// Filter low-effort posts or test posts from the recent list.
 			const minimumRelevantLength = 30
 			if len(entry.Markdown) < minimumRelevantLength {
