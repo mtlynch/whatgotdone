@@ -9,7 +9,7 @@ type Reader interface {
 	RecentFollowing(username string, start, limit int) ([]RecentEntry, error)
 }
 
-type entrystore interface {
+type EntryStore interface {
 	// Users returns all the users who have published entries.
 	Users() ([]string, error)
 	// GetEntries returns all published entries for the given user.
@@ -20,10 +20,10 @@ type entrystore interface {
 }
 
 type defaultReader struct {
-	store entrystore
+	store EntryStore
 }
 
-func NewReader(store entrystore) Reader {
+func NewReader(store EntryStore) Reader {
 	return defaultReader{
 		store: store,
 	}
