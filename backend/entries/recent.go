@@ -5,6 +5,7 @@ import (
 	"sort"
 )
 
+// RecentEntry stores data about a journal entry.
 type RecentEntry struct {
 	Author       string
 	Date         string
@@ -46,7 +47,6 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 }
 
 func (r defaultReader) RecentFollowing(username string, start, limit int) ([]RecentEntry, error) {
-
 	following, err := r.store.Following(username)
 	if err != nil {
 		log.Printf("failed to retrieve user's follow list %s: %v", username, err)
