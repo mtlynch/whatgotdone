@@ -5,8 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 8085",
     "build": "vue-cli-service build",
-    "check-format": "prettier --check 'src/**/*.js' 'src/**/*.vue' '.prettierrc'",
-    "format": "prettier --write 'src/**/*.js' 'src/**/*.vue' '.prettierrc'",
+    "check-format": "prettier --check .",
+    "format": "prettier --write .",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },

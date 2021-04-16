@@ -9,14 +9,12 @@ module.exports = {
   //
   //    content="[[.Title]]"
   //
-  chainWebpack: config => {
-    config
-      .plugin('html')
-      .tap(args => {
-        if (args[0].minify) {
-          args[0].minify.removeAttributeQuotes = false;
-        }
-        return args;
-      })
-  }
-}
+  chainWebpack: (config) => {
+    config.plugin('html').tap((args) => {
+      if (args[0].minify) {
+        args[0].minify.removeAttributeQuotes = false;
+      }
+      return args;
+    });
+  },
+};

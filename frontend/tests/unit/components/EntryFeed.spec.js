@@ -31,7 +31,7 @@ describe('EntryFeed component', () => {
           return mockEntries;
         },
         readEntriesFromServer: () => {
-          return new Promise(function(resolve) {
+          return new Promise(function (resolve) {
             resolve(mockEntries);
           });
         },
