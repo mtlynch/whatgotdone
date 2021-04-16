@@ -24,23 +24,17 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 
 	entries := []RecentEntry{}
 	for _, username := range users {
-		userEntries, err := r.store.GetEntries(username)
+		entriesForUser, err := r.entriesFromUser(username)
 		if err != nil {
-			log.Printf("Failed to retrieve entries for user %s: %s", username, err)
-			return []RecentEntry{}, err
+			return recentEntries{}, err
 		}
-		for _, entry := range userEntries {
+		for _, entry := range entriesForUser {
 			// Filter low-effort posts or test posts from the recent list.
 			const minimumRelevantLength = 30
 			if len(entry.Markdown) < minimumRelevantLength {
 				continue
 			}
-			entries = append(entries, RecentEntry{
-				Author:       username,
-				Date:         entry.Date,
-				LastModified: entry.LastModified,
-				Markdown:     entry.Markdown,
-			})
+			entries = append(entries, entry)
 		}
 	}
 	return sortAndSliceEntries(entries, start, limit), nil
@@ -55,21 +49,31 @@ func (r defaultReader) RecentFollowing(username string, start, limit int) ([]Rec
 
 	var entries recentEntries
 	for _, followedUsername := range following {
-		userEntries, err := r.store.GetEntries(followedUsername)
+		entriesForUser, err := r.entriesFromUser(followedUsername)
 		if err != nil {
-			log.Printf("Failed to retrieve entries for user %s: %v", followedUsername, err)
-			return []RecentEntry{}, err
+			return recentEntries{}, err
 		}
-		for _, entry := range userEntries {
-			entries = append(entries, RecentEntry{
-				Author:       followedUsername,
-				Date:         entry.Date,
-				LastModified: entry.LastModified,
-				Markdown:     entry.Markdown,
-			})
-		}
+		entries = append(entries, entriesForUser...)
 	}
 	return sortAndSliceEntries(entries, start, limit), nil
+}
+
+func (r defaultReader) entriesFromUser(username string) (recentEntries, error) {
+	entries := recentEntries{}
+	journalEntries, err := r.store.GetEntries(username)
+	if err != nil {
+		log.Printf("Failed to retrieve entries for user %s: %v", username, err)
+		return []RecentEntry{}, err
+	}
+	for _, entry := range journalEntries {
+		entries = append(entries, RecentEntry{
+			Author:       username,
+			Date:         entry.Date,
+			LastModified: entry.LastModified,
+			Markdown:     entry.Markdown,
+		})
+	}
+	return entries, nil
 }
 
 func sortAndSliceEntries(entries recentEntries, start, limit int) recentEntries {
