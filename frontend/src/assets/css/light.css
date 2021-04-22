@@ -1,0 +1,178 @@
+/* General styling */
+body {
+  background: #fff;
+  color: #2b3e50;
+}
+
+hr {
+  border-top: 1px solid rgb(43, 62, 80, 0.4);
+}
+
+h1 {
+  margin-bottom: 16px;
+}
+
+/* Navigation styling */
+
+.navbar {
+  background: #2b3e50 !important;
+}
+
+.navbar,
+.navbar-brand,
+.nav-link {
+  color: white !important;
+}
+
+.navbar-toggler {
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.nav-link {
+  padding: 8px !important;
+}
+
+.nav-link:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+}
+
+.dropdown-menu {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Features styling */
+
+.jumbotron {
+  background: #2b3e50 !important;
+  color: white;
+  border-radius: 10px;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.jumbotron hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.jumbotron h1 {
+  font-size: 36px;
+  margin-top: 0px;
+}
+
+.feature {
+  color: #2b3e50 !important;
+  font-size: 1.2rem;
+}
+
+.feature img {
+  border-radius: 10px;
+  border: none !important;
+}
+
+/* Contact us */
+
+.contact-us {
+  color: #2b3e50 !important;
+}
+
+/* Controls */
+
+.btn {
+  border-radius: 6px;
+}
+
+.btn.not-collapsed {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.btn.twitter {
+  background: rgba(29, 161, 242, 1);
+}
+
+textarea.form-control,
+input.form-control,
+.rich-text-editor.form-control {
+  border: 1px solid rgba(43, 62, 80, 0.5) !important;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 16px 0;
+  background: white !important;
+}
+
+input.form-control {
+  height: auto !important;
+}
+
+label {
+  font-size: 16px;
+}
+
+.form-group label {
+  font-weight: 600 !important;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+/* Alerts */
+
+.alert {
+  border-radius: 10px;
+}
+
+/* Journal */
+
+.journal,
+.journal-preview {
+  padding: 16px !important;
+  border-radius: 10px;
+  border: none !important;
+  background: #2b3e50 !important;
+  color: #fff !important;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.preview-bar {
+  background: rgba(255, 255, 255, 0.4) !important;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.journal-body {
+  padding: 20px 20px 0;
+}
+
+.reaction-buttons {
+  margin: 16px 0 25px 0 !important;
+}
+
+/* Pagination */
+
+.page-item {
+  margin: 2px !important;
+}
+
+.page-item .page-link {
+  min-width: 32px;
+  border-radius: 6px !important;
+  border: none !important;
+}
+
+/* Responsive */
+
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding: 40px;
+  }
+
+  .jumbotron h1 {
+    font-size: 48px;
+    font-weight: 500;
+  }
+}
