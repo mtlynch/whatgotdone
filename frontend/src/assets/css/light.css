@@ -78,6 +78,7 @@ h1 {
 /* Contact us */
 
 .contact-us {
+  font-size: 1.2rem;
   color: #2b3e50 !important;
 }
 
@@ -162,6 +163,14 @@ label {
   min-width: 32px;
   border-radius: 6px !important;
   border: none !important;
+}
+
+.page-item:not(.active) .page-link {
+  background: #4e5d6c;
+}
+
+.page-item .page-link:hover {
+  opacity: 0.8;
 }
 
 /* Responsive */
