@@ -12,6 +12,79 @@ h1 {
   margin-bottom: 16px;
 }
 
+<<<<<<< HEAD
+=======
+/* Navigation styling */
+
+.navbar {
+  background: #2b3e50 !important;
+}
+
+.navbar,
+.navbar-brand,
+.nav-link {
+  color: white !important;
+}
+
+.navbar-toggler {
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.nav-link {
+  padding: 8px !important;
+}
+
+.nav-link:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+}
+
+.dropdown-menu {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Features styling */
+
+.jumbotron {
+  background: #2b3e50 !important;
+  color: white;
+  border-radius: 10px;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.jumbotron hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.jumbotron h1 {
+  font-size: 36px;
+  margin-top: 0px;
+}
+
+.feature {
+  color: #2b3e50 !important;
+  font-size: 1.2rem;
+}
+
+.feature img {
+  border-radius: 10px;
+  border: none !important;
+}
+
+/* Contact us */
+
+.contact-us {
+  font-size: 1.2rem;
+  color: #2b3e50 !important;
+}
+
+>>>>>>> 31b8674 (updated font-size for contact-us block, fixed page-link hover bg-color)
 /* Controls */
 
 .btn {
@@ -98,6 +171,20 @@ label {
 .page-item:not(.active) .page-link {
   background: #4e5d6c;
 }
+<<<<<<< HEAD
+=======
+
+.page-item .page-link:hover {
+  opacity: 0.8;
+}
+
+/* Responsive */
+
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding: 40px;
+  }
+>>>>>>> 31b8674 (updated font-size for contact-us block, fixed page-link hover bg-color)
 
 .page-item .page-link:hover {
   opacity: 0.8;
