@@ -56,6 +56,12 @@ h1 {
   font-size: 1.2rem;
 }
 
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding: 40px;
+  }
+}
+
 .jumbotron hr {
   border-top: 1px solid rgba(255, 255, 255, 0.4);
 }
@@ -63,6 +69,13 @@ h1 {
 .jumbotron h1 {
   font-size: 36px;
   margin-top: 0px;
+}
+
+@media screen and (min-width: 768px) {
+  .jumbotron h1 {
+    font-size: 48px;
+    font-weight: 500;
+  }
 }
 
 .feature {
@@ -171,17 +184,4 @@ label {
 
 .page-item .page-link:hover {
   opacity: 0.8;
-}
-
-/* Responsive */
-
-@media screen and (min-width: 768px) {
-  .jumbotron {
-    padding: 40px;
-  }
-
-  .jumbotron h1 {
-    font-size: 48px;
-    font-weight: 500;
-  }
 }
