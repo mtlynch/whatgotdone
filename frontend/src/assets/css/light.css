@@ -85,7 +85,7 @@ h1 {
 
 .feature img {
   border-radius: 10px;
-  border: none !important;
+  border: 1px solid #4e5d6c !important;
 }
 
 /* Contact us */
