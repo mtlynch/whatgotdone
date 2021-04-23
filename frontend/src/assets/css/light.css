@@ -83,6 +83,11 @@ label {
   margin: 16px 0 25px 0 !important;
 }
 
+span.end-date {
+  color: #2b3e50 !important;
+  font-weight: bold;
+}
+
 /* Pagination */
 
 .page-item {
