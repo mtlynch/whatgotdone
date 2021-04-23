@@ -32,6 +32,13 @@ h1 {
 
 .nav-link {
   padding: 8px !important;
+  font-size: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .nav-link {
+    font-size: 14px;
+  }
 }
 
 .nav-link:hover {
@@ -44,6 +51,16 @@ h1 {
   border-radius: 6px;
   border: none;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-item {
+  font-size: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .dropdown-item {
+    font-size: 14px;
+  }
 }
 
 /* Features styling */
