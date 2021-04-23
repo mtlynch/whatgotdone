@@ -13,4 +13,5 @@ else
 fi
 
 cd integration
-docker-compose up --exit-code-from cypress --abort-on-container-exit $flags
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+  docker-compose up --exit-code-from cypress --abort-on-container-exit $flags
