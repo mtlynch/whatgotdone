@@ -1,11 +1,9 @@
 <template>
   <div class="footer container">
     <hr />
-    <p class="float-center">
-      <a href="mailto:contact@whatgotdone.com">Email Us</a>
-      <span class="separator">|</span>
+    <div class="links">
       <router-link to="/privacy-policy">Privacy Policy</router-link>
-    </p>
+    </div>
   </div>
 </template>
 
@@ -16,15 +14,13 @@ export default {
 </script>
 
 <style scoped>
-* {
-  text-align: center;
+.links {
+  display: flex;
+  align-content: center;
+  justify-content: center;
 }
 
 .footer {
-  margin-top: 80px;
-}
-
-.separator {
-  margin: 0px 15px;
+  margin-top: 2rem;
 }
 </style>
