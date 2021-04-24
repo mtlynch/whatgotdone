@@ -74,15 +74,15 @@
       <img class="border-black" src="/images/example-freeform.jpg" />
     </div>
 
-    <div class="contact-us">
-      <h2>Contact us</h2>
+    <div>
+      <h2>Who made this?</h2>
       <p>
-        If you have questions or feature requests for What Got Done, we'd love
-        to speak to you.
+        What Got Done is a free, open-source project by
+        <a href="https://mtlynch.io">Michael Lynch</a>.
       </p>
       <p>
-        Send an email to
-        <a href="mailto:contact@whatgotdone.com">contact@whatgotdone.com</a>.
+        Anyone can contribute features or bugfix through What Got Done's
+        <a href="https://github.com/mtlynch/whatgotdone">public Github</a>.
       </p>
     </div>
   </div>
@@ -226,11 +226,5 @@ a {
 
 .border-black {
   border: 1px solid black;
-}
-
-@media (min-width: 768px) {
-  .contact-us {
-    max-width: 570px;
-  }
 }
 </style>
