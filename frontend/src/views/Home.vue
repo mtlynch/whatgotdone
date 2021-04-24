@@ -81,7 +81,7 @@
         <a href="https://mtlynch.io">Michael Lynch</a>.
       </p>
       <p>
-        Anyone can contribute features or bugfix through What Got Done's
+        Anyone can contribute features or bugfixes through What Got Done's
         <a href="https://github.com/mtlynch/whatgotdone">public Github</a>.
       </p>
     </div>
