@@ -61,8 +61,8 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".editor-content .ProseMirror").type("Full report is on the wiki");
   cy.get(".editor-content .ProseMirror").setSelection("wiki");
   cy.get(".btn-link .btn").click();
-  cy.get(".modal-dialog input").type("example.com/wiki{enter}");
-  cy.get(".editor-content .ProseMirror").type(".{enter}{enter}");
+  cy.get(".modal-dialog input").type("https://example.com/wiki{enter}");
+  cy.get(".editor-content .ProseMirror").type("{rightarrow}.{enter}{enter}");
 
   cy.get(".editor-content .ProseMirror").type("Most were in the ");
   cy.get(".btn-inline-code .btn").click();

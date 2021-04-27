@@ -1,7 +1,9 @@
 <template>
   <div
     class="editor rich-text-editor form-control"
-    v-on:foo="this.editor.chain().focus().setLink({href: linkUrl}).run()"
+    @linkAdded="
+      this.editor.chain().focus().setLink({href: $event.linkUrl}).run()
+    "
   >
     <div class="menubar">
       <EditorMenuButton
@@ -34,10 +36,9 @@
       <EditorMenuButton
         class="btn-link"
         :isActive="editor.isActive('link')"
+        :disabled="editor.state.selection.from === editor.state.selection.to"
         tooltip="Link"
-        @click="
-          editor.chain().focus().setLink({href: 'https://google.com'}).run()
-        "
+        @click="showModal()"
       >
         <b-icon-link></b-icon-link>
       </EditorMenuButton>
@@ -129,9 +130,12 @@
     <b-modal
       ref="insert-link"
       title="Insert link"
+      @ok="handleInsertLink"
+      @keydown.native.enter="handleInsertLink"
       @shown="$refs['url-input'].focus()"
+      @hidden="onLinkModalHide"
     >
-      <b-form @submit.stop.prevent>
+      <b-form @submit="handleInsertLink" @submit.stop.prevent>
         <b-form-input ref="url-input" v-model="linkUrl"></b-form-input>
       </b-form>
     </b-modal>
@@ -194,6 +198,13 @@ export default {
     onClickLink() {
       this.linkUrl = 'https://';
       this.$refs['insert-link'].show();
+    },
+    handleInsertLink() {
+      this.editor.chain().focus().setLink({href: this.linkUrl}).run();
+      this.$refs['insert-link'].hide();
+    },
+    onLinkModalHide() {
+      this.editor.focus();
     },
     htmlToMarkdown(html) {
       turndownService.use(gfm);
