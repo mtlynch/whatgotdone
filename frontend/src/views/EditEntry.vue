@@ -169,7 +169,7 @@ export default {
 }
 
 span.end-date {
-  color: rgb(255, 208, 56);
+  color: #2b3e50 !important;
   font-weight: bold;
 }
 

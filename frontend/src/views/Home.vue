@@ -143,6 +143,33 @@ a {
 .jumbotron {
   padding-bottom: 40px;
   margin-bottom: 100px;
+  background: #2b3e50 !important;
+  color: white;
+  border-radius: 10px;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding: 40px;
+  }
+}
+
+.jumbotron hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.jumbotron h1 {
+  font-size: 36px;
+  margin-top: 0px;
+}
+
+@media screen and (min-width: 768px) {
+  .jumbotron h1 {
+    font-size: 48px;
+    font-weight: 500;
+  }
 }
 
 .jumbotron-footer {
@@ -177,6 +204,8 @@ a {
   grid-template-rows: auto 1fr auto;
   grid-gap: 1rem;
   margin-bottom: 100px;
+  color: #2b3e50 !important;
+  font-size: 1.2rem;
 }
 
 .feature h2 {
@@ -189,6 +218,8 @@ a {
   grid-row: 2;
   grid-column: 1;
   max-width: 100%;
+  border-radius: 10px;
+  border: 1px solid #4e5d6c !important;
 }
 
 .feature .text {
@@ -226,5 +257,16 @@ a {
 
 .border-black {
   border: 1px solid black;
+}
+
+.contact-us {
+  font-size: 1.2rem;
+  color: #2b3e50 !important;
+}
+
+@media (min-width: 768px) {
+  .contact-us {
+    max-width: 570px;
+  }
 }
 </style>
