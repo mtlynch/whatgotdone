@@ -12,106 +12,6 @@ h1 {
   margin-bottom: 16px;
 }
 
-/* Navigation styling */
-
-.navbar {
-  background: #2b3e50 !important;
-}
-
-.navbar,
-.navbar-brand,
-.nav-link {
-  color: white !important;
-}
-
-.navbar-toggler {
-  border: none;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.nav-link {
-  padding: 8px !important;
-  font-size: 16px;
-}
-
-@media screen and (min-width: 768px) {
-  .nav-link {
-    font-size: 14px;
-  }
-}
-
-.nav-link:hover {
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 6px;
-}
-
-.dropdown-menu {
-  border-radius: 6px;
-  border: none;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
-}
-
-.dropdown-item {
-  font-size: 16px;
-}
-
-@media screen and (min-width: 768px) {
-  .dropdown-item {
-    font-size: 14px;
-  }
-}
-
-/* Features styling */
-
-.jumbotron {
-  background: #2b3e50 !important;
-  color: white;
-  border-radius: 10px;
-  padding: 40px;
-  font-size: 1.2rem;
-}
-
-@media screen and (min-width: 768px) {
-  .jumbotron {
-    padding: 40px;
-  }
-}
-
-.jumbotron hr {
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.jumbotron h1 {
-  font-size: 36px;
-  margin-top: 0px;
-}
-
-@media screen and (min-width: 768px) {
-  .jumbotron h1 {
-    font-size: 48px;
-    font-weight: 500;
-  }
-}
-
-.feature {
-  color: #2b3e50 !important;
-  font-size: 1.2rem;
-}
-
-.feature img {
-  border-radius: 10px;
-  border: 1px solid #4e5d6c !important;
-}
-
-/* Contact us */
-
-.contact-us {
-  font-size: 1.2rem;
-  color: #2b3e50 !important;
-}
-
 /* Controls */
 
 .btn {
@@ -181,11 +81,6 @@ label {
 
 .reaction-buttons {
   margin: 16px 0 25px 0 !important;
-}
-
-span.end-date {
-  color: #2b3e50 !important;
-  font-weight: bold;
 }
 
 /* Pagination */

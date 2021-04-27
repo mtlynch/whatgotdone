@@ -90,4 +90,53 @@ export default {
 .navbar-brand {
   margin: 10px 20px 10px 0px;
 }
+
+.navbar {
+  background: #2b3e50 !important;
+}
+
+.navbar,
+.navbar-brand,
+.nav-link {
+  color: white !important;
+}
+
+.navbar-toggler {
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.nav-link {
+  padding: 8px !important;
+  font-size: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .nav-link {
+    font-size: 14px;
+  }
+}
+
+.nav-link:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+}
+
+.dropdown-menu {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-item {
+  font-size: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .dropdown-item {
+    font-size: 14px;
+  }
+}
 </style>
