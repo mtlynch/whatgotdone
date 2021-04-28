@@ -187,6 +187,13 @@ export default {
   }
 }
 
+.reaction .username {
+  background: #2b3e50;
+  border-radius: 6px;
+  padding: 2px 8px 5px;
+  color: white;
+}
+
 .reaction-symbol {
   font-size: 18pt;
 }
