@@ -1,7 +1,8 @@
 <template>
   <b-navbar
     toggleable="md"
-    class="navbar navbar-expand-lg navbar-light bg-light"
+    id="navbar"
+    class="navbar navbar-expand-lg navbar-dark bg-dark"
   >
     <b-navbar-brand
       v-b-toggle.nav-collapse
@@ -87,7 +88,56 @@ export default {
 </script>
 
 <style scoped>
-.navbar-brand {
+#navbar .navbar-brand {
   margin: 10px 20px 10px 0px;
+}
+
+#navbar .navbar {
+  background: #2b3e50;
+}
+
+#navbar .navbar,
+#navbar .navbar-brand,
+#navbar .nav-link {
+  color: white;
+}
+
+#navbar .navbar-toggler {
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+#navbar .nav-link {
+  padding: 8px;
+  font-size: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  #navbar .nav-link {
+    font-size: 14px;
+  }
+}
+
+#navbar .nav-link:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+}
+
+#navbar .dropdown-menu {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+#navbar .dropdown-item {
+  font-size: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  #navbar .dropdown-item {
+    font-size: 14px;
+  }
 }
 </style>
