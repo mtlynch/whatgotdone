@@ -1,7 +1,8 @@
 <template>
   <b-navbar
     toggleable="md"
-    class="navbar navbar-expand-lg navbar-light bg-light"
+    id="navbar"
+    class="navbar navbar-expand-lg navbar-dark bg-dark"
   >
     <b-navbar-brand
       v-b-toggle.nav-collapse
@@ -87,55 +88,55 @@ export default {
 </script>
 
 <style scoped>
-.navbar-brand {
+#navbar .navbar-brand {
   margin: 10px 20px 10px 0px;
 }
 
-.navbar {
-  background: #2b3e50 !important;
+#navbar .navbar {
+  background: #2b3e50;
 }
 
-.navbar,
-.navbar-brand,
-.nav-link {
-  color: white !important;
+#navbar .navbar,
+#navbar .navbar-brand,
+#navbar .nav-link {
+  color: white;
 }
 
-.navbar-toggler {
+#navbar .navbar-toggler {
   border: none;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.4);
 }
 
-.nav-link {
-  padding: 8px !important;
+#navbar .nav-link {
+  padding: 8px;
   font-size: 16px;
 }
 
 @media screen and (min-width: 768px) {
-  .nav-link {
+  #navbar .nav-link {
     font-size: 14px;
   }
 }
 
-.nav-link:hover {
+#navbar .nav-link:hover {
   cursor: pointer;
   background: rgba(255, 255, 255, 0.4);
   border-radius: 6px;
 }
 
-.dropdown-menu {
+#navbar .dropdown-menu {
   border-radius: 6px;
   border: none;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
 }
 
-.dropdown-item {
+#navbar .dropdown-item {
   font-size: 16px;
 }
 
 @media screen and (min-width: 768px) {
-  .dropdown-item {
+  #navbar .dropdown-item {
     font-size: 14px;
   }
 }
