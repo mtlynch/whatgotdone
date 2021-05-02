@@ -16,7 +16,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/vue-fontawesome": "^2.0.2",
     "@tiptap/extension-link": "^2.0.0-beta.8",
-    "@tiptap/starter-kit": "^2.0.0-beta.34",
+    "@tiptap/starter-kit": "^2.0.0-beta.37",
     "@tiptap/vue-2": "^2.0.0-beta.21",
     "axios": "^0.21.1",
     "babel-runtime": "^6.26.0",
