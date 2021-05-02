@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="editor rich-text-editor form-control"
-    @linkAdded="
-      this.editor.chain().focus().setLink({href: $event.linkUrl}).run()
-    "
-  >
+  <div class="editor rich-text-editor form-control">
     <div class="menubar">
       <EditorMenuButton
         class="btn-bold"
@@ -38,7 +33,7 @@
         :isActive="editor.isActive('link')"
         :disabled="editor.state.selection.from === editor.state.selection.to"
         tooltip="Link"
-        @click="showModal()"
+        @click="onClickLink()"
       >
         <b-icon-link></b-icon-link>
       </EditorMenuButton>
@@ -133,7 +128,7 @@
       @ok="handleInsertLink"
       @keydown.native.enter="handleInsertLink"
       @shown="$refs['url-input'].focus()"
-      @hidden="onLinkModalHide"
+      return-focus=".editor-content"
     >
       <b-form @submit="handleInsertLink" @submit.stop.prevent>
         <b-form-input ref="url-input" v-model="linkUrl"></b-form-input>
@@ -200,11 +195,8 @@ export default {
       this.$refs['insert-link'].show();
     },
     handleInsertLink() {
-      this.editor.chain().focus().setLink({href: this.linkUrl}).run();
       this.$refs['insert-link'].hide();
-    },
-    onLinkModalHide() {
-      this.editor.focus();
+      this.editor.chain().focus().setLink({href: this.linkUrl}).run();
     },
     htmlToMarkdown(html) {
       turndownService.use(gfm);
