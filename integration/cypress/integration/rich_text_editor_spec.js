@@ -176,16 +176,3 @@ it("supports undo", () => {
   cy.get(".switch-mode .btn").click();
   cy.get(".editor-textarea").should("have.value", "Hello, world!");
 });
-
-it("canonicalizes newlines after bulleted list", () => {
-  cy.login("staging_jimmy");
-
-  cy.location("pathname").should("include", "/entry/edit");
-
-  cy.get(".btn-bulleted-list .btn").click();
-  cy.get(".editor-content .ProseMirror").type("a{enter}{enter}b");
-
-  cy.get(".switch-mode .btn").click();
-
-  cy.get(".editor-textarea").should("have.value", "*   a\n\nb");
-});
