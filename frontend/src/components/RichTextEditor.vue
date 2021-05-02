@@ -1,125 +1,123 @@
 <template>
   <div class="editor rich-text-editor form-control">
-    <editor-menu-bar :editor="editor" v-slot="{commands, isActive}">
-      <div class="menubar">
-        <EditorMenuButton
-          class="btn-bold"
-          :isActive="isActive.bold()"
-          tooltip="Bold"
-          @click="commands.bold"
-        >
-          <b-icon-type-bold></b-icon-type-bold>
-        </EditorMenuButton>
+    <div class="menubar">
+      <EditorMenuButton
+        class="btn-bold"
+        :isActive="editor.isActive('bold')"
+        tooltip="Bold"
+        @click="editor.chain().focus().toggleBold().run()"
+      >
+        <b-icon-type-bold></b-icon-type-bold>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-italic"
-          :isActive="isActive.italic()"
-          tooltip="Italic"
-          @click="commands.italic"
-        >
-          <b-icon-type-italic></b-icon-type-italic>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-italic"
+        :isActive="editor.isActive('italic')"
+        tooltip="Italic"
+        @click="editor.chain().focus().toggleItalic().run()"
+      >
+        <b-icon-type-italic></b-icon-type-italic>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-strikethrough"
-          :isActive="isActive.strike()"
-          tooltip="Strikethrough"
-          @click="commands.strike"
-        >
-          <b-icon-type-strikethrough></b-icon-type-strikethrough>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-strikethrough"
+        :isActive="editor.isActive('strike')"
+        tooltip="Strikethrough"
+        @click="editor.chain().focus().toggleStrike().run()"
+      >
+        <b-icon-type-strikethrough></b-icon-type-strikethrough>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-link"
-          :class="{'is-active': isActive.link()}"
-          :disabled="editor.selection.from === editor.selection.to"
-          tooltip="Link"
-          @click="onClickLink"
-        >
-          <b-icon-link></b-icon-link>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-link"
+        :isActive="editor.isActive('link')"
+        :disabled="editor.state.selection.from === editor.state.selection.to"
+        tooltip="Link"
+        @click="onClickLink()"
+      >
+        <b-icon-link></b-icon-link>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-inline-code"
-          :isActive="isActive.code()"
-          tooltip="Inline code"
-          @click="commands.code"
-        >
-          <b-icon-code></b-icon-code>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-inline-code"
+        :isActive="editor.isActive('code')"
+        tooltip="Inline code"
+        @click="editor.chain().focus().toggleCode().run()"
+      >
+        <b-icon-code></b-icon-code>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-code-block"
-          :isActive="isActive.code_block()"
-          tooltip="Code block"
-          @click="commands.code_block"
-        >
-          <b-icon-file-code></b-icon-file-code>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-code-block"
+        :isActive="editor.isActive('codeBlock')"
+        tooltip="Code block"
+        @click="editor.chain().focus().toggleCodeBlock().run()"
+      >
+        <b-icon-file-code></b-icon-file-code>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-h1"
-          :isActive="isActive.heading({level: 1})"
-          tooltip="Main heading"
-          @click="commands.heading({level: 1})"
-        >
-          H1
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-h1"
+        :isActive="editor.isActive('heading', {level: 1})"
+        tooltip="Main heading"
+        @click="editor.chain().focus().toggleHeading({level: 1}).run()"
+      >
+        H1
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-h2"
-          :isActive="isActive.heading({level: 2})"
-          tooltip="Subheading"
-          @click="commands.heading({level: 2})"
-        >
-          H2
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-h2"
+        :isActive="editor.isActive('heading', {level: 2})"
+        tooltip="Subheading"
+        @click="editor.chain().focus().toggleHeading({level: 2}).run()"
+      >
+        H2
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-h3"
-          :isActive="isActive.heading({level: 3})"
-          tooltip="Subsection heading"
-          @click="commands.heading({level: 3})"
-        >
-          H3
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-h3"
+        :isActive="editor.isActive('heading', {level: 3})"
+        tooltip="Subsection heading"
+        @click="editor.chain().focus().toggleHeading({level: 3}).run()"
+      >
+        H3
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-bulleted-list"
-          :isActive="isActive.bullet_list()"
-          tooltip="Bulleted list"
-          @click="commands.bullet_list"
-        >
-          <b-icon-list-ul></b-icon-list-ul>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-bulleted-list"
+        :isActive="editor.isActive('bulletList')"
+        tooltip="Bulleted list"
+        @click="editor.chain().focus().toggleBulletList().run()"
+      >
+        <b-icon-list-ul></b-icon-list-ul>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-numbered-list"
-          :isActive="isActive.ordered_list()"
-          tooltip="Numbered list"
-          @click="commands.ordered_list"
-        >
-          <b-icon-list-ol></b-icon-list-ol>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-numbered-list"
+        :isActive="editor.isActive('orderedList')"
+        tooltip="Numbered list"
+        @click="editor.chain().focus().toggleOrderedList().run()"
+      >
+        <b-icon-list-ol></b-icon-list-ol>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="btn-blockquote"
-          :isActive="isActive.blockquote()"
-          tooltip="Quote"
-          @click="commands.blockquote"
-        >
-          <b-icon-blockquote-left></b-icon-blockquote-left>
-        </EditorMenuButton>
+      <EditorMenuButton
+        class="btn-blockquote"
+        :isActive="editor.isActive('blockquote')"
+        tooltip="Quote"
+        @click="editor.chain().focus().toggleBlockquote().run()"
+      >
+        <b-icon-blockquote-left></b-icon-blockquote-left>
+      </EditorMenuButton>
 
-        <EditorMenuButton
-          class="switch-mode"
-          tooltip="For markdown enthusiasts"
-          @click="$emit('change-mode')"
-        >
-          Plaintext Editor
-        </EditorMenuButton>
-      </div>
-    </editor-menu-bar>
+      <EditorMenuButton
+        class="switch-mode"
+        tooltip="For markdown enthusiasts"
+        @click="$emit('change-mode')"
+      >
+        Plaintext Editor
+      </EditorMenuButton>
+    </div>
 
     <hr />
 
@@ -130,7 +128,7 @@
       @ok="handleInsertLink"
       @keydown.native.enter="handleInsertLink"
       @shown="$refs['url-input'].focus()"
-      @hidden="onLinkModalHide"
+      return-focus=".editor-content"
     >
       <b-form @submit="handleInsertLink" @submit.stop.prevent>
         <b-form-input ref="url-input" v-model="linkUrl"></b-form-input>
@@ -145,21 +143,9 @@ import VueMarkdown from 'vue-markdown';
 
 Vue.use(VueMarkdown);
 
-import {Editor, EditorContent, EditorMenuBar} from 'tiptap';
-import {
-  Blockquote,
-  CodeBlock,
-  Heading,
-  OrderedList,
-  BulletList,
-  ListItem,
-  Bold,
-  Code,
-  Italic,
-  Link,
-  Strike,
-  History,
-} from 'tiptap-extensions';
+import {Editor, EditorContent} from '@tiptap/vue-2';
+import Link from '@tiptap/extension-link';
+import {defaultExtensions} from '@tiptap/starter-kit';
 import showdown from 'showdown';
 import TurndownService from 'turndown';
 import {gfm} from 'turndown-plugin-gfm';
@@ -185,7 +171,6 @@ const turndownService = new TurndownService({headingStyle: 'atx'});
 export default {
   components: {
     EditorContent,
-    EditorMenuBar,
     EditorMenuButton,
   },
   props: {
@@ -195,23 +180,11 @@ export default {
     return {
       linkUrl: '',
       editor: new Editor({
-        extensions: [
-          new Blockquote(),
-          new BulletList(),
-          new CodeBlock(),
-          new Heading({levels: [1, 2, 3]}),
-          new ListItem(),
-          new OrderedList(),
-          new Link(),
-          new Bold(),
-          new Code(),
-          new Italic(),
-          new Strike(),
-          new History(),
-        ],
+        autofocus: true,
+        extensions: [Link, ...defaultExtensions()],
         content: showdownService.makeHtml(this.value),
-        onUpdate: ({getHTML}) => {
-          this.$emit('input', this.htmlToMarkdown(getHTML()));
+        onUpdate: () => {
+          this.$emit('input', this.htmlToMarkdown(this.editor.getHTML()));
         },
       }),
     };
@@ -222,16 +195,8 @@ export default {
       this.$refs['insert-link'].show();
     },
     handleInsertLink() {
-      this.editor.commands.link({href: this.linkUrl});
-      // Unselect the text so the user can continue typing.
-      this.editor.setSelection(
-        this.editor.selection.to,
-        this.editor.selection.to
-      );
       this.$refs['insert-link'].hide();
-    },
-    onLinkModalHide() {
-      this.editor.focus();
+      this.editor.chain().focus().setLink({href: this.linkUrl}).run();
     },
     htmlToMarkdown(html) {
       turndownService.use(gfm);

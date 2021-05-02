@@ -1,3 +1,9 @@
+// There seems to be a bug in tiptap where formatting buttons don't apply until
+// the user has typed text.
+function applyTipTapWorkaround() {
+  cy.get(".editor-content .ProseMirror").type("a{backspace}");
+}
+
 it("writes an entry without formatting", () => {
   cy.login("staging_jimmy");
 
@@ -5,6 +11,7 @@ it("writes an entry without formatting", () => {
 
   const entryText = "Posted an update at " + new Date().toISOString();
 
+  applyTipTapWorkaround();
   cy.get(".editor-content .ProseMirror").type(entryText);
   cy.get("form").submit();
 
@@ -18,6 +25,7 @@ it("canonicalizes newlines after bulleted list", () => {
 
   cy.location("pathname").should("include", "/entry/edit");
 
+  applyTipTapWorkaround();
   cy.get(".btn-bulleted-list .btn").click();
   cy.get(".editor-content .ProseMirror").type("a{enter}{enter}b");
 
@@ -31,6 +39,7 @@ it("writes an entry with every type of formatting", () => {
 
   cy.location("pathname").should("include", "/entry/edit");
 
+  applyTipTapWorkaround();
   cy.get(".btn-h1 .btn").click();
   cy.get(".editor-content .ProseMirror").type("Project A{enter}{enter}");
 
@@ -62,7 +71,7 @@ it("writes an entry with every type of formatting", () => {
   cy.get(".editor-content .ProseMirror").setSelection("wiki");
   cy.get(".btn-link .btn").click();
   cy.get(".modal-dialog input").type("example.com/wiki{enter}");
-  cy.get(".editor-content .ProseMirror").type(".{enter}{enter}");
+  cy.get(".editor-content .ProseMirror").type("{rightarrow}.{enter}{enter}");
 
   cy.get(".editor-content .ProseMirror").type("Most were in the ");
   cy.get(".btn-inline-code .btn").click();
@@ -162,6 +171,7 @@ it("supports undo", () => {
 
   cy.location("pathname").should("include", "/entry/edit");
 
+  applyTipTapWorkaround();
   cy.get(".editor-content .ProseMirror").type("Hello, world!");
 
   // Wait for auto-save to complete
@@ -175,17 +185,4 @@ it("supports undo", () => {
   cy.get(".editor-content .ProseMirror").type("{ctrl}z");
   cy.get(".switch-mode .btn").click();
   cy.get(".editor-textarea").should("have.value", "Hello, world!");
-});
-
-it("canonicalizes newlines after bulleted list", () => {
-  cy.login("staging_jimmy");
-
-  cy.location("pathname").should("include", "/entry/edit");
-
-  cy.get(".btn-bulleted-list .btn").click();
-  cy.get(".editor-content .ProseMirror").type("a{enter}{enter}b");
-
-  cy.get(".switch-mode .btn").click();
-
-  cy.get(".editor-textarea").should("have.value", "*   a\n\nb");
 });
