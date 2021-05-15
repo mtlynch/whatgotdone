@@ -12,7 +12,7 @@ export const mutations = {
   setUsername(state, username) {
     state.username = username;
   },
-  clearLoginState(state) {
+  clearUserState(state) {
     state.username = null;
     state.following = [];
     state.recentFollowingEntries = [];

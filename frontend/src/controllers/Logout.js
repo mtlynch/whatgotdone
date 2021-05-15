@@ -10,7 +10,7 @@ function deleteCookie(name) {
 }
 
 export function logout() {
-  store.commit('clearLoginState');
+  store.commit('clearUserState');
   return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/logout`;
     axios
