@@ -9,17 +9,19 @@ function clearCachedAuthInformation() {
 }
 
 export default function updateLoginState() {
-  getUserSelfMetadata()
-    .then((metadata) => {
-      store.commit('setUsername', metadata.username);
-      return metadata;
-    })
-    .catch((error) => {
-      // If checking user information fails, the cached authentication information
-      // is no longer correct, so we need to clear it.
-      if (error.response && error.response.status === 403) {
-        clearCachedAuthInformation();
-      }
-      throw error;
-    });
+  return new Promise(function (resolve, reject) {
+    getUserSelfMetadata()
+      .then((metadata) => {
+        store.commit('setUsername', metadata.username);
+        resolve(metadata);
+      })
+      .catch((error) => {
+        // If checking user information fails, the cached authentication information
+        // is no longer correct, so we need to clear it.
+        if (error.response && error.response.status === 403) {
+          clearCachedAuthInformation();
+        }
+        reject(error);
+      });
+  });
 }
