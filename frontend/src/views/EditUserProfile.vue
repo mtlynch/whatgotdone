@@ -45,7 +45,7 @@
 
     <b-button
       variant="primary"
-      class="float-right"
+      class="d-block ml-auto"
       @click.prevent="handleSave()"
       id="save-profile"
       >Save</b-button
