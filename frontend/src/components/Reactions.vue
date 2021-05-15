@@ -163,14 +163,12 @@ export default {
 }
 
 .reaction-buttons {
-  margin-top: 40px;
-  margin-bottom: 25px;
+  margin: 1rem 0;
   clear: both;
 }
 
 @media screen and (min-width: 768px) {
   .reaction-buttons {
-    margin-top: 0px;
     clear: none;
   }
 }
