@@ -11,7 +11,6 @@ function clearCachedAuthInformation() {
 
 function updateFollowingUsers(username) {
   getFollowing(username).then((following) => {
-    console.log('following', following);
     for (const followedUser of following) {
       store.commit('addFollowedUser', followedUser);
     }

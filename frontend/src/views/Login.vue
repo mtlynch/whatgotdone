@@ -35,7 +35,6 @@ export default {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       userKit.authenticate().then(() => {
         initializeUserState().then(() => {
-          console.log('Finished initializing user after login');
           this.goBackOrGoHome();
         });
       });
