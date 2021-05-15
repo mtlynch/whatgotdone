@@ -29,7 +29,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
-		path := fmt.Sprintf("/avatars/%s/%s-avatar.jpg", username, username)
+		path := fmt.Sprintf("avatars/%s/%s-avatar.jpg", username, username)
 
 		_, err = s.gcsClient.UploadFile(avatarFile, path, contentType)
 		if err != nil {

@@ -3,11 +3,23 @@
     <h1>Edit Profile</h1>
 
     <div class="form-group">
-      <label for="upload-profile-phoot">Profile Photo</label>
+      <label for="upload-profile-photo">Profile Photo</label>
 
       <Avatar :username="loggedInUsername" size="80px" />
-      <b-button variant="danger" id="edit-profile-photo">Edit</b-button>
+
+      <b-button variant="secondary" id="edit-profile-photo">Edit</b-button>
       <b-button variant="danger" id="delete-profile-photo">Remove</b-button>
+
+      <b-form-file
+        id="upload-profile-photo"
+        v-on:input="onUploadProfilePhoto"
+        v-model="profilePhoto"
+        :state="Boolean(profilePhoto)"
+        accept="image/jpeg"
+      ></b-form-file>
+      <b-button variant="secondary" @click="onUploadProfilePhoto"
+        >Upload</b-button
+      >
     </div>
 
     <div class="form-group">
@@ -60,6 +72,7 @@
 </template>
 
 <script>
+import {uploadAvatar} from '@/controllers/Avatar.js';
 import {getUserMetadata, setUserMetadata} from '@/controllers/User.js';
 
 import Avatar from '@/components/Avatar.vue';
@@ -71,6 +84,7 @@ export default {
   },
   data() {
     return {
+      profilePhoto: null,
       profile: {
         aboutMarkdown: '',
         twitterHandle: '',
@@ -104,6 +118,11 @@ export default {
             this.formError = error;
           }
         });
+    },
+    onUploadProfilePhoto: function (file) {
+      uploadAvatar(file).catch((error) => {
+        this.formError = error;
+      });
     },
   },
   created() {
