@@ -9,6 +9,9 @@
 </template>
 
 <script>
+import store from '@/store.js';
+
+import {getFollowing} from '@/controllers/Follow.js';
 import {getRecent} from '@/controllers/Recent.js';
 import updateLoginState from '@/controllers/LoginState.js';
 import {loadUserKit} from '@/controllers/UserKit.js';
@@ -25,7 +28,7 @@ export default {
   created() {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       if (userKit.isLoggedIn() === true) {
-        updateLoginState();
+        this.initializeUser();
       } else {
         this.$store.commit('clearLoginState');
         if (this.routeRequiresLogin) {
@@ -50,6 +53,20 @@ export default {
         return true;
       }
       return false;
+    },
+  },
+  methods: {
+    initializeUser() {
+      updateLoginState().then((metadata) => {
+        this.updateFollowingUsers(metadata.username);
+      });
+    },
+    updateFollowingUsers(username) {
+      getFollowing(username).then((following) => {
+        for (const followedUser of following) {
+          store.commit('addFollowedUser', followedUser);
+        }
+      });
     },
   },
 };

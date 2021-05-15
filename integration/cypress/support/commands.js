@@ -7,8 +7,13 @@ Cypress.Commands.add("completeLoginForm", (username, options = {}) => {
 });
 
 Cypress.Commands.add("login", (username, options = {}) => {
+  cy.server();
+  cy.route("GET", "/api/user/*/following").as("getFollowing");
+
   cy.visit("/login");
   cy.completeLoginForm(username, options);
+  // Wait for user to initialize fully.
+  cy.wait("@getFollowing");
 });
 
 Cypress.Commands.add("routeShouldBeCalled", (alias, timesCalled) => {
