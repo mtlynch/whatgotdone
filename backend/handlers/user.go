@@ -84,16 +84,6 @@ func (s defaultServer) userPost() http.HandlerFunc {
 			http.Error(w, "Failed to update user profile", http.StatusInternalServerError)
 			return
 		}
-
-		type profileUpdateResponse struct {
-			Ok bool `json:"ok"`
-		}
-		resp := profileUpdateResponse{
-			Ok: true,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
 	}
 }
 

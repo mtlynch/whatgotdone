@@ -84,11 +84,9 @@ func (s *defaultServer) entryPost() http.HandlerFunc {
 		}
 
 		type entryResponse struct {
-			Ok   bool   `json:"ok"`
 			Path string `json:"path"`
 		}
 		resp := entryResponse{
-			Ok:   true,
 			Path: fmt.Sprintf("/%s/%s", username, date),
 		}
 		if err := json.NewEncoder(w).Encode(resp); err != nil {

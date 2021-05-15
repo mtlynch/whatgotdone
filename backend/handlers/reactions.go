@@ -93,16 +93,6 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 			http.Error(w, "Failed to add reaction", http.StatusInternalServerError)
 			return
 		}
-
-		type reactionResponse struct {
-			Ok bool `json:"ok"`
-		}
-		resp := reactionResponse{
-			Ok: true,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
 	}
 }
 

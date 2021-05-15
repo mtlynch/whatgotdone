@@ -90,12 +90,6 @@ func (s defaultServer) draftPost() http.HandlerFunc {
 			http.Error(w, "Failed to update draft entry", http.StatusInternalServerError)
 			return
 		}
-		resp := draftResponse{
-			Ok: true,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
 	}
 }
 
