@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import updateLoginState from '@/controllers/LoginState.js';
+import initializeUserState from '@/controllers/UserState.js';
 import {loadUserKit} from '@/controllers/UserKit.js';
 
 export default {
@@ -34,7 +34,7 @@ export default {
   mounted() {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       userKit.authenticate().then(() => {
-        updateLoginState().then(() => {
+        initializeUserState().then(() => {
           this.goBackOrGoHome();
         });
       });

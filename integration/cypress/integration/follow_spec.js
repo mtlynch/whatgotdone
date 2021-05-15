@@ -1,6 +1,7 @@
 it("follows a user", () => {
   cy.server();
   cy.route("GET", "/api/draft/*").as("getDraft");
+  cy.route("GET", "/api/user/*/following").as("getFollowing");
   cy.route("POST", "/api/logout").as("logout");
 
   // Log in as a leader user and create an entry.
@@ -22,20 +23,24 @@ it("follows a user", () => {
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/feed");
+  cy.wait("@getFollowing");
 
   // Verify the personalized feed is empty.
   cy.get(".alert").should("contain", "You're not following anyone yet.");
   cy.get(".journal").should("not.exist");
 
   cy.visit("/leader_lenny");
+  cy.wait("@getFollowing");
   cy.get(".follow-btn").click();
   cy.get(".unfollow-btn").should("exist");
   cy.get(".follow-btn").should("not.exist");
 
   cy.visit("/feed");
+  cy.wait("@getFollowing");
   cy.get(".journal").should("exist");
 
   cy.visit("/leader_lenny");
+  cy.wait("@getFollowing");
   cy.get(".unfollow-btn").click();
   cy.get(".follow-btn").should("exist");
   cy.get(".unfollow-btn").should("not.exist");

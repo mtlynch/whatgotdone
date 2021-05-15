@@ -5,22 +5,25 @@ import {getUserSelfMetadata} from '@/controllers/User.js';
 import {logoutUserKit} from '@/controllers/UserKit.js';
 
 function clearCachedAuthInformation() {
-  store.commit('clearLoginState');
+  store.commit('clearUserState');
   logoutUserKit();
 }
 
-export default function updateLoginState() {
+function updateFollowingUsers(username) {
+  getFollowing(username).then((following) => {
+    for (const followedUser of following) {
+      store.commit('addFollowedUser', followedUser);
+    }
+  });
+}
+
+export default function initializeUserState() {
   return new Promise(function (resolve, reject) {
     getUserSelfMetadata()
       .then((metadata) => {
         store.commit('setUsername', metadata.username);
-        // TODO: Move this
-        getFollowing(metadata.username).then((following) => {
-          for (const followedUser of following) {
-            store.commit('addFollowedUser', followedUser);
-          }
-        });
-        resolve(metadata);
+        updateFollowingUsers(metadata.username);
+        resolve();
       })
       .catch((error) => {
         // If checking user information fails, the cached authentication information

@@ -10,7 +10,7 @@
 
 <script>
 import {getRecent} from '@/controllers/Recent.js';
-import updateLoginState from '@/controllers/LoginState.js';
+import initializeUserState from '@/controllers/UserState.js';
 import {loadUserKit} from '@/controllers/UserKit.js';
 
 import Footer from '@/components/Footer';
@@ -25,9 +25,9 @@ export default {
   created() {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       if (userKit.isLoggedIn() === true) {
-        updateLoginState();
+        initializeUserState();
       } else {
-        this.$store.commit('clearLoginState');
+        this.$store.commit('clearUserState');
         if (this.routeRequiresLogin) {
           this.$router.push('/login');
         }
