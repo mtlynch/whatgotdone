@@ -46,7 +46,7 @@
       <b-button
         :to="'/entry/edit/' + this.entryDate"
         variant="primary"
-        class="float-right edit-btn"
+        class="d-inline-block ml-auto edit-btn"
         >Edit</b-button
       >
     </div>

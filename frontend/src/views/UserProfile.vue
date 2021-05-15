@@ -37,7 +37,7 @@
       </ul>
     </template>
 
-    <div class="float-right">
+    <div class="d-flex justify-content-end">
       <b-button
         class="edit-btn"
         v-if="canEdit"
