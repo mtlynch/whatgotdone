@@ -3,7 +3,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,15 +29,6 @@ func (s *server) resetPost() http.HandlerFunc {
 			log.Printf("failed to reset datstore: %v", err)
 			http.Error(w, fmt.Sprintf("Failed to reset datastore: %v", err), http.StatusInternalServerError)
 			return
-		}
-		type response struct {
-			Ok bool `json:"ok"`
-		}
-		resp := response{
-			Ok: true,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
 		}
 	}
 }

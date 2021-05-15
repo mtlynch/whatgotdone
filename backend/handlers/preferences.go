@@ -59,16 +59,6 @@ func (s defaultServer) preferencesPost() http.HandlerFunc {
 			http.Error(w, "Failed to save preferences", http.StatusInternalServerError)
 			return
 		}
-
-		type response struct {
-			Ok bool `json:"ok"`
-		}
-		resp := response{
-			Ok: true,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
 	}
 }
 

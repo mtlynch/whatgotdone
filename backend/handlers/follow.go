@@ -50,16 +50,6 @@ func (s defaultServer) followPut() http.HandlerFunc {
 			http.Error(w, "Failed to follow user", http.StatusInternalServerError)
 			return
 		}
-
-		type response struct {
-			Ok bool `json:"ok"`
-		}
-		resp := response{
-			Ok: true,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
 	}
 }
 
@@ -84,16 +74,6 @@ func (s defaultServer) followDelete() http.HandlerFunc {
 			http.Error(w, "Failed to unfollow user", http.StatusInternalServerError)
 			return
 		}
-
-		type response struct {
-			Ok bool `json:"ok"`
-		}
-		resp := response{
-			Ok: true,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
 	}
 }
 
@@ -114,11 +94,9 @@ func (s defaultServer) userFollowingGet() http.HandlerFunc {
 		}
 
 		type response struct {
-			Ok        bool     `json:"ok"`
 			Following []string `json:"following"`
 		}
 		resp := response{
-			Ok:        true,
 			Following: leaders,
 		}
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
