@@ -30,7 +30,9 @@ export const mutations = {
     if (state.following.includes(followedUser)) {
       return;
     }
-    state.following.push(followedUser);
+    // Create a new object instead of simply appending so that Vue's reactivity
+    // detection notices the change.
+    state.following = this.state.following.concat([followedUser]);
   },
   removeFollowedUser(state, followedUser) {
     this.state.following = this.state.following.filter(
