@@ -2,8 +2,6 @@
   <div>
     <h1>Edit Profile</h1>
 
-    <p>Fill out your public profile below:</p>
-
     <div class="form-group">
       <label for="user-bio">Bio</label>
       <textarea
