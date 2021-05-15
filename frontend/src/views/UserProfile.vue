@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1>{{ username }}</h1>
+    <div class="header">
+      <Avatar class="avatar" :username="username" size="150px" />
+      <h1>{{ username }}</h1>
+    </div>
 
     <h2>About</h2>
 
@@ -86,13 +89,15 @@ import {getEntriesFromUser} from '@/controllers/Entries.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
-import PartialJournal from '../components/PartialJournal.vue';
+import Avatar from '@/components/Avatar.vue';
+import PartialJournal from '@/components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
 
 export default {
   name: 'UserProfile',
   components: {
+    Avatar,
     VueMarkdown,
     PartialJournal,
   },
@@ -191,8 +196,26 @@ export default {
   text-align: left;
 }
 
-h1 {
-  margin-bottom: 50px;
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media screen and (min-width: 768px) {
+  .header {
+    flex-direction: row;
+  }
+}
+
+.header .avatar {
+  margin-bottom: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+  .header .avatar {
+    margin-right: 1rem;
+  }
 }
 
 h2 {

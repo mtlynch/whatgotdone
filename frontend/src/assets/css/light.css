@@ -61,7 +61,7 @@ label {
 
 .journal,
 .journal-preview {
-  padding: 16px !important;
+  padding: 1rem 1.5rem !important;
   border-radius: 10px;
   border: none !important;
   background: #2b3e50 !important;
@@ -73,10 +73,6 @@ label {
   background: rgba(255, 255, 255, 0.4) !important;
   padding: 8px;
   border-radius: 6px;
-}
-
-.journal-body {
-  padding: 20px 20px 0;
 }
 
 /* Pagination */

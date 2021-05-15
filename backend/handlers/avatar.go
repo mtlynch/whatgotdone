@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
 
-func (s defaultServer) userAvatarGet() http.HandlerFunc {
+func (s defaultServer) userAvatarFullGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)
 		if err != nil {
@@ -14,15 +14,40 @@ func (s defaultServer) userAvatarGet() http.HandlerFunc {
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
+		// TODO: Replace placeholder with this
+		url := fmt.Sprintf("https://storage.googleapis.com/%s/avatars/%s/full-300px.jpg", "whatgotdone-staging", username)
 
-		type response struct {
-			Url string `json:"url"`
+		if username == "testjoe" {
+			url = "https://placekitten.com/300/300"
 		}
-		resp := response{
-			Url: "https://whatgotdone.com/" + username,
+
+		http.Redirect(
+			w,
+			r,
+			url,
+			http.StatusTemporaryRedirect)
+	}
+}
+
+func (s defaultServer) userAvatarThumbnailGet() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username, err := usernameFromRequestPath(r)
+		if err != nil {
+			log.Printf("failed to retrieve username from request path: %s", err)
+			http.Error(w, "Invalid username", http.StatusBadRequest)
+			return
 		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
+		// TODO: Replace placeholder with this
+		url := fmt.Sprintf("https://storage.googleapis.com/%s/avatars/%s/thumb-30px.jpg", "whatgotdone-staging", username)
+
+		if username == "testjoe" {
+			url = "https://placekitten.com/300/300"
 		}
+
+		http.Redirect(
+			w,
+			r,
+			url,
+			http.StatusTemporaryRedirect)
 	}
 }

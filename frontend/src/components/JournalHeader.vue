@@ -1,9 +1,10 @@
 <template>
-  <p class="journal-header text-center">
+  <p class="journal-header text-left">
     <Avatar
       class="avatar"
       :username="entryAuthor"
-      src="https://placekitten.com/300/300"
+      :to="'/' + entryAuthor"
+      size="md"
     />
     <Username class="username" :username="entryAuthor" />'s update for the week
     ending on

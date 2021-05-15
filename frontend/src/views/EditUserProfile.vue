@@ -3,6 +3,14 @@
     <h1>Edit Profile</h1>
 
     <div class="form-group">
+      <label for="upload-profile-phoot">Profile Photo</label>
+
+      <Avatar :username="loggedInUsername" size="80px" />
+      <b-button variant="danger" id="edit-profile-photo">Edit</b-button>
+      <b-button variant="danger" id="delete-profile-photo">Remove</b-button>
+    </div>
+
+    <div class="form-group">
       <label for="user-bio">Bio</label>
       <textarea
         id="user-bio"
@@ -54,8 +62,13 @@
 <script>
 import {getUserMetadata, setUserMetadata} from '@/controllers/User.js';
 
+import Avatar from '@/components/Avatar.vue';
+
 export default {
   name: 'EditUserProfile',
+  components: {
+    Avatar,
+  },
   data() {
     return {
       profile: {
