@@ -117,21 +117,6 @@ export default {
   text-align: left;
 }
 
-h1 {
-  font-size: 48px;
-  margin-top: 50px;
-}
-
-@media screen and (min-width: 768px) {
-  h1 {
-    font-size: 72px;
-  }
-}
-
-h2 {
-  margin-top: 80px;
-}
-
 p {
   margin-top: 20px;
 }
@@ -146,13 +131,13 @@ a {
   background: #2b3e50 !important;
   color: white;
   border-radius: 10px;
-  padding: 40px;
+  padding: 1rem;
   font-size: 1.2rem;
 }
 
 @media screen and (min-width: 768px) {
   .jumbotron {
-    padding: 40px;
+    padding: 2rem;
   }
 }
 
@@ -162,7 +147,6 @@ a {
 
 .jumbotron h1 {
   font-size: 36px;
-  margin-top: 0px;
 }
 
 @media screen and (min-width: 768px) {
@@ -173,29 +157,28 @@ a {
 }
 
 .jumbotron-footer {
+  display: flex;
+  flex-direction: column;
   margin-top: 60px;
   text-align: center;
 }
 
 @media screen and (min-width: 768px) {
   .jumbotron-footer {
-    margin-top: 40px;
-    text-align: right;
+    flex-direction: row;
+    justify-content: flex-end;
   }
+}
+
+.jumbotron-footer .btn-start-now {
+  margin-bottom: 1rem;
 }
 
 @media screen and (min-width: 768px) {
-  .btn {
-    margin-right: 20px;
+  .jumbotron-footer .btn-start-now {
+    margin-bottom: 0;
+    margin-right: 1rem;
   }
-}
-
-.btn-start-now {
-  margin-right: 15px;
-}
-
-.btn-view-recent {
-  margin-right: 0px;
 }
 
 .feature {
@@ -205,7 +188,7 @@ a {
   grid-gap: 1rem;
   margin-bottom: 100px;
   color: #2b3e50 !important;
-  font-size: 1.2rem;
+  font-size: 1.2em;
 }
 
 .feature h2 {
@@ -257,16 +240,5 @@ a {
 
 .border-black {
   border: 1px solid black;
-}
-
-.contact-us {
-  font-size: 1.2rem;
-  color: #2b3e50 !important;
-}
-
-@media (min-width: 768px) {
-  .contact-us {
-    max-width: 570px;
-  }
 }
 </style>
