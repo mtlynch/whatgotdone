@@ -1,5 +1,11 @@
 <template>
-  <b-avatar variant="info" :src="src" :size="size" class="avatar"></b-avatar>
+  <b-avatar
+    variant="info"
+    :to="to"
+    :src="src"
+    :size="size"
+    class="avatar"
+  ></b-avatar>
 </template>
 
 <script>
@@ -14,11 +20,11 @@ export default {
   },
   computed: {
     src: function () {
-      let size = 'thumb-30px';
+      let size = '40px';
       if (this.size !== 'md') {
-        size = 'full-300px';
+        size = '300px';
       }
-      return `https://storage.googleapis.com/${this.username}/avatars/%s/${this.username}-avatar-${size}.jpg`;
+      return `https://storage.googleapis.com/whatgotdone-public-dev/avatars/${this.username}/${this.username}-avatar-${size}.jpg`;
     },
   },
 };

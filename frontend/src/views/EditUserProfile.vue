@@ -8,7 +8,12 @@
       <Avatar :username="loggedInUsername" size="80px" />
 
       <b-button variant="secondary" id="edit-profile-photo">Edit</b-button>
-      <b-button variant="danger" id="delete-profile-photo">Remove</b-button>
+      <b-button
+        variant="danger"
+        id="delete-profile-photo"
+        @click="onRemoveProfilePhoto"
+        >Remove</b-button
+      >
 
       <b-form-file
         id="upload-profile-photo"
@@ -72,7 +77,7 @@
 </template>
 
 <script>
-import {uploadAvatar} from '@/controllers/Avatar.js';
+import {deleteAvatar, uploadAvatar} from '@/controllers/Avatar.js';
 import {getUserMetadata, setUserMetadata} from '@/controllers/User.js';
 
 import Avatar from '@/components/Avatar.vue';
@@ -121,6 +126,11 @@ export default {
     },
     onUploadProfilePhoto: function (file) {
       uploadAvatar(file).catch((error) => {
+        this.formError = error;
+      });
+    },
+    onRemoveProfilePhoto: function () {
+      deleteAvatar().catch((error) => {
         this.formError = error;
       });
     },

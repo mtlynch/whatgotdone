@@ -40,6 +40,7 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/user/me", s.userMeGet()).Methods(http.MethodGet)
 	api.HandleFunc("/user/avatar", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/user/avatar", s.userAvatarPut()).Methods(http.MethodPut)
+	api.HandleFunc("/user/avatar", s.userAvatarDelete()).Methods(http.MethodDelete)
 	api.HandleFunc("/user/{username}", s.userGet()).Methods(http.MethodGet)
 	api.HandleFunc("/user/{username}/following", s.userFollowingGet()).Methods(http.MethodGet)
 	api.HandleFunc("/user", allowOptions()).Methods(http.MethodOptions)

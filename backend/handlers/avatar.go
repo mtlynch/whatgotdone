@@ -1,17 +1,20 @@
 package handlers
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/mtlynch/whatgotdone/backend/image"
 )
 
 func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if s.gcsClient == nil {
-			log.Printf("can't accept avatar upload because media uploads are disabled")
+			log.Printf("can't accept avatar upload because GCS is disabled")
 			http.Error(w, fmt.Sprintf("User profile photo uploading is disabled"), http.StatusBadRequest)
 			return
 		}
@@ -24,17 +27,68 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 
 		avatarFile, contentType, err := avatarFileFromRequest(w, r)
 		if err != nil {
-			log.Printf("failed to read media from request: %v", err)
-			http.Error(w, fmt.Sprintf("Media upload failed: %v", err), http.StatusBadRequest)
+			log.Printf("failed to read profile photo from request: %v", err)
+			http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusBadRequest)
 			return
 		}
 
-		path := fmt.Sprintf("avatars/%s/%s-avatar.jpg", username, username)
+		if contentType != "image/jpeg" {
+			http.Error(w, "Profile photo must be in JPEG format", http.StatusBadRequest)
+			return
+		}
 
-		_, err = s.gcsClient.UploadFile(avatarFile, path, contentType)
+		avatarRawImg, err := image.Decode(avatarFile, image.DecodeLimits{
+			MinWidthPixels:  40,
+			MaxWidthPixels:  50000,
+			MinHeightPixels: 40,
+			MaxHeightPixels: 50000,
+		})
 		if err != nil {
-			log.Printf("failed to upload avatar to static storage: %v", err)
+			log.Printf("failed to read profile photo from request: %v", err)
 			http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusBadRequest)
+			return
+		}
+
+		const avatarThumbnailWidth = 40
+		const avatarLargeWidth = 300
+		for _, resizedAvatar := range image.Resize(avatarRawImg, []int{avatarLargeWidth, avatarThumbnailWidth}) {
+			var buf bytes.Buffer
+			err = image.Encode(resizedAvatar.Img, &buf)
+			if err != nil {
+				log.Printf("failed to encode image to bytes: %v", err)
+				http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusInternalServerError)
+				return
+			}
+			path := fmt.Sprintf("avatars/%s/%s-avatar-%dpx.jpg", username, username, resizedAvatar.Width)
+			_, err = s.gcsClient.UploadFile(&buf, path, "image/jpeg", "no-cache")
+			if err != nil {
+				log.Printf("failed to upload avatar to static storage: %v", err)
+				http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusInternalServerError)
+				return
+			}
+		}
+
+	}
+}
+
+func (s *defaultServer) userAvatarDelete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if s.gcsClient == nil {
+			log.Printf("can't accept avatar delete because GCS is disabled")
+			http.Error(w, fmt.Sprintf("User profile photo deleting is disabled"), http.StatusBadRequest)
+			return
+		}
+
+		username, err := s.loggedInUser(r)
+		if err != nil {
+			http.Error(w, "You must be logged in to delete your profile photo", http.StatusForbidden)
+			return
+		}
+
+		path := fmt.Sprintf("avatars/%s/", username)
+		if err := s.gcsClient.DeletePath(path); err != nil {
+			log.Printf("failed to delete avatars from static storage: %v", err)
+			http.Error(w, fmt.Sprintf("Profile photo deletion failed: %v", err), http.StatusInternalServerError)
 			return
 		}
 	}

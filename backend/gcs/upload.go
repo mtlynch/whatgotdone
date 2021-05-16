@@ -10,7 +10,7 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-func (c Client) UploadFile(r io.Reader, path, contentType string) (string, error) {
+func (c Client) UploadFile(r io.Reader, path, contentType, cacheControl string) (string, error) {
 	log.Printf("Saving image to gs://%s/%s", c.bucketName, path)
 	ctx := context.Background()
 	bh := c.gcsClient.Bucket(c.bucketName)
@@ -27,7 +27,8 @@ func (c Client) UploadFile(r io.Reader, path, contentType string) (string, error
 	}
 
 	_, err := obj.Update(ctx, storage.ObjectAttrsToUpdate{
-		ContentType: contentType,
+		ContentType:  contentType,
+		CacheControl: cacheControl,
 	})
 	if err != nil {
 		return "", err
