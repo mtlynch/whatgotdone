@@ -10,6 +10,10 @@ import (
 	"cloud.google.com/go/storage"
 )
 
+// CacheControlPublic indicates that any cache can store the response.
+const CacheControlPublic = "public"
+
+// UploadFile uploads a file to a lcoation on Google Cloud Storage.
 func (c Client) UploadFile(r io.Reader, path, contentType, cacheControl string) (string, error) {
 	log.Printf("Saving image to gs://%s/%s", c.bucketName, path)
 	ctx := context.Background()
