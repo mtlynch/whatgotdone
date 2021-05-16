@@ -13,21 +13,21 @@ import (
 type mockDatastore struct {
 	journalEntries []types.JournalEntry
 	journalDrafts  []types.JournalEntry
-	users          []string
+	users          []types.Username
 	reactions      []types.Reaction
 	pageViewCounts []ga.PageViewCount
 	userProfile    types.UserProfile
 }
 
-func (ds mockDatastore) Users() ([]string, error) {
+func (ds mockDatastore) Users() ([]types.Username, error) {
 	return ds.users, nil
 }
 
-func (ds mockDatastore) GetEntries(username string) ([]types.JournalEntry, error) {
+func (ds mockDatastore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }
 
-func (ds mockDatastore) GetDraft(username string, date string) (types.JournalEntry, error) {
+func (ds mockDatastore) GetDraft(username types.Username, date string) (types.JournalEntry, error) {
 	if len(ds.journalDrafts) > 0 {
 		return ds.journalDrafts[0], nil
 	}
@@ -37,33 +37,33 @@ func (ds mockDatastore) GetDraft(username string, date string) (types.JournalEnt
 	}
 }
 
-func (ds mockDatastore) InsertEntry(username string, j types.JournalEntry) error {
+func (ds mockDatastore) InsertEntry(username types.Username, j types.JournalEntry) error {
 	return nil
 }
 
-func (ds mockDatastore) InsertDraft(username string, j types.JournalEntry) error {
+func (ds mockDatastore) InsertDraft(username types.Username, j types.JournalEntry) error {
 	return nil
 }
 
-func (ds mockDatastore) InsertFollow(leader, follower string) error {
+func (ds mockDatastore) InsertFollow(leader, follower types.Username) error {
 	return errors.New("not implemented")
 }
 
-func (ds mockDatastore) DeleteFollow(leader, follower string) error {
+func (ds mockDatastore) DeleteFollow(leader, follower types.Username) error {
 	return errors.New("not implemented")
 }
 
-func (ds mockDatastore) Following(follower string) ([]string, error) {
-	return []string{}, errors.New("not implemented")
+func (ds mockDatastore) Following(follower types.Username) ([]types.Username, error) {
+	return []types.Username{}, errors.New("not implemented")
 }
 
-func (ds mockDatastore) GetPreferences(username string) (types.Preferences, error) {
+func (ds mockDatastore) GetPreferences(username types.Username) (types.Preferences, error) {
 	return types.Preferences{}, datastore.PreferencesNotFoundError{
 		Username: username,
 	}
 }
 
-func (ds mockDatastore) SetPreferences(username string, prefs types.Preferences) error {
+func (ds mockDatastore) SetPreferences(username types.Username, prefs types.Preferences) error {
 	return errors.New("not implemented")
 }
 
@@ -72,10 +72,10 @@ func (ds mockDatastore) Close() error {
 }
 
 type mockAuthenticator struct {
-	tokensToUsers map[string]string
+	tokensToUsers map[string]types.Username
 }
 
-func (a mockAuthenticator) UserFromAuthToken(authToken string) (string, error) {
+func (a mockAuthenticator) UserFromAuthToken(authToken string) (types.Username, error) {
 	for k, v := range a.tokensToUsers {
 		if k == authToken {
 			return v, nil

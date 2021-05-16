@@ -11,8 +11,8 @@ import (
 )
 
 // GetPreferences retrieves the user's preferences for using the site.
-func (c client) GetPreferences(username string) (types.Preferences, error) {
-	doc := c.firestoreClient.Collection(preferencesRootKey).Doc(username)
+func (c client) GetPreferences(username types.Username) (types.Preferences, error) {
+	doc := c.firestoreClient.Collection(preferencesRootKey).Doc(string(username))
 	docsnap, err := doc.Get(c.ctx)
 	if err != nil {
 		if status.Code(err) == codes.NotFound {
@@ -28,8 +28,8 @@ func (c client) GetPreferences(username string) (types.Preferences, error) {
 }
 
 // SetPreferences saves the user's preferences for using the site.
-func (c client) SetPreferences(username string, prefs types.Preferences) error {
+func (c client) SetPreferences(username types.Username, prefs types.Preferences) error {
 	log.Printf("saving preferences to datastore: %+v", prefs)
-	_, err := c.firestoreClient.Collection(preferencesRootKey).Doc(username).Set(c.ctx, prefs)
+	_, err := c.firestoreClient.Collection(preferencesRootKey).Doc(string(username)).Set(c.ctx, prefs)
 	return err
 }

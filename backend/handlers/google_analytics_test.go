@@ -32,7 +32,7 @@ func (ds mockDatastore) GetPageViews(path string) (int, error) {
 	return 0, errors.New("no pageview results found")
 }
 
-func (ds mockDatastore) GetEntry(username string, date string) (types.JournalEntry, error) {
+func (ds mockDatastore) GetEntry(username types.Username, date string) (types.JournalEntry, error) {
 	return types.JournalEntry{}, errors.New("not implemented")
 }
 
@@ -80,7 +80,7 @@ func TestPageViewsGet(t *testing.T) {
 	}
 
 	ds := mockDatastore{
-		users: []string{"jimmy123"},
+		users: []types.Username{"jimmy123"},
 		pageViewCounts: []ga.PageViewCount{
 			{
 				Path:  "/jimmy123/2020-01-17",
@@ -167,7 +167,7 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 	}
 
 	ds := mockDatastore{
-		users: []string{"joe", "mary"},
+		users: []types.Username{"joe", "mary"},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{

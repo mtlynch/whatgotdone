@@ -12,11 +12,11 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (ds mockDatastore) GetUserProfile(username string) (types.UserProfile, error) {
+func (ds mockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
 	return ds.userProfile, nil
 }
 
-func (ds *mockDatastore) SetUserProfile(username string, p types.UserProfile) error {
+func (ds *mockDatastore) SetUserProfile(username types.Username, p types.UserProfile) error {
 	ds.userProfile = p
 	return nil
 }
@@ -113,7 +113,7 @@ func TestUserPost(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_C": "dummyUserC",
 			},
 		},

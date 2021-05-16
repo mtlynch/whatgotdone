@@ -10,7 +10,7 @@ import (
 )
 
 // Users returns all the users who have published entries.
-func (c client) Users() (users []string, err error) {
+func (c client) Users() (users []types.Username, err error) {
 	iter := c.firestoreClient.Collection(entriesRootKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
@@ -28,8 +28,8 @@ func (c client) Users() (users []string, err error) {
 }
 
 // UserProfile returns profile information about the given user.
-func (c client) GetUserProfile(username string) (types.UserProfile, error) {
-	doc := c.firestoreClient.Collection(userProfilesRootKey).Doc(username)
+func (c client) GetUserProfile(username types.Username) (types.UserProfile, error) {
+	doc := c.firestoreClient.Collection(userProfilesRootKey).Doc(string(username))
 	docsnap, err := doc.Get(c.ctx)
 	if err != nil {
 		if status.Code(err) == codes.NotFound {
@@ -46,7 +46,7 @@ func (c client) GetUserProfile(username string) (types.UserProfile, error) {
 
 // SetUserProfile updates the given user's profile or creates a new profile for
 // the user.
-func (c client) SetUserProfile(username string, p types.UserProfile) error {
-	_, err := c.firestoreClient.Collection(userProfilesRootKey).Doc(username).Set(c.ctx, p)
+func (c client) SetUserProfile(username types.Username, p types.UserProfile) error {
+	_, err := c.firestoreClient.Collection(userProfilesRootKey).Doc(string(username)).Set(c.ctx, p)
 	return err
 }

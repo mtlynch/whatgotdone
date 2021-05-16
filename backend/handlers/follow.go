@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (s defaultServer) followPut() http.HandlerFunc {
@@ -94,7 +95,7 @@ func (s defaultServer) userFollowingGet() http.HandlerFunc {
 		}
 
 		type response struct {
-			Following []string `json:"following"`
+			Following []types.Username `json:"following"`
 		}
 		resp := response{
 			Following: leaders,

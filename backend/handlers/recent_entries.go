@@ -8,12 +8,13 @@ import (
 	"strconv"
 
 	"github.com/mtlynch/whatgotdone/backend/entries"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type entryPublic struct {
-	Author   string `json:"author"`
-	Date     string `json:"date"`
-	Markdown string `json:"markdown"`
+	Author   types.Username `json:"author"`
+	Date     string         `json:"date"`
+	Markdown string         `json:"markdown"`
 }
 
 type entriesPublic []entryPublic

@@ -7,14 +7,15 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func usernameFromRequestPath(r *http.Request) (string, error) {
+func usernameFromRequestPath(r *http.Request) (types.Username, error) {
 	username := mux.Vars(r)["username"]
 	if !validate.Username(username) {
 		return "", errors.New("Invalid username")
 	}
-	return username, nil
+	return types.Username(username), nil
 }
 
 func dateFromRequestPath(r *http.Request) (string, error) {

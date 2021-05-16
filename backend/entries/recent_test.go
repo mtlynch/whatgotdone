@@ -10,19 +10,19 @@ import (
 
 type mockStore struct {
 	journalEntries []types.JournalEntry
-	users          []string
+	users          []types.Username
 }
 
-func (ms mockStore) Users() ([]string, error) {
+func (ms mockStore) Users() ([]types.Username, error) {
 	return ms.users, nil
 }
 
-func (ms mockStore) GetEntries(username string) ([]types.JournalEntry, error) {
+func (ms mockStore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
 	return ms.journalEntries, nil
 }
 
-func (ms mockStore) Following(follower string) ([]string, error) {
-	return []string{}, errors.New("not implemented")
+func (ms mockStore) Following(follower types.Username) ([]types.Username, error) {
+	return []types.Username{}, errors.New("not implemented")
 }
 
 func (ms mockStore) Close() error {
@@ -41,7 +41,7 @@ func TestRecentSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
 	}
 	ms := mockStore{
 		journalEntries: entries,
-		users: []string{
+		users: []types.Username{
 			"bob",
 		},
 	}
@@ -79,7 +79,7 @@ func TestRecentAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 	}
 	ms := mockStore{
 		journalEntries: entries,
-		users: []string{
+		users: []types.Username{
 			"bob",
 		},
 	}
@@ -116,7 +116,7 @@ func TestRecentObservesStartAndLimitParameters(t *testing.T) {
 	}
 	ms := mockStore{
 		journalEntries: entries,
-		users: []string{
+		users: []types.Username{
 			"bob",
 		},
 	}
