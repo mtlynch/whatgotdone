@@ -13,7 +13,7 @@ import (
 
 type (
 	userEntries struct {
-		Username string               `yaml:"username"`
+		Username types.Username       `yaml:"username"`
 		Drafts   []types.JournalEntry `yaml:"drafts"`
 		Entries  []types.JournalEntry `yaml:"entries"`
 	}

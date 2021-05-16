@@ -4,11 +4,13 @@ import (
 	"log"
 	"sort"
 	"sync"
+
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 // RecentEntry stores data about a journal entry.
 type RecentEntry struct {
-	Author       string
+	Author       types.Username
 	Date         string
 	LastModified string
 	Markdown     string
@@ -31,7 +33,7 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 	var wg sync.WaitGroup
 	for _, username := range users {
 		wg.Add(1)
-		go func(u string) {
+		go func(u types.Username) {
 			defer wg.Done()
 			entriesForUser, err := r.entriesFromUser(u)
 			c <- result{entriesForUser, err}
@@ -60,7 +62,7 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 	return sortAndSliceEntries(entries, start, limit), nil
 }
 
-func (r defaultReader) RecentFollowing(username string, start, limit int) ([]RecentEntry, error) {
+func (r defaultReader) RecentFollowing(username types.Username, start, limit int) ([]RecentEntry, error) {
 	following, err := r.store.Following(username)
 	if err != nil {
 		log.Printf("failed to retrieve user's follow list %s: %v", username, err)
@@ -78,7 +80,7 @@ func (r defaultReader) RecentFollowing(username string, start, limit int) ([]Rec
 	return sortAndSliceEntries(entries, start, limit), nil
 }
 
-func (r defaultReader) entriesFromUser(username string) (recentEntries, error) {
+func (r defaultReader) entriesFromUser(username types.Username) (recentEntries, error) {
 	entries := recentEntries{}
 	journalEntries, err := r.store.GetEntries(username)
 	if err != nil {

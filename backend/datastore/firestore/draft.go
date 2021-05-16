@@ -10,8 +10,8 @@ import (
 )
 
 // GetDraft returns an entry draft for the given user for the given date.
-func (c client) GetDraft(username string, date string) (types.JournalEntry, error) {
-	iter := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Documents(c.ctx)
+func (c client) GetDraft(username types.Username, date string) (types.JournalEntry, error) {
+	iter := c.firestoreClient.Collection(draftsRootKey).Doc(string(username)).Collection(perUserDraftsKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -34,13 +34,13 @@ func (c client) GetDraft(username string, date string) (types.JournalEntry, erro
 
 // InsertDraft saves an entry draft to the datastore, overwriting any existing
 // entry with the same name and username.
-func (c client) InsertDraft(username string, j types.JournalEntry) error {
+func (c client) InsertDraft(username types.Username, j types.JournalEntry) error {
 	log.Printf("adding new draft for %s: %+v", username, j)
 	// Create a User document so that its children appear in Firestore console.
-	c.firestoreClient.Collection(draftsRootKey).Doc(username).Set(c.ctx, userDocument{
+	c.firestoreClient.Collection(draftsRootKey).Doc(string(username)).Set(c.ctx, userDocument{
 		Username:     username,
 		LastModified: j.LastModified,
 	})
-	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(username).Collection(perUserDraftsKey).Doc(j.Date).Set(c.ctx, j)
+	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(string(username)).Collection(perUserDraftsKey).Doc(j.Date).Set(c.ctx, j)
 	return err
 }

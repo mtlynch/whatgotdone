@@ -13,11 +13,11 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (ds mockDatastore) GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error) {
+func (ds mockDatastore) GetReactions(entryAuthor types.Username, entryDate string) ([]types.Reaction, error) {
 	return ds.reactions, nil
 }
 
-func (ds *mockDatastore) AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error {
+func (ds *mockDatastore) AddReaction(entryAuthor types.Username, entryDate string, reaction types.Reaction) error {
 	ds.reactions = append(ds.reactions, reaction)
 	return nil
 }
@@ -137,7 +137,7 @@ func TestReactionsPostStoresValidReaction(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_C": "dummyUserC",
 			},
 		},
@@ -183,7 +183,7 @@ func TestReactionsPostRejectsRequestWithMissingSymbolField(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_C": "dummyUserC",
 			},
 		},
@@ -217,7 +217,7 @@ func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_C": "dummyUserC",
 			},
 		},
@@ -251,7 +251,7 @@ func TestReactionsPostRejectsRequestWhenUsernameIsUndefined(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_C": "dummyUserC",
 			},
 		},

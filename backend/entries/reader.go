@@ -10,18 +10,18 @@ type Reader interface {
 	Recent(start, limit int) ([]RecentEntry, error)
 	// RecentFollowing returns recent entries from among users that the specified
 	// user is following.
-	RecentFollowing(username string, start, limit int) ([]RecentEntry, error)
+	RecentFollowing(username types.Username, start, limit int) ([]RecentEntry, error)
 }
 
 // EntryStore stores information related to journal entries.
 type EntryStore interface {
 	// Users returns all the users who have published entries.
-	Users() ([]string, error)
+	Users() ([]types.Username, error)
 	// GetEntries returns all published entries for the given user.
-	GetEntries(username string) ([]types.JournalEntry, error)
+	GetEntries(username types.Username) ([]types.JournalEntry, error)
 	// GetReactions retrieves reader reactions associated with a published entry.
 	// Followers returns all the users the specified user is following.
-	Following(follower string) ([]string, error)
+	Following(follower types.Username) ([]types.Username, error)
 }
 
 type defaultReader struct {

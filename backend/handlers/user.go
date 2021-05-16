@@ -96,9 +96,8 @@ func (s defaultServer) userMeGet() http.HandlerFunc {
 		}
 
 		type userMeResponse struct {
-			Username string `json:"username"`
+			Username types.Username `json:"username"`
 		}
-
 		resp := userMeResponse{
 			Username: username,
 		}
@@ -128,7 +127,7 @@ func profileFromRequest(r *http.Request) (types.UserProfile, error) {
 	}, nil
 }
 
-func (s defaultServer) userExists(username string) (bool, error) {
+func (s defaultServer) userExists(username types.Username) (bool, error) {
 	// BUG: Will only detect users who have published an entry. Ideally, we'd be
 	// able to tell if the username exists in UserKit, but the UserKit API
 	// currently does not offer lookup by username.

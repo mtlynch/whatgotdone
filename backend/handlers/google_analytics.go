@@ -13,6 +13,7 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type pageViewResponse struct {
@@ -69,7 +70,7 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) wasEntryPublishedRecently(username, entryDate string) bool {
+func (s defaultServer) wasEntryPublishedRecently(username types.Username, entryDate string) bool {
 	entry, err := s.datastore.GetEntry(username, entryDate)
 	if err != nil {
 		return false
@@ -162,7 +163,7 @@ func (s defaultServer) filterNonEntries(pvcs []ga.PageViewCount) []ga.PageViewCo
 	return filtered
 }
 
-func parseJournalEntryPath(path string, users []string) (string, string, bool) {
+func parseJournalEntryPath(path string, users []types.Username) (types.Username, string, bool) {
 	pathParts := strings.Split(path, "/")
 	if len(pathParts) != 3 {
 		return "", "", false
@@ -172,8 +173,8 @@ func parseJournalEntryPath(path string, users []string) (string, string, bool) {
 		return "", "", false
 	}
 
-	user := pathParts[1]
-	if !isStringInSlice(user, users) {
+	user := types.Username(pathParts[1])
+	if !isUsernameInSlice(user, users) {
 		return "", "", false
 	}
 	entryDate := pathParts[2]
@@ -183,9 +184,9 @@ func parseJournalEntryPath(path string, users []string) (string, string, bool) {
 	return user, entryDate, true
 }
 
-func isStringInSlice(s string, ss []string) bool {
-	for _, x := range ss {
-		if s == x {
+func isUsernameInSlice(u types.Username, uu []types.Username) bool {
+	for _, x := range uu {
+		if u == x {
 			return true
 		}
 	}
