@@ -38,10 +38,6 @@ export default {
   overflow: auto;
 }
 
-@media screen and (min-width: 768px) {
-  overflow: visible;
-}
-
 .preview-bar {
   background-color: #3f464d;
   font-size: 9pt;
