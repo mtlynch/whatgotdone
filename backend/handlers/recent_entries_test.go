@@ -11,6 +11,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mtlynch/whatgotdone/backend/entries"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type mockEntriesReader struct {
@@ -21,7 +22,7 @@ func (mer mockEntriesReader) Recent(start, limit int) ([]entries.RecentEntry, er
 	return mer.entries, nil
 }
 
-func (mer mockEntriesReader) RecentFollowing(username string, start, limit int) ([]entries.RecentEntry, error) {
+func (mer mockEntriesReader) RecentFollowing(username types.Username, start, limit int) ([]entries.RecentEntry, error) {
 	return mer.entries, nil
 }
 

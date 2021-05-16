@@ -15,47 +15,47 @@ import (
 // reactions).
 type Datastore interface {
 	// Users returns all the users who have published entries.
-	Users() ([]string, error)
+	Users() ([]types.Username, error)
 	// GetUserProfile returns profile information for the given user.
-	GetUserProfile(username string) (types.UserProfile, error)
+	GetUserProfile(username types.Username) (types.UserProfile, error)
 	// SetUserProfile updates the given user's profile.
-	SetUserProfile(username string, profile types.UserProfile) error
+	SetUserProfile(username types.Username, profile types.UserProfile) error
 	// GetEntry returns the published entry for the given date.
-	GetEntry(username string, date string) (types.JournalEntry, error)
+	GetEntry(username types.Username, date string) (types.JournalEntry, error)
 	// GetEntries returns all published entries for the given user.
-	GetEntries(username string) ([]types.JournalEntry, error)
+	GetEntries(username types.Username) ([]types.JournalEntry, error)
 	// GetDraft returns an entry draft for the given user for the given date.
-	GetDraft(username string, date string) (types.JournalEntry, error)
+	GetDraft(username types.Username, date string) (types.JournalEntry, error)
 	// InsertEntry saves an entry to the datastore, overwriting any existing entry
 	// with the same name and username.
-	InsertEntry(username string, j types.JournalEntry) error
+	InsertEntry(username types.Username, j types.JournalEntry) error
 	// InsertDraft saves an entry draft to the datastore, overwriting any existing
 	// draft with the same name and username.
-	InsertDraft(username string, j types.JournalEntry) error
+	InsertDraft(username types.Username, j types.JournalEntry) error
 	// GetReactions retrieves reader reactions associated with a published entry.
-	GetReactions(entryAuthor string, entryDate string) ([]types.Reaction, error)
+	GetReactions(entryAuthor types.Username, entryDate string) ([]types.Reaction, error)
 	// AddReaction saves a reader reaction associated with a published entry,
 	// overwriting any existing reaction.
-	AddReaction(entryAuthor string, entryDate string, reaction types.Reaction) error
+	AddReaction(entryAuthor types.Username, entryDate string, reaction types.Reaction) error
 	// InsertPageViews stores the count of pageviews for a given What Got Done route.
 	InsertPageViews(path string, pageViews int) error
 	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
 	GetPageViews(path string) (int, error)
 	// InsertFollow adds a following relationship to the datastore.
-	InsertFollow(leader, follower string) error
+	InsertFollow(leader, follower types.Username) error
 	// DeleteFollow removes a following relationship from the datastore.
-	DeleteFollow(leader, follower string) error
+	DeleteFollow(leader, follower types.Username) error
 	// Followers returns all the users the specified user is following.
-	Following(follower string) ([]string, error)
+	Following(follower types.Username) ([]types.Username, error)
 	// GetPreferences retrieves the user's preferences for using the site.
-	GetPreferences(username string) (types.Preferences, error)
+	GetPreferences(username types.Username) (types.Preferences, error)
 	// SetPreferences saves the user's preferences for using the site.
-	SetPreferences(username string, prefs types.Preferences) error
+	SetPreferences(username types.Username, prefs types.Preferences) error
 }
 
 // EntryNotFoundError occurs when no published exists for a user with a given date.
 type EntryNotFoundError struct {
-	Username string
+	Username types.Username
 	Date     string
 }
 
@@ -65,7 +65,7 @@ func (f EntryNotFoundError) Error() string {
 
 // DraftNotFoundError occurs when no draft exists for a user with a given date.
 type DraftNotFoundError struct {
-	Username string
+	Username types.Username
 	Date     string
 }
 
@@ -76,7 +76,7 @@ func (f DraftNotFoundError) Error() string {
 // UserProfileNotFoundError occurs when no profile exists for the given
 // username. The user might exist, but they have not submitted profile data.
 type UserProfileNotFoundError struct {
-	Username string
+	Username types.Username
 }
 
 func (f UserProfileNotFoundError) Error() string {
@@ -94,8 +94,8 @@ func (f PageViewsNotFoundError) Error() string {
 }
 
 type FollowAlreadyExistsError struct {
-	Leader   string
-	Follower string
+	Leader   types.Username
+	Follower types.Username
 }
 
 func (f FollowAlreadyExistsError) Error() string {
@@ -105,7 +105,7 @@ func (f FollowAlreadyExistsError) Error() string {
 // PreferencesNotFoundError occurs when no profile exists for the given
 // username. The user might exist, but they have not set preferences.
 type PreferencesNotFoundError struct {
-	Username string
+	Username types.Username
 }
 
 func (f PreferencesNotFoundError) Error() string {

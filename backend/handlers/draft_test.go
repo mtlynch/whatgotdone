@@ -51,7 +51,7 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_A": "dummyUser",
 			},
 		},
@@ -86,7 +86,7 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_A": "dummyUser",
 			},
 		},
@@ -131,7 +131,7 @@ func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_A": "dummyUser",
 			},
 		},
@@ -164,7 +164,7 @@ func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
-			tokensToUsers: map[string]string{
+			tokensToUsers: map[string]types.Username{
 				"mock_token_A": "dummyUser",
 			},
 		},

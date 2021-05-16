@@ -4,12 +4,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/mtlynch/whatgotdone/backend/types"
 	userkit "github.com/workpail/userkit-go"
 )
 
 // Authenticator wraps a user authentication system.
 type Authenticator interface {
-	UserFromAuthToken(authToken string) (string, error)
+	UserFromAuthToken(authToken string) (types.Username, error)
 }
 
 type (
@@ -31,11 +32,11 @@ func New() Authenticator {
 
 // UserFromAuthToken finds the user associated with the given auth token and
 // returns that user's username.
-func (a defaultAuthenticator) UserFromAuthToken(authToken string) (string, error) {
+func (a defaultAuthenticator) UserFromAuthToken(authToken string) (types.Username, error) {
 	user, err := a.userKitClient.Users.GetUserBySession(authToken)
 	if err != nil {
 		log.Printf("Failed to authenticate user's session token with UserKit: %v", err)
 		return "", err
 	}
-	return user.Username, nil
+	return types.Username(user.Username), nil
 }

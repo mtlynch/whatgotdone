@@ -11,6 +11,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/dates"
 	"github.com/mtlynch/whatgotdone/backend/gcs"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (s *defaultServer) mediaPut() http.HandlerFunc {
@@ -76,14 +77,14 @@ func mediaFileFromRequest(w http.ResponseWriter, r *http.Request) (io.Reader, st
 	return file, contentType, nil
 }
 
-func mediaPath(contentType, username string) (string, error) {
+func mediaPath(contentType string, username types.Username) (string, error) {
 	timestamp := dates.ThisFriday().Format("20060102")
 	extension := "png"
 	if contentType == "image/jpeg" {
 		extension = "jpg"
 	}
 
-	return fmt.Sprintf("uploads/%s/%s/%s.%s", username, timestamp, randomKey(), extension), nil
+	return fmt.Sprintf("uploads/%s/%s/%s.%s", string(username), timestamp, randomKey(), extension), nil
 }
 
 func randomKey() string {
