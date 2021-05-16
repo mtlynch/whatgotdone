@@ -10,7 +10,11 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-func (c Client) UploadFile(r io.Reader, path, contentType string) (string, error) {
+// CacheControlPublic indicates that any cache can store the response.
+const CacheControlPublic = "public"
+
+// UploadFile uploads a file to a lcoation on Google Cloud Storage.
+func (c Client) UploadFile(r io.Reader, path, contentType, cacheControl string) (string, error) {
 	log.Printf("Saving image to gs://%s/%s", c.bucketName, path)
 	ctx := context.Background()
 	bh := c.gcsClient.Bucket(c.bucketName)
@@ -27,7 +31,8 @@ func (c Client) UploadFile(r io.Reader, path, contentType string) (string, error
 	}
 
 	_, err := obj.Update(ctx, storage.ObjectAttrsToUpdate{
-		ContentType: contentType,
+		ContentType:  contentType,
+		CacheControl: cacheControl,
 	})
 	if err != nil {
 		return "", err
