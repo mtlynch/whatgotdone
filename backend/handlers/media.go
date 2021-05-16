@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	"github.com/mtlynch/whatgotdone/backend/dates"
+	"github.com/mtlynch/whatgotdone/backend/gcs"
 )
 
 func (s *defaultServer) mediaPut() http.HandlerFunc {
@@ -40,7 +41,7 @@ func (s *defaultServer) mediaPut() http.HandlerFunc {
 			return
 		}
 
-		url, err := s.gcsClient.UploadFile(mediaFile, path, contentType)
+		url, err := s.gcsClient.UploadFile(mediaFile, path, contentType, gcs.CacheControlPublic)
 		if err != nil {
 			log.Printf("failed to read media from request: %v", err)
 			http.Error(w, fmt.Sprintf("Media upload failed: %v", err), http.StatusBadRequest)
