@@ -65,8 +65,8 @@ export default {
   margin-top: 60px;
 }
 
-/* TODO: Remove the #app part of the selector */
-#app a {
+body p a,
+body .alert a {
   color: rgb(101, 168, 255);
 }
 
