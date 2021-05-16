@@ -2,18 +2,10 @@
   <div>
     <h1>Edit Profile</h1>
 
-    <div class="form-group">
+    <div class="form-group profile-photo">
       <label for="upload-profile-photo">Profile Photo</label>
 
-      <Avatar :username="loggedInUsername" size="80px" />
-
-      <b-button variant="secondary" id="edit-profile-photo">Edit</b-button>
-      <b-button
-        variant="danger"
-        id="delete-profile-photo"
-        @click="onRemoveProfilePhoto"
-        >Remove</b-button
-      >
+      <Avatar :username="loggedInUsername" size="80px" ref="avatar" />
 
       <b-form-file
         id="upload-profile-photo"
@@ -22,8 +14,11 @@
         :state="Boolean(profilePhoto)"
         accept="image/jpeg"
       ></b-form-file>
-      <b-button variant="secondary" @click="onUploadProfilePhoto"
-        >Upload</b-button
+      <b-button
+        variant="danger"
+        id="delete-profile-photo"
+        @click="onRemoveProfilePhoto"
+        >Remove</b-button
       >
     </div>
 
@@ -125,14 +120,22 @@ export default {
         });
     },
     onUploadProfilePhoto: function (file) {
-      uploadAvatar(file).catch((error) => {
-        this.formError = error;
-      });
+      uploadAvatar(file)
+        .then(() => {
+          this.$refs.avatar.refresh();
+        })
+        .catch((error) => {
+          this.formError = error;
+        });
     },
     onRemoveProfilePhoto: function () {
-      deleteAvatar().catch((error) => {
-        this.formError = error;
-      });
+      deleteAvatar()
+        .then(() => {
+          this.$refs.avatar.refresh();
+        })
+        .catch((error) => {
+          this.formError = error;
+        });
     },
   },
   created() {
@@ -144,5 +147,10 @@ export default {
 <style scoped>
 * {
   text-align: left;
+}
+
+.profile-photo {
+  display: flex;
+  flex-direction: column;
 }
 </style>

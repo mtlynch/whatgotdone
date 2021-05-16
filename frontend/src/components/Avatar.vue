@@ -5,6 +5,7 @@
     :src="src"
     :size="size"
     class="avatar"
+    ref="avatar"
   ></b-avatar>
 </template>
 
@@ -18,13 +19,25 @@ export default {
       default: 'md',
     },
   },
+  data() {
+    return {
+      // This just exists for cache-busting.
+      version: 1,
+    };
+  },
   computed: {
     src: function () {
       let size = '40px';
       if (this.size !== 'md') {
         size = '300px';
       }
-      return `https://storage.googleapis.com/whatgotdone-public-dev/avatars/${this.username}/${this.username}-avatar-${size}.jpg`;
+      return `https://storage.googleapis.com/whatgotdone-public-dev/avatars/${this.username}/${this.username}-avatar-${size}.jpg?v=${this.version}`;
+    },
+  },
+  methods: {
+    // Increment the version number on the avatar image, which causes the browser to request a new version from the server.
+    refresh: function () {
+      this.version += 1;
     },
   },
 };
