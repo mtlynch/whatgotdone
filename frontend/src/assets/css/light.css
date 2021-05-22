@@ -12,6 +12,15 @@ h1 {
   margin-bottom: 16px;
 }
 
+body p a,
+body .alert a,
+body .journal-body a,
+body .journal-preview a,
+body .rich-text-editor a {
+  color: rgb(101, 168, 255);
+  text-decoration: none;
+}
+
 /* Controls */
 
 .btn {
