@@ -65,11 +65,6 @@ export default {
   margin-top: 60px;
 }
 
-body p a,
-body .alert a {
-  color: rgb(101, 168, 255);
-}
-
 #app a.btn {
   color: white;
 }
