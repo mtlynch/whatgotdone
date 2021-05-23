@@ -13,7 +13,7 @@ it("views a non-existing user profile with empty information", () => {
   cy.get(".no-entries-message").should("be.visible");
 });
 
-it("logs in updates profile", () => {
+it("logs in and updates profile", () => {
   cy.server();
   cy.route("/api/user/staging_jimmy").as("getUserProfile");
 
@@ -27,17 +27,11 @@ it("logs in updates profile", () => {
   // Wait for page to pull down existing profile.
   cy.wait("@getUserProfile");
 
-  cy.get("#user-bio")
-    .clear()
-    .type("Hello, my name is staging_jimmy!");
+  cy.get("#user-bio").clear().type("Hello, my name is staging_jimmy!");
 
-  cy.get("#email-address")
-    .clear()
-    .type("staging_jimmy@example.com");
+  cy.get("#email-address").clear().type("staging_jimmy@example.com");
 
-  cy.get("#twitter-handle")
-    .clear()
-    .type("jack");
+  cy.get("#twitter-handle").clear().type("jack");
 
   cy.get("#save-profile").click();
   cy.location("pathname").should("eq", "/staging_jimmy");
@@ -45,4 +39,39 @@ it("logs in updates profile", () => {
   cy.get(".user-bio").should("contain", "Hello, my name is staging_jimmy!");
   cy.get(".email-address").should("contain", "staging_jimmy@example.com");
   cy.get(".twitter-handle").should("contain", "jack");
+});
+
+it("logs in and sets profile photo", () => {
+  cy.server();
+  cy.route("/api/user/staging_jimmy").as("getUserProfile");
+  cy.route("PUT", "/api/user/avatar").as("setProfilePhoto");
+  cy.route("DELETE", "/api/user/avatar").as("deleteProfilePhoto");
+
+  cy.login("staging_jimmy");
+
+  cy.location("pathname").should("include", "/entry/edit");
+
+  cy.visit("/staging_jimmy");
+  cy.get(".edit-btn").click();
+
+  // Wait for page to pull down existing profile.
+  cy.wait("@getUserProfile");
+
+  cy.fixture("kittyface.jpg").then((fileContent) => {
+    cy.get("#upload-profile-photo").upload({
+      fileContent,
+      fileName: "kittyface.jpg",
+      mimeType: "image/jpeg",
+    });
+  });
+  cy.wait("@setProfilePhoto");
+
+  cy.visit("/staging_jimmy");
+
+  cy.get(".edit-btn").click();
+  // Wait for page to pull down existing profile.
+  cy.wait("@getUserProfile");
+
+  cy.get("#delete-profile-photo").click();
+  cy.wait("@deleteProfilePhoto");
 });

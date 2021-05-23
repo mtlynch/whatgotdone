@@ -2,6 +2,33 @@
   <div>
     <h1>Edit Profile</h1>
 
+    <div class="form-group profile-photo-form">
+      <label for="upload-profile-photo">Profile Photo</label>
+
+      <a class="avatar-wrapper" href="#" @click="openFileUploadDialog">
+        <Avatar :username="loggedInUsername" size="80px" ref="avatar" />
+      </a>
+
+      <div class="profile-photo-btns">
+        <b-form-file
+          id="upload-profile-photo"
+          @input="onUploadProfilePhoto"
+          v-model="profilePhoto"
+          :plain="true"
+          ref="fileUpload"
+          input="profile-photo-input"
+          accept="image/jpeg"
+        ></b-form-file>
+        <b-button
+          variant="danger"
+          id="delete-profile-photo"
+          @click="onRemoveProfilePhoto"
+          class="profile-photo-btn"
+          >Remove</b-button
+        >
+      </div>
+    </div>
+
     <div class="form-group">
       <label for="user-bio">Bio</label>
       <textarea
@@ -52,12 +79,19 @@
 </template>
 
 <script>
+import {deleteAvatar, uploadAvatar} from '@/controllers/Avatar.js';
 import {getUserMetadata, setUserMetadata} from '@/controllers/User.js';
+
+import Avatar from '@/components/Avatar.vue';
 
 export default {
   name: 'EditUserProfile',
+  components: {
+    Avatar,
+  },
   data() {
     return {
+      profilePhoto: null,
       profile: {
         aboutMarkdown: '',
         twitterHandle: '',
@@ -92,6 +126,29 @@ export default {
           }
         });
     },
+    openFileUploadDialog: function () {
+      console.log('clicked profile photo');
+      this.$refs.fileUpload.reset();
+      this.$refs.fileUpload.$el.click();
+    },
+    onUploadProfilePhoto: function (file) {
+      uploadAvatar(file)
+        .then(() => {
+          this.$refs.avatar.refresh();
+        })
+        .catch((error) => {
+          this.formError = error;
+        });
+    },
+    onRemoveProfilePhoto: function () {
+      deleteAvatar()
+        .then(() => {
+          this.$refs.avatar.refresh();
+        })
+        .catch((error) => {
+          this.formError = error;
+        });
+    },
   },
   created() {
     this.loadProfile();
@@ -102,5 +159,35 @@ export default {
 <style scoped>
 * {
   text-align: left;
+}
+
+.profile-photo-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.avatar-wrapper {
+  margin: 1rem 0;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.profile-photo-btns {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+
+.profile-photo-btns {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-photo-btns > * {
+  margin: 0.5rem 0;
+}
+
+#delete-profile-photo {
+  max-width: 20ch;
 }
 </style>

@@ -31,7 +31,7 @@ export default {
 
 <style scoped>
 .journal-preview {
-  margin-top: 40px;
+  margin-top: 2rem;
   background-color: #4e5d6c;
   border: 1px solid rgb(90, 90, 90);
   text-align: left;

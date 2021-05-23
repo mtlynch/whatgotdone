@@ -8,6 +8,7 @@ require (
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/cortesi/modd v0.0.0-20210323234521-b35eddab86cc // indirect
+	github.com/disintegration/imaging v1.6.2
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/gorilla/csrf v1.7.0

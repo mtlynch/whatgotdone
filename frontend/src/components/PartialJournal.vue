@@ -50,17 +50,15 @@ export default {
 </script>
 
 <style scoped>
-div.journal {
+.journal {
   border: 1px solid rgb(26, 0, 68);
-  padding: 10px;
   margin-bottom: 60px;
   background-color: #4e5d6c;
   overflow: auto;
 }
 
 @media screen and (min-width: 768px) {
-  div.journal {
-    padding: 15px;
+  .journal {
     margin-bottom: 40px;
     overflow: visible;
   }
@@ -69,16 +67,6 @@ div.journal {
 .header {
   font-style: italic;
   margin-bottom: 15px;
-}
-
-.journal-entry {
-  padding: 4px 5px;
-}
-
-@media screen and (min-width: 768px) {
-  .journal-entry {
-    padding: 20px 20px 0px 20px;
-  }
 }
 
 .journal-body {

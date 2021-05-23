@@ -1,41 +1,48 @@
 <template>
   <div>
-    <h1>{{ username }}</h1>
+    <div class="profile">
+      <Avatar
+        class="avatar"
+        :username="username"
+        :to="avatarLink"
+        size="150px"
+      />
 
-    <h2>About</h2>
+      <div class="profile-body">
+        <h1>{{ username }}</h1>
 
-    <vue-markdown
-      :linkify="false"
-      :html="false"
-      :anchorAttributes="{rel: 'ugc'}"
-      :source="aboutMarkdown"
-      class="user-bio"
-    ></vue-markdown>
+        <vue-markdown
+          :linkify="false"
+          :html="false"
+          :anchorAttributes="{rel: 'ugc'}"
+          :source="aboutMarkdown"
+          class="user-bio"
+        ></vue-markdown>
 
-    <p v-if="profileLoaded && !aboutMarkdown" class="no-bio-message">
-      This user has not yet created a public bio.
-    </p>
+        <p v-if="profileLoaded && !aboutMarkdown" class="no-bio-message">
+          This user has not yet created a public bio.
+        </p>
 
-    <template v-if="twitterHandle || emailAddress">
-      <h2>Contact</h2>
-
-      <ul>
-        <li v-if="emailAddress">
-          <a :href="'mailto:' + emailAddress" class="email-address">{{
-            emailAddress
-          }}</a>
-          (Email)
-        </li>
-        <li v-if="twitterHandle">
-          <a
-            :href="'https://twitter.com/' + twitterHandle"
-            class="twitter-handle"
-            >@{{ twitterHandle }}</a
-          >
-          (Twitter)
-        </li>
-      </ul>
-    </template>
+        <template v-if="twitterHandle || emailAddress">
+          <ul>
+            <li v-if="emailAddress">
+              <a :href="'mailto:' + emailAddress" class="email-address">{{
+                emailAddress
+              }}</a>
+              (Email)
+            </li>
+            <li v-if="twitterHandle">
+              <a
+                :href="'https://twitter.com/' + twitterHandle"
+                class="twitter-handle"
+                >@{{ twitterHandle }}</a
+              >
+              (Twitter)
+            </li>
+          </ul>
+        </template>
+      </div>
+    </div>
 
     <div class="d-flex justify-content-end">
       <b-button
@@ -86,13 +93,15 @@ import {getEntriesFromUser} from '@/controllers/Entries.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
-import PartialJournal from '../components/PartialJournal.vue';
+import Avatar from '@/components/Avatar.vue';
+import PartialJournal from '@/components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
 
 export default {
   name: 'UserProfile',
   components: {
+    Avatar,
     VueMarkdown,
     PartialJournal,
   },
@@ -121,6 +130,12 @@ export default {
         return false;
       }
       return this.$store.state.following.includes(this.username);
+    },
+    avatarLink: function () {
+      if (this.canEdit) {
+        return '/profile/edit';
+      }
+      return null;
     },
     isSelf: function () {
       if (!this.loggedInUsername) {
@@ -191,8 +206,26 @@ export default {
   text-align: left;
 }
 
-h1 {
-  margin-bottom: 50px;
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media screen and (min-width: 768px) {
+  .profile {
+    flex-direction: row;
+  }
+}
+
+.profile .avatar {
+  margin-bottom: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+  .profile .avatar {
+    margin-right: 2.5rem;
+  }
 }
 
 h2 {

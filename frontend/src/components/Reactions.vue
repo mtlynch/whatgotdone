@@ -15,6 +15,7 @@
       v-bind:key="reaction.key"
     >
       <p>
+        <Avatar :username="reaction.username" class="avatar" />
         <Username :username="reaction.username" />&nbsp;reacted with a
         <span class="reaction-symbol">{{ reaction.reaction }}</span>
       </p>
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar.vue';
 import Username from '@/components/Username.vue';
 
 import {getReactions, setReaction} from '@/controllers/Reactions.js';
@@ -34,6 +36,7 @@ export default {
     entryDate: String,
   },
   components: {
+    Avatar,
     Username,
   },
   data() {
@@ -183,6 +186,10 @@ export default {
     margin-right: 8px;
     font-size: 12pt;
   }
+}
+
+.reaction .avatar {
+  margin-right: 0.5rem;
 }
 
 .reaction .username {

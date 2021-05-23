@@ -27,7 +27,7 @@ services:
       context: ../
       args:
         NPM_BUILD_MODE: staging
-        GO_BUILD_TAGS: "staging"
+        GO_BUILD_TAGS: staging
     depends_on:
       - firestore_emulator
     environment:
@@ -35,6 +35,7 @@ services:
       - CSRF_SECRET_SEED=dummy-staging-seed
       - USERKIT_SECRET=dummy.dummy
       - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
+      - PUBLIC_GCS_BUCKET=whatgotdone-public-staging
       - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json

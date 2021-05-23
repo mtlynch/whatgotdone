@@ -12,6 +12,8 @@ else
   flags="--build"
 fi
 
-cd integration
+cd integration/cypress
+npm install
+cd ..
 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
   docker-compose up --exit-code-from cypress --abort-on-container-exit $flags
