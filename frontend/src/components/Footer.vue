@@ -1,5 +1,5 @@
 <template>
-  <div class="footer container">
+  <div class="footer">
     <hr />
     <div class="links">
       <router-link to="/privacy-policy">Privacy Policy</router-link>
@@ -7,20 +7,15 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Footer',
-};
-</script>
-
 <style scoped>
+.footer {
+  margin: 2rem auto;
+  max-width: 95%;
+}
+
 .links {
   display: flex;
   align-content: center;
   justify-content: center;
-}
-
-.footer {
-  margin-top: 2rem;
 }
 </style>
