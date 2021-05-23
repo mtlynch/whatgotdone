@@ -13,6 +13,8 @@ h1 {
 }
 
 body p a,
+body li a,
+body .footer a,
 body .alert a,
 body .journal-body a,
 body .journal-preview a,

@@ -121,10 +121,6 @@ p {
   margin-top: 20px;
 }
 
-a {
-  color: red;
-}
-
 .jumbotron {
   padding-bottom: 40px;
   margin-bottom: 100px;
