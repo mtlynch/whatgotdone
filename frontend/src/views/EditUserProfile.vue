@@ -3,17 +3,15 @@
     <h1>Edit Profile</h1>
 
     <div class="form-group profile-photo-form">
-      <label for="upload-profile-photo" @click="openFileUploadDialog"
-        >Profile Photo</label
-      >
+      <label for="upload-profile-photo">Profile Photo</label>
 
-      <a class="avatar-wrapper" @click="openFileUploadDialog">
+      <a class="avatar-wrapper" href="#" @click="openFileUploadDialog">
         <Avatar :username="loggedInUsername" size="80px" ref="avatar" />
       </a>
 
       <b-form-file
         id="upload-profile-photo"
-        v-on:input="onUploadProfilePhoto"
+        @input="onUploadProfilePhoto"
         v-model="profilePhoto"
         :plain="true"
         ref="fileUpload"
@@ -172,8 +170,12 @@ export default {
 .profile-photo-form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+}
+
+.avatar-wrapper {
+  margin: 1rem 0;
+  display: inline-block;
+  align-self: flex-start;
 }
 
 #upload-profile-photo {
@@ -186,7 +188,7 @@ export default {
 }
 
 .profile-photo-btn {
-  margin: 0.5rem 0;
+  margin-right: 1rem;
   display: inline-block;
 }
 </style>
