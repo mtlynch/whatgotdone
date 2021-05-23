@@ -9,22 +9,16 @@
         <Avatar :username="loggedInUsername" size="80px" ref="avatar" />
       </a>
 
-      <b-form-file
-        id="upload-profile-photo"
-        @input="onUploadProfilePhoto"
-        v-model="profilePhoto"
-        :plain="true"
-        ref="fileUpload"
-        accept="image/jpeg"
-      ></b-form-file>
-
       <div class="profile-photo-btns">
-        <b-button
-          variant="primary"
-          @click="openFileUploadDialog"
-          class="profile-photo-btn"
-          >Change</b-button
-        >
+        <b-form-file
+          id="upload-profile-photo"
+          @input="onUploadProfilePhoto"
+          v-model="profilePhoto"
+          :plain="true"
+          ref="fileUpload"
+          input="profile-photo-input"
+          accept="image/jpeg"
+        ></b-form-file>
         <b-button
           variant="danger"
           id="delete-profile-photo"
@@ -178,17 +172,22 @@ export default {
   align-self: flex-start;
 }
 
-#upload-profile-photo {
-  display: none;
+.profile-photo-btns {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
 }
 
 .profile-photo-btns {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
-.profile-photo-btn {
-  margin-right: 1rem;
-  display: inline-block;
+.profile-photo-btns > * {
+  margin: 0.5rem 0;
+}
+
+#delete-profile-photo {
+  max-width: 20ch;
 }
 </style>

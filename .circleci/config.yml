@@ -71,6 +71,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Retrieve integration service account credentials (JSON) from CircleCI
+          command: |
+            echo "$INTEGRATION_CLIENT_SECRET" | \
+              base64 --decode > service-account-creds-integration.json
+      - run:
           name: Perform integration tests.
           command: dev-scripts/run-integration-tests
       - store_artifacts:

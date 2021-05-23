@@ -31,7 +31,7 @@ export default {
       if (this.size !== 'md') {
         size = '300px';
       }
-      return `https://storage.googleapis.com/whatgotdone-public-dev/avatars/${this.username}/${this.username}-avatar-${size}.jpg?v=${this.version}`;
+      return `${process.env.VUE_APP_GCS_PUBLIC_BASE_URL}/avatars/${this.username}/${this.username}-avatar-${size}.jpg?v=${this.version}`;
     },
   },
   methods: {

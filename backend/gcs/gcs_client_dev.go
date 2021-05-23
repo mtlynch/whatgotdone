@@ -4,6 +4,7 @@ package gcs
 
 import (
 	"context"
+	"log"
 
 	"cloud.google.com/go/storage"
 	"google.golang.org/api/option"
@@ -15,6 +16,7 @@ func newGcsClient(ctx context.Context) (*storage.Client, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Print("loaded dev GCS credentials")
 
 	return client, nil
 }
