@@ -13,10 +13,19 @@ h1 {
 }
 
 body p a,
+body p a:hover,
+body li a,
+body li a:hover,
+body .footer a,
+body .footer a:hover,
 body .alert a,
+body .alert a:hover,
 body .journal-body a,
+body .journal-body a:hover,
 body .journal-preview a,
-body .rich-text-editor a {
+body .journal-preview a:hover,
+body .rich-text-editor a,
+body .rich-text-editor a:hover {
   color: rgb(101, 168, 255);
   text-decoration: none;
 }
