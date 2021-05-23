@@ -1,44 +1,43 @@
 <template>
   <div>
-    <div class="header">
+    <div class="profile">
       <Avatar class="avatar" :username="username" size="150px" />
-      <h1>{{ username }}</h1>
+
+      <div class="profile-body">
+        <h1>{{ username }}</h1>
+
+        <vue-markdown
+          :linkify="false"
+          :html="false"
+          :anchorAttributes="{rel: 'ugc'}"
+          :source="aboutMarkdown"
+          class="user-bio"
+        ></vue-markdown>
+
+        <p v-if="profileLoaded && !aboutMarkdown" class="no-bio-message">
+          This user has not yet created a public bio.
+        </p>
+
+        <template v-if="twitterHandle || emailAddress">
+          <ul>
+            <li v-if="emailAddress">
+              <a :href="'mailto:' + emailAddress" class="email-address">{{
+                emailAddress
+              }}</a>
+              (Email)
+            </li>
+            <li v-if="twitterHandle">
+              <a
+                :href="'https://twitter.com/' + twitterHandle"
+                class="twitter-handle"
+                >@{{ twitterHandle }}</a
+              >
+              (Twitter)
+            </li>
+          </ul>
+        </template>
+      </div>
     </div>
-
-    <h2>About</h2>
-
-    <vue-markdown
-      :linkify="false"
-      :html="false"
-      :anchorAttributes="{rel: 'ugc'}"
-      :source="aboutMarkdown"
-      class="user-bio"
-    ></vue-markdown>
-
-    <p v-if="profileLoaded && !aboutMarkdown" class="no-bio-message">
-      This user has not yet created a public bio.
-    </p>
-
-    <template v-if="twitterHandle || emailAddress">
-      <h2>Contact</h2>
-
-      <ul>
-        <li v-if="emailAddress">
-          <a :href="'mailto:' + emailAddress" class="email-address">{{
-            emailAddress
-          }}</a>
-          (Email)
-        </li>
-        <li v-if="twitterHandle">
-          <a
-            :href="'https://twitter.com/' + twitterHandle"
-            class="twitter-handle"
-            >@{{ twitterHandle }}</a
-          >
-          (Twitter)
-        </li>
-      </ul>
-    </template>
 
     <div class="d-flex justify-content-end">
       <b-button
@@ -196,25 +195,25 @@ export default {
   text-align: left;
 }
 
-.header {
+.profile {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
 @media screen and (min-width: 768px) {
-  .header {
+  .profile {
     flex-direction: row;
   }
 }
 
-.header .avatar {
+.profile .avatar {
   margin-bottom: 1rem;
 }
 
 @media screen and (min-width: 768px) {
-  .header .avatar {
-    margin-right: 1rem;
+  .profile .avatar {
+    margin-right: 2.5rem;
   }
 }
 
