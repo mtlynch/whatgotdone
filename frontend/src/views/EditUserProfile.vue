@@ -2,24 +2,39 @@
   <div>
     <h1>Edit Profile</h1>
 
-    <div class="form-group profile-photo">
-      <label for="upload-profile-photo">Profile Photo</label>
+    <div class="form-group profile-photo-form">
+      <label for="upload-profile-photo" @click="openFileUploadDialog"
+        >Profile Photo</label
+      >
 
-      <Avatar :username="loggedInUsername" size="80px" ref="avatar" />
+      <a class="avatar-wrapper" @click="openFileUploadDialog">
+        <Avatar :username="loggedInUsername" size="80px" ref="avatar" />
+      </a>
 
       <b-form-file
         id="upload-profile-photo"
         v-on:input="onUploadProfilePhoto"
         v-model="profilePhoto"
-        :state="Boolean(profilePhoto)"
+        :plain="true"
+        ref="fileUpload"
         accept="image/jpeg"
       ></b-form-file>
-      <b-button
-        variant="danger"
-        id="delete-profile-photo"
-        @click="onRemoveProfilePhoto"
-        >Remove</b-button
-      >
+
+      <div class="profile-photo-btns">
+        <b-button
+          variant="primary"
+          @click="openFileUploadDialog"
+          class="profile-photo-btn"
+          >Change</b-button
+        >
+        <b-button
+          variant="danger"
+          id="delete-profile-photo"
+          @click="onRemoveProfilePhoto"
+          class="profile-photo-btn"
+          >Remove</b-button
+        >
+      </div>
     </div>
 
     <div class="form-group">
@@ -119,6 +134,11 @@ export default {
           }
         });
     },
+    openFileUploadDialog: function () {
+      console.log('clicked profile photo');
+      this.$refs.fileUpload.reset();
+      this.$refs.fileUpload.$el.click();
+    },
     onUploadProfilePhoto: function (file) {
       uploadAvatar(file)
         .then(() => {
@@ -149,8 +169,24 @@ export default {
   text-align: left;
 }
 
-.profile-photo {
+.profile-photo-form {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#upload-profile-photo {
+  display: none;
+}
+
+.profile-photo-btns {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-photo-btn {
+  margin: 0.5rem 0;
+  display: inline-block;
 }
 </style>
