@@ -37,6 +37,7 @@ func contentSecurityPolicy() string {
 		},
 		"img-src": {
 			"'self'",
+			"https://storage.googleapis.com/whatgotdone-public/",
 			// For bootstrap navbar images
 			"data:",
 			// For Google Analytics
