@@ -23,7 +23,7 @@ it("logs in and reacts to an entry", () => {
   cy.get(".reaction-buttons .btn:first-of-type").click();
 
   // TODO(mtlynch): We should really be selecting the *first* div.reaction element.
-  cy.get(".reaction").then(element => {
+  cy.get(".reaction").then((element) => {
     expect(element.text().replace(/\s+/g, " ")).to.equal(
       "reacting_tommy reacted with a 👍"
     );

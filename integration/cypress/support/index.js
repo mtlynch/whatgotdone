@@ -1,6 +1,6 @@
 import "./commands";
 
 // Reset the datastore before each test.
-beforeEach(function() {
+beforeEach(function () {
   cy.request("POST", Cypress.env("testDataManagerUrl") + "/reset");
 });

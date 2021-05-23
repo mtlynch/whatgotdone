@@ -5,8 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 8085",
     "build": "vue-cli-service build",
-    "check-format": "prettier --check .",
-    "format": "prettier --write .",
+    "check-format": "prettier --check ../**/*.js  ../**/*.json",
+    "format": "prettier --write  ../**/*.js  ../**/*.json",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },

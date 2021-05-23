@@ -27,17 +27,11 @@ it("logs in updates profile", () => {
   // Wait for page to pull down existing profile.
   cy.wait("@getUserProfile");
 
-  cy.get("#user-bio")
-    .clear()
-    .type("Hello, my name is staging_jimmy!");
+  cy.get("#user-bio").clear().type("Hello, my name is staging_jimmy!");
 
-  cy.get("#email-address")
-    .clear()
-    .type("staging_jimmy@example.com");
+  cy.get("#email-address").clear().type("staging_jimmy@example.com");
 
-  cy.get("#twitter-handle")
-    .clear()
-    .type("jack");
+  cy.get("#twitter-handle").clear().type("jack");
 
   cy.get("#save-profile").click();
   cy.location("pathname").should("eq", "/staging_jimmy");
