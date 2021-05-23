@@ -10,7 +10,7 @@ const app = express();
 // Trigger a backup
 app.get("/cloud-firestore-export", async (req, res) => {
   const auth = await google.auth.getClient({
-    scopes: ["https://www.googleapis.com/auth/datastore"]
+    scopes: ["https://www.googleapis.com/auth/datastore"],
   });
 
   const accessTokenResponse = await auth.getAccessToken();
@@ -18,7 +18,7 @@ app.get("/cloud-firestore-export", async (req, res) => {
 
   const headers = {
     "Content-Type": "application/json",
-    Authorization: "Bearer " + accessToken
+    Authorization: "Bearer " + accessToken,
   };
 
   const outputUriPrefix = "gs://" + process.env.BUCKET_NAME;
@@ -34,7 +34,7 @@ app.get("/cloud-firestore-export", async (req, res) => {
   console.log(`Exporting Firestore data to ${path}`);
 
   const body = {
-    outputUriPrefix: path
+    outputUriPrefix: path,
   };
 
   const projectId = process.env.GOOGLE_CLOUD_PROJECT;
@@ -42,10 +42,7 @@ app.get("/cloud-firestore-export", async (req, res) => {
 
   try {
     const response = await axios.post(url, body, { headers: headers });
-    res
-      .status(200)
-      .send(response.data)
-      .end();
+    res.status(200).send(response.data).end();
   } catch (e) {
     if (e.response) {
       console.warn(e.response.data);
@@ -60,10 +57,7 @@ app.get("/cloud-firestore-export", async (req, res) => {
 
 // Index page, just to make it easy to see if the app is working.
 app.get("/", (req, res) => {
-  res
-    .status(200)
-    .send("[scheduled-backups]: We are up and running!")
-    .end();
+  res.status(200).send("[scheduled-backups]: We are up and running!").end();
 });
 
 // Start the server
