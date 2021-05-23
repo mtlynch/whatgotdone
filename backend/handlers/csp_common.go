@@ -37,9 +37,10 @@ func contentSecurityPolicy() string {
 		},
 		"img-src": {
 			"'self'",
-			"https://storage.googleapis.com/whatgotdone-public/",
 			// For bootstrap navbar images
 			"data:",
+			// For user-generated uploads
+			"https://media.whatgotdone.com",
 			// For Google Analytics
 			"https://www.google-analytics.com",
 			// For Google Sign In
