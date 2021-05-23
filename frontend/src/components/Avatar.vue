@@ -42,10 +42,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Prevent us from using the standard link color, which distorts the avatar image. */
-.avatar a {
-  color: initial !important;
-}
-</style>

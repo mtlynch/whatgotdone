@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="profile">
-      <Avatar class="avatar" :username="username" size="150px" />
+      <Avatar
+        class="avatar"
+        :username="username"
+        :to="avatarLink"
+        size="150px"
+      />
 
       <div class="profile-body">
         <h1>{{ username }}</h1>
@@ -125,6 +130,12 @@ export default {
         return false;
       }
       return this.$store.state.following.includes(this.username);
+    },
+    avatarLink: function () {
+      if (this.canEdit) {
+        return '/profile/edit';
+      }
+      return null;
     },
     isSelf: function () {
       if (!this.loggedInUsername) {
