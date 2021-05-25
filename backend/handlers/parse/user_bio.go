@@ -1,16 +1,18 @@
-package validate
+package parse
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
+
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 // UserBioMaxLength is the maximum allowable length of a user bio (in
 // characters).
 const UserBioMaxLength = 300
 
-// UserBio validates that a user's profile bio is valid.
-func UserBio(bio string) bool {
+func UserBio(bio string) (types.UserBio, error) {
 	invalidPatterns := []string{
 		fmt.Sprintf(".{%d}", UserBioMaxLength+1), // excessive length
 		"```",                                    // fenced code block
@@ -19,9 +21,8 @@ func UserBio(bio string) bool {
 	}
 	for _, p := range invalidPatterns {
 		if regexp.MustCompile(p).MatchString(bio) {
-			return false
+			return types.UserBio(""), errors.New("bio contains disallowed Markdown characters")
 		}
 	}
-
-	return true
+	return types.UserBio(bio), nil
 }

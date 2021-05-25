@@ -138,7 +138,7 @@ func TestUserPost(t *testing.T) {
 				tt.requestBody, status, tt.httpStatusExpected)
 		}
 		if tt.httpStatusExpected == http.StatusOK && !reflect.DeepEqual(ds.userProfile, tt.userProfileExpected) {
-			t.Fatalf("for input [%s], unexpected user profile: got %v want %v",
+			t.Fatalf("for input [%s], unexpected user profile: got %+v want %+v",
 				tt.requestBody, ds.userProfile, tt.userProfileExpected)
 		}
 	}

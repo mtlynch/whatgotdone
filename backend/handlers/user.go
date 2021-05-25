@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
-	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
+	"github.com/mtlynch/whatgotdone/backend/handlers/parse"
 	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/backend/types/requests"
 )
 
 func (s defaultServer) userGet() http.HandlerFunc {
@@ -37,9 +37,9 @@ func (s defaultServer) userGet() http.HandlerFunc {
 		}
 
 		resp := userResponse{
-			AboutMarkdown: p.AboutMarkdown,
-			TwitterHandle: p.TwitterHandle,
-			EmailAddress:  p.EmailAddress,
+			AboutMarkdown: string(p.AboutMarkdown),
+			TwitterHandle: string(p.TwitterHandle),
+			EmailAddress:  string(p.EmailAddress),
 		}
 
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
@@ -60,21 +60,6 @@ func (s defaultServer) userPost() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Invalid profile update request: %v", err)
 			http.Error(w, "Invalid profile update request", http.StatusBadRequest)
-			return
-		}
-
-		if !validate.UserBio(userProfile.AboutMarkdown) {
-			http.Error(w, "Invalid user bio", http.StatusBadRequest)
-			return
-		}
-
-		if userProfile.EmailAddress != "" && !validate.EmailAddress(userProfile.EmailAddress) {
-			http.Error(w, "Invalid email address", http.StatusBadRequest)
-			return
-		}
-
-		if userProfile.TwitterHandle != "" && !validate.TwitterHandle(userProfile.TwitterHandle) {
-			http.Error(w, "Invalid twitter handle", http.StatusBadRequest)
 			return
 		}
 
@@ -109,22 +94,13 @@ func (s defaultServer) userMeGet() http.HandlerFunc {
 }
 
 func profileFromRequest(r *http.Request) (types.UserProfile, error) {
-	type profileUpdateRequest struct {
-		AboutMarkdown string `json:"aboutMarkdown"`
-		EmailAddress  string `json:"emailAddress"`
-		TwitterHandle string `json:"twitterHandle"`
-	}
-	var pur profileUpdateRequest
+	var pur requests.ProfileUpdate
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&pur)
 	if err != nil {
 		return types.UserProfile{}, err
 	}
-	return types.UserProfile{
-		AboutMarkdown: strings.TrimSpace(pur.AboutMarkdown),
-		EmailAddress:  pur.EmailAddress,
-		TwitterHandle: pur.TwitterHandle,
-	}, nil
+	return parse.ProfileUpdateRequest(pur)
 }
 
 func (s defaultServer) userExists(username types.Username) (bool, error) {

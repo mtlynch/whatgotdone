@@ -1,8 +1,14 @@
 package types
 
-// UserProfile represents public information about a What Got Done user.
-type UserProfile struct {
-	AboutMarkdown string `json:"aboutMarkdown" firestore:"aboutMarkdown,omitempty"`
-	EmailAddress  string `json:"emailAddress" firestore:"emailAddress,omitempty"`
-	TwitterHandle string `json:"twitterHandle" firestore:"twitterHandle,omitempty"`
-}
+type (
+	UserBio       string
+	EmailAddress  string
+	TwitterHandle string
+
+	// UserProfile represents public information about a What Got Done user.
+	UserProfile struct {
+		AboutMarkdown UserBio       `json:"aboutMarkdown" firestore:"aboutMarkdown,omitempty"`
+		EmailAddress  EmailAddress  `json:"emailAddress" firestore:"emailAddress,omitempty"`
+		TwitterHandle TwitterHandle `json:"twitterHandle" firestore:"twitterHandle,omitempty"`
+	}
+)
