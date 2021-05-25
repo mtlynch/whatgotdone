@@ -12,6 +12,8 @@ import (
 // characters).
 const UserBioMaxLength = 300
 
+// UserBio parses a raw user bio string into a UserBio, validating that it
+// contains no prohibited Markdown for a bio.
 func UserBio(bio string) (types.UserBio, error) {
 	invalidPatterns := []string{
 		fmt.Sprintf(".{%d}", UserBioMaxLength+1), // excessive length

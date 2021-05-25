@@ -7,6 +7,8 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types/requests"
 )
 
+// ProfileUpdateRequest parses a raw profile update request into a UserProfile,
+// validating that the request is well-formed and all fields are legal.
 func ProfileUpdateRequest(pur requests.ProfileUpdate) (types.UserProfile, error) {
 	up := types.UserProfile{}
 	if pur.AboutMarkdown != "" {
