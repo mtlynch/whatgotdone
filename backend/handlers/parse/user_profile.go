@@ -10,27 +10,27 @@ import (
 // ProfileUpdateRequest parses a raw profile update request into a UserProfile,
 // validating that the request is well-formed and all fields are legal.
 func ProfileUpdateRequest(pur requests.ProfileUpdate) (types.UserProfile, error) {
-	up := types.UserProfile{}
+	p := types.UserProfile{}
 	if pur.AboutMarkdown != "" {
 		bio, err := UserBio(strings.TrimSpace(pur.AboutMarkdown))
 		if err != nil {
 			return types.UserProfile{}, err
 		}
-		up.AboutMarkdown = bio
+		p.AboutMarkdown = bio
 	}
 	if pur.EmailAddress != "" {
 		email, err := EmailAddress(pur.EmailAddress)
 		if err != nil {
 			return types.UserProfile{}, err
 		}
-		up.EmailAddress = email
+		p.EmailAddress = email
 	}
 	if pur.TwitterHandle != "" {
 		twitterHandle, err := TwitterHandle(pur.TwitterHandle)
 		if err != nil {
 			return types.UserProfile{}, err
 		}
-		up.TwitterHandle = twitterHandle
+		p.TwitterHandle = twitterHandle
 	}
-	return up, nil
+	return p, nil
 }
