@@ -1,4 +1,4 @@
-package validate
+package parse
 
 import (
 	"testing"
@@ -48,9 +48,9 @@ func TestTwitterHandle(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		validActual := TwitterHandle(tt.handle)
-		if validActual != tt.validExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.handle, validActual, tt.validExpected)
+		_, err := TwitterHandle(tt.handle)
+		if (err == nil) != tt.validExpected {
+			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.handle, err, tt.validExpected)
 		}
 	}
 }

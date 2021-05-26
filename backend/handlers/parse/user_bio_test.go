@@ -1,4 +1,4 @@
-package validate
+package parse
 
 import (
 	"strings"
@@ -79,9 +79,9 @@ func TestUserBio(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		validActual := UserBio(tt.bio)
-		if validActual != tt.validExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.bio, validActual, tt.validExpected)
+		_, err := UserBio(tt.bio)
+		if (err == nil) != tt.validExpected {
+			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.bio, err, tt.validExpected)
 		}
 	}
 }
