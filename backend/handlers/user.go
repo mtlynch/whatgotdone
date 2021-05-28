@@ -31,15 +31,17 @@ func (s defaultServer) userGet() http.HandlerFunc {
 		}
 
 		type userResponse struct {
-			AboutMarkdown string `json:"aboutMarkdown"`
-			TwitterHandle string `json:"twitterHandle"`
-			EmailAddress  string `json:"emailAddress"`
+			AboutMarkdown   string `json:"aboutMarkdown"`
+			TwitterHandle   string `json:"twitterHandle"`
+			EmailAddress    string `json:"emailAddress"`
+			MastodonAddress string `json:"mastodonAddress"`
 		}
 
 		resp := userResponse{
-			AboutMarkdown: string(p.AboutMarkdown),
-			TwitterHandle: string(p.TwitterHandle),
-			EmailAddress:  string(p.EmailAddress),
+			AboutMarkdown:   string(p.AboutMarkdown),
+			TwitterHandle:   string(p.TwitterHandle),
+			EmailAddress:    string(p.EmailAddress),
+			MastodonAddress: string(p.MastodonAddress),
 		}
 
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
