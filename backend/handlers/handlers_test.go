@@ -27,7 +27,7 @@ func (ds mockDatastore) GetEntries(username types.Username) ([]types.JournalEntr
 	return ds.journalEntries, nil
 }
 
-func (ds mockDatastore) GetDraft(username types.Username, date string) (types.JournalEntry, error) {
+func (ds mockDatastore) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	if len(ds.journalDrafts) > 0 {
 		return ds.journalDrafts[0], nil
 	}

@@ -11,7 +11,7 @@ import (
 // RecentEntry stores data about a journal entry.
 type RecentEntry struct {
 	Author       types.Username
-	Date         string
+	Date         types.EntryDate
 	LastModified string
 	Markdown     string
 }

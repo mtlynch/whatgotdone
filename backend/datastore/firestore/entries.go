@@ -11,7 +11,7 @@ import (
 )
 
 // GetEntry returns the published entry for the given date.
-func (c client) GetEntry(username types.Username, date string) (types.JournalEntry, error) {
+func (c client) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	iter := c.firestoreClient.Collection(entriesRootKey).Doc(string(username)).Collection(perUserEntriesKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
@@ -64,6 +64,6 @@ func (c client) InsertEntry(username types.Username, j types.JournalEntry) error
 		Username:     username,
 		LastModified: j.LastModified,
 	})
-	_, err := c.firestoreClient.Collection(entriesRootKey).Doc(string(username)).Collection(perUserEntriesKey).Doc(j.Date).Set(c.ctx, j)
+	_, err := c.firestoreClient.Collection(entriesRootKey).Doc(string(username)).Collection(perUserEntriesKey).Doc(string(j.Date)).Set(c.ctx, j)
 	return err
 }

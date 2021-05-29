@@ -86,17 +86,17 @@ func getPageTitle(r *http.Request) string {
 		return t
 	}
 
-	dateString, err := dateFromRequestPath(r)
+	date, err := dateFromRequestPath(r)
 	if err != nil {
 		return t
 	}
 
-	date, err := time.Parse("2006-01-02", dateString)
+	dateParsed, err := time.Parse("2006-01-02", string(date))
 	if err != nil {
 		return t
 	}
 
-	formattedDate := date.Format("Jan. 2, 2006")
+	formattedDate := dateParsed.Format("Jan. 2, 2006")
 
 	return fmt.Sprintf("%s's What Got Done for the week of %s", username, formattedDate)
 }
@@ -125,17 +125,17 @@ func getDescription(r *http.Request) string {
 		return t
 	}
 
-	dateString, err := dateFromRequestPath(r)
+	date, err := dateFromRequestPath(r)
 	if err != nil {
 		return t
 	}
 
-	date, err := time.Parse("2006-01-02", dateString)
+	dateParsed, err := time.Parse("2006-01-02", string(date))
 	if err != nil {
 		return t
 	}
 
-	formattedDate := date.Format("January 2, 2006")
+	formattedDate := dateParsed.Format("January 2, 2006")
 
 	return fmt.Sprintf("Find out what %s accomplished for the week ending on %s", username, formattedDate)
 }

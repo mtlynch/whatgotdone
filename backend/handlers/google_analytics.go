@@ -13,7 +13,6 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/handlers/parse"
-	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -71,7 +70,7 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) wasEntryPublishedRecently(username types.Username, entryDate string) bool {
+func (s defaultServer) wasEntryPublishedRecently(username types.Username, entryDate types.EntryDate) bool {
 	entry, err := s.datastore.GetEntry(username, entryDate)
 	if err != nil {
 		return false
@@ -164,7 +163,7 @@ func (s defaultServer) filterNonEntries(pvcs []ga.PageViewCount) []ga.PageViewCo
 	return filtered
 }
 
-func parseJournalEntryPath(path string, users []types.Username) (types.Username, string, bool) {
+func parseJournalEntryPath(path string, users []types.Username) (types.Username, types.EntryDate, bool) {
 	pathParts := strings.Split(path, "/")
 	if len(pathParts) != 3 {
 		return "", "", false
@@ -181,8 +180,8 @@ func parseJournalEntryPath(path string, users []types.Username) (types.Username,
 	if !isUsernameInSlice(user, users) {
 		return "", "", false
 	}
-	entryDate := pathParts[2]
-	if !validate.EntryDate(entryDate) {
+	entryDate, err := parse.EntryDate(pathParts[2])
+	if err != nil {
 		return "", "", false
 	}
 	return user, entryDate, true

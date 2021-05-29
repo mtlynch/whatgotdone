@@ -32,7 +32,7 @@ func (ds mockDatastore) GetPageViews(path string) (int, error) {
 	return 0, errors.New("no pageview results found")
 }
 
-func (ds mockDatastore) GetEntry(username types.Username, date string) (types.JournalEntry, error) {
+func (ds mockDatastore) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	return types.JournalEntry{}, errors.New("not implemented")
 }
 

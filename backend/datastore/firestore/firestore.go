@@ -35,8 +35,8 @@ type (
 	}
 
 	entryReactionsDocument struct {
-		entryAuthor types.Username `firestore:"entryAuthor,omitempty"`
-		entryDate   string         `firestore:"entryDate,omitempty"`
+		entryAuthor types.Username  `firestore:"entryAuthor,omitempty"`
+		entryDate   types.EntryDate `firestore:"entryDate,omitempty"`
 	}
 
 	followDocument struct {
