@@ -4,8 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/mtlynch/whatgotdone/backend/types"
 	userkit "github.com/workpail/userkit-go"
+
+	"github.com/mtlynch/whatgotdone/backend/handlers/parse"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 // Authenticator wraps a user authentication system.
@@ -38,5 +40,5 @@ func (a defaultAuthenticator) UserFromAuthToken(authToken string) (types.Usernam
 		log.Printf("Failed to authenticate user's session token with UserKit: %v", err)
 		return "", err
 	}
-	return types.Username(user.Username), nil
+	return parse.Username(user.Username)
 }

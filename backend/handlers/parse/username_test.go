@@ -1,4 +1,4 @@
-package validate
+package parse
 
 import (
 	"strings"
@@ -79,9 +79,9 @@ func TestUsername(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		validActual := Username(tt.username)
-		if validActual != tt.validExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.username, validActual, tt.validExpected)
+		_, err := Username(tt.username)
+		if (err == nil) != tt.validExpected {
+			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.username, err, tt.validExpected)
 		}
 	}
 }
