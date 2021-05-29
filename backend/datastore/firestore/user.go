@@ -1,6 +1,8 @@
 package firestore
 
 import (
+	"log"
+
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -47,6 +49,7 @@ func (c client) GetUserProfile(username types.Username) (types.UserProfile, erro
 // SetUserProfile updates the given user's profile or creates a new profile for
 // the user.
 func (c client) SetUserProfile(username types.Username, p types.UserProfile) error {
+	log.Printf("saving user profile to datastore: %s -> %+v", username, p)
 	_, err := c.firestoreClient.Collection(userProfilesRootKey).Doc(string(username)).Set(c.ctx, p)
 	return err
 }

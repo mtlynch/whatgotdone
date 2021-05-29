@@ -39,6 +39,10 @@
               >
               (Twitter)
             </li>
+            <li v-if="mastodonAddress">
+              <a :href="mastodonUrl">{{ mastodonAddress }}</a>
+              (Mastodon)
+            </li>
           </ul>
         </template>
       </div>
@@ -110,6 +114,7 @@ export default {
       aboutMarkdown: '',
       twitterHandle: null,
       emailAddress: null,
+      mastodonAddress: null,
       recentEntries: [],
       profileLoaded: false,
       entriesLoaded: false,
@@ -137,6 +142,15 @@ export default {
       }
       return null;
     },
+    mastodonUrl: function () {
+      if (!this.mastodonAddress) {
+        return null;
+      }
+      const addressParts = this.mastodonAddress.split('@');
+      const username = addressParts[0];
+      const domain = addressParts[1];
+      return `https://${domain}/@${username}`;
+    },
     isSelf: function () {
       if (!this.loggedInUsername) {
         return false;
@@ -155,6 +169,7 @@ export default {
       this.aboutMarkdown = '';
       this.twitterHandle = null;
       this.emailAddress = null;
+      this.mastodonAddress = null;
       this.recentEntries = [];
       this.profileLoaded = false;
       this.entriesLoaded = false;
@@ -164,6 +179,7 @@ export default {
         this.aboutMarkdown = metadata.aboutMarkdown;
         this.twitterHandle = metadata.twitterHandle;
         this.emailAddress = metadata.emailAddress;
+        this.mastodonAddress = metadata.mastodonAddress;
         this.profileLoaded = true;
       });
     },

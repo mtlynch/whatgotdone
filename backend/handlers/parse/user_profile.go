@@ -32,5 +32,12 @@ func ProfileUpdateRequest(pur requests.ProfileUpdate) (types.UserProfile, error)
 		}
 		p.TwitterHandle = twitterHandle
 	}
+	if pur.MastodonAddress != "" {
+		mastodonAddress, err := MastodonAddress(pur.MastodonAddress)
+		if err != nil {
+			return types.UserProfile{}, err
+		}
+		p.MastodonAddress = mastodonAddress
+	}
 	return p, nil
 }

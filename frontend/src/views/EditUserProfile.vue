@@ -64,6 +64,17 @@
       />
     </div>
 
+    <div class="form-group">
+      <label for="mastodon-address">Mastodon address</label>
+      <input
+        type="text"
+        v-model="profile.mastodonAddress"
+        class="form-control"
+        id="mastodon-address"
+        :disabled="!profileLoaded"
+      />
+    </div>
+
     <div class="alert alert-primary" role="alert" v-if="formError">
       {{ formError }}
     </div>
@@ -96,6 +107,7 @@ export default {
         aboutMarkdown: '',
         twitterHandle: '',
         emailAddress: '',
+        mastodonAddress: '',
       },
       profileLoaded: false,
       formError: null,
@@ -127,7 +139,6 @@ export default {
         });
     },
     openFileUploadDialog: function () {
-      console.log('clicked profile photo');
       this.$refs.fileUpload.reset();
       this.$refs.fileUpload.$el.click();
     },
