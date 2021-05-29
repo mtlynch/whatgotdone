@@ -16,7 +16,7 @@ commands:
 jobs:
   check_whitespace:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2021.04
     steps:
       - checkout
       - run:
