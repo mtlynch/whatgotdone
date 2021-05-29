@@ -87,13 +87,10 @@ docker run \
 
 ### 2. Populate the database
 
-To populate the database with initial data, run the test data manager:
+To populate the database with initial data, run the data population script:
 
 ```bash
-pushd test-data-manager &&
-  go build --tags "dev" -o /tmp/mgr . && \
-  /tmp/mgr
-popd
+./dev-scripts/populate-dev-data
 ```
 
 ### 3. Build the frontend
