@@ -21,4 +21,4 @@ readonly BUILD_DIR="$(mktemp -d)"
 
 cd test-data-manager
 go build --tags "dev" -o "${BUILD_DIR}" .
-"${BUILD_DIR}/test-data-manager"
+"${BUILD_DIR}/test-data-manager" -source "dev-data.yaml"

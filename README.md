@@ -130,14 +130,6 @@ npm run serve
 
 A hot-reloading Vue server will run on port [http://localhost:8085](http://localhost:8085). It will communicate with the What Got Done backend at port 3001.
 
-### Optional: Pre-populate the datastore
-
-What Got Done can run fine with an empty datastore, but if you want to populate it with some test data, run the following command to pre-populate the Firestore emulator:
-
-```bash
-./dev-scripts/reset-datastore
-```
-
 #### Quirks of the dev environment
 
 Because the production What Got Done server runs both the frontend and the backend on a single port, there are a few hacks to make a development version work:
