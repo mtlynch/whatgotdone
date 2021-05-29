@@ -1,5 +1,25 @@
 #!/bin/bash
 
-# Run this from the repository root to enable all git hooks for this project.
+# Run this to enable all git hooks for this project.
 
-rm -rf .git/hooks/ && ln -s -f ../dev-scripts/git-hooks .git/hooks
+set -x
+set -e
+set -u
+
+# If there's an existing symlink, remove it.
+if [[ -L .git/hooks ]]
+then
+  rm .git/hooks
+fi
+
+# If it's a regular directory, remove all files.
+if [[ -d .git/hooks ]]
+then
+  rm -rf .git/hooks
+fi
+
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
+ln --symbolic --force ../dev-scripts/git-hooks .git/hooks
