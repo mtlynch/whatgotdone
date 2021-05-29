@@ -21,11 +21,11 @@ type Datastore interface {
 	// SetUserProfile updates the given user's profile.
 	SetUserProfile(username types.Username, profile types.UserProfile) error
 	// GetEntry returns the published entry for the given date.
-	GetEntry(username types.Username, date string) (types.JournalEntry, error)
+	GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error)
 	// GetEntries returns all published entries for the given user.
 	GetEntries(username types.Username) ([]types.JournalEntry, error)
 	// GetDraft returns an entry draft for the given user for the given date.
-	GetDraft(username types.Username, date string) (types.JournalEntry, error)
+	GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error)
 	// InsertEntry saves an entry to the datastore, overwriting any existing entry
 	// with the same name and username.
 	InsertEntry(username types.Username, j types.JournalEntry) error
@@ -33,10 +33,10 @@ type Datastore interface {
 	// draft with the same name and username.
 	InsertDraft(username types.Username, j types.JournalEntry) error
 	// GetReactions retrieves reader reactions associated with a published entry.
-	GetReactions(entryAuthor types.Username, entryDate string) ([]types.Reaction, error)
+	GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error)
 	// AddReaction saves a reader reaction associated with a published entry,
 	// overwriting any existing reaction.
-	AddReaction(entryAuthor types.Username, entryDate string, reaction types.Reaction) error
+	AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error
 	// InsertPageViews stores the count of pageviews for a given What Got Done route.
 	InsertPageViews(path string, pageViews int) error
 	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
@@ -56,7 +56,7 @@ type Datastore interface {
 // EntryNotFoundError occurs when no published exists for a user with a given date.
 type EntryNotFoundError struct {
 	Username types.Username
-	Date     string
+	Date     types.EntryDate
 }
 
 func (f EntryNotFoundError) Error() string {
@@ -66,7 +66,7 @@ func (f EntryNotFoundError) Error() string {
 // DraftNotFoundError occurs when no draft exists for a user with a given date.
 type DraftNotFoundError struct {
 	Username types.Username
-	Date     string
+	Date     types.EntryDate
 }
 
 func (f DraftNotFoundError) Error() string {

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/mtlynch/whatgotdone/backend/handlers/entry"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (s *defaultServer) projectGet() http.HandlerFunc {
@@ -33,8 +34,8 @@ func (s *defaultServer) projectGet() http.HandlerFunc {
 		}
 
 		type projectBody struct {
-			Date     string `json:"date"`
-			Markdown string `json:"markdown"`
+			Date     types.EntryDate `json:"date"`
+			Markdown string          `json:"markdown"`
 		}
 
 		projectBodies := []projectBody{}

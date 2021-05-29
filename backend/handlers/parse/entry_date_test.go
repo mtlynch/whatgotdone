@@ -1,4 +1,4 @@
-package validate
+package parse
 
 import (
 	"testing"
@@ -38,9 +38,9 @@ func TestEntryDate(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		validActual := EntryDate(tt.date)
-		if validActual != tt.validExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.date, validActual, tt.validExpected)
+		_, err := EntryDate(tt.date)
+		if (err == nil) != tt.validExpected {
+			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.date, err, tt.validExpected)
 		}
 	}
 }

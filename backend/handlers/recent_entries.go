@@ -12,9 +12,9 @@ import (
 )
 
 type entryPublic struct {
-	Author   types.Username `json:"author"`
-	Date     string         `json:"date"`
-	Markdown string         `json:"markdown"`
+	Author   types.Username  `json:"author"`
+	Date     types.EntryDate `json:"date"`
+	Markdown string          `json:"markdown"`
 }
 
 type entriesPublic []entryPublic

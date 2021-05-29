@@ -93,7 +93,7 @@ func (s defaultServer) draftPost() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) savedDraftOrEntryTemplate(username types.Username, date string) (string, error) {
+func (s defaultServer) savedDraftOrEntryTemplate(username types.Username, date types.EntryDate) (string, error) {
 	// First, check if there's a saved draft.
 	d, err := s.datastore.GetDraft(username, date)
 	if err == nil && d.Markdown != "" {

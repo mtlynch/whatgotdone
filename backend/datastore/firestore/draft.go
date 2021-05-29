@@ -10,7 +10,7 @@ import (
 )
 
 // GetDraft returns an entry draft for the given user for the given date.
-func (c client) GetDraft(username types.Username, date string) (types.JournalEntry, error) {
+func (c client) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	iter := c.firestoreClient.Collection(draftsRootKey).Doc(string(username)).Collection(perUserDraftsKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
@@ -41,6 +41,6 @@ func (c client) InsertDraft(username types.Username, j types.JournalEntry) error
 		Username:     username,
 		LastModified: j.LastModified,
 	})
-	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(string(username)).Collection(perUserDraftsKey).Doc(j.Date).Set(c.ctx, j)
+	_, err := c.firestoreClient.Collection(draftsRootKey).Doc(string(username)).Collection(perUserDraftsKey).Doc(string(j.Date)).Set(c.ctx, j)
 	return err
 }
