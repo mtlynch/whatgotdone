@@ -12,6 +12,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
+	"github.com/mtlynch/whatgotdone/backend/handlers/parse"
 	"github.com/mtlynch/whatgotdone/backend/handlers/validate"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -173,7 +174,10 @@ func parseJournalEntryPath(path string, users []types.Username) (types.Username,
 		return "", "", false
 	}
 
-	user := types.Username(pathParts[1])
+	user, err := parse.Username(pathParts[1])
+	if err != nil {
+		return "", "", false
+	}
 	if !isUsernameInSlice(user, users) {
 		return "", "", false
 	}
