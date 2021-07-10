@@ -38,5 +38,9 @@ func (c Client) UploadFile(r io.Reader, path, contentType, cacheControl string) 
 		return "", err
 	}
 
+	if c.bucketName == "media.whatgotdone.com" {
+		return fmt.Sprintf("https://%s/%s", c.bucketName, path), nil
+	}
+
 	return fmt.Sprintf("https://storage.googleapis.com/%s/%s", c.bucketName, path), nil
 }
