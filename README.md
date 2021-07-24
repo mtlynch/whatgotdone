@@ -72,28 +72,14 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 
 ### 1. Start a Firestore emulator
 
-Run the following command to start a [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) in a Docker container:
+Run the following command to start a [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) in a Docker container and populate it with test data:
 
 ```bash
-. dev.env
-docker run \
-  --detach \
-  --env "FIRESTORE_PROJECT_ID=${GOOGLE_CLOUD_PROJECT}" \
-  --env "PORT=8080" \
-  --publish 8080:8080 \
-  --name firestore-emulator \
-  mtlynch/firestore-emulator
+./dev-scripts/start-firestore-emulator && \
+  ./dev-scripts/populate-dev-data
 ```
 
-### 2. Populate the database
-
-To populate the database with initial data, run the data population script:
-
-```bash
-./dev-scripts/populate-dev-data
-```
-
-### 3. Build the frontend
+### 2. Build the frontend
 
 To build the Vue frontend for What Got Done, run the following command:
 
@@ -104,7 +90,7 @@ pushd frontend && \
   popd
 ```
 
-### 4. Run the backend
+### 3. Run the backend
 
 To run the Go backend server, run the following command:
 
