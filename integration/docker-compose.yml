@@ -41,7 +41,7 @@ services:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/integration
   cypress:
-    image: "cypress/included:7.0.1"
+    image: "mtlynch/cypress:8.1.0-chrome91-2"
     command: ["--browser", "chrome"]
     depends_on:
       - whatgotdone
