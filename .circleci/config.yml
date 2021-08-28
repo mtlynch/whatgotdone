@@ -84,7 +84,7 @@ jobs:
           path: integration/cypress/screenshots
   deploy:
     docker:
-      - image: google/cloud-sdk:351.0.0-slim
+      - image: google/cloud-sdk:335.0.0
     environment:
       GCLOUD_PROJECT: whatgotdone
     steps:
