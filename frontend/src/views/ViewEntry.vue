@@ -1,5 +1,5 @@
 <template>
-  <div class="view-entry container">
+  <div class="view-entry">
     <template v-if="journalEntries.length > 0">
       <b-pagination-nav
         :pages="pages"
