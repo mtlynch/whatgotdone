@@ -1,4 +1,4 @@
-FROM golang:1.16.7-buster
+FROM golang:1.16.7-alpine
 
 COPY ./backend /app/backend
 COPY ./test-data-manager /app/test-data-manager
