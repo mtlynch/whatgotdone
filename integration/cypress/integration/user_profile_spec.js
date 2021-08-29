@@ -57,13 +57,7 @@ it("logs in and sets profile photo", () => {
   // Wait for page to pull down existing profile.
   cy.wait("@getUserProfile");
 
-  cy.fixture("kittyface.jpg").then((fileContent) => {
-    cy.get("#upload-profile-photo").upload({
-      fileContent,
-      fileName: "kittyface.jpg",
-      mimeType: "image/jpeg",
-    });
-  });
+  cy.get("#upload-profile-photo").attachFile("kittyface.jpg");
   cy.wait("@setProfilePhoto");
 
   cy.visit("/staging_jimmy");

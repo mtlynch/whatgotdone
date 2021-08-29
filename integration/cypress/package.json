@@ -8,6 +8,6 @@
   },
   "private": true,
   "devDependencies": {
-    "cypress-file-upload": "^3.5.3"
+    "cypress-file-upload": "^5.0.8"
   }
 }
