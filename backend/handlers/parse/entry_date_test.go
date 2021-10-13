@@ -21,8 +21,13 @@ func TestEntryDate(t *testing.T) {
 			false,
 		},
 		{
-			"future date is invalid",
-			"2039-03-13",
+			"future Friday date is invalid",
+			"2039-03-11",
+			false,
+		},
+		{
+			"date prior to What Got Done epoch is invalid",
+			"2018-12-28",
 			false,
 		},
 		{
