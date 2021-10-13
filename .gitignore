@@ -13,3 +13,6 @@ env_variables.yaml
 
 # Persistent data directory
 persist/
+
+# Code coverage artifacts
+.coverage*

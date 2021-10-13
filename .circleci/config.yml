@@ -59,6 +59,8 @@ jobs:
       - run:
           name: Test go packages
           command: dev-scripts/run-go-tests
+      - store_artifacts:
+          path: coverage.html
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
