@@ -131,7 +131,7 @@ jobs:
               --quiet \
               app deploy \
               --promote \
-              --version v1 \
+              --version "${SERVING_VERSION}" \
               app.yaml \
               cron.yaml
 workflows:
