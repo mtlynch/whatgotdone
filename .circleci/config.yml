@@ -89,6 +89,9 @@ jobs:
       - image: google/cloud-sdk:335.0.0
     environment:
       GCLOUD_PROJECT: whatgotdone
+      # Specify a version so that deploying doesn't keep creating
+      # new, parallel versions.
+      SERVING_VERSION: v1
     steps:
       - checkout
       - attach_workspace:
@@ -121,7 +124,14 @@ jobs:
           command: gcloud config set project "${GCLOUD_PROJECT}"
       - run:
           name: Deploy to AppEngine
-          command: gcloud --quiet app deploy --promote app.yaml cron.yaml
+          command: |
+            gcloud \
+              --quiet \
+              app deploy \
+              --promote \
+              --version v1 \
+              app.yaml \
+              cron.yaml
 workflows:
   version: 2
   test-deploy:
