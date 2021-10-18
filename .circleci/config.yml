@@ -17,6 +17,7 @@ jobs:
   check_whitespace:
     docker:
       - image: cimg/base:2021.04
+    resource_class: small
     steps:
       - checkout
       - run:
@@ -87,6 +88,7 @@ jobs:
   deploy:
     docker:
       - image: google/cloud-sdk:335.0.0
+    resource_class: small
     environment:
       GCLOUD_PROJECT: whatgotdone
     steps:
