@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -64,9 +63,7 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			Views: views,
 		}
 
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			panic(err)
-		}
+		respondOK(w, response)
 	}
 }
 
@@ -116,9 +113,7 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			}(pvc)
 		}
 		wg.Wait()
-		if err := json.NewEncoder(w).Encode(true); err != nil {
-			panic(err)
-		}
+		respondOK(w, true)
 	}
 }
 

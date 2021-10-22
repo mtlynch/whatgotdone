@@ -30,23 +30,17 @@ func (s defaultServer) userGet() http.HandlerFunc {
 			return
 		}
 
-		type userResponse struct {
+		respondOK(w, struct {
 			AboutMarkdown   string `json:"aboutMarkdown"`
 			TwitterHandle   string `json:"twitterHandle"`
 			EmailAddress    string `json:"emailAddress"`
 			MastodonAddress string `json:"mastodonAddress"`
-		}
-
-		resp := userResponse{
+		}{
 			AboutMarkdown:   string(p.AboutMarkdown),
 			TwitterHandle:   string(p.TwitterHandle),
 			EmailAddress:    string(p.EmailAddress),
 			MastodonAddress: string(p.MastodonAddress),
-		}
-
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }
 
@@ -82,16 +76,11 @@ func (s defaultServer) userMeGet() http.HandlerFunc {
 			return
 		}
 
-		type userMeResponse struct {
+		respondOK(w, struct {
 			Username types.Username `json:"username"`
-		}
-		resp := userMeResponse{
+		}{
 			Username: username,
-		}
-
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }
 

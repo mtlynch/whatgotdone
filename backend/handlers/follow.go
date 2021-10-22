@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -94,14 +93,10 @@ func (s defaultServer) userFollowingGet() http.HandlerFunc {
 			return
 		}
 
-		type response struct {
+		respondOK(w, struct {
 			Following []types.Username `json:"following"`
-		}
-		resp := response{
+		}{
 			Following: leaders,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }

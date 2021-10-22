@@ -25,10 +25,7 @@ func (s *defaultServer) entriesGet() http.HandlerFunc {
 			http.Error(w, fmt.Sprintf("Failed to retrieve entries for %s", username), http.StatusInternalServerError)
 			return
 		}
-
-		if err := json.NewEncoder(w).Encode(entries); err != nil {
-			panic(err)
-		}
+		respondOK(w, entries)
 	}
 }
 
@@ -83,14 +80,10 @@ func (s *defaultServer) entryPost() http.HandlerFunc {
 			return
 		}
 
-		type entryResponse struct {
+		respondOK(w, struct {
 			Path string `json:"path"`
-		}
-		resp := entryResponse{
+		}{
 			Path: fmt.Sprintf("/%s/%s", username, date),
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }
