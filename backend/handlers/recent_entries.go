@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -39,9 +38,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			return
 		}
 
-		if err := json.NewEncoder(w).Encode(recentEntriesToPublicEntries(entries)); err != nil {
-			panic(err)
-		}
+		respondOK(w, recentEntriesToPublicEntries(entries))
 	}
 }
 
@@ -70,15 +67,11 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 			return
 		}
 
-		type response struct {
+		respondOK(w, struct {
 			Entries entriesPublic `json:"entries"`
-		}
-		resp := response{
+		}{
 			Entries: recentEntriesToPublicEntries(entries),
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }
 

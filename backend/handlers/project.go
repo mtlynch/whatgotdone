@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -55,8 +54,6 @@ func (s *defaultServer) projectGet() http.HandlerFunc {
 			})
 		}
 
-		if err := json.NewEncoder(w).Encode(projectBodies); err != nil {
-			panic(err)
-		}
+		respondOK(w, projectBodies)
 	}
 }

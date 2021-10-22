@@ -41,9 +41,7 @@ func (s defaultServer) reactionsGet() http.HandlerFunc {
 			}
 		}
 
-		if err := json.NewEncoder(w).Encode(reactionsFiltered); err != nil {
-			panic(err)
-		}
+		respondOK(w, reactionsFiltered)
 	}
 }
 

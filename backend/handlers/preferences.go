@@ -28,15 +28,11 @@ func (s defaultServer) preferencesGet() http.HandlerFunc {
 			return
 		}
 
-		type response struct {
+		respondOK(w, struct {
 			EntryTemplate string `json:"entryTemplate"`
-		}
-		resp := response{
+		}{
 			EntryTemplate: prefs.EntryTemplate,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }
 

@@ -36,15 +36,11 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 			return
 		}
 
-		type response struct {
+		respondOK(w, struct {
 			Markdown string `json:"markdown"`
-		}
-		resp := response{
+		}{
 			Markdown: draftMarkdown,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }
 

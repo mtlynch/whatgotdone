@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -49,15 +48,11 @@ func (s *defaultServer) mediaPut() http.HandlerFunc {
 			return
 		}
 
-		type response struct {
+		respondOK(w, struct {
 			URL string `json:"url"`
-		}
-		resp := response{
+		}{
 			URL: url,
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			panic(err)
-		}
+		})
 	}
 }
 
