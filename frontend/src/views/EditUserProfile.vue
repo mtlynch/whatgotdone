@@ -61,6 +61,7 @@
         class="form-control"
         id="twitter-handle"
         :disabled="!profileLoaded"
+        placeholder="@handle"
       />
     </div>
 
@@ -72,6 +73,7 @@
         class="form-control"
         id="mastodon-address"
         :disabled="!profileLoaded"
+        placeholder="handle@example.com"
       />
     </div>
 
