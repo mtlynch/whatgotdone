@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -55,7 +56,7 @@ func (s defaultServer) userPost() http.HandlerFunc {
 		userProfile, err := profileFromRequest(r)
 		if err != nil {
 			log.Printf("Invalid profile update request: %v", err)
-			http.Error(w, "Invalid profile update request", http.StatusBadRequest)
+			http.Error(w, fmt.Sprintf("Invalid profile update request: %v", err), http.StatusBadRequest)
 			return
 		}
 

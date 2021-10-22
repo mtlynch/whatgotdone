@@ -23,7 +23,7 @@ func MastodonAddress(address string) (types.MastodonAddress, error) {
 
 	a, err := mail.ParseAddress(address)
 	if err != nil {
-		return types.MastodonAddress(""), err
+		return types.MastodonAddress(""), errors.New("invalid Mastodon address, must be in the form of handle@hostname")
 	}
 	return types.MastodonAddress(a.Address), nil
 }
