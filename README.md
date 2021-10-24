@@ -67,7 +67,7 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 ### 0. Pre-requisites
 
 * [Node.js](https://nodejs.org/) (12.x or higher)
-* [Go](https://golang.org/dl/) (1.11 or higher)
+* [Go](https://golang.org/dl/) (1.16 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
 
 ### 1. Start a Firestore emulator
@@ -96,8 +96,8 @@ To run the Go backend server, run the following command:
 
 ```bash
 . dev.env
-env GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
-$GOPATH/bin/modd
+go get github.com/cortesi/modd/cmd/modd
+$(go env GOPATH)/bin/modd
 ```
 
 What Got Done is now running on [http://localhost:3001](http://localhost:3001). [Modd](https://github.com/cortesi/modd) is a hot reloading tool that will automatically rebuild and restart the server upon changes to any `.go` files.
