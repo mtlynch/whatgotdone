@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Exit on first failing command.
+set -e
+
+# Exit on unset variable.
+set -u
+
+# Echo commands
+set -x
+
+. dev.env
+go get github.com/cortesi/modd/cmd/modd
+$(go env GOPATH)/bin/modd

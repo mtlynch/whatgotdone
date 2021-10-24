@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Exit on first failing command.
+set -e
+
+# Exit on unset variable.
+set -u
+
+# Echo commands
+set -x
+
+cd frontend
+npm install
+npm run build -- --mode development
