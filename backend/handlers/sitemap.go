@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ikeikeikeike/go-sitemap-generator/stm"
+	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
