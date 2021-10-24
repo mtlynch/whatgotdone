@@ -11,8 +11,12 @@ import (
 )
 
 func (s defaultServer) sitemapGet() http.HandlerFunc {
-	sm := buildSitemap(s.datastore)
+	var sm *stm.Sitemap = nil
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Lazy-load the sitemap on first request.
+		if sm == nil {
+			sm = buildSitemap(s.datastore)
+		}
 		w.Write(sm.XMLContent())
 	}
 }
