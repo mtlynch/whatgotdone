@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Exit on first failing command.
+set -e
+
+# Exit on unset variable.
+set -u
+
+# Echo commands
+set -x
+
+./dev-scripts/start-firestore-emulator
+
+./dev-scripts/populate-dev-data
+
+# Run the hot reloading frontend server in a background screen session.
+screen -Sdm whatgotdone-frontend ./dev-scripts/serve-frontend
+
+./dev-scripts/serve-backend

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Exit on first failing command.
+set -e
+
+# Exit on unset variable.
+set -u
+
+# Echo commands
+set -x
+
+. dev.env
+
+# Install modd if it's not present.
+MODD_PATH="$(go env GOPATH)/bin/modd"
+if [ ! -f "${MODD_PATH}" ]; then
+    go get github.com/cortesi/modd/cmd/modd
+fi
+
+# Run modd for hot reloading.
+$MODD_PATH

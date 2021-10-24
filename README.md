@@ -64,57 +64,29 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 
 ## Development notes
 
-### 0. Pre-requisites
+### Pre-requisites
 
 * [Node.js](https://nodejs.org/) (12.x or higher)
 * [Go](https://golang.org/dl/) (1.16 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
+* [Google Cloud SDK](https://cloud.google.com/sdk)
+* [screen](https://wiki.debian.org/screen)
 
-### 1. Start a Firestore emulator
+### Start hot reloading server
 
-Run the following command to start a [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) in a Docker container and populate it with test data:
-
-```bash
-./dev-scripts/start-firestore-emulator && \
-  ./dev-scripts/populate-dev-data
-```
-
-### 2. Build the frontend
-
-To build the Vue frontend for What Got Done, run the following command:
+Run the following command to start a What Got Done development server:
 
 ```bash
-pushd frontend && \
-  npm install && \
-  npm run build -- --mode development && \
-  popd
+./dev-scripts/serve
 ```
 
-### 3. Run the backend
+1. Launches new [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) and populates it with test data.
+1. Builds the Vue frontend.
+1. Starts a hot reloading server for the Vue frontend.
+1. Starts a hot reloading server for the backend.
 
-To run the Go backend server, run the following command:
-
-```bash
-. dev.env
-go get github.com/cortesi/modd/cmd/modd
-$(go env GOPATH)/bin/modd
-```
-
-What Got Done is now running on [http://localhost:3001](http://localhost:3001). [Modd](https://github.com/cortesi/modd) is a hot reloading tool that will automatically rebuild and restart the server upon changes to any `.go` files.
-
-Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username using the password `password`.
-
-### Optional: Run frontend with hot reloading
-
-If you're making changes to the Vue code, you'll probably want to run the standard Vue HTTP server with hot reloading. Keep the backend running, and in a separate shell session, run the following command:
-
-```bash
-. dev.env
-cd frontend
-npm run serve
-```
-
-A hot-reloading Vue server will run on port [http://localhost:8085](http://localhost:8085). It will communicate with the What Got Done backend at port 3001.
+* The backend server will run on [http://localhost:3001](http://localhost:3001).
+* The frontend server will run on port [http://localhost:8085](http://localhost:8085).
 
 #### Quirks of the dev environment
 
