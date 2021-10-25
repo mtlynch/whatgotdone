@@ -20,6 +20,7 @@ func contentSecurityPolicy() string {
 			"https://www.google.com/recaptcha/",
 			"https://www.gstatic.com/recaptcha/",
 			"https://apis.google.com",
+			"https://accounts.google.com",
 		},
 		"style-src": {
 			"'self'",
