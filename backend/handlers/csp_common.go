@@ -19,12 +19,12 @@ func contentSecurityPolicy() string {
 			"https://api.userkit.io",
 			"https://www.google.com/recaptcha/",
 			"https://www.gstatic.com/recaptcha/",
-			"https://apis.google.com",
 			"https://accounts.google.com",
 		},
 		"style-src": {
 			"'self'",
 			// URLs for /login route (UserKit)
+			"https://accounts.google.com",
 			"https://widget.userkit.io",
 			"https://fonts.googleapis.com",
 			"https://fonts.gstatic.com",
