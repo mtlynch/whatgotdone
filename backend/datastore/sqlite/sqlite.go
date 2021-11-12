@@ -31,7 +31,14 @@ func New() datastore.Datastore {
 	CREATE TABLE IF NOT EXISTS user_preferences (
 		username TEXT PRIMARY KEY,
 		entry_template TEXT
-		)
+		);
+	CREATE TABLE IF NOT EXISTS user_profiles (
+		username TEXT PRIMARY KEY,
+		about_markdown TEXT,
+		email TEXT,
+		twitter TEXT,
+		mastodon TEXT
+		);
 	`)
 	if err != nil {
 		log.Fatalln(err)

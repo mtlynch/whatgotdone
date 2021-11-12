@@ -1,6 +1,8 @@
 package sqlite
 
 import (
+	"log"
+
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -11,31 +13,38 @@ func (d db) Users() ([]types.Username, error) {
 
 // GetUserProfile returns profile information for the given user.
 func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
-	/*stmt, err := d.ctx.Prepare("SELECT contents FROM entries WHERE id=?")
+	stmt, err := d.ctx.Prepare("SELECT about_markdown, email, twitter, mastodon FROM user_profiles WHERE username=?")
 	if err != nil {
-		return "", err
+		return types.UserProfile{}, err
 	}
 	defer stmt.Close()
 
-	var contents string
-	err = stmt.QueryRow(id).Scan(&contents)
+	var (
+		aboutMarkdown string
+		email         string
+		twitter       string
+		mastodon      string
+	)
+	err = stmt.QueryRow(username).Scan(&aboutMarkdown, &email, &twitter, &mastodon)
 	if err != nil {
-		return "", err
+		return types.UserProfile{}, err
 	}
-	return contents, nil*/
-	return types.UserProfile{}, notImplementedError
+
+	return types.UserProfile{
+		AboutMarkdown:   types.UserBio(aboutMarkdown),
+		EmailAddress:    types.EmailAddress(email),
+		TwitterHandle:   types.TwitterHandle(twitter),
+		MastodonAddress: types.MastodonAddress(mastodon),
+	}, nil
 }
 
 // SetUserProfile updates the given user's profile.
 func (d db) SetUserProfile(username types.Username, profile types.UserProfile) error {
-	/*_, err := d.ctx.Exec(`
-	INSERT INTO entries(
-		id,
-		creation_time,
-		contents)
-	values(?,?,?)`, id, time.Now().Format(time.RFC3339), contents)
-	return err*/
-	return notImplementedError
+	log.Printf("saving preferences to datastore: %s -> %+v", username, profile)
+	_, err := d.ctx.Exec(`
+	INSERT INTO user_profiles(username,about_markdown, email, twitter, mastodon)
+	values(?,?,?,?,?)`, username, profile.AboutMarkdown, profile.EmailAddress, profile.TwitterHandle, profile.MastodonAddress)
+	return err
 }
 
 // GetDraft returns an entry draft for the given user for the given date.
