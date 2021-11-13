@@ -1,8 +1,10 @@
 package sqlite
 
 import (
+	"database/sql"
 	"log"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -16,7 +18,9 @@ func (d db) GetPreferences(username types.Username) (types.Preferences, error) {
 
 	var entryTemplate string
 	err = stmt.QueryRow(username).Scan(&entryTemplate)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return types.Preferences{}, datastore.PreferencesNotFoundError{Username: username}
+	} else if err != nil {
 		return types.Preferences{}, err
 	}
 
