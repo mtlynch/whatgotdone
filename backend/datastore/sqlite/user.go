@@ -51,7 +51,7 @@ func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
 func (d db) SetUserProfile(username types.Username, profile types.UserProfile) error {
 	log.Printf("saving preferences to datastore: %s -> %+v", username, profile)
 	_, err := d.ctx.Exec(`
-	INSERT INTO user_profiles(
+	INSERT OR REPLACE INTO user_profiles(
 		username,
 		about_markdown,
 		email,
