@@ -13,7 +13,7 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (ds mockDatastore) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
+func (ds *mockDatastore) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
 	return ds.reactions, nil
 }
 

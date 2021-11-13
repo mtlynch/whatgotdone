@@ -16,6 +16,8 @@ import (
 )
 
 func (ds *mockDatastore) InsertPageViews(path string, pageViews int) error {
+	ds.mu.Lock()
+	defer ds.mu.Unlock()
 	ds.pageViewCounts = append(ds.pageViewCounts, ga.PageViewCount{
 		Path:  path,
 		Views: pageViews,
@@ -23,7 +25,7 @@ func (ds *mockDatastore) InsertPageViews(path string, pageViews int) error {
 	return nil
 }
 
-func (ds mockDatastore) GetPageViews(path string) (int, error) {
+func (ds *mockDatastore) GetPageViews(path string) (int, error) {
 	for _, pvc := range ds.pageViewCounts {
 		if pvc.Path == path {
 			return pvc.Views, nil
@@ -32,7 +34,7 @@ func (ds mockDatastore) GetPageViews(path string) (int, error) {
 	return 0, errors.New("no pageview results found")
 }
 
-func (ds mockDatastore) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
+func (ds *mockDatastore) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	return types.JournalEntry{}, errors.New("not implemented")
 }
 
