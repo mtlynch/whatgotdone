@@ -46,39 +46,3 @@ func (d db) SetUserProfile(username types.Username, profile types.UserProfile) e
 	values(?,?,?,?,?)`, username, profile.AboutMarkdown, profile.EmailAddress, profile.TwitterHandle, profile.MastodonAddress)
 	return err
 }
-
-// GetReactions retrieves reader reactions associated with a published entry.
-func (d db) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
-	return []types.Reaction{}, notImplementedError
-}
-
-// AddReaction saves a reader reaction associated with a published entry,
-// overwriting any existing reaction.
-func (d db) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error {
-	return notImplementedError
-}
-
-// InsertPageViews stores the count of pageviews for a given What Got Done route.
-func (d db) InsertPageViews(path string, pageViews int) error {
-	return notImplementedError
-}
-
-// GetPageViews retrieves the count of pageviews for a given What Got Done route.
-func (d db) GetPageViews(path string) (int, error) {
-	return 0, notImplementedError
-}
-
-// InsertFollow adds a following relationship to the datastore.
-func (d db) InsertFollow(leader, follower types.Username) error {
-	return notImplementedError
-}
-
-// DeleteFollow removes a following relationship from the datastore.
-func (d db) DeleteFollow(leader, follower types.Username) error {
-	return notImplementedError
-}
-
-// Followers returns all the users the specified user is following.
-func (d db) Following(follower types.Username) ([]types.Username, error) {
-	return []types.Username{}, notImplementedError
-}
