@@ -67,12 +67,14 @@ func (s *defaultServer) entryPost() http.HandlerFunc {
 			Markdown:     t.EntryContent,
 		}
 
+		// First update the latest draft entry.
 		err = s.datastore.InsertDraft(username, j)
 		if err != nil {
 			log.Printf("Failed to update journal draft entry: %s", err)
 			http.Error(w, "Failed to insert entry", http.StatusInternalServerError)
 			return
 		}
+		// Then, update the published version.
 		err = s.datastore.InsertEntry(username, j)
 		if err != nil {
 			log.Printf("Failed to insert journal entry: %s", err)
