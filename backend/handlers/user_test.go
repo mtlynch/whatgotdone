@@ -12,7 +12,7 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-func (ds mockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
+func (ds *mockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
 	return ds.userProfile, nil
 }
 

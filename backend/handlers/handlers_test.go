@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path"
+	"sync"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
@@ -17,17 +18,18 @@ type mockDatastore struct {
 	reactions      []types.Reaction
 	pageViewCounts []ga.PageViewCount
 	userProfile    types.UserProfile
+	mu             sync.Mutex
 }
 
-func (ds mockDatastore) Users() ([]types.Username, error) {
+func (ds *mockDatastore) Users() ([]types.Username, error) {
 	return ds.users, nil
 }
 
-func (ds mockDatastore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
+func (ds *mockDatastore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }
 
-func (ds mockDatastore) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
+func (ds *mockDatastore) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	if len(ds.journalDrafts) > 0 {
 		return ds.journalDrafts[0], nil
 	}
@@ -37,37 +39,37 @@ func (ds mockDatastore) GetDraft(username types.Username, date types.EntryDate) 
 	}
 }
 
-func (ds mockDatastore) InsertEntry(username types.Username, j types.JournalEntry) error {
+func (ds *mockDatastore) InsertEntry(username types.Username, j types.JournalEntry) error {
 	return nil
 }
 
-func (ds mockDatastore) InsertDraft(username types.Username, j types.JournalEntry) error {
+func (ds *mockDatastore) InsertDraft(username types.Username, j types.JournalEntry) error {
 	return nil
 }
 
-func (ds mockDatastore) InsertFollow(leader, follower types.Username) error {
+func (ds *mockDatastore) InsertFollow(leader, follower types.Username) error {
 	return errors.New("not implemented")
 }
 
-func (ds mockDatastore) DeleteFollow(leader, follower types.Username) error {
+func (ds *mockDatastore) DeleteFollow(leader, follower types.Username) error {
 	return errors.New("not implemented")
 }
 
-func (ds mockDatastore) Following(follower types.Username) ([]types.Username, error) {
+func (ds *mockDatastore) Following(follower types.Username) ([]types.Username, error) {
 	return []types.Username{}, errors.New("not implemented")
 }
 
-func (ds mockDatastore) GetPreferences(username types.Username) (types.Preferences, error) {
+func (ds *mockDatastore) GetPreferences(username types.Username) (types.Preferences, error) {
 	return types.Preferences{}, datastore.PreferencesNotFoundError{
 		Username: username,
 	}
 }
 
-func (ds mockDatastore) SetPreferences(username types.Username, prefs types.Preferences) error {
+func (ds *mockDatastore) SetPreferences(username types.Username, prefs types.Preferences) error {
 	return errors.New("not implemented")
 }
 
-func (ds mockDatastore) Close() error {
+func (ds *mockDatastore) Close() error {
 	return nil
 }
 
