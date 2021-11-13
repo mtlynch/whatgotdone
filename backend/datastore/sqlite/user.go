@@ -13,7 +13,16 @@ func (d db) Users() ([]types.Username, error) {
 
 // GetUserProfile returns profile information for the given user.
 func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
-	stmt, err := d.ctx.Prepare("SELECT about_markdown, email, twitter, mastodon FROM user_profiles WHERE username=?")
+	stmt, err := d.ctx.Prepare(`
+		SELECT
+			about_markdown,
+			email,
+			twitter,
+			mastodon
+		FROM
+			user_profiles
+		WHERE
+			username=?`)
 	if err != nil {
 		return types.UserProfile{}, err
 	}
@@ -42,7 +51,12 @@ func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
 func (d db) SetUserProfile(username types.Username, profile types.UserProfile) error {
 	log.Printf("saving preferences to datastore: %s -> %+v", username, profile)
 	_, err := d.ctx.Exec(`
-	INSERT INTO user_profiles(username,about_markdown, email, twitter, mastodon)
+	INSERT INTO user_profiles(
+		username,
+		about_markdown,
+		email,
+		twitter,
+		mastodon)
 	values(?,?,?,?,?)`, username, profile.AboutMarkdown, profile.EmailAddress, profile.TwitterHandle, profile.MastodonAddress)
 	return err
 }
