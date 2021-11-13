@@ -1,0 +1,45 @@
+# fly.toml file generated for whatgotdone on 2021-11-13T16:51:31-05:00
+
+app = "whatgotdone"
+
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+  GOOGLE_CLOUD_PROJECT = "dummy-local-gcp-project"
+  PORT = "8080"
+
+[build.args]
+  NPM_BUILD_MODE="production"
+  GO_BUILD_TAGS=""
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
