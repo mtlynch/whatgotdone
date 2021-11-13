@@ -18,7 +18,7 @@ WORKDIR /app
 ARG GO_BUILD_TAGS="dev"
 RUN go build --tags "$GO_BUILD_TAGS" -o /app/main backend/main.go
 
-FROM golang:1.16.7-alpine
+FROM golang:1.16.7
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY --from=backend_builder /app/main /app/main
