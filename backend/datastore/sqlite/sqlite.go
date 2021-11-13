@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -39,6 +40,14 @@ func New() datastore.Datastore {
 		twitter TEXT,
 		mastodon TEXT
 		);
+	CREATE TABLE IF NOT EXISTS journal_entries(
+		username TEXT,
+		date TEXT,
+		last_modified TEXT,
+		markdown TEXT,
+		is_draft INTEGER,
+		PRIMARY KEY (username, date, is_draft)
+		);
 	`)
 	if err != nil {
 		log.Fatalln(err)
@@ -46,4 +55,12 @@ func New() datastore.Datastore {
 	return &db{
 		ctx: ctx,
 	}
+}
+
+func parseDate(s string) (time.Time, error) {
+	return time.Parse("2006-01-02", s)
+}
+
+func parseDatetime(s string) (time.Time, error) {
+	return time.Parse("2006-01-02 15:04:05", s)
 }

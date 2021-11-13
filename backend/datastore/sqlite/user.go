@@ -47,17 +47,6 @@ func (d db) SetUserProfile(username types.Username, profile types.UserProfile) e
 	return err
 }
 
-// GetDraft returns an entry draft for the given user for the given date.
-func (d db) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
-	return types.JournalEntry{}, notImplementedError
-}
-
-// InsertDraft saves an entry draft to the datastore, overwriting any existing
-// draft with the same name and username.
-func (d db) InsertDraft(username types.Username, j types.JournalEntry) error {
-	return notImplementedError
-}
-
 // GetReactions retrieves reader reactions associated with a published entry.
 func (d db) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
 	return []types.Reaction{}, notImplementedError
