@@ -28,30 +28,35 @@ func New() datastore.Datastore {
 		log.Fatalln(err)
 	}
 
-	_, err = ctx.Exec(`
-	CREATE TABLE IF NOT EXISTS user_preferences (
-		username TEXT PRIMARY KEY,
-		entry_template TEXT
-		);
-	CREATE TABLE IF NOT EXISTS user_profiles (
-		username TEXT PRIMARY KEY,
-		about_markdown TEXT,
-		email TEXT,
-		twitter TEXT,
-		mastodon TEXT
-		);
-	CREATE TABLE IF NOT EXISTS journal_entries(
-		username TEXT,
-		date TEXT,
-		last_modified TEXT,
-		markdown TEXT,
-		is_draft INTEGER,
-		PRIMARY KEY (username, date, is_draft)
-		);
-	`)
-	if err != nil {
-		log.Fatalln(err)
+	createTableStmts := []string{
+		`CREATE TABLE IF NOT EXISTS user_preferences (
+			username TEXT PRIMARY KEY,
+			entry_template TEXT
+			)`,
+		`CREATE TABLE IF NOT EXISTS user_profiles (
+			username TEXT PRIMARY KEY,
+			about_markdown TEXT,
+			email TEXT,
+			twitter TEXT,
+			mastodon TEXT
+			)`,
+		`CREATE TABLE IF NOT EXISTS journal_entries(
+			username TEXT,
+			date TEXT,
+			last_modified TEXT,
+			markdown TEXT,
+			is_draft INTEGER,
+			PRIMARY KEY (username, date, is_draft)
+			)`,
 	}
+
+	for _, stmt := range createTableStmts {
+		_, err = ctx.Exec(stmt)
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}
+
 	return &db{
 		ctx: ctx,
 	}
