@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/mtlynch/whatgotdone/backend/entries"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -38,7 +37,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			return
 		}
 
-		respondOK(w, recentEntriesToPublicEntries(entries))
+		respondOK(w, entriesToPublicEntries(entries))
 	}
 }
 
@@ -70,7 +69,7 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 		respondOK(w, struct {
 			Entries entriesPublic `json:"entries"`
 		}{
-			Entries: recentEntriesToPublicEntries(entries),
+			Entries: entriesToPublicEntries(entries),
 		})
 	}
 }
@@ -97,7 +96,7 @@ func parseLimit(s string) (int, error) {
 	return i, nil
 }
 
-func recentEntriesToPublicEntries(entries []entries.RecentEntry) entriesPublic {
+func entriesToPublicEntries(entries []types.JournalEntry) entriesPublic {
 	p := entriesPublic{}
 	for _, entry := range entries {
 		p = append(p, entryPublic{

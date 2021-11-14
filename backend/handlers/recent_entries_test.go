@@ -10,24 +10,23 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/mtlynch/whatgotdone/backend/entries"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 type mockEntriesReader struct {
-	entries []entries.RecentEntry
+	entries []types.JournalEntry
 }
 
-func (mer mockEntriesReader) Recent(start, limit int) ([]entries.RecentEntry, error) {
+func (mer mockEntriesReader) Recent(start, limit int) ([]types.JournalEntry, error) {
 	return mer.entries, nil
 }
 
-func (mer mockEntriesReader) RecentFollowing(username types.Username, start, limit int) ([]entries.RecentEntry, error) {
+func (mer mockEntriesReader) RecentFollowing(username types.Username, start, limit int) ([]types.JournalEntry, error) {
 	return mer.entries, nil
 }
 
 func TestRecentEntriesHandlerReturnsRecentEntries(t *testing.T) {
-	recentEntries := []entries.RecentEntry{
+	recentEntries := []types.JournalEntry{
 		{Author: "alan", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
 		{Author: "janie", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
 		{Author: "carla", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
@@ -84,7 +83,7 @@ func TestRecentEntriesHandlerReturnsRecentEntries(t *testing.T) {
 }
 
 func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
-	recentEntries := []entries.RecentEntry{
+	recentEntries := []types.JournalEntry{
 		{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
 		{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
 		{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
@@ -154,7 +153,7 @@ func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
 
 func TestRecentEntriesHandlerReturnsEmptyArrayWhenEntriesReaderIsEmpty(t *testing.T) {
 	mer := mockEntriesReader{
-		entries: []entries.RecentEntry{},
+		entries: []types.JournalEntry{},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
