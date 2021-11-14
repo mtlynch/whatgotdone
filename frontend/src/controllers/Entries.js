@@ -35,7 +35,7 @@ export function saveEntry(entryDate, entryContent) {
   return new Promise(function (resolve, reject) {
     const url = `${process.env.VUE_APP_BACKEND_URL}/api/entry/${entryDate}`;
     axios
-      .post(
+      .put(
         url,
         {
           entryContent: entryContent,

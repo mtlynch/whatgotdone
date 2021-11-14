@@ -44,7 +44,7 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) draftPost() http.HandlerFunc {
+func (s defaultServer) draftPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := s.loggedInUser(r)
 		if err != nil {
