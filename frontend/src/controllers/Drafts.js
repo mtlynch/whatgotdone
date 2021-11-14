@@ -19,10 +19,10 @@ export function getDraft(entryDate) {
     .then((draft) => {
       if (!Object.prototype.hasOwnProperty.call(draft, 'markdown')) {
         return Promise.reject(
-          new Error('response is missing expected field: data.markdown')
+          new Error('response is missing expected field: markdown')
         );
       }
-      Promise.resolve(draft.markdown);
+      return Promise.resolve(draft.markdown);
     });
 }
 
