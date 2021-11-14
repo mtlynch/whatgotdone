@@ -28,35 +28,16 @@ func (r defaultReader) RecentFollowing(username types.Username, start, limit int
 		return journalEntries{}, err
 	}
 
-	var entries journalEntries
-	for _, followedUsername := range following {
-		entriesForUser, err := r.entriesFromUser(followedUsername)
-		if err != nil {
-			return journalEntries{}, err
-		}
-		entries = append(entries, entriesForUser...)
-	}
-	return sortAndSliceEntries(entries, start, limit), nil
-}
-
-func (r defaultReader) entriesFromUser(username types.Username) (journalEntries, error) {
-	entries := journalEntries{}
-	journalEntries, err := r.store.ReadEntries(datastore.EntryFilter{
-		ByUsers: []types.Username{username},
+	// TODO: Filter by start date and min entry length.
+	entries, err := r.store.ReadEntries(datastore.EntryFilter{
+		ByUsers: following,
 	})
 	if err != nil {
-		log.Printf("Failed to retrieve entries for user %s: %v", username, err)
-		return journalEntries, err
+		log.Printf("Failed to retrieve entries: %s", err)
+		return journalEntries{}, err
 	}
-	for _, entry := range journalEntries {
-		entries = append(entries, types.JournalEntry{
-			Author:       username,
-			Date:         entry.Date,
-			LastModified: entry.LastModified,
-			Markdown:     entry.Markdown,
-		})
-	}
-	return entries, nil
+
+	return sortAndSliceEntries(entries, start, limit), nil
 }
 
 // TODO: Reimplement this in SQL.
