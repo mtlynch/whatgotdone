@@ -1,6 +1,6 @@
 it("pre-populates new entries with the user's draft template", () => {
   cy.server();
-  cy.route("PUT", "/api/preferences").as("postPreferences");
+  cy.route("PUT", "/api/preferences").as("putPreferences");
   cy.route("GET", "/api/preferences").as("getPreferences");
 
   cy.visit("/preferences");
@@ -11,7 +11,7 @@ it("pre-populates new entries with the user's draft template", () => {
   cy.get("#entry-template-input").type("# Project Falcon\n\n* Item 1");
   cy.get("form").submit();
 
-  cy.wait("@postPreferences");
+  cy.wait("@putPreferences");
 
   cy.get(".alert").contains("Preferences saved");
 

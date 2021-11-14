@@ -55,7 +55,6 @@ it("uses the entry template for new drafts", () => {
   cy.server();
   cy.route("GET", "/api/draft/*").as("getDraft");
   cy.route("PUT", "/api/draft/*").as("putDraft");
-  cy.route("POST", "/api/prefrences").as("postPreferences");
 
   cy.login("staging_jimmy");
 
