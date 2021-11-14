@@ -22,7 +22,7 @@ export function getPreferences() {
 export function savePreferences(preferences) {
   return new Promise(function (resolve, reject) {
     axios
-      .post(url, preferences, {
+      .put(url, preferences, {
         withCredentials: true,
         headers: {'X-CSRF-Token': getCsrfToken()},
       })
