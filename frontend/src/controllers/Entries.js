@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import getCsrfToken from '@/controllers/CsrfToken.js';
+import {getCsrfToken} from '@/controllers/Common.js';
 
 export function getEntriesFromUser(username, project = null) {
   return new Promise(function (resolve, reject) {

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import store from '@/store.js';
 
-import getCsrfToken from '@/controllers/CsrfToken.js';
+import {getCsrfToken} from '@/controllers/Common.js';
 import {logoutUserKit} from '@/controllers/UserKit.js';
 
 function deleteCookie(name) {

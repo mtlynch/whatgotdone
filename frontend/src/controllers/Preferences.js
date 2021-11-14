@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import getCsrfToken from '@/controllers/CsrfToken.js';
+import {getCsrfToken} from '@/controllers/Common.js';
 
 const url = `${process.env.VUE_APP_BACKEND_URL}/api/preferences`;
 
