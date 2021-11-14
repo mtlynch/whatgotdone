@@ -35,7 +35,7 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
     response: {},
     status: 500,
   }).as("getDraft");
-  cy.route("POST", "/api/draft/*").as("postDraft");
+  cy.route("PUT", "/api/draft/*").as("postDraft");
 
   cy.login("staging_jimmy");
 
