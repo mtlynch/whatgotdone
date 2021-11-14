@@ -6,9 +6,20 @@ set -e
 # Echo commands to stdout.
 set -x
 
+if [ "$1" = "--quick" ]; then
+  quick_test=""
+  flags=""
+else
+  quick_test="1"
+  flags="-race --coverprofile=.coverage.out"
+fi
+
 # Exit on unset variable.
 set -u
 
-go test -v -coverprofile=.coverage.out ./...
+go test -v $flags ./...
 go vet ./...
-go tool cover -html .coverage.out -o .coverage.html
+
+if [ ! -z "$quick_test" ]; then
+  go tool cover -html .coverage.out -o .coverage.html
+fi
