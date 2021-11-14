@@ -5,18 +5,13 @@ export function getDraft(entryDate) {
     credentials: 'include',
   })
     .then(processJsonResponse)
-    .then((result) => {
-      if (!Object.prototype.hasOwnProperty.call(result, 'data')) {
-        return Promise.reject(
-          new Error('response is missing expected field: data')
-        );
-      }
-      if (!Object.prototype.hasOwnProperty.call(result.data, 'markdown')) {
+    .then((draft) => {
+      if (!Object.prototype.hasOwnProperty.call(draft, 'markdown')) {
         return Promise.reject(
           new Error('response is missing expected field: data.markdown')
         );
       }
-      Promise.resolve(result.data.markdown);
+      Promise.resolve(draft.markdown);
     })
     .catch((error) => {
       // A 404 is not an error.
