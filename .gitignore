@@ -12,7 +12,7 @@ bin/
 env_variables.yaml
 
 # Persistent data directory
-persist/
+data/
 
 # Code coverage artifacts
 .coverage*
