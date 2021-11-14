@@ -1,7 +1,7 @@
 it("logs in and saves a draft", () => {
   cy.server();
   cy.route("GET", "/api/draft/*").as("getDraft");
-  cy.route("POST", "/api/draft/*").as("postDraft");
+  cy.route("PUT", "/api/draft/*").as("putDraft");
 
   cy.login("staging_jimmy");
 
@@ -16,7 +16,7 @@ it("logs in and saves a draft", () => {
 
   // Wait for auto-save to complete.
   cy.get(".save-draft").should("contain", "Changes Saved");
-  cy.wait("@postDraft");
+  cy.wait("@putDraft");
 
   // User should stay on the same page after saving a draft.
   cy.location("pathname").should("include", "/entry/edit");
@@ -35,7 +35,7 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
     response: {},
     status: 500,
   }).as("getDraft");
-  cy.route("PUT", "/api/draft/*").as("postDraft");
+  cy.route("PUT", "/api/draft/*").as("putDraft");
 
   cy.login("staging_jimmy");
 
@@ -47,14 +47,14 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
   cy.get(".journal-markdown").should("not.exist");
   cy.get(".save-draft").should("not.exist");
 
-  cy.routeShouldBeCalled("postDraft", 0);
+  cy.routeShouldBeCalled("putDraft", 0);
   cy.get(".entry-form").should("not.exist");
 });
 
 it("uses the entry template for new drafts", () => {
   cy.server();
   cy.route("GET", "/api/draft/*").as("getDraft");
-  cy.route("POST", "/api/draft/*").as("postDraft");
+  cy.route("PUT", "/api/draft/*").as("putDraft");
   cy.route("POST", "/api/prefrences").as("postPreferences");
 
   cy.login("staging_jimmy");
