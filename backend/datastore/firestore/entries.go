@@ -1,8 +1,8 @@
 package firestore
 
 import (
+	"errors"
 	"log"
-	"strings"
 
 	"google.golang.org/api/iterator"
 
@@ -33,26 +33,8 @@ func (c client) GetEntry(username types.Username, date types.EntryDate) (types.J
 	}
 }
 
-// GetEntries returns all published entries for the given user.
-func (c client) GetEntries(username types.Username) ([]types.JournalEntry, error) {
-	entries := make([]types.JournalEntry, 0)
-	iter := c.firestoreClient.Collection(entriesRootKey).Doc(string(username)).Collection(perUserEntriesKey).Documents(c.ctx)
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return nil, err
-		}
-		var j types.JournalEntry
-		doc.DataTo(&j)
-		if strings.TrimSpace(j.Markdown) == "" {
-			continue
-		}
-		entries = append(entries, j)
-	}
-	return entries, nil
+func (c client) ReadEntries(datastore.EntryFilter) ([]types.JournalEntry, error) {
+	return []types.JournalEntry{}, errors.New("not implemented")
 }
 
 // InsertEntry saves an entry to the datastore, overwriting any existing entry

@@ -5,6 +5,7 @@ import (
 	"sort"
 	"sync"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -82,7 +83,9 @@ func (r defaultReader) RecentFollowing(username types.Username, start, limit int
 
 func (r defaultReader) entriesFromUser(username types.Username) (recentEntries, error) {
 	entries := recentEntries{}
-	journalEntries, err := r.store.GetEntries(username)
+	journalEntries, err := r.store.ReadEntries(datastore.EntryFilter{
+		ByUsers: []types.Username{username},
+	})
 	if err != nil {
 		log.Printf("Failed to retrieve entries for user %s: %v", username, err)
 		return []RecentEntry{}, err

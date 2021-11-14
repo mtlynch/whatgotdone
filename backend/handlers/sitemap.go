@@ -8,6 +8,7 @@ import (
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func (s defaultServer) sitemapGet() http.HandlerFunc {
@@ -42,7 +43,9 @@ func addUsersAndEntries(sm *stm.Sitemap, ds datastore.Datastore) {
 	}
 	for _, u := range users {
 		sm.Add(stm.URL{{"loc", fmt.Sprintf("/%s", u)}})
-		entries, err := ds.GetEntries(u)
+		entries, err := ds.ReadEntries(datastore.EntryFilter{
+			ByUsers: []types.Username{u},
+		})
 		if err != nil {
 			log.Printf("error getting entries for %s: %v", u, err)
 			continue

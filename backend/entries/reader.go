@@ -1,6 +1,7 @@
 package entries
 
 import (
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -17,8 +18,8 @@ type Reader interface {
 type EntryStore interface {
 	// Users returns all the users who have published entries.
 	Users() ([]types.Username, error)
-	// GetEntries returns all published entries for the given user.
-	GetEntries(username types.Username) ([]types.JournalEntry, error)
+	// ReadEntries returns all published entries matching the given filter.
+	ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error)
 	// GetReactions retrieves reader reactions associated with a published entry.
 	// Followers returns all the users the specified user is following.
 	Following(follower types.Username) ([]types.Username, error)

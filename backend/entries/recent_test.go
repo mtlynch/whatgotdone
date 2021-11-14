@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -17,7 +18,7 @@ func (ms mockStore) Users() ([]types.Username, error) {
 	return ms.users, nil
 }
 
-func (ms mockStore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
+func (ms mockStore) ReadEntries(datastore.EntryFilter) ([]types.JournalEntry, error) {
 	return ms.journalEntries, nil
 }
 
