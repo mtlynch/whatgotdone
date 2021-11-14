@@ -1,8 +1,11 @@
 package sqlite
 
 import (
+	"fmt"
 	"log"
+	"strings"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -42,9 +45,20 @@ func (d db) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 	}, nil
 }
 
-// GetEntries returns all published entries for the given user.
-func (d db) GetEntries(username types.Username) ([]types.JournalEntry, error) {
-	stmt, err := d.ctx.Prepare(`
+// ReadEntries returns all published entries matching the given filter.
+func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error) {
+	whereClauses := []string{
+		"is_draft=0",
+	}
+	values := []string{}
+	if len(filter.ByUsers) != 0 {
+		placeholders := strings.TrimSuffix(strings.Repeat("?,", len(filter.ByUsers)), ",")
+		whereClauses = append(whereClauses, fmt.Sprintf("username IN (%s)", placeholders))
+		for _, u := range filter.ByUsers {
+			values = append(values, string(u))
+		}
+	}
+	stmt, err := d.ctx.Prepare(fmt.Sprintf(`
 		SELECT
 			date,
 			markdown,
@@ -52,9 +66,8 @@ func (d db) GetEntries(username types.Username) ([]types.JournalEntry, error) {
 		FROM
 			journal_entries
 		WHERE
-			username=? AND
-			is_draft=0
-		`)
+		  %s
+		`, strings.Join(whereClauses, " AND ")))
 	if err != nil {
 		return []types.JournalEntry{}, err
 	}
@@ -62,7 +75,7 @@ func (d db) GetEntries(username types.Username) ([]types.JournalEntry, error) {
 
 	entries := []types.JournalEntry{}
 
-	rows, err := stmt.Query(username)
+	rows, err := stmt.Query(values)
 	for rows.Next() {
 		var dateRaw string
 		var markdown string

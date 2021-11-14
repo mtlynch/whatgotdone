@@ -10,6 +10,10 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
+type EntryFilter struct {
+	ByUsers []types.Username
+}
+
 // Datastore represents the What Got Done datastore. It's responsible for
 // storing and retrieving all persistent data (journal entries, journal drafts,
 // reactions).
@@ -23,8 +27,8 @@ type Datastore interface {
 	SetUserProfile(username types.Username, profile types.UserProfile) error
 	// GetEntry returns the published entry for the given date.
 	GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error)
-	// GetEntries returns all published entries for the given user.
-	GetEntries(username types.Username) ([]types.JournalEntry, error)
+	// ReadEntries returns all published entries matching the given filter.
+	ReadEntries(filter EntryFilter) ([]types.JournalEntry, error)
 	// GetDraft returns an entry draft for the given user for the given date.
 	GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error)
 	// InsertEntry saves an entry to the datastore, overwriting any existing entry
