@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Exit build script on first failure.
+set -e
+
+# Exit on unset variable.
+set -u
+
+is_litestream_enabled() {
+  set +ux
+
+  local IS_ENABLED='false'
+
+  if [[ ! -z "${LITESTREAM_ACCESS_KEY_ID}" ]] && \
+      [[ ! -z "${LITESTREAM_SECRET_ACCESS_KEY}" ]] && \
+      [[ ! -z "${LITESTREAM_ENDPOINT}" ]]; then
+    IS_ENABLED='true';
+  fi
+
+  set -ux
+
+  echo "${IS_ENABLED}"
+}
+
+readonly IS_LITESTREAM_ENABLED="$(is_litestream_enabled)"
+
+# Echo commands to stdout.
+set -x
+
+if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
+
+  export readonly DB_PATH="/app/data/store.db"
+
+  # Restore database from S3.
+  /app/litestream restore -if-replica-exists -v "${DB_PATH}"
+
+  # Let Litestream start What Got Done as a child process
+  exec /app/litestream replicate \
+    -exec /app/main
+    "${DB_PATH}" \
+    "${LITESTREAM_ENDPOINT}"
+else
+  # Start server directly.
+  /app/main
+fi
