@@ -8,6 +8,8 @@ processes = []
 
 [env]
   GOOGLE_CLOUD_PROJECT = "dummy-local-gcp-project"
+  LITESTREAM_BUCKET = "whatgotdone-backup"
+  LITESTREAM_ENDPOINT = "s3.us-west-002.backblazeb2.com"
   PORT = "8080"
 
 [build.args]
