@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import getCsrfToken from '@/controllers/CsrfToken.js';
+import {getCsrfToken} from '@/controllers/Common.js';
 
 export function getDraft(entryDate) {
   return new Promise(function (resolve, reject) {
