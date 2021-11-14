@@ -1,10 +1,21 @@
-import {getCsrfToken, processJsonResponse} from '@/controllers/Common.js';
+import {getCsrfToken} from '@/controllers/Common.js';
 
 export function getDraft(entryDate) {
   return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/draft/${entryDate}`, {
     credentials: 'include',
   })
-    .then(processJsonResponse)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      // A 404 is not an error.
+      if (response.status === 404) {
+        return Promise.resolve({markdown: ''});
+      }
+      return response.text().then((error) => {
+        return Promise.reject(error);
+      });
+    })
     .then((draft) => {
       if (!Object.prototype.hasOwnProperty.call(draft, 'markdown')) {
         return Promise.reject(
@@ -12,14 +23,6 @@ export function getDraft(entryDate) {
         );
       }
       Promise.resolve(draft.markdown);
-    })
-    .catch((error) => {
-      // A 404 is not an error.
-      if (error?.response?.status === 404) {
-        Promise.resolve('');
-      } else {
-        Promise.reject(error);
-      }
     });
 }
 
