@@ -36,7 +36,7 @@ func (s defaultServer) preferencesGet() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) preferencesPost() http.HandlerFunc {
+func (s defaultServer) preferencesPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := s.loggedInUser(r)
 		if err != nil {

@@ -32,7 +32,7 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/pageViews", s.pageViewsGet()).Methods(http.MethodGet)
 	api.HandleFunc("/preferences", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/preferences", s.preferencesGet()).Methods(http.MethodGet)
-	api.HandleFunc("/preferences", s.preferencesPost()).Methods(http.MethodPost)
+	api.HandleFunc("/preferences", s.preferencesPut()).Methods(http.MethodPut)
 	api.HandleFunc("/reactions/entry/{username}/{date}", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsGet()).Methods(http.MethodGet)
 	api.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsPost()).Methods(http.MethodPost)
