@@ -18,18 +18,14 @@ RUN go build --tags "$GO_BUILD_TAGS" -o /app/main main.go
 
 FROM golang:1.16.7 AS litestream_builder
 
-ARG litestream_version="0.3.6"
+ARG litestream_version="v0.3.6"
 
 RUN set -x && \
     apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-      ca-certificates \
-      git
+    DEBIAN_FRONTEND=noninteractive apt-get install -y git
 
 RUN set -x && \
-    git clone https://github.com/benbjohnson/litestream.git && \
-    cd litestream && \
-    git checkout "v${litestream_version}"
+    git clone --branch "${litestream_version}" --single-branch https://github.com/benbjohnson/litestream.git
 
 RUN set -x && \
     cd litestream && \
