@@ -13,7 +13,8 @@ import (
 func (d db) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	stmt, err := d.ctx.Prepare(`
 		SELECT
-			markdown, last_modified
+			markdown,
+			last_modified
 		FROM
 			journal_entries
 		WHERE
@@ -39,6 +40,7 @@ func (d db) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 	}
 
 	return types.JournalEntry{
+		Author:       username,
 		Date:         date,
 		LastModified: t.Format("2006-01-02T15:04:05Z"),
 		Markdown:     markdown,
@@ -50,7 +52,7 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 	whereClauses := []string{
 		"is_draft=0",
 	}
-	values := []string{}
+	var values []interface{}
 	if len(filter.ByUsers) != 0 {
 		placeholders := strings.TrimSuffix(strings.Repeat("?,", len(filter.ByUsers)), ",")
 		whereClauses = append(whereClauses, fmt.Sprintf("username IN (%s)", placeholders))
@@ -60,6 +62,7 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 	}
 	stmt, err := d.ctx.Prepare(fmt.Sprintf(`
 		SELECT
+			username,
 			date,
 			markdown,
 			last_modified
@@ -73,14 +76,18 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 	}
 	defer stmt.Close()
 
-	entries := []types.JournalEntry{}
+	rows, err := stmt.Query(values...)
+	if err != nil {
+		return []types.JournalEntry{}, err
+	}
 
-	rows, err := stmt.Query(values)
+	entries := []types.JournalEntry{}
 	for rows.Next() {
+		var usernameRaw string
 		var dateRaw string
 		var markdown string
 		var lastModified string
-		err := rows.Scan(&dateRaw, &markdown, &lastModified)
+		err := rows.Scan(&usernameRaw, &dateRaw, &markdown, &lastModified)
 		if err != nil {
 			return []types.JournalEntry{}, err
 		}
@@ -96,8 +103,9 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 		}
 
 		entries = append(entries, types.JournalEntry{
+			Author:       types.Username(usernameRaw),
 			Date:         types.EntryDate(date.Format("2006-01-02")),
-			LastModified: t.Format("2006-01-02T15:04:05Z"),
+			LastModified: t.Format("2006-01-02 15:04:05Z"),
 			Markdown:     markdown,
 		})
 	}
@@ -110,7 +118,7 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 func (d db) InsertEntry(username types.Username, j types.JournalEntry) error {
 	log.Printf("saving entry to datastore: %s -> %+v", username, j.Date)
 	_, err := d.ctx.Exec(`
-	INSERT INTO journal_entries(
+	INSERT OR REPLACE INTO journal_entries(
 		username,
 		date,
 		markdown,

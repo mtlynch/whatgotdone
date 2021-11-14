@@ -8,10 +8,10 @@ import (
 // Reader reads journal entries.
 type Reader interface {
 	// Recent returns the recent entries in the store.
-	Recent(start, limit int) ([]RecentEntry, error)
+	Recent(start, limit int) ([]types.JournalEntry, error)
 	// RecentFollowing returns recent entries from among users that the specified
 	// user is following.
-	RecentFollowing(username types.Username, start, limit int) ([]RecentEntry, error)
+	RecentFollowing(username types.Username, start, limit int) ([]types.JournalEntry, error)
 }
 
 // EntryStore stores information related to journal entries.

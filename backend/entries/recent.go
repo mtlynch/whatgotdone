@@ -3,24 +3,16 @@ package entries
 import (
 	"log"
 	"sort"
-	"sync"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-// RecentEntry stores data about a journal entry.
-type RecentEntry struct {
-	Author       types.Username
-	Date         types.EntryDate
-	LastModified string
-	Markdown     string
-}
+type journalEntries []types.JournalEntry
 
-type recentEntries []RecentEntry
-
-func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
-	users, err := r.store.Users()
+func (r defaultReader) Recent(start, limit int) ([]types.JournalEntry, error) {
+	// TODO: Filter by start date and min entry length.
+	entries, err := r.store.ReadEntries(datastore.EntryFilter{})
 	if err != nil {
 		log.Printf("Failed to retrieve users: %s", err)
 		return []RecentEntry{}, err
@@ -99,17 +91,17 @@ func (r defaultReader) recentEntriesFromAllUsers(users []types.Username) ([]Rece
 	return entries, nil
 }
 
-func (r defaultReader) entriesFromUser(username types.Username) (recentEntries, error) {
-	entries := recentEntries{}
+func (r defaultReader) entriesFromUser(username types.Username) (journalEntries, error) {
+	entries := journalEntries{}
 	journalEntries, err := r.store.ReadEntries(datastore.EntryFilter{
 		ByUsers: []types.Username{username},
 	})
 	if err != nil {
 		log.Printf("Failed to retrieve entries for user %s: %v", username, err)
-		return []RecentEntry{}, err
+		return journalEntries, err
 	}
 	for _, entry := range journalEntries {
-		entries = append(entries, RecentEntry{
+		entries = append(entries, types.JournalEntry{
 			Author:       username,
 			Date:         entry.Date,
 			LastModified: entry.LastModified,
@@ -119,8 +111,9 @@ func (r defaultReader) entriesFromUser(username types.Username) (recentEntries, 
 	return entries, nil
 }
 
-func sortAndSliceEntries(entries recentEntries, start, limit int) recentEntries {
-	sorted := make(recentEntries, len(entries))
+// TODO: Reimplement this in SQL.
+func sortAndSliceEntries(entries journalEntries, start, limit int) journalEntries {
+	sorted := make(journalEntries, len(entries))
 	copy(sorted, entries)
 
 	sort.Sort(sorted)
@@ -135,15 +128,15 @@ func sortAndSliceEntries(entries recentEntries, start, limit int) recentEntries 
 	return sorted[start:end]
 }
 
-func (e recentEntries) Len() int {
+func (e journalEntries) Len() int {
 	return len(e)
 }
 
-func (e recentEntries) Swap(i, j int) {
+func (e journalEntries) Swap(i, j int) {
 	e[i], e[j] = e[j], e[i]
 }
 
-func (e recentEntries) Less(i, j int) bool {
+func (e journalEntries) Less(i, j int) bool {
 	if e[i].Date < e[j].Date {
 		return true
 	}
