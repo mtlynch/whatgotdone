@@ -97,18 +97,11 @@ func (r defaultReader) entriesFromUser(username types.Username) (journalEntries,
 		ByUsers: []types.Username{username},
 	})
 	if err != nil {
-		log.Printf("Failed to retrieve entries for user %s: %v", username, err)
-		return journalEntries, err
+		log.Printf("Failed to retrieve entries: %s", err)
+		return journalEntries{}, err
 	}
-	for _, entry := range journalEntries {
-		entries = append(entries, types.JournalEntry{
-			Author:       username,
-			Date:         entry.Date,
-			LastModified: entry.LastModified,
-			Markdown:     entry.Markdown,
-		})
-	}
-	return entries, nil
+
+	return sortAndSliceEntries(entries, start, limit), nil
 }
 
 // TODO: Reimplement this in SQL.
