@@ -44,8 +44,7 @@ it("logs in and signs out", () => {
 });
 
 it("bare route should redirect authenticated user to their edit entry page", () => {
-  cy.server();
-  cy.route("/api/user/me").as("getUsername");
+  cy.intercept("/api/user/me").as("getUsername");
 
   cy.visit("/");
   cy.location("pathname").should("eq", "/");

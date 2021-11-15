@@ -5,8 +5,7 @@ it("reaction buttons should not appear when the post is missing", () => {
 });
 
 it("logs in and reacts to an entry", () => {
-  cy.server();
-  cy.route("POST", "https://api.userkit.io/v1/widget/login").as(
+  cy.intercept("POST", "https://api.userkit.io/v1/widget/login").as(
     "postUserKitLogin"
   );
 

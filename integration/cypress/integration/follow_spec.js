@@ -1,8 +1,7 @@
 it("follows a user", () => {
-  cy.server();
-  cy.route("GET", "/api/draft/*").as("getDraft");
-  cy.route("GET", "/api/user/*/following").as("getFollowing");
-  cy.route("POST", "/api/logout").as("logout");
+  cy.intercept("GET", "/api/draft/*").as("getDraft");
+  cy.intercept("GET", "/api/user/*/following").as("getFollowing");
+  cy.intercept("POST", "/api/logout").as("logout");
 
   // Log in as a leader user and create an entry.
   cy.login("leader_lenny");

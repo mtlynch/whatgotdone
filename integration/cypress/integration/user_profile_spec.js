@@ -14,8 +14,7 @@ it("views a non-existing user profile with empty information", () => {
 });
 
 it("logs in and updates profile", () => {
-  cy.server();
-  cy.route("/api/user/staging_jimmy").as("getUserProfile");
+  cy.intercept("/api/user/staging_jimmy").as("getUserProfile");
 
   cy.login("staging_jimmy");
 
@@ -42,10 +41,9 @@ it("logs in and updates profile", () => {
 });
 
 it("logs in and sets profile photo", () => {
-  cy.server();
-  cy.route("/api/user/staging_jimmy").as("getUserProfile");
-  cy.route("PUT", "/api/user/avatar").as("setProfilePhoto");
-  cy.route("DELETE", "/api/user/avatar").as("deleteProfilePhoto");
+  cy.intercept("/api/user/staging_jimmy").as("getUserProfile");
+  cy.intercept("PUT", "/api/user/avatar").as("setProfilePhoto");
+  cy.intercept("DELETE", "/api/user/avatar").as("deleteProfilePhoto");
 
   cy.login("staging_jimmy");
 
