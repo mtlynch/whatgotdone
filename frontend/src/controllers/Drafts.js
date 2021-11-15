@@ -1,34 +1,29 @@
-import axios from 'axios';
-
 import {getCsrfToken} from '@/controllers/Common.js';
 
 export function getDraft(entryDate) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${entryDate}`;
-    axios
-      .get(url, {withCredentials: true})
-      .then((result) => {
-        if (!Object.prototype.hasOwnProperty.call(result, 'data')) {
-          return Promise.reject(
-            new Error('response is missing expected field: data')
-          );
-        }
-        if (!Object.prototype.hasOwnProperty.call(result.data, 'markdown')) {
-          return Promise.reject(
-            new Error('response is missing expected field: data.markdown')
-          );
-        }
-        resolve(result.data.markdown);
-      })
-      .catch((error) => {
-        // A 404 is not an error.
-        if (error?.response?.status === 404) {
-          resolve('');
-        } else {
-          reject(error);
-        }
+  return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/draft/${entryDate}`, {
+    credentials: 'include',
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      // A 404 is not an error.
+      if (response.status === 404) {
+        return Promise.resolve({markdown: ''});
+      }
+      return response.text().then((error) => {
+        return Promise.reject(error);
       });
-  });
+    })
+    .then((draft) => {
+      if (!Object.prototype.hasOwnProperty.call(draft, 'markdown')) {
+        return Promise.reject(
+          new Error('response is missing expected field: markdown')
+        );
+      }
+      return Promise.resolve(draft.markdown);
+    });
 }
 
 export function saveDraft(entryDate, entryContent) {
