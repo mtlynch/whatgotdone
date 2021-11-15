@@ -30,8 +30,8 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
   cy.intercept({
     method: "GET",
     url: "/api/draft/*",
-    response: {},
-    status: 500,
+    statusCode: 500,
+    body: {},
   }).as("getDraft");
   cy.intercept("PUT", "/api/draft/*").as("putDraft");
 
