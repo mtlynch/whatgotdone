@@ -45,7 +45,7 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
   cy.get(".journal-markdown").should("not.exist");
   cy.get(".save-draft").should("not.exist");
 
-  cy.interceptShouldBeCalled("putDraft", 0);
+  cy.routeShouldBeCalled("putDraft", 0);
   cy.get(".entry-form").should("not.exist");
 });
 
