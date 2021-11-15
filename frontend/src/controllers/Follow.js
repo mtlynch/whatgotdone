@@ -1,49 +1,27 @@
-import axios from 'axios';
-
-import {getCsrfToken} from '@/controllers/Common.js';
+import {getCsrfToken, processJsonResponse} from '@/controllers/Common.js';
 
 export function getFollowing(username) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/${username}/following`;
-    axios
-      .get(url)
-      .then((result) => {
-        resolve(result.data.following);
-      })
-      .catch((err) => reject(err));
-  });
+  return fetch(
+    `${process.env.VUE_APP_BACKEND_URL}/api/user/${username}/following`
+  )
+    .then(processJsonResponse)
+    .then((followData) => {
+      return Promise.resolve(followData.following);
+    });
 }
 
 export function follow(username) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/follow/${username}`;
-    axios
-      .put(
-        url,
-        {},
-        {
-          withCredentials: true,
-          headers: {'X-CSRF-Token': getCsrfToken()},
-        }
-      )
-      .then(() => {
-        resolve();
-      })
-      .catch((err) => reject(err));
+  return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/follow/${username}`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {'X-CSRF-Token': getCsrfToken()},
   });
 }
 
 export function unfollow(username) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/follow/${username}`;
-    axios
-      .delete(url, {
-        withCredentials: true,
-        headers: {'X-CSRF-Token': getCsrfToken()},
-      })
-      .then(() => {
-        resolve();
-      })
-      .catch((err) => reject(err));
+  return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/follow/${username}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {'X-CSRF-Token': getCsrfToken()},
   });
 }
