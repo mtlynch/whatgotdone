@@ -32,21 +32,17 @@ export function getDraft(entryDate) {
 }
 
 export function saveDraft(entryDate, entryContent) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/draft/${entryDate}`;
-    axios
-      .put(
-        url,
-        {
-          entryContent: entryContent,
-        },
-        {withCredentials: true, headers: {'X-CSRF-Token': getCsrfToken()}}
-      )
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+  return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/draft/${entryDate}`, {
+    method: 'PUT',
+    body: JSON.stringify({entryContent: entryContent}),
+    credentials: 'include',
+    headers: {'X-CSRF-Token': getCsrfToken()},
+  }).then((response) => {
+    if (response.ok) {
+      return Promise.resolve();
+    }
+    return response.text().then((error) => {
+      return Promise.reject(error);
+    });
   });
 }
