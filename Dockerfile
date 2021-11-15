@@ -32,7 +32,7 @@ RUN set -x && \
     go install ./cmd/litestream && \
     echo "litestream installed to ${GOPATH}/bin/litestream"
 
-FROM golang:1.16.7
+FROM debian:stable-20211011-slim
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY --from=backend_builder /app/main /app/main
