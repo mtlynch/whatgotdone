@@ -1,7 +1,6 @@
 it("logs in and saves a draft", () => {
-  cy.server();
-  cy.route("GET", "/api/draft/*").as("getDraft");
-  cy.route("PUT", "/api/draft/*").as("putDraft");
+  cy.intercept("GET", "/api/draft/*").as("getDraft");
+  cy.intercept("PUT", "/api/draft/*").as("putDraft");
 
   cy.login("staging_jimmy");
 
@@ -28,14 +27,11 @@ it("logs in and saves a draft", () => {
 });
 
 it("don't overwrite draft until we successfully sync the latest draft from the server", () => {
-  cy.server();
-  cy.route({
-    method: "GET",
-    url: "/api/draft/*",
-    response: {},
-    status: 500,
+  cy.intercept("GET", "/api/draft/*", {
+    statusCode: 500,
+    body: {},
   }).as("getDraft");
-  cy.route("PUT", "/api/draft/*").as("putDraft");
+  cy.intercept("PUT", "/api/draft/*").as("putDraft");
 
   cy.login("staging_jimmy");
 
@@ -52,9 +48,8 @@ it("don't overwrite draft until we successfully sync the latest draft from the s
 });
 
 it("uses the entry template for new drafts", () => {
-  cy.server();
-  cy.route("GET", "/api/draft/*").as("getDraft");
-  cy.route("PUT", "/api/draft/*").as("putDraft");
+  cy.intercept("GET", "/api/draft/*").as("getDraft");
+  cy.intercept("PUT", "/api/draft/*").as("putDraft");
 
   cy.login("staging_jimmy");
 

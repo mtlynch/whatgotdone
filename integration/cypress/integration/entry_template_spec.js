@@ -1,7 +1,6 @@
 it("pre-populates new entries with the user's draft template", () => {
-  cy.server();
-  cy.route("PUT", "/api/preferences").as("putPreferences");
-  cy.route("GET", "/api/preferences").as("getPreferences");
+  cy.intercept("PUT", "/api/preferences").as("putPreferences");
+  cy.intercept("GET", "/api/preferences").as("getPreferences");
 
   cy.visit("/preferences");
   cy.completeLoginForm("staging_jimmy");

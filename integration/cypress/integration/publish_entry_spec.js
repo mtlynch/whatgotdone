@@ -1,6 +1,5 @@
 it("logs in and posts an update", () => {
-  cy.server();
-  cy.route("/api/draft/*").as("getDraft");
+  cy.intercept("/api/draft/*").as("getDraft");
 
   cy.login("staging_jimmy");
 
@@ -28,8 +27,7 @@ it("logs in and posts an update", () => {
 });
 
 it("logs in and backdates an update from a previous week", () => {
-  cy.server();
-  cy.route("/api/draft/*").as("getDraft");
+  cy.intercept("/api/draft/*").as("getDraft");
 
   cy.login("staging_jimmy");
 
@@ -75,8 +73,7 @@ it("logs in and backdates an update from a previous week", () => {
 });
 
 it("logs in and posts an empty update (deleting the existing entry)", () => {
-  cy.server();
-  cy.route("GET", "/api/draft/2019-06-28").as("getDraft");
+  cy.intercept("GET", "/api/draft/2019-06-28").as("getDraft");
 
   cy.login("staging_jimmy");
 
