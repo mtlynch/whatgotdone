@@ -1,19 +1,11 @@
 import axios from 'axios';
 
-import {getCsrfToken} from '@/controllers/Common.js';
+import {getCsrfToken, processJsonResponse} from '@/controllers/Common.js';
 
 export function getUserSelfMetadata() {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/user/me`;
-    axios
-      .get(url, {withCredentials: true})
-      .then((result) => {
-        resolve(result.data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/user/me`, {
+    credentials: 'include',
+  }).then(processJsonResponse);
 }
 
 export function getUserMetadata(username) {
