@@ -27,9 +27,7 @@ it("logs in and saves a draft", () => {
 });
 
 it("don't overwrite draft until we successfully sync the latest draft from the server", () => {
-  cy.intercept({
-    method: "GET",
-    url: "/api/draft/*",
+  cy.intercept("GET", "/api/draft/*", {
     statusCode: 500,
     body: {},
   }).as("getDraft");
