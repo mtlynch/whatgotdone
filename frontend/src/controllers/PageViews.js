@@ -1,23 +1,14 @@
-import axios from 'axios';
+import {processJsonResponse} from '@/controllers/Common.js';
 
 export function getPageViews(path) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/pageViews`;
-    axios
-      .get(url, {
-        params: {
-          path: path,
-        },
+  return fetch(
+    `${process.env.VUE_APP_BACKEND_URL}/api/pageViews?` +
+      new URLSearchParams({
+        path,
       })
-      .then((result) => {
-        if (result.data) {
-          resolve(result.data.views);
-        } else {
-          resolve(null);
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  )
+    .then(processJsonResponse)
+    .then((viewData) => {
+      return Promise.resolve(viewData.views);
+    });
 }
