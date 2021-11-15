@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import {getCsrfToken, processJsonResponse} from '@/controllers/Common.js';
 
 export function getUserSelfMetadata() {
