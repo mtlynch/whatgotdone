@@ -26,14 +26,13 @@ export function getRecentFollowing(start) {
     .then(processJsonResponse)
     .then((recentEntries) => {
       if (!recentEntries.entries) {
-        Promise.resolve([]);
-        return;
+        return Promise.resolve([]);
       }
       // Transform each response data into entry object
       const entries = recentEntries.entries.map((rawEntry) => {
         return processEntry(rawEntry);
       });
-      Promise.resolve(entries);
+      return Promise.resolve(entries);
     });
 }
 
