@@ -14,10 +14,6 @@ type mockStore struct {
 	users          []types.Username
 }
 
-func (ms mockStore) Users() ([]types.Username, error) {
-	return ms.users, nil
-}
-
 func (ms mockStore) ReadEntries(datastore.EntryFilter) ([]types.JournalEntry, error) {
 	return ms.journalEntries, nil
 }

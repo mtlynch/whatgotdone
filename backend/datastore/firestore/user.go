@@ -3,31 +3,12 @@ package firestore
 import (
 	"log"
 
-	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
-
-// Users returns all the users who have published entries.
-func (c client) Users() (users []types.Username, err error) {
-	iter := c.firestoreClient.Collection(entriesRootKey).Documents(c.ctx)
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return nil, err
-		}
-		var u userDocument
-		doc.DataTo(&u)
-		users = append(users, u.Username)
-	}
-	return users, nil
-}
 
 // UserProfile returns profile information about the given user.
 func (c client) GetUserProfile(username types.Username) (types.UserProfile, error) {

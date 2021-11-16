@@ -21,10 +21,6 @@ type mockDatastore struct {
 	mu             sync.Mutex
 }
 
-func (ds *mockDatastore) Users() ([]types.Username, error) {
-	return ds.users, nil
-}
-
 func (ds *mockDatastore) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error) {
 	return ds.journalEntries, nil
 }

@@ -16,8 +16,6 @@ type Reader interface {
 
 // EntryStore stores information related to journal entries.
 type EntryStore interface {
-	// Users returns all the users who have published entries.
-	Users() ([]types.Username, error)
 	// ReadEntries returns all published entries matching the given filter.
 	ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error)
 	// GetReactions retrieves reader reactions associated with a published entry.
