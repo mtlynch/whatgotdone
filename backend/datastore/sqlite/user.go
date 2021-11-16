@@ -6,12 +6,6 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-// TODO: Get rid of this method.
-// Users returns all the users who have published entries.
-func (d db) Users() ([]types.Username, error) {
-	return []types.Username{}, notImplementedError
-}
-
 // GetUserProfile returns profile information for the given user.
 func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
 	stmt, err := d.ctx.Prepare(`

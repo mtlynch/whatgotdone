@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
@@ -37,21 +36,19 @@ func buildSitemap(ds datastore.Datastore) *stm.Sitemap {
 }
 
 func addUsersAndEntries(sm *stm.Sitemap, ds datastore.Datastore) {
-	users, err := ds.Users()
+	entries, err := ds.ReadEntries(datastore.EntryFilter{})
 	if err != nil {
 		return
 	}
-	for _, u := range users {
-		sm.Add(stm.URL{{"loc", fmt.Sprintf("/%s", u)}})
-		entries, err := ds.ReadEntries(datastore.EntryFilter{
-			ByUsers: []types.Username{u},
-		})
-		if err != nil {
-			log.Printf("error getting entries for %s: %v", u, err)
-			continue
-		}
-		for _, e := range entries {
-			sm.Add(stm.URL{{"loc", fmt.Sprintf("/%s/%s", u, e.Date)}})
-		}
+	users := map[types.Username]bool{}
+	// Add URLs for journal entries.
+	for _, e := range entries {
+		sm.Add(stm.URL{{"loc", fmt.Sprintf("/%s/%s", e.Author, e.Date)}})
+		users[e.Author] = true
 	}
+	// Add URLs for user profiles.
+	for u := range users {
+		sm.Add(stm.URL{{"loc", fmt.Sprintf("/%s", u)}})
+	}
+
 }

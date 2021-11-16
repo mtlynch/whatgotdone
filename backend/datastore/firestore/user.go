@@ -3,7 +3,6 @@ package firestore
 import (
 	"log"
 
-	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 

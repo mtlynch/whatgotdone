@@ -89,11 +89,13 @@ func (s defaultServer) userExists(username types.Username) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	for _, u := range users {
-		if u == username {
-			return true, nil
-		}
+
+	// TODO: Verify that ReadEntries returns empty slice on no results instead of
+	// returning an error.
+	if len(entries) > 0 {
+		return true, nil
 	}
+
 	return false, nil
 }
 
