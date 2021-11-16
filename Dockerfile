@@ -34,6 +34,11 @@ RUN set -x && \
 
 FROM debian:stable-20211011-slim
 
+RUN set -x && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY --from=backend_builder /app/main /app/main
 COPY --from=litestream_builder /go/bin/litestream /app/litestream
