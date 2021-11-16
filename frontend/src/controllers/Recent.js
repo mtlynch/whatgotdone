@@ -1,43 +1,39 @@
-import axios from 'axios';
+import {processJsonResponse} from '@/controllers/Common.js';
 
 // Number of entries to request from the server on each request;
 const updateSize = 15;
 
 export function getRecent(start) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/recentEntries?start=${start}&limit=${updateSize}`;
-    axios
-      .get(url)
-      .then((result) => {
-        // Transform each response data into entry object
-        const recentEntries = result.data.map((rawEntry) => {
+  return fetch(
+    `${process.env.VUE_APP_BACKEND_URL}/api/recentEntries?start=${start}&limit=${updateSize}`
+  )
+    .then(processJsonResponse)
+    .then((recentEntriesRaw) => {
+      return Promise.resolve(
+        recentEntriesRaw.map((rawEntry) => {
           return processEntry(rawEntry);
-        });
-        resolve(recentEntries);
-      })
-      .catch((err) => reject(err));
-  });
+        })
+      );
+    });
 }
 
 // Retrieve recent entries from users that the logged-in user is following.
 export function getRecentFollowing(start) {
-  return new Promise(function (resolve, reject) {
-    const url = `${process.env.VUE_APP_BACKEND_URL}/api/entries/following?start=${start}&limit=${updateSize}`;
-    axios
-      .get(url, {withCredentials: true})
-      .then((result) => {
-        if (!result.data.entries) {
-          resolve([]);
-          return;
-        }
-        // Transform each response data into entry object
-        const entries = result.data.entries.map((rawEntry) => {
-          return processEntry(rawEntry);
-        });
-        resolve(entries);
-      })
-      .catch((err) => reject(err));
-  });
+  return fetch(
+    `${process.env.VUE_APP_BACKEND_URL}/api/entries/following?start=${start}&limit=${updateSize}`,
+    {credentials: 'include'}
+  )
+    .then(processJsonResponse)
+    .then((recentEntries) => {
+      if (!recentEntries.entries) {
+        return Promise.resolve([]);
+      }
+      // Transform each response data into entry object
+      const entries = recentEntries.entries.map((rawEntry) => {
+        return processEntry(rawEntry);
+      });
+      return Promise.resolve(entries);
+    });
 }
 
 // Merges two arrays of entries so that there are no duplicate entries.
