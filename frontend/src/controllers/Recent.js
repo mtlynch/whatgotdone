@@ -6,13 +6,15 @@ const updateSize = 15;
 export function getRecent(start) {
   return fetch(
     `${process.env.VUE_APP_BACKEND_URL}/api/recentEntries?start=${start}&limit=${updateSize}`
-  ).then((result) => {
-    // Transform each response data into entry object
-    const recentEntries = result.data.map((rawEntry) => {
-      return processEntry(rawEntry);
+  )
+    .then(processJsonResponse)
+    .then((recentEntriesRaw) => {
+      return Promise.resolve(
+        recentEntriesRaw.map((rawEntry) => {
+          return processEntry(rawEntry);
+        })
+      );
     });
-    return Promise.resolve(recentEntries);
-  });
 }
 
 // Retrieve recent entries from users that the logged-in user is following.
