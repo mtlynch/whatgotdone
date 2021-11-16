@@ -35,7 +35,12 @@ func (ds *mockDatastore) GetPageViews(path string) (int, error) {
 }
 
 func (ds *mockDatastore) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
-	return types.JournalEntry{}, errors.New("not implemented")
+	if (username == types.Username("jimmy123")) && (date == types.EntryDate("2020-01-17")) {
+		return types.JournalEntry{
+			Markdown: "dummy journal content",
+		}, nil
+	}
+	return types.JournalEntry{}, errors.New("mock not found")
 }
 
 func TestPageViewsGet(t *testing.T) {
@@ -154,7 +159,7 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 				Views: 25,
 			},
 			{
-				Path:  "/invalidUser/2020-04-17",
+				Path:  "/undefined/2020-04-17",
 				Views: 100,
 			},
 			{
