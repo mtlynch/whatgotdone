@@ -29,15 +29,18 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			return
 		}
 
-		users, err := s.datastore.Users()
-		if err != nil {
-			log.Printf("Failed to retrieve users from datastore: %v", err)
-			http.Error(w, "Failed to retrieve pageviews", http.StatusInternalServerError)
-			return
-		}
-		user, entryDate, ok := parseJournalEntryPath(path, users)
+		user, entryDate, ok := parseJournalEntryPath(path)
 		if !ok {
 			log.Printf("path is not a journal entry: %s", path)
+			http.Error(w, "path parameter must specify a journal entry", http.StatusForbidden)
+			return
+		}
+
+		// Make sure the requested path actually has a journal entry associated with
+		// it.
+		_, err := s.datastore.GetEntry(user, entryDate)
+		if err != nil {
+			log.Printf("failed to find entry associated with requested pageview: %s, %s -> %v", user, entryDate, err)
 			http.Error(w, "path parameter must specify a journal entry", http.StatusForbidden)
 			return
 		}
@@ -145,20 +148,15 @@ func coalescePageViews(pvcs []ga.PageViewCount) []ga.PageViewCount {
 // filterNonEntries removes page counts for paths that are not user entries.
 func (s defaultServer) filterNonEntries(pvcs []ga.PageViewCount) []ga.PageViewCount {
 	filtered := []ga.PageViewCount{}
-	users, err := s.datastore.Users()
-	if err != nil {
-		log.Printf("failed to retrieve user list for pageview filtering: %v", err)
-		return filtered
-	}
 	for _, pvc := range pvcs {
-		if _, _, ok := parseJournalEntryPath(pvc.Path, users); ok {
+		if _, _, ok := parseJournalEntryPath(pvc.Path); ok {
 			filtered = append(filtered, pvc)
 		}
 	}
 	return filtered
 }
 
-func parseJournalEntryPath(path string, users []types.Username) (types.Username, types.EntryDate, bool) {
+func parseJournalEntryPath(path string) (types.Username, types.EntryDate, bool) {
 	pathParts := strings.Split(path, "/")
 	if len(pathParts) != 3 {
 		return "", "", false
@@ -172,23 +170,11 @@ func parseJournalEntryPath(path string, users []types.Username) (types.Username,
 	if err != nil {
 		return "", "", false
 	}
-	if !isUsernameInSlice(user, users) {
-		return "", "", false
-	}
 	entryDate, err := parse.EntryDate(pathParts[2])
 	if err != nil {
 		return "", "", false
 	}
 	return user, entryDate, true
-}
-
-func isUsernameInSlice(u types.Username, uu []types.Username) bool {
-	for _, x := range uu {
-		if u == x {
-			return true
-		}
-	}
-	return false
 }
 
 func isAppEngineInternalRequest(r *http.Request) bool {
