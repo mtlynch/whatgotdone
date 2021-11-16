@@ -48,6 +48,12 @@ func New() datastore.Datastore {
 			is_draft INTEGER,
 			PRIMARY KEY (username, date, is_draft)
 			)`,
+		`CREATE TABLE IF NOT EXISTS follows(
+			follower TEXT,
+			leader TEXT,
+			created TEXT,
+			PRIMARY KEY (leader, follower)
+			)`,
 	}
 
 	for _, stmt := range createTableStmts {
