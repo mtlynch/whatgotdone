@@ -70,16 +70,10 @@ export default {
   },
   methods: {
     loadPreferences() {
-      getPreferences()
-        .then((preferences) => {
-          this.preferencesFromServer = Object.assign({}, preferences);
-          this.preferences = Object.assign({}, preferences);
-        })
-        .catch((error) => {
-          if (error.response.status == 404) {
-            this.preferencesFromServer = Object.assign({}, this.preferences);
-          }
-        });
+      getPreferences().then((preferences) => {
+        this.preferencesFromServer = Object.assign({}, preferences);
+        this.preferences = Object.assign({}, preferences);
+      });
     },
     onEntryTemplateChanged() {
       if (
