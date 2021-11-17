@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -75,9 +74,8 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 		}
 
 		reaction := types.Reaction{
-			Username:  username,
-			Timestamp: time.Now().Format(time.RFC3339),
-			Symbol:    reactionSymbol,
+			Username: username,
+			Symbol:   reactionSymbol,
 		}
 		err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
 		if err != nil {
