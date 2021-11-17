@@ -1,9 +1,9 @@
-import {getCsrfToken, processJsonResult} from '@/controllers/Common.js';
+import {getCsrfToken, processJsonResponse} from '@/controllers/Common.js';
 
 export function getPreferences() {
   return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/preferences`, {
     credentials: 'include',
-  }).then(processJsonResult);
+  }).then(processJsonResponse);
 }
 
 export function savePreferences(preferences) {
