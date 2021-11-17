@@ -70,10 +70,13 @@ export default {
   },
   methods: {
     loadPreferences() {
-      getPreferences().then((preferences) => {
-        this.preferencesFromServer = Object.assign({}, preferences);
-        this.preferences = Object.assign({}, preferences);
-      });
+      getPreferences()
+        .then((preferences) => {
+          this.preferencesFromServer = Object.assign({}, preferences);
+          this.preferences = Object.assign({}, preferences);
+        })
+        // Ignore errors on pulling down preferences.
+        .catch(() => {});
     },
     onEntryTemplateChanged() {
       if (
