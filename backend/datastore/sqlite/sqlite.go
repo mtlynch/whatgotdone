@@ -54,6 +54,14 @@ func New() datastore.Datastore {
 			created TEXT,
 			PRIMARY KEY (leader, follower)
 			)`,
+		`CREATE TABLE IF NOT EXISTS entry_reactions(
+			entry_author TEXT,
+			entry_date TEXT,
+			reacting_user TEXT,
+			reaction TEXT,
+			timestamp TEXT,
+			PRIMARY KEY (entry_author, entry_date, reacting_user)
+			)`,
 	}
 
 	for _, stmt := range createTableStmts {
