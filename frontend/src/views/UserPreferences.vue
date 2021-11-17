@@ -75,11 +75,8 @@ export default {
           this.preferencesFromServer = Object.assign({}, preferences);
           this.preferences = Object.assign({}, preferences);
         })
-        .catch((error) => {
-          if (error.response.status == 404) {
-            this.preferencesFromServer = Object.assign({}, this.preferences);
-          }
-        });
+        // Ignore errors on pulling down preferences.
+        .catch(() => {});
     },
     onEntryTemplateChanged() {
       if (
