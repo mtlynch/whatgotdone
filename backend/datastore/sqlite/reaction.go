@@ -67,3 +67,17 @@ func (d db) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, r
 	values(?,?,?,?,datetime('now'))`, entryAuthor, entryDate, reaction.Username, reaction.Symbol)
 	return err
 }
+
+// DeleteReaction removes a user's reaction to a published entry.
+func (d db) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error {
+	log.Printf("deleting reaction from datastore: %s to %s/%s", reactingUser, entryAuthor, entryDate)
+	_, err := d.ctx.Exec(`
+	DELETE FROM
+		entry_reactions
+	WHERE
+		entry_author=? AND
+		entry_date=? AND
+		reacting_user=?
+	`, entryAuthor, entryDate, reactingUser)
+	return err
+}
