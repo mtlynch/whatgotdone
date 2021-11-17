@@ -19,3 +19,14 @@ export function setReaction(entryAuthor, entryDate, reaction) {
     }
   );
 }
+
+export function deleteReaction(entryAuthor, entryDate) {
+  return fetch(
+    `${process.env.VUE_APP_BACKEND_URL}/api/reactions/entry/${entryAuthor}/${entryDate}`,
+    {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {'X-CSRF-Token': getCsrfToken()},
+    }
+  );
+}

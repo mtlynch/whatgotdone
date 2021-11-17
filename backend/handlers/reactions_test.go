@@ -22,6 +22,19 @@ func (ds *mockDatastore) AddReaction(entryAuthor types.Username, entryDate types
 	return nil
 }
 
+func (ds *mockDatastore) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, user types.Username) error {
+	toDelete := -1
+	for i, r := range ds.reactions {
+		if r.Username == user {
+			toDelete = i
+		}
+	}
+	if toDelete >= 0 {
+		ds.reactions = append(ds.reactions[:toDelete], ds.reactions[toDelete+1:]...)
+	}
+	return nil
+}
+
 // Create a dummy CSRF middleware that never rejects HTTP requests.
 func dummyCsrfMiddleware() httpMiddlewareHandler {
 	return func(h http.Handler) http.Handler {

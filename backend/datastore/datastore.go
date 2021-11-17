@@ -37,6 +37,8 @@ type Datastore interface {
 	// AddReaction saves a reader reaction associated with a published entry,
 	// overwriting any existing reaction.
 	AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error
+	// DeleteReaction removes a user's reaction to a published entry.
+	DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error
 	// InsertPageViews stores the count of pageviews for a given What Got Done route.
 	InsertPageViews(path string, pageViews int) error
 	// GetPageViews retrieves the count of pageviews for a given What Got Done route.

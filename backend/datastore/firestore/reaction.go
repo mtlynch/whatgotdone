@@ -42,6 +42,18 @@ func (c client) AddReaction(entryAuthor types.Username, entryDate types.EntryDat
 	return err
 }
 
+// DeleteReaction removes a user's reaction to a published entry.
+func (c client) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error {
+	key := getEntryReactionsKey(entryAuthor, entryDate)
+	log.Printf("deleting %s's reaction to %s from datastore", reactingUser, key)
+	_, err := c.firestoreClient.Collection(reactionsRootKey).Doc(key).Collection(perUserReactionsKey).Doc(string(reactingUser)).Set(c.ctx, types.Reaction{
+		Username: reactingUser,
+		Symbol:   "",
+	})
+
+	return err
+}
+
 func getEntryReactionsKey(entryAuthor types.Username, entryDate types.EntryDate) string {
 	return string(entryAuthor) + ":" + string(entryDate)
 }

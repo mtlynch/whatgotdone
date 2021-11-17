@@ -36,6 +36,7 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/reactions/entry/{username}/{date}", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsGet()).Methods(http.MethodGet)
 	api.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsPost()).Methods(http.MethodPost)
+	api.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsDelete()).Methods(http.MethodDelete)
 	api.HandleFunc("/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
 	api.HandleFunc("/user/me", s.userMeGet()).Methods(http.MethodGet)
 	api.HandleFunc("/user/avatar", allowOptions()).Methods(http.MethodOptions)
