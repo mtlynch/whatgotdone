@@ -27,7 +27,11 @@
 import Avatar from '@/components/Avatar.vue';
 import Username from '@/components/Username.vue';
 
-import {getReactions, setReaction} from '@/controllers/Reactions.js';
+import {
+  getReactions,
+  deleteReaction,
+  setReaction,
+} from '@/controllers/Reactions.js';
 
 export default {
   name: 'Reactions',
@@ -107,10 +111,11 @@ export default {
       }
       if (this.selectedReaction == reactionSymbol) {
         this.selectedReaction = '';
+        deleteReaction(this.entryAuthor, this.entryDate);
       } else {
         this.selectedReaction = reactionSymbol;
+        setReaction(this.entryAuthor, this.entryDate, this.selectedReaction);
       }
-      setReaction(this.entryAuthor, this.entryDate, this.selectedReaction);
       this.updateReactions();
     },
     updateReactions: function () {
