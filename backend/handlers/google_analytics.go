@@ -90,9 +90,7 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			return
 		}
 
-		// Verify the request came from AppEngine so that external users can't
-		// force the server to exceed Google Analytics rate limits.
-		if !isAppEngineInternalRequest(r) {
+		if !isAuthenticatedRequest(r) {
 			http.Error(w, "Refreshes of Google Analytics data must come from within AppEngine", http.StatusForbidden)
 			return
 		}
@@ -177,11 +175,7 @@ func parseJournalEntryPath(path string) (types.Username, types.EntryDate, bool) 
 	return user, entryDate, true
 }
 
-func isAppEngineInternalRequest(r *http.Request) bool {
-	cronHeader := r.Header.Get("X-Appengine-Cron")
-	if cronHeader != "true" {
-		log.Printf("X-Appengine-Cron=[%v]", cronHeader)
-		return false
-	}
+func isAuthenticatedRequest(r *http.Request) bool {
+	// TODO: Actually authenticate this.
 	return true
 }
