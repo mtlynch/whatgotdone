@@ -12,6 +12,13 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types/requests"
 )
 
+type profilePublic struct {
+	AboutMarkdown   string `json:"aboutMarkdown"`
+	TwitterHandle   string `json:"twitterHandle"`
+	EmailAddress    string `json:"emailAddress"`
+	MastodonAddress string `json:"mastodonAddress"`
+}
+
 func (s defaultServer) userGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)
@@ -31,17 +38,7 @@ func (s defaultServer) userGet() http.HandlerFunc {
 			return
 		}
 
-		respondOK(w, struct {
-			AboutMarkdown   string `json:"aboutMarkdown"`
-			TwitterHandle   string `json:"twitterHandle"`
-			EmailAddress    string `json:"emailAddress"`
-			MastodonAddress string `json:"mastodonAddress"`
-		}{
-			AboutMarkdown:   string(p.AboutMarkdown),
-			TwitterHandle:   string(p.TwitterHandle),
-			EmailAddress:    string(p.EmailAddress),
-			MastodonAddress: string(p.MastodonAddress),
-		})
+		respondOK(w, profileToPublic(p))
 	}
 }
 
@@ -109,4 +106,13 @@ func (s defaultServer) userExists(username types.Username) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func profileToPublic(p types.UserProfile) profilePublic {
+	return profilePublic{
+		AboutMarkdown:   string(p.AboutMarkdown),
+		TwitterHandle:   string(p.TwitterHandle),
+		EmailAddress:    string(p.EmailAddress),
+		MastodonAddress: string(p.MastodonAddress),
+	}
 }
