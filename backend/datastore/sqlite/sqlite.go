@@ -62,6 +62,11 @@ func New() datastore.Datastore {
 			timestamp TEXT,
 			PRIMARY KEY (entry_author, entry_date, reacting_user)
 			)`,
+		`CREATE TABLE IF NOT EXISTS pageviews(
+			path TEXT PRIMARY KEY,
+			views INTEGER,
+			last_updated TEXT
+			)`,
 	}
 
 	for _, stmt := range createTableStmts {

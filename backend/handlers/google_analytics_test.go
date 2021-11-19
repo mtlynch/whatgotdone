@@ -217,28 +217,3 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 		t.Fatalf("Unexpected response: got %v want %v", ds.pageViewCounts, expected)
 	}
 }
-
-func TestRefreshGoogleAnalyticsRejectsExternalRequests(t *testing.T) {
-	ds := mockDatastore{}
-	router := mux.NewRouter()
-	s := defaultServer{
-		datastore:              &ds,
-		router:                 router,
-		csrfMiddleware:         dummyCsrfMiddleware(),
-		googleAnalyticsFetcher: mockGoogleAnalyticsFetcher{},
-	}
-	s.routes()
-
-	req, err := http.NewRequest("GET", "/api/tasks/refreshGoogleAnalytics", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	// Omit AppEngine header
-
-	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
-
-	if status := w.Code; status != http.StatusForbidden {
-		t.Fatalf("handler returned wrong status code: got %v want %v", status, http.StatusForbidden)
-	}
-}
