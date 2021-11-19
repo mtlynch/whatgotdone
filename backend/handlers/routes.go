@@ -26,6 +26,7 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/draft/{date}", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/draft/{date}", s.draftGet()).Methods(http.MethodGet)
 	api.HandleFunc("/draft/{date}", s.draftPut()).Methods(http.MethodPut)
+	api.HandleFunc("/export", s.exportGet()).Methods(http.MethodGet)
 	api.HandleFunc("/media", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/media", s.mediaPut()).Methods(http.MethodPut)
 	api.HandleFunc("/pageViews", allowOptions()).Methods(http.MethodOptions)
