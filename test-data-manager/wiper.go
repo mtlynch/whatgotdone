@@ -34,7 +34,6 @@ const (
 	pageViewsRootKey    = "pageViews"
 	preferencesRootKey  = "preferences"
 	reactionsRootKey    = "reactions"
-	secretsRootKey      = "secrets"
 	userProfilesRootKey = "userProfiles"
 	followingRootKey    = "following"
 )

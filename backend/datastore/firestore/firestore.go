@@ -54,8 +54,6 @@ const (
 	preferencesRootKey  = "preferences"
 	reactionsRootKey    = "reactions"
 	perUserReactionsKey = "perUserReactions"
-	secretsRootKey      = "secrets"
-	secretUserKitDocKey = "userKitKey"
 	userProfilesRootKey = "userProfiles"
 	followingRootKey    = "following"
 	perUserFollowingKey = "perUserFollowers"
