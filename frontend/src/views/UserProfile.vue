@@ -96,7 +96,7 @@
       <b-button
         variant="primary"
         v-on:click="onExport"
-        data-test-id="export-data"
+        data-test-id="export-data-btn"
         >Download</b-button
       >
       <a class="d-none" ref="file-download-helper"
