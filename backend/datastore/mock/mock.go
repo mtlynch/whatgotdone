@@ -18,6 +18,7 @@ type MockDatastore struct {
 	Reactions      []types.Reaction
 	PageViewCounts []ga.PageViewCount
 	UserProfile    types.UserProfile
+	GetEntriesErr  error
 	mu             sync.Mutex
 }
 
@@ -44,7 +45,7 @@ func (ds *MockDatastore) GetEntry(username types.Username, date types.EntryDate)
 }
 
 func (ds *MockDatastore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
-	return ds.JournalEntries, nil
+	return ds.JournalEntries, ds.GetEntriesErr
 }
 
 func (ds *MockDatastore) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {

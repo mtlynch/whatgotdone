@@ -48,7 +48,7 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 	entries := []RecentEntry{}
 	for res := range c {
 		if res.err != nil {
-			return []RecentEntry{}, err
+			return []RecentEntry{}, res.err
 		}
 		for _, entry := range res.entries {
 			// Filter low-effort posts or test posts from the recent list.
