@@ -14,7 +14,8 @@ import (
 // storing and retrieving all persistent data (journal entries, journal drafts,
 // reactions).
 type Datastore interface {
-	// Users returns all the users who have published entries.
+	// Users returns all the users who have saved drafts, profiles, or
+	// preferences.
 	Users() ([]types.Username, error)
 	// GetUserProfile returns profile information for the given user.
 	GetUserProfile(username types.Username) (types.UserProfile, error)

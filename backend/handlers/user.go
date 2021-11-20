@@ -96,9 +96,9 @@ func profileFromRequest(r *http.Request) (types.UserProfile, error) {
 }
 
 func (s defaultServer) userExists(username types.Username) (bool, error) {
-	// BUG: Will only detect users who have published an entry. Ideally, we'd be
-	// able to tell if the username exists in UserKit, but the UserKit API
-	// currently does not offer lookup by username.
+	// BUG: Will only detect users who have saved information into What Got Done.
+	// Ideally, we'd be able to tell if the username exists in UserKit, but the
+	// UserKit API currently does not offer lookup by username.
 	users, err := s.datastore.Users()
 	if err != nil {
 		return false, err
