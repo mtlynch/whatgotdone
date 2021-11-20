@@ -22,7 +22,7 @@ func (ms mockStore) GetEntries(username types.Username) ([]types.JournalEntry, e
 }
 
 func (ms mockStore) Following(follower types.Username) ([]types.Username, error) {
-	return []types.Username{}, errors.New("not implemented")
+	return []types.Username{}, errors.New("mockStore does not implement Following")
 }
 
 func (ms mockStore) Close() error {

@@ -48,15 +48,15 @@ func (ds *mockDatastore) InsertDraft(username types.Username, j types.JournalEnt
 }
 
 func (ds *mockDatastore) InsertFollow(leader, follower types.Username) error {
-	return errors.New("not implemented")
+	return errors.New("mockDatastore does not implement InsertFollow")
 }
 
 func (ds *mockDatastore) DeleteFollow(leader, follower types.Username) error {
-	return errors.New("not implemented")
+	return errors.New("mockDatastore does not implement DeleteFollow")
 }
 
 func (ds *mockDatastore) Following(follower types.Username) ([]types.Username, error) {
-	return []types.Username{}, errors.New("not implemented")
+	return []types.Username{}, errors.New("mockDatastore does not implement Following")
 }
 
 func (ds *mockDatastore) GetPreferences(username types.Username) (types.Preferences, error) {
@@ -66,7 +66,7 @@ func (ds *mockDatastore) GetPreferences(username types.Username) (types.Preferen
 }
 
 func (ds *mockDatastore) SetPreferences(username types.Username, prefs types.Preferences) error {
-	return errors.New("not implemented")
+	return errors.New("mockDatastore does not implement SetPreferences")
 }
 
 func (ds *mockDatastore) Close() error {
