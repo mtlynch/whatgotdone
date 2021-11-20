@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -11,37 +10,10 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
-
-func (ds *mockDatastore) InsertPageViews(path string, pageViews int) error {
-	ds.mu.Lock()
-	defer ds.mu.Unlock()
-	ds.pageViewCounts = append(ds.pageViewCounts, ga.PageViewCount{
-		Path:  path,
-		Views: pageViews,
-	})
-	return nil
-}
-
-func (ds *mockDatastore) GetPageViews(path string) (int, error) {
-	for _, pvc := range ds.pageViewCounts {
-		if pvc.Path == path {
-			return pvc.Views, nil
-		}
-	}
-	return 0, errors.New("no pageview results found")
-}
-
-func (ds *mockDatastore) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
-	if (username == types.Username("jimmy123")) && (date == types.EntryDate("2020-01-17")) {
-		return types.JournalEntry{
-			Markdown: "dummy journal content",
-		}, nil
-	}
-	return types.JournalEntry{}, errors.New("mock not found")
-}
 
 func TestPageViewsGet(t *testing.T) {
 	var pageViewsGetTests = []struct {
@@ -86,9 +58,9 @@ func TestPageViewsGet(t *testing.T) {
 		},
 	}
 
-	ds := mockDatastore{
-		users: []types.Username{"jimmy123"},
-		pageViewCounts: []ga.PageViewCount{
+	ds := mock.MockDatastore{
+		Usernames: []types.Username{"jimmy123"},
+		PageViewCounts: []ga.PageViewCount{
 			{
 				Path:  "/jimmy123/2020-01-17",
 				Views: 5,
@@ -173,8 +145,8 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 		},
 	}
 
-	ds := mockDatastore{
-		users: []types.Username{"joe", "mary"},
+	ds := mock.MockDatastore{
+		Usernames: []types.Username{"joe", "mary"},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -212,14 +184,14 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 			Views: 25,
 		},
 	}
-	sort.Slice(ds.pageViewCounts, func(i, j int) bool { return ds.pageViewCounts[i].Path < ds.pageViewCounts[j].Path })
-	if !reflect.DeepEqual(ds.pageViewCounts, expected) {
-		t.Fatalf("Unexpected response: got %v want %v", ds.pageViewCounts, expected)
+	sort.Slice(ds.PageViewCounts, func(i, j int) bool { return ds.PageViewCounts[i].Path < ds.PageViewCounts[j].Path })
+	if !reflect.DeepEqual(ds.PageViewCounts, expected) {
+		t.Fatalf("Unexpected response: got %v want %v", ds.PageViewCounts, expected)
 	}
 }
 
 func TestRefreshGoogleAnalyticsRejectsExternalRequests(t *testing.T) {
-	ds := mockDatastore{}
+	ds := mock.MockDatastore{}
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:              &ds,

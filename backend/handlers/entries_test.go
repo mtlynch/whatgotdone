@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -17,8 +18,8 @@ func TestEntriesHandler(t *testing.T) {
 		{Date: "2019-03-15", LastModified: "2019-03-15", Markdown: "Took a nap"},
 		{Date: "2019-03-08", LastModified: "2019-03-09", Markdown: "Watched the movie *The Royal Tenenbaums*."},
 	}
-	ds := mockDatastore{
-		journalEntries: entries,
+	ds := mock.MockDatastore{
+		JournalEntries: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -51,8 +52,8 @@ func TestEntriesHandler(t *testing.T) {
 	}
 }
 func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
-	ds := mockDatastore{
-		journalEntries: []types.JournalEntry{},
+	ds := mock.MockDatastore{
+		JournalEntries: []types.JournalEntry{},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -88,8 +89,8 @@ func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
 
 func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
 	entries := []types.JournalEntry{}
-	ds := mockDatastore{
-		journalEntries: entries,
+	ds := mock.MockDatastore{
+		JournalEntries: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -115,8 +116,8 @@ func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
 
 func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	entries := []types.JournalEntry{}
-	ds := mockDatastore{
-		journalEntries: entries,
+	ds := mock.MockDatastore{
+		JournalEntries: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
