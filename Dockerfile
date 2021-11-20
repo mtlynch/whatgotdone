@@ -16,34 +16,36 @@ COPY ./go.sum /app/go.sum
 WORKDIR /app
 
 ARG GO_BUILD_TAGS="dev"
-RUN go build --tags "$GO_BUILD_TAGS" -o /app/main backend/main.go
 
-FROM golang:1.16.7 AS litestream_builder
+RUN GOOS=linux GOARCH=amd64 \
+    go build \
+      -tags "netgo $GO_BUILD_TAGS" \
+      -ldflags '-w -extldflags "-static"' \
+      -o /app/main \
+      backend/main.go
+
+FROM debian:stable-20211011-slim AS litestream_downloader
 
 ARG litestream_version="v0.3.6"
+ARG litestream_binary_tgz_filename="litestream-${litestream_version}-linux-amd64-static.tar.gz"
+
+WORKDIR /litestream
 
 RUN set -x && \
     apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y git
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      ca-certificates \
+      wget
+RUN wget "https://github.com/benbjohnson/litestream/releases/download/${litestream_version}/${litestream_binary_tgz_filename}"
+RUN tar -xvzf "${litestream_binary_tgz_filename}"
 
-RUN set -x && \
-    git clone --branch "${litestream_version}" --single-branch https://github.com/benbjohnson/litestream.git
+FROM alpine:3.15
 
-RUN set -x && \
-    cd litestream && \
-    go install ./cmd/litestream && \
-    echo "litestream installed to ${GOPATH}/bin/litestream"
-
-FROM debian:stable-20211011-slim
-
-RUN set -x && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache bash
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY --from=backend_builder /app/main /app/main
-COPY --from=litestream_builder /go/bin/litestream /app/litestream
+COPY --from=litestream_downloader /litestream/litestream /app/litestream
 COPY ./litestream.yml /etc/litestream.yml
 COPY ./docker_entrypoint /app/docker_entrypoint
 
