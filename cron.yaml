@@ -1,8 +1,0 @@
-cron:
-  - description: "refresh Google Analytics stats"
-    url: /api/tasks/refreshGoogleAnalytics
-    schedule: every 10 minutes
-  - description: "Daily Cloud Firestore Export"
-    url: /cloud-firestore-export
-    target: firestore-daily-backup
-    schedule: every 24 hours

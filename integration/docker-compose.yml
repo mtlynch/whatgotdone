@@ -1,10 +1,5 @@
 version: "3.2"
 services:
-  firestore_emulator:
-    image: mtlynch/firestore-emulator:20191115T1224
-    environment:
-      - FIRESTORE_PROJECT_ID=dummy-local-gcp-project
-      - PORT=8080
   test_data_manager:
     build:
       context: ../
@@ -16,27 +11,21 @@ services:
       driver: none
     environment:
       - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
-      - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
       - PORT=5200
     command:
       ["-source", "/app/test-data-manager/integration-data.yaml", "-keepAlive"]
-    depends_on:
-      - firestore_emulator
   whatgotdone:
     build:
       context: ../
       args:
         NPM_BUILD_MODE: staging
         GO_BUILD_TAGS: staging
-    depends_on:
-      - firestore_emulator
     environment:
       - PORT=3123
       - CSRF_SECRET_SEED=dummy-staging-seed
       - USERKIT_SECRET=dummy.dummy
       - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
       - PUBLIC_GCS_BUCKET=whatgotdone-public-staging
-      - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/integration

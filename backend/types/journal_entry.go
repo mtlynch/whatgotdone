@@ -8,8 +8,8 @@ type (
 	// public or a private draft that has not yet been published.
 	JournalEntry struct {
 		Author       Username
-		Date         EntryDate `json:"date" yaml:"date" firestore:"date,omitempty"`
-		LastModified string    `json:"lastModified" yaml:"lastModified" firestore:"lastModified,omitempty"`
-		Markdown     string    `json:"markdown" yaml:"markdown" firestore:"markdown,omitempty"`
+		Date         EntryDate `json:"date" yaml:"date"`
+		LastModified string    `json:"lastModified" yaml:"lastModified"`
+		Markdown     string    `json:"markdown" yaml:"markdown"`
 	}
 )
