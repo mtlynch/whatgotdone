@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -15,8 +17,8 @@ func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 	drafts := []types.JournalEntry{
 		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
 	}
-	ds := mockDatastore{
-		journalDrafts: drafts,
+	ds := mock.MockDatastore{
+		JournalDrafts: drafts,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -45,8 +47,8 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 	drafts := []types.JournalEntry{
 		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
 	}
-	ds := mockDatastore{
-		journalDrafts: drafts,
+	ds := mock.MockDatastore{
+		JournalDrafts: drafts,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -80,8 +82,8 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 	drafts := []types.JournalEntry{
 		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
 	}
-	ds := mockDatastore{
-		journalDrafts: drafts,
+	ds := mock.MockDatastore{
+		JournalDrafts: drafts,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -125,8 +127,8 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 
 func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing.T) {
 	entries := []types.JournalEntry{}
-	ds := mockDatastore{
-		journalDrafts: entries,
+	ds := mock.MockDatastore{
+		JournalDrafts: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -158,8 +160,8 @@ func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing
 
 func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 	entries := []types.JournalEntry{}
-	ds := mockDatastore{
-		journalDrafts: entries,
+	ds := mock.MockDatastore{
+		JournalDrafts: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{

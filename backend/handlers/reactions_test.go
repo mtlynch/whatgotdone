@@ -10,30 +10,9 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
-
-func (ds *mockDatastore) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
-	return ds.reactions, nil
-}
-
-func (ds *mockDatastore) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error {
-	ds.reactions = append(ds.reactions, reaction)
-	return nil
-}
-
-func (ds *mockDatastore) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, user types.Username) error {
-	toDelete := -1
-	for i, r := range ds.reactions {
-		if r.Username == user {
-			toDelete = i
-		}
-	}
-	if toDelete >= 0 {
-		ds.reactions = append(ds.reactions[:toDelete], ds.reactions[toDelete+1:]...)
-	}
-	return nil
-}
 
 // Create a dummy CSRF middleware that never rejects HTTP requests.
 func dummyCsrfMiddleware() httpMiddlewareHandler {
@@ -43,8 +22,8 @@ func dummyCsrfMiddleware() httpMiddlewareHandler {
 }
 
 func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
-	ds := mockDatastore{
-		reactions: []types.Reaction{},
+	ds := mock.MockDatastore{
+		Reactions: []types.Reaction{},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -82,8 +61,8 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 		{Username: "dummyUserA", Symbol: "🎉", Timestamp: "2019-07-09T14:56:29-04:00"},
 		{Username: "dummyUserB", Symbol: "👍", Timestamp: "2019-07-09T11:57:02-04:00"},
 	}
-	ds := mockDatastore{
-		reactions: reactions,
+	ds := mock.MockDatastore{
+		Reactions: reactions,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -117,8 +96,8 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 }
 
 func TestReactionsGetWhenEntryAuthorIsUndefined(t *testing.T) {
-	ds := mockDatastore{
-		reactions: []types.Reaction{},
+	ds := mock.MockDatastore{
+		Reactions: []types.Reaction{},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -144,8 +123,8 @@ func TestReactionsGetWhenEntryAuthorIsUndefined(t *testing.T) {
 
 func TestReactionsPostStoresValidReaction(t *testing.T) {
 	reactions := []types.Reaction{}
-	ds := mockDatastore{
-		reactions: reactions,
+	ds := mock.MockDatastore{
+		Reactions: reactions,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -174,24 +153,24 @@ func TestReactionsPostStoresValidReaction(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
-	if len(ds.reactions) != 1 {
+	if len(ds.Reactions) != 1 {
 		t.Fatalf("unexpected reaction count: got %v (%v) want %v",
-			len(ds.reactions), ds.reactions, 1)
+			len(ds.Reactions), ds.Reactions, 1)
 	}
-	if ds.reactions[0].Username != "dummyUserC" {
+	if ds.Reactions[0].Username != "dummyUserC" {
 		t.Fatalf("unexpected username in reaction: got %v want %v",
-			ds.reactions[0].Username, "dummyUserC")
+			ds.Reactions[0].Username, "dummyUserC")
 	}
-	if ds.reactions[0].Symbol != "👍" {
+	if ds.Reactions[0].Symbol != "👍" {
 		t.Fatalf("unexpected symbol in reaction: got [%v] want [%v]",
-			ds.reactions[0].Symbol, "👍")
+			ds.Reactions[0].Symbol, "👍")
 	}
 }
 
 func TestReactionsPostRejectsRequestWithMissingSymbolField(t *testing.T) {
 	reactions := []types.Reaction{}
-	ds := mockDatastore{
-		reactions: reactions,
+	ds := mock.MockDatastore{
+		Reactions: reactions,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -224,8 +203,8 @@ func TestReactionsPostRejectsRequestWithMissingSymbolField(t *testing.T) {
 
 func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
 	reactions := []types.Reaction{}
-	ds := mockDatastore{
-		reactions: reactions,
+	ds := mock.MockDatastore{
+		Reactions: reactions,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -258,8 +237,8 @@ func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
 
 func TestReactionsPostRejectsRequestWhenUsernameIsUndefined(t *testing.T) {
 	reactions := []types.Reaction{}
-	ds := mockDatastore{
-		reactions: reactions,
+	ds := mock.MockDatastore{
+		Reactions: reactions,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -292,8 +271,8 @@ func TestReactionsPostRejectsRequestWhenUsernameIsUndefined(t *testing.T) {
 
 func TestReactionsPostRejectsRequestWhenUserIsNotLoggedIn(t *testing.T) {
 	reactions := []types.Reaction{}
-	ds := mockDatastore{
-		reactions: reactions,
+	ds := mock.MockDatastore{
+		Reactions: reactions,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{

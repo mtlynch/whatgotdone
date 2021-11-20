@@ -1,33 +1,12 @@
 package entries
 
 import (
-	"errors"
 	"reflect"
 	"testing"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
-
-type mockStore struct {
-	journalEntries []types.JournalEntry
-	users          []types.Username
-}
-
-func (ms mockStore) Users() ([]types.Username, error) {
-	return ms.users, nil
-}
-
-func (ms mockStore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
-	return ms.journalEntries, nil
-}
-
-func (ms mockStore) Following(follower types.Username) ([]types.Username, error) {
-	return []types.Username{}, errors.New("mockStore does not implement Following")
-}
-
-func (ms mockStore) Close() error {
-	return nil
-}
 
 func TestRecentSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
 	entries := []types.JournalEntry{
@@ -39,9 +18,9 @@ func TestRecentSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
 		{Date: "2019-05-24", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
 		{Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
 	}
-	ms := mockStore{
-		journalEntries: entries,
-		users: []types.Username{
+	ms := mock.MockDatastore{
+		JournalEntries: entries,
+		Usernames: []types.Username{
 			"bob",
 		},
 	}
@@ -77,9 +56,9 @@ func TestRecentAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 		{Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of chocolate"},
 		{Date: "2019-09-20", LastModified: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
 	}
-	ms := mockStore{
-		journalEntries: entries,
-		users: []types.Username{
+	ms := mock.MockDatastore{
+		JournalEntries: entries,
+		Usernames: []types.Username{
 			"bob",
 		},
 	}
@@ -114,9 +93,9 @@ func TestRecentObservesStartAndLimitParameters(t *testing.T) {
 		{Date: "2019-04-12", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
 		{Date: "2019-04-05", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
 	}
-	ms := mockStore{
-		journalEntries: entries,
-		users: []types.Username{
+	ms := mock.MockDatastore{
+		JournalEntries: entries,
+		Usernames: []types.Username{
 			"bob",
 		},
 	}
