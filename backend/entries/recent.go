@@ -25,39 +25,19 @@ func (r defaultReader) Recent(start, limit int) ([]RecentEntry, error) {
 		return []RecentEntry{}, err
 	}
 
-	type result struct {
-		entries []RecentEntry
-		err     error
-	}
-	c := make(chan result)
-	var wg sync.WaitGroup
-	for _, username := range users {
-		wg.Add(1)
-		go func(u types.Username) {
-			defer wg.Done()
-			entriesForUser, err := r.entriesFromUser(u)
-			c <- result{entriesForUser, err}
-		}(username)
+	entriesRaw, err := r.recentEntriesFromAllUsers(users)
+	if err != nil {
+		return []RecentEntry{}, err
 	}
 
-	go func() {
-		wg.Wait()
-		close(c)
-	}()
-
-	entries := []RecentEntry{}
-	for res := range c {
-		if res.err != nil {
-			return []RecentEntry{}, res.err
+	entries := recentEntries{}
+	for _, entry := range entriesRaw {
+		// Filter low-effort posts or test posts from the recent list.
+		const minimumRelevantLength = 30
+		if len(entry.Markdown) < minimumRelevantLength {
+			continue
 		}
-		for _, entry := range res.entries {
-			// Filter low-effort posts or test posts from the recent list.
-			const minimumRelevantLength = 30
-			if len(entry.Markdown) < minimumRelevantLength {
-				continue
-			}
-			entries = append(entries, entry)
-		}
+		entries = append(entries, entry)
 	}
 	return sortAndSliceEntries(entries, start, limit), nil
 }
@@ -78,6 +58,44 @@ func (r defaultReader) RecentFollowing(username types.Username, start, limit int
 		entries = append(entries, entriesForUser...)
 	}
 	return sortAndSliceEntries(entries, start, limit), nil
+}
+
+func (r defaultReader) recentEntriesFromAllUsers(users []types.Username) ([]RecentEntry, error) {
+	type result struct {
+		entries []RecentEntry
+		err     error
+	}
+	c := make(chan result)
+	var wg sync.WaitGroup
+	wg.Add(len(users))
+	for _, username := range users {
+		go func(u types.Username) {
+			defer wg.Done()
+			entriesForUser, err := r.entriesFromUser(u)
+			c <- result{entriesForUser, err}
+		}(username)
+	}
+
+	go func() {
+		wg.Wait()
+		close(c)
+	}()
+
+	entries := []RecentEntry{}
+	var err error
+	for res := range c {
+		// Don't exit immediately because otherwise we'd leak the chan. Instead,
+		//  save the first error we encounter.
+		if err == nil && res.err != nil {
+			err = res.err
+		}
+		entries = append(entries, res.entries...)
+	}
+	if err != nil {
+		return []RecentEntry{}, err
+	}
+
+	return entries, nil
 }
 
 func (r defaultReader) entriesFromUser(username types.Username) (recentEntries, error) {
