@@ -94,7 +94,11 @@ func (s defaultServer) exportUserData(username types.Username) (exportedUserData
 func (s defaultServer) exportUserDrafts(username types.Username) ([]types.JournalEntry, error) {
 	drafts := []types.JournalEntry{}
 
-	// First ever post on What Got Done.
+	// Retrieve all the user's drafts by checking every possible draft date for an
+	// entry. This is inefficient, and we could optimize/parallelize this, but
+	// exporting isn't a very common or performance-sensitive code path.
+
+	// 2019-03-29 is the first ever post on What Got Done.
 	currentDate := time.Date(2019, time.March, 29, 0, 0, 0, 0, time.UTC)
 	for {
 		if currentDate.After(dates.ThisFriday()) {
