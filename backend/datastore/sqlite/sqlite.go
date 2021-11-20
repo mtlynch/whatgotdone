@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"errors"
 	"log"
 	"os"
 	"time"
@@ -15,8 +14,6 @@ import (
 type db struct {
 	ctx *sql.DB
 }
-
-var notImplementedError = errors.New("not implemented")
 
 func New() datastore.Datastore {
 	dbDir := "data"
