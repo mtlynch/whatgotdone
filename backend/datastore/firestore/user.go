@@ -49,9 +49,7 @@ func (c client) usernamesInCollection(collectionKey string) ([]types.Username, e
 		if err != nil {
 			return nil, err
 		}
-		var u userDocument
-		doc.DataTo(&u)
-		users = append(users, u.Username)
+		users = append(users, types.Username(doc.Ref.ID))
 	}
 	return users, nil
 }
