@@ -1,4 +1,4 @@
-version: '3.2'
+version: "3.2"
 services:
   whatgotdone:
     build:
@@ -11,13 +11,5 @@ services:
     environment:
       - PORT=3001
       - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
-      - FIRESTORE_EMULATOR_HOST=firestore_emulator:8080
       - CSRF_SECRET_SEED=dummy-dev-secret-seed
       - USERKIT_SECRET=dummy.dummy
-    depends_on:
-      - firestore_emulator
-  firestore_emulator:
-    image: mtlynch/firestore-emulator:20191115T1224
-    environment:
-      - FIRESTORE_PROJECT_ID=dummy-local-gcp-project
-      - PORT=8080

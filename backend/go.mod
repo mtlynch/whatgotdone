@@ -3,7 +3,6 @@ module github.com/mtlynch/whatgotdone/backend
 go 1.16
 
 require (
-	cloud.google.com/go/firestore v1.5.0
 	cloud.google.com/go/storage v1.14.0
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/disintegration/imaging v1.6.2
