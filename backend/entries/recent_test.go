@@ -1,6 +1,7 @@
 package entries
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 
@@ -147,5 +148,22 @@ func TestRecentObservesStartAndLimitParameters(t *testing.T) {
 		if !reflect.DeepEqual(actual, tt.entriesExpected) {
 			t.Fatalf("Unexpected response: got %v want %v", actual, tt.entriesExpected)
 		}
+	}
+}
+
+func TestRecentFailsWhenDatastoreFailsToRetrieveEntries(t *testing.T) {
+	ms := mock.MockDatastore{
+		Usernames: []types.Username{
+			"bob",
+		},
+		GetEntriesErr: errors.New("dummy error for MockDatastore.GetEntries()"),
+	}
+	r := defaultReader{
+		store: &ms,
+	}
+
+	_, err := r.Recent(0, 20)
+	if err == nil {
+		t.Fatalf("Expected call to Recent to fail")
 	}
 }
