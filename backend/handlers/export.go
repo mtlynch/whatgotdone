@@ -51,6 +51,7 @@ func (s defaultServer) exportGet() http.HandlerFunc {
 }
 
 func (s defaultServer) exportUserData(username types.Username) (exportedUserData, error) {
+	log.Printf("starting export for %s", username)
 	drafts, err := s.exportUserDrafts(username)
 	if err != nil {
 		return exportedUserData{}, err
@@ -79,6 +80,8 @@ func (s defaultServer) exportUserData(username types.Username) (exportedUserData
 	if err != nil {
 		return exportedUserData{}, err
 	}
+
+	log.Printf("finished export for %s", username)
 
 	return exportedUserData{
 		Entries:   entriesToExportedEntries(entries, username),
