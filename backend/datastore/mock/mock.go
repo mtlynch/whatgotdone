@@ -12,14 +12,16 @@ import (
 // MockDatastore is a mock implementation of the datstore.Datastore interface
 // for testing.
 type MockDatastore struct {
-	JournalEntries []types.JournalEntry
-	JournalDrafts  []types.JournalEntry
-	Usernames      []types.Username
-	Reactions      []types.Reaction
-	PageViewCounts []ga.PageViewCount
-	UserProfile    types.UserProfile
-	GetEntriesErr  error
-	mu             sync.Mutex
+	JournalEntries  []types.JournalEntry
+	JournalDrafts   []types.JournalEntry
+	Usernames       []types.Username
+	Reactions       []types.Reaction
+	UserFollows     map[types.Username][]types.Username
+	UserPreferences map[types.Username]types.Preferences
+	PageViewCounts  []ga.PageViewCount
+	UserProfile     types.UserProfile
+	GetEntriesErr   error
+	mu              sync.Mutex
 }
 
 func (ds *MockDatastore) Users() ([]types.Username, error) {
@@ -49,8 +51,10 @@ func (ds *MockDatastore) GetEntries(username types.Username) ([]types.JournalEnt
 }
 
 func (ds *MockDatastore) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
-	if len(ds.JournalDrafts) > 0 {
-		return ds.JournalDrafts[0], nil
+	for _, d := range ds.JournalDrafts {
+		if d.Date == date {
+			return d, nil
+		}
 	}
 	return types.JournalEntry{}, datastore.DraftNotFoundError{
 		Username: username,
@@ -116,13 +120,17 @@ func (ds *MockDatastore) DeleteFollow(leader, follower types.Username) error {
 }
 
 func (ds *MockDatastore) Following(follower types.Username) ([]types.Username, error) {
-	return []types.Username{}, errors.New("MockDatastore does not implement Following")
+	return ds.UserFollows[follower], nil
 }
 
 func (ds *MockDatastore) GetPreferences(username types.Username) (types.Preferences, error) {
-	return types.Preferences{}, datastore.PreferencesNotFoundError{
-		Username: username,
+	prefs, ok := ds.UserPreferences[username]
+	if !ok {
+		return types.Preferences{}, datastore.PreferencesNotFoundError{
+			Username: username,
+		}
 	}
+	return prefs, nil
 }
 
 func (ds *MockDatastore) SetPreferences(username types.Username, prefs types.Preferences) error {

@@ -2,9 +2,12 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/dates"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -38,6 +41,7 @@ func (s defaultServer) exportGet() http.HandlerFunc {
 
 		d, err := s.exportUserData(username)
 		if err != nil {
+			log.Printf("Failed to export user data: %v", err)
 			http.Error(w, fmt.Sprintf("Failed to export user data: %s", err), http.StatusInternalServerError)
 			return
 		}
@@ -47,6 +51,11 @@ func (s defaultServer) exportGet() http.HandlerFunc {
 }
 
 func (s defaultServer) exportUserData(username types.Username) (exportedUserData, error) {
+	drafts, err := s.exportUserDrafts(username)
+	if err != nil {
+		return exportedUserData{}, err
+	}
+
 	entries, err := s.datastore.GetEntries(username)
 	if err != nil {
 		return exportedUserData{}, err
@@ -73,12 +82,38 @@ func (s defaultServer) exportUserData(username types.Username) (exportedUserData
 
 	return exportedUserData{
 		Entries:   entriesToExportedEntries(entries, username),
+		Drafts:    entriesToExportedEntries(drafts, username),
 		Following: following,
 		Profile:   profileToPublic(profile),
 		Preferences: exportedPreferences{
 			EntryTemplate: prefs.EntryTemplate,
 		},
 	}, nil
+}
+
+func (s defaultServer) exportUserDrafts(username types.Username) ([]types.JournalEntry, error) {
+	drafts := []types.JournalEntry{}
+
+	// First ever post on What Got Done.
+	currentDate := time.Date(2019, time.March, 29, 0, 0, 0, 0, time.UTC)
+	for {
+		if currentDate.After(dates.ThisFriday()) {
+			break
+		}
+		draft, err := s.datastore.GetDraft(username, types.EntryDate(currentDate.Format("2006-01-02")))
+		if _, ok := err.(datastore.DraftNotFoundError); ok {
+			// Ignore not found errors
+		} else if err != nil {
+			return []types.JournalEntry{}, err
+		}
+		if err == nil {
+			drafts = append(drafts, draft)
+		}
+
+		currentDate = currentDate.AddDate(0, 0, 7)
+	}
+
+	return drafts, nil
 }
 
 func entriesToExportedEntries(entries []types.JournalEntry, author types.Username) []exportedEntry {
