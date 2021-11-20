@@ -91,49 +91,11 @@ jobs:
     resource_class: small
     environment:
       GCLOUD_PROJECT: whatgotdone
-      # Specify a version so that deploying doesn't keep creating
-      # new, parallel versions.
-      SERVING_VERSION: v1
     steps:
       - checkout
       - attach_workspace:
           at: ./
-      - run:
-          name: Retrieve secret environment variables from CircleCI
-          command: |
-            echo "env_variables:" > env_variables.yaml && \
-            echo "  CSRF_SECRET_SEED: '${CSRF_SECRET_SEED}'" >> env_variables.yaml && \
-            echo "  USERKIT_SECRET: '${USERKIT_SECRET_PROD}'" >> env_variables.yaml && \
-            echo "  PUBLIC_GCS_BUCKET: 'media.whatgotdone.com'" >> env_variables.yaml && \
-            echo "  GOOGLE_ANALYTICS_VIEW_ID: '${GOOGLE_ANALYTICS_VIEW_ID}'" >> env_variables.yaml
-      - run:
-          name: Retrieve Google Analytics service account client secret from CircleCI
-          command: |
-            echo "$GOOGLE_ANALYTICS_SERVICE_ACCOUNT_PROD" | \
-              base64 --decode > "google-analytics-service-account.json"
-      - run:
-          name: Retrieve client secret from CircleCI
-          command: |
-            echo "$CLIENT_SECRET" | \
-              base64 --decode > "${HOME}/client-secret.json"
-      - run:
-          name: Authenticate gcloud
-          command: |
-            gcloud auth activate-service-account \
-              --key-file "${HOME}/client-secret.json"
-      - run:
-          name: Configure gcloud project
-          command: gcloud config set project "${GCLOUD_PROJECT}"
-      - run:
-          name: Deploy to AppEngine
-          command: |
-            gcloud \
-              --quiet \
-              app deploy \
-              --promote \
-              --version "${SERVING_VERSION}" \
-              app.yaml \
-              cron.yaml
+      # TODO: Deploy with fly.io
 workflows:
   version: 2
   test-deploy:
