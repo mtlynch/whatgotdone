@@ -11,9 +11,36 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-// Users returns all the users who have published entries.
-func (c client) Users() (users []types.Username, err error) {
-	iter := c.firestoreClient.Collection(entriesRootKey).Documents(c.ctx)
+// Users returns all the users who have saved drafts or published profiles.
+func (c client) Users() ([]types.Username, error) {
+	usersWithDrafts, err := c.usernamesInCollection(draftsRootKey)
+	if err != nil {
+		return []types.Username{}, err
+	}
+	usersWithProfiles, err := c.usernamesInCollection(userProfilesRootKey)
+	if err != nil {
+		return []types.Username{}, err
+	}
+	usersWithPreferences, err := c.usernamesInCollection(preferencesRootKey)
+	if err != nil {
+		return []types.Username{}, err
+	}
+	allUsers := map[types.Username]bool{}
+	for _, u := range append(usersWithDrafts, append(usersWithProfiles, usersWithPreferences...)...) {
+		allUsers[u] = true
+	}
+	uniqueUsers := make([]types.Username, len(allUsers))
+	i := 0
+	for u := range allUsers {
+		uniqueUsers[i] = u
+		i++
+	}
+	return uniqueUsers, nil
+}
+
+func (c client) usernamesInCollection(collectionKey string) ([]types.Username, error) {
+	users := []types.Username{}
+	iter := c.firestoreClient.Collection(collectionKey).Documents(c.ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
