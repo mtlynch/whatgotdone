@@ -56,10 +56,6 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 			EntryContent string `json:"entryContent"`
 		}
 
-		type draftResponse struct {
-			Ok bool `json:"ok"`
-		}
-
 		var t draftRequest
 		decoder := json.NewDecoder(r.Body)
 		err = decoder.Decode(&t)
