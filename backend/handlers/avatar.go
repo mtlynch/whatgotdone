@@ -19,11 +19,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must be logged in to upload a profile photo", http.StatusForbidden)
-			return
-		}
+		username := usernameFromContext(r.Context())
 
 		avatarFile, contentType, err := avatarFileFromRequest(w, r)
 		if err != nil {
@@ -79,11 +75,7 @@ func (s *defaultServer) userAvatarDelete() http.HandlerFunc {
 			return
 		}
 
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must be logged in to delete your profile photo", http.StatusForbidden)
-			return
-		}
+		username := usernameFromContext(r.Context())
 
 		path := fmt.Sprintf("avatars/%s/", username)
 		if err := s.gcsClient.DeletePath(path); err != nil {

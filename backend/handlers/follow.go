@@ -11,12 +11,6 @@ import (
 
 func (s defaultServer) followPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		follower, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to follow a new user", http.StatusForbidden)
-			return
-		}
-
 		leader, err := usernameFromRequestPath(r)
 		if err != nil {
 			log.Printf("failed to retrieve username from request path: %s", err)
@@ -24,6 +18,7 @@ func (s defaultServer) followPut() http.HandlerFunc {
 			return
 		}
 
+		follower := usernameFromContext(r.Context())
 		if leader == follower {
 			http.Error(w, "You can't follow yourself", http.StatusBadRequest)
 			return
@@ -55,11 +50,7 @@ func (s defaultServer) followPut() http.HandlerFunc {
 
 func (s defaultServer) followDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		follower, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to unfollow a user", http.StatusForbidden)
-			return
-		}
+		follower := usernameFromContext(r.Context())
 
 		leader, err := usernameFromRequestPath(r)
 		if err != nil {

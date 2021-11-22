@@ -12,11 +12,7 @@ import (
 
 func (s defaultServer) draftGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to retrieve a draft entry", http.StatusForbidden)
-			return
-		}
+		username := usernameFromContext(r.Context())
 
 		date, err := dateFromRequestPath(r)
 		if err != nil {
@@ -46,11 +42,7 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 
 func (s defaultServer) draftPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to save a draft entry", http.StatusForbidden)
-			return
-		}
+		username := usernameFromContext(r.Context())
 
 		type draftRequest struct {
 			EntryContent string `json:"entryContent"`
@@ -62,7 +54,7 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 
 		var t draftRequest
 		decoder := json.NewDecoder(r.Body)
-		err = decoder.Decode(&t)
+		err := decoder.Decode(&t)
 		if err != nil {
 			log.Printf("Failed to decode request: %s", err)
 			http.Error(w, "Failed to decode request", http.StatusBadRequest)

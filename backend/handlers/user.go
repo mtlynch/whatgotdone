@@ -27,7 +27,6 @@ func (s defaultServer) userGet() http.HandlerFunc {
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
-
 		p, err := s.datastore.GetUserProfile(username)
 		if _, ok := err.(datastore.UserProfileNotFoundError); ok {
 			http.Error(w, "No profile found", http.StatusNotFound)
@@ -44,12 +43,6 @@ func (s defaultServer) userGet() http.HandlerFunc {
 
 func (s defaultServer) userPost() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to update your profile", http.StatusForbidden)
-			return
-		}
-
 		userProfile, err := profileFromRequest(r)
 		if err != nil {
 			log.Printf("Invalid profile update request: %v", err)
@@ -57,6 +50,7 @@ func (s defaultServer) userPost() http.HandlerFunc {
 			return
 		}
 
+		username := usernameFromContext(r.Context())
 		err = s.datastore.SetUserProfile(username, userProfile)
 		if err != nil {
 			log.Printf("Failed to update user profile: %s", err)
@@ -68,16 +62,10 @@ func (s defaultServer) userPost() http.HandlerFunc {
 
 func (s defaultServer) userMeGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must be logged in to retrieve information about your account", http.StatusForbidden)
-			return
-		}
-
 		respondOK(w, struct {
 			Username types.Username `json:"username"`
 		}{
-			Username: username,
+			Username: usernameFromContext(r.Context()),
 		})
 	}
 }

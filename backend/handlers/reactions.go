@@ -47,12 +47,6 @@ func (s defaultServer) reactionsGet() http.HandlerFunc {
 
 func (s defaultServer) reactionsPost() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to provide a reaction", http.StatusForbidden)
-			return
-		}
-
 		reactionSymbol, err := reactionSymbolFromRequest(r)
 		if err != nil {
 			log.Printf("Invalid reactions request: %v", err)
@@ -75,7 +69,7 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 		}
 
 		reaction := types.Reaction{
-			Username:  username,
+			Username:  usernameFromContext(r.Context()),
 			Timestamp: time.Now().Format(time.RFC3339),
 			Symbol:    reactionSymbol,
 		}
@@ -90,12 +84,6 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 
 func (s defaultServer) reactionsDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to delete a reaction", http.StatusForbidden)
-			return
-		}
-
 		entryAuthor, err := usernameFromRequestPath(r)
 		if err != nil {
 			log.Printf("Failed to retrieve username from request path: %s", err)
@@ -110,7 +98,7 @@ func (s defaultServer) reactionsDelete() http.HandlerFunc {
 			return
 		}
 
-		err = s.datastore.DeleteReaction(entryAuthor, entryDate, username)
+		err = s.datastore.DeleteReaction(entryAuthor, entryDate, usernameFromContext(r.Context()))
 		if err != nil {
 			log.Printf("Failed to delete reaction: %s", err)
 			http.Error(w, "Failed to delete reaction", http.StatusInternalServerError)
