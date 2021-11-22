@@ -145,7 +145,7 @@ Vue.use(VueMarkdown);
 
 import {Editor, EditorContent} from '@tiptap/vue-2';
 import Link from '@tiptap/extension-link';
-import {defaultExtensions} from '@tiptap/starter-kit';
+import StarterKit from '@tiptap/starter-kit';
 import showdown from 'showdown';
 import TurndownService from 'turndown';
 import {gfm} from 'turndown-plugin-gfm';
@@ -181,7 +181,7 @@ export default {
       linkUrl: '',
       editor: new Editor({
         autofocus: true,
-        extensions: [Link, ...defaultExtensions()],
+        extensions: [Link, StarterKit],
         content: showdownService.makeHtml(this.value),
         onUpdate: () => {
           this.$emit('input', this.htmlToMarkdown(this.editor.getHTML()));
