@@ -19,8 +19,6 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
-
 		avatarFile, contentType, err := avatarFileFromRequest(w, r)
 		if err != nil {
 			log.Printf("failed to read profile photo from request: %v", err)
@@ -45,6 +43,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
+		username := usernameFromContext(r.Context())
 		const avatarThumbnailWidth = 40
 		const avatarLargeWidth = 300
 		for _, resizedAvatar := range image.Resize(avatarRawImg, []int{avatarLargeWidth, avatarThumbnailWidth}) {

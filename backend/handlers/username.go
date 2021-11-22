@@ -18,7 +18,6 @@ var contextKeyUsername = &contextKey{"username"}
 
 func (s defaultServer) requireAuthentication(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		tokenCookie, err := r.Cookie(userKitAuthCookieName)
 		if err != nil {
 			log.Printf("failed to retrieve cookie from request: %v", err)

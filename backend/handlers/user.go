@@ -27,6 +27,7 @@ func (s defaultServer) userGet() http.HandlerFunc {
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
+
 		p, err := s.datastore.GetUserProfile(username)
 		if _, ok := err.(datastore.UserProfileNotFoundError); ok {
 			http.Error(w, "No profile found", http.StatusNotFound)

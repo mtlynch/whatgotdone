@@ -42,8 +42,6 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 
 func (s defaultServer) draftPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username := usernameFromContext(r.Context())
-
 		type draftRequest struct {
 			EntryContent string `json:"entryContent"`
 		}
@@ -72,6 +70,8 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 			LastModified: time.Now().Format(time.RFC3339),
 			Markdown:     t.EntryContent,
 		}
+
+		username := usernameFromContext(r.Context())
 		err = s.datastore.InsertDraft(username, j)
 		if err != nil {
 			log.Printf("Failed to update draft entry: %s", err)

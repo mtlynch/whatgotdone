@@ -50,14 +50,14 @@ func (s defaultServer) followPut() http.HandlerFunc {
 
 func (s defaultServer) followDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		follower := usernameFromContext(r.Context())
-
 		leader, err := usernameFromRequestPath(r)
 		if err != nil {
 			log.Printf("failed to retrieve username from request path: %s", err)
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
+
+		follower := usernameFromContext(r.Context())
 
 		err = s.datastore.DeleteFollow(leader, follower)
 		if err != nil {
