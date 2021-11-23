@@ -35,11 +35,7 @@ type (
 
 func (s defaultServer) exportGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to export your data", http.StatusForbidden)
-			return
-		}
+		username := usernameFromContext(r.Context())
 
 		d, err := s.exportUserData(username)
 		if err != nil {

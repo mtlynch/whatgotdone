@@ -36,12 +36,6 @@ func (s *defaultServer) entriesGet() http.HandlerFunc {
 // datastore).
 func (s *defaultServer) entryPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to edit a journal entry", http.StatusForbidden)
-			return
-		}
-
 		date, err := dateFromRequestPath(r)
 		if err != nil {
 			log.Printf("Invalid date: %s", date)
@@ -66,6 +60,8 @@ func (s *defaultServer) entryPut() http.HandlerFunc {
 			LastModified: time.Now().Format(time.RFC3339),
 			Markdown:     t.EntryContent,
 		}
+
+		username := usernameFromContext(r.Context())
 
 		// First update the latest draft entry.
 		err = s.datastore.InsertDraft(username, j)

@@ -12,12 +12,7 @@ import (
 
 func (s defaultServer) preferencesGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must be logged in to retrieve your preferences", http.StatusForbidden)
-			return
-		}
-
+		username := usernameFromContext(r.Context())
 		prefs, err := s.datastore.GetPreferences(username)
 		if _, ok := err.(datastore.PreferencesNotFoundError); ok {
 			http.Error(w, "No user preferences found", http.StatusNotFound)
@@ -38,17 +33,13 @@ func (s defaultServer) preferencesGet() http.HandlerFunc {
 
 func (s defaultServer) preferencesPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to update your preferences", http.StatusForbidden)
-			return
-		}
 		prefs, err := preferencesFromRequest(r)
 		if err != nil {
 			http.Error(w, "Invalid preferences update request", http.StatusBadRequest)
 			return
 		}
 
+		username := usernameFromContext(r.Context())
 		err = s.datastore.SetPreferences(username, prefs)
 		if err != nil {
 			log.Printf("failed to save updated preferences for user %s: %v", username, err)
