@@ -1,4 +1,6 @@
 version: "3.2"
+volumes:
+  wgt_data:
 services:
   test_data_manager:
     build:
@@ -10,8 +12,9 @@ services:
       # test_data_manager's logs are too noisy
       driver: none
     environment:
-      - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
       - PORT=5200
+    volumes:
+      - wgt_data:/app/test-data-manager/data
     command:
       ["-source", "/app/test-data-manager/integration-data.yaml", "-keepAlive"]
   whatgotdone:
@@ -29,11 +32,13 @@ services:
     volumes:
       - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
       - ./:/app/integration
+      - wgt_data:/app/data
   cypress:
     image: "mtlynch/cypress:8.1.0-chrome91-2"
     command: ["--browser", "chrome"]
     depends_on:
       - whatgotdone
+      - test_data_manager
     environment:
       - CYPRESS_baseUrl=http://whatgotdone:3123
       - CYPRESS_testDataManagerUrl=http://test_data_manager:5200
