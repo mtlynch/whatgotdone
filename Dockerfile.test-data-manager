@@ -6,7 +6,6 @@ COPY ./test-data-manager /app/test-data-manager
 WORKDIR /app/test-data-manager
 
 ARG GO_BUILD_TAGS="dev"
-RUN cd test-data-manager && \
-    go build --tags "$GO_BUILD_TAGS" -o /app/main .
+RUN go build --tags "$GO_BUILD_TAGS" -o /app/main .
 
 ENTRYPOINT ["/app/main"]
