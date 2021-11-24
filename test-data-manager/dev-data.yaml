@@ -24,3 +24,11 @@ perUserEntries:
           * Went fishing.
           * Ate an entire pizza in one bite.
           * Saw the movie *Knives Out*.
+profiles:
+  joe:
+    about: |2-
+      I'm Joe.
+
+      What's up?
+    email: joe@example.com
+    twitter: da1truejoe
