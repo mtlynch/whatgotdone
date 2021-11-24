@@ -1,4 +1,4 @@
-module github.com/mtlynch/whatgotdone
+module github.com/mtlynch/whatgotdone/backend
 
 go 1.16
 
@@ -14,5 +14,4 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.9
 	github.com/workpail/userkit-go v0.0.0-20180527213510-29d105cd872b
 	google.golang.org/api v0.59.0
-	gopkg.in/yaml.v2 v2.4.0
 )

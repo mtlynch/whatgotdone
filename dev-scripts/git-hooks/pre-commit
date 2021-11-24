@@ -12,9 +12,11 @@ set -u
 ./dev-scripts/run-go-tests --quick
 ./dev-scripts/check-go-formatting
 
-go build -o /dev/null --tags 'dev' backend/main.go
-go build -o /dev/null --tags 'staging' backend/main.go
-go build -o /dev/null backend/main.go
+pushd backend
+go build -o /dev/null --tags 'dev' main.go
+go build -o /dev/null --tags 'staging' main.go
+go build -o /dev/null main.go
+popd
 
 cd frontend
 npm run lint
