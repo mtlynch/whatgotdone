@@ -29,7 +29,3 @@ popd
 pushd test-data-manager
 go vet -tags dev ./...
 popd
-
-if [ ! -z "$quick_test" ]; then
-  go tool cover -html .coverage.out -o .coverage.html
-fi
