@@ -19,6 +19,8 @@ cd "${SCRIPT_DIR}/.."
 
 readonly BUILD_DIR="$(mktemp -d)"
 
-cd test-data-manager
+pushd test-data-manager
 go build --tags "dev" -o "${BUILD_DIR}" .
-"${BUILD_DIR}/test-data-manager" -source "dev-data.yaml"
+popd
+
+"${BUILD_DIR}/test-data-manager" -source "test-data-manager/dev-data.yaml"
