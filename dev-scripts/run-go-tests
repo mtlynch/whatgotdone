@@ -17,8 +17,18 @@ fi
 # Exit on unset variable.
 set -u
 
+pushd backend
 go test -v $flags ./...
 go vet ./...
+
+if [ ! -z "$quick_test" ]; then
+  go tool cover -html .coverage.out -o .coverage.html
+fi
+popd
+
+pushd test-data-manager
+go vet -tags dev ./...
+popd
 
 if [ ! -z "$quick_test" ]; then
   go tool cover -html .coverage.out -o .coverage.html
