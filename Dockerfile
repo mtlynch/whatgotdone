@@ -10,13 +10,11 @@ RUN npm run build -- --mode "$NPM_BUILD_MODE"
 FROM golang:1.16.7 AS backend_builder
 
 COPY ./backend /app/backend
-COPY ./go.mod /app/go.mod
-COPY ./go.sum /app/go.sum
 
-WORKDIR /app
+WORKDIR /app/backend
 
 ARG GO_BUILD_TAGS="dev"
-RUN go build --tags "$GO_BUILD_TAGS" -o /app/main backend/main.go
+RUN go build --tags "$GO_BUILD_TAGS" -o /app/main main.go
 
 FROM golang:1.16.7
 
