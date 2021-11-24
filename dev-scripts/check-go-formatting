@@ -9,4 +9,4 @@ set -x
 # Exit on unset variable.
 set -u
 
-test -z "$(gofmt -d ./backend/)"
+test -z "$(gofmt -d ./backend/ ./test-data-manager/)"
