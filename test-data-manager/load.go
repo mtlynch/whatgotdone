@@ -18,8 +18,15 @@ type (
 		Entries  []types.JournalEntry `yaml:"entries"`
 	}
 
+	profile struct {
+		About   string `yaml:"about"`
+		Email   string `yaml:"email"`
+		Twitter string `yaml:"twitter"`
+	}
+
 	initData struct {
-		PerUserEntries []userEntries `yaml:"perUserEntries"`
+		PerUserEntries []userEntries      `yaml:"perUserEntries"`
+		Profiles       map[string]profile `yaml:"profiles"`
 	}
 )
 

@@ -7,6 +7,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func NewManager(baseData initData) manager {
@@ -39,6 +40,16 @@ func (m *manager) Reset() error {
 			if err != nil {
 				return err
 			}
+		}
+	}
+	for u, p := range m.baseData.Profiles {
+		err := m.datastore.SetUserProfile(types.Username(u), types.UserProfile{
+			AboutMarkdown: types.UserBio(p.About),
+			EmailAddress:  types.EmailAddress(p.Email),
+			TwitterHandle: types.TwitterHandle(p.Twitter),
+		})
+		if err != nil {
+			return err
 		}
 	}
 	return nil
