@@ -101,10 +101,10 @@ jobs:
       - run:
           name: Retrieve secret environment variables from CircleCI
           command: |
-            echo "env_variables:" > env_variables.yaml && \
-            echo "  CSRF_SECRET_SEED: '${CSRF_SECRET_SEED}'" >> env_variables.yaml && \
-            echo "  USERKIT_SECRET: '${USERKIT_SECRET_PROD}'" >> env_variables.yaml && \
-            echo "  PUBLIC_GCS_BUCKET: 'media.whatgotdone.com'" >> env_variables.yaml && \
+            echo "env_variables:" > backend/env_variables.yaml && \
+            echo "  CSRF_SECRET_SEED: '${CSRF_SECRET_SEED}'" >> backend/env_variables.yaml && \
+            echo "  USERKIT_SECRET: '${USERKIT_SECRET_PROD}'" >> backend/env_variables.yaml && \
+            echo "  PUBLIC_GCS_BUCKET: 'media.whatgotdone.com'" >> backend/env_variables.yaml && \
             echo "  GOOGLE_ANALYTICS_VIEW_ID: '${GOOGLE_ANALYTICS_VIEW_ID}'" >> backend/env_variables.yaml
       - run:
           name: Retrieve Google Analytics service account client secret from CircleCI
