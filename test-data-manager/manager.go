@@ -3,18 +3,16 @@
 package main
 
 import (
-	"context"
 	"log"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
-	"github.com/mtlynch/whatgotdone/backend/datastore/firestore"
+	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
 )
 
 func NewManager(baseData initData) manager {
-	ctx := context.Background()
 	return manager{
-		datastore: firestore.New(),
-		wiper:     newWiper(ctx),
+		datastore: sqlite.New(),
+		wiper:     newWiper(),
 		baseData:  baseData,
 	}
 }

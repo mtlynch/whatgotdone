@@ -3,110 +3,42 @@
 package main
 
 import (
-	"context"
 	"log"
+	"os"
 
-	"cloud.google.com/go/firestore"
-	"google.golang.org/api/iterator"
+	"database/sql"
 
-	"github.com/mtlynch/whatgotdone/backend/datastore/firestore/client"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type wiper struct {
-	firestoreClient *firestore.Client
-	ctx             context.Context
 }
 
-func newWiper(ctx context.Context) wiper {
-	c, err := client.New(ctx)
+func newWiper() wiper {
+	return wiper{}
+}
+
+func (w *wiper) Wipe() {
+	dbDir := "data"
+	if _, err := os.Stat(dbDir); os.IsNotExist(err) {
+		os.Mkdir(dbDir, os.ModePerm)
+	}
+	ctx, err := sql.Open("sqlite3", dbDir+"/store.db")
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return wiper{
-		firestoreClient: c,
-		ctx:             ctx,
+	tables := []string{
+		"user_preferences",
+		"user_profiles",
+		"journal_entries",
+		"follows",
+		"entry_reactions",
+		"pageviews",
 	}
-}
-
-const (
-	entriesRootKey      = "journalEntries"
-	draftsRootKey       = "journalDrafts"
-	pageViewsRootKey    = "pageViews"
-	preferencesRootKey  = "preferences"
-	reactionsRootKey    = "reactions"
-	secretsRootKey      = "secrets"
-	userProfilesRootKey = "userProfiles"
-	followingRootKey    = "following"
-)
-
-func (w *wiper) Wipe() {
-	w.deleteAllCollections()
-}
-
-func (w *wiper) deleteAllCollections() error {
-	iter := w.firestoreClient.Collections(w.ctx)
-	for {
-		collection, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
+	for _, tbl := range tables {
+		_, err = ctx.Exec("DELETE FROM " + tbl)
 		if err != nil {
-			return err
-		}
-
-		err = w.deleteCollection(collection)
-		if err != nil {
-			return err
+			log.Fatalln(err)
 		}
 	}
-	return nil
-}
-
-func (w *wiper) deleteCollection(collection *firestore.CollectionRef) error {
-	for {
-		iter := collection.Limit(50).Documents(w.ctx)
-		numDeleted := 0
-
-		for {
-			doc, err := iter.Next()
-			if err == iterator.Done {
-				break
-			}
-			if err != nil {
-				return err
-			}
-
-			err = w.recursiveDeleteDocument(doc.Ref)
-			if err != nil {
-				return err
-			}
-			numDeleted++
-		}
-
-		// If there are no documents to delete, the process is over.
-		if numDeleted == 0 {
-			return nil
-		}
-	}
-}
-
-func (w *wiper) recursiveDeleteDocument(doc *firestore.DocumentRef) error {
-	iter := doc.Collections(w.ctx)
-	for {
-		collection, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return err
-		}
-
-		err = w.deleteCollection(collection)
-		if err != nil {
-			return err
-		}
-	}
-
-	_, err := doc.Delete(w.ctx)
-	return err
 }
