@@ -1,13 +1,12 @@
 user_data:
   joe:
     profile:
-      about: |2-
+      about_markdown: |2-
         I'm Joe.
 
         What's up?
-      about_markdown: Hello, I am Staging Jimmy.
       email_address: joe@example.com
-      twitter: da1truejoe
+      twitter_handle: da1truejoe
     preferences:
       entry_template: "This is how my week went..."
     drafts:
