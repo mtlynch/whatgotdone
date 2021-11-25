@@ -15,16 +15,12 @@ import (
 )
 
 type (
-	exportedPreferences struct {
-		EntryTemplate string `json:"entryTemplate"`
-	}
-
 	exportedUserData struct {
 		Entries     []export.JournalEntry `json:"entries"`
 		Drafts      []export.JournalEntry `json:"drafts"`
 		Following   []types.Username      `json:"following"`
 		Profile     profilePublic         `json:"profile"`
-		Preferences exportedPreferences   `json:"preferences"`
+		Preferences export.Preferences    `json:"preferences"`
 	}
 )
 
@@ -87,7 +83,7 @@ func (s defaultServer) exportUserData(username types.Username) (exportedUserData
 		Drafts:    entriesToExportedEntries(drafts, username),
 		Following: following,
 		Profile:   profileToPublic(profile),
-		Preferences: exportedPreferences{
+		Preferences: export.Preferences{
 			EntryTemplate: prefs.EntryTemplate,
 		},
 	}, nil

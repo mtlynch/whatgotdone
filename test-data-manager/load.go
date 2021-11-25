@@ -14,9 +14,10 @@ import (
 
 type (
 	userEntries struct {
-		Username types.Username        `yaml:"username"`
-		Drafts   []export.JournalEntry `yaml:"drafts"`
-		Entries  []export.JournalEntry `yaml:"entries"`
+		Username    types.Username        `yaml:"username"`
+		Preferences export.Preferences    `yaml:"preferences"`
+		Drafts      []export.JournalEntry `yaml:"drafts"`
+		Entries     []export.JournalEntry `yaml:"entries"`
 	}
 
 	initData struct {

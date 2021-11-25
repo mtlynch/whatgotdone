@@ -103,7 +103,7 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 			},
 		},
 		Following: []types.Username{types.Username("dummyUserC")},
-		Preferences: exportedPreferences{
+		Preferences: export.Preferences{
 			EntryTemplate: "# My weekly template",
 		},
 		Profile: profilePublic{
