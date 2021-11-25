@@ -43,11 +43,6 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 
 func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must log in to retrieve your personalized feed", http.StatusForbidden)
-			return
-		}
 		start, err := parseStart(r.URL.Query().Get("start"))
 		if err != nil {
 			http.Error(w, "Invalid start parameter", http.StatusBadRequest)
@@ -59,6 +54,7 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 			return
 		}
 
+		username := usernameFromContext(r.Context())
 		entries, err := s.entriesReader.RecentFollowing(username, start, limit)
 		if err != nil {
 			log.Printf("Failed to retrieve recent entries from users %s is following: %v", username, err)

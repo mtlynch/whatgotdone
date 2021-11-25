@@ -10,10 +10,8 @@ RUN npm run build -- --mode "$NPM_BUILD_MODE"
 FROM golang:1.16.7 AS backend_builder
 
 COPY ./backend /app/backend
-COPY ./go.mod /app/go.mod
-COPY ./go.sum /app/go.sum
 
-WORKDIR /app
+WORKDIR /app/backend
 
 ARG GO_BUILD_TAGS="dev"
 
@@ -22,7 +20,7 @@ RUN GOOS=linux GOARCH=amd64 \
       -tags "netgo $GO_BUILD_TAGS" \
       -ldflags '-w -extldflags "-static"' \
       -o /app/main \
-      backend/main.go
+      main.go
 
 FROM debian:stable-20211011-slim AS litestream_downloader
 

@@ -13,5 +13,8 @@ require (
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/mattn/go-sqlite3 v1.14.9
 	github.com/workpail/userkit-go v0.0.0-20180527213510-29d105cd872b
-	google.golang.org/api v0.59.0
+	golang.org/x/mod v0.4.2 // indirect
+	google.golang.org/api v0.44.0
+	google.golang.org/genproto v0.0.0-20210406143921-e86de6bf7a46 // indirect
+	google.golang.org/grpc v1.37.0 // indirect
 )

@@ -5,26 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
-
-type mockStore struct {
-	journalEntries []types.JournalEntry
-	users          []types.Username
-}
-
-func (ms mockStore) ReadEntries(datastore.EntryFilter) ([]types.JournalEntry, error) {
-	return ms.journalEntries, nil
-}
-
-func (ms mockStore) Following(follower types.Username) ([]types.Username, error) {
-	return []types.Username{}, errors.New("not implemented")
-}
-
-func (ms mockStore) Close() error {
-	return nil
-}
 
 func TestRecentSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
 	entries := []types.JournalEntry{
@@ -36,9 +19,9 @@ func TestRecentSortsByDateThenByModifedTimeInDescendingOrder(t *testing.T) {
 		{Author: "bob", Date: "2019-05-24", LastModified: "2019-05-25T06:00:00.000Z", Markdown: "Read the news today... Oh boy!"},
 		{Author: "bob", Date: "2019-05-17", LastModified: "2019-05-16T00:00:00.000Z", Markdown: "Took a nap and dreamed about chocolate"},
 	}
-	ms := mockStore{
-		journalEntries: entries,
-		users: []types.Username{
+	ms := mock.MockDatastore{
+		JournalEntries: entries,
+		Usernames: []types.Username{
 			"bob",
 		},
 	}
@@ -74,9 +57,9 @@ func TestRecentAlwaysPlacesNewDatesAheadOfOldDates(t *testing.T) {
 		{Author: "bob", Date: "2019-09-06", LastModified: "2019-09-22T00:00:00.000Z", Markdown: "Ate an apple in a single bite of chocolate"},
 		{Author: "bob", Date: "2019-09-20", LastModified: "2019-09-20T00:00:00.000Z", Markdown: "Attended an Indie Hackers meetup"},
 	}
-	ms := mockStore{
-		journalEntries: entries,
-		users: []types.Username{
+	ms := mock.MockDatastore{
+		JournalEntries: entries,
+		Usernames: []types.Username{
 			"bob",
 		},
 	}
@@ -111,9 +94,9 @@ func TestRecentObservesStartAndLimitParameters(t *testing.T) {
 		{Author: "bob", Date: "2019-04-12", LastModified: "2019-05-23T00:00:00.000Z", Markdown: "Ate some crackers in a bathtub"},
 		{Author: "bob", Date: "2019-04-05", LastModified: "2019-05-24T00:00:00.000Z", Markdown: "Rode the bus and saw a movie about ghosts"},
 	}
-	ms := mockStore{
-		journalEntries: entries,
-		users: []types.Username{
+	ms := mock.MockDatastore{
+		JournalEntries: entries,
+		Usernames: []types.Username{
 			"bob",
 		},
 	}
@@ -165,5 +148,22 @@ func TestRecentObservesStartAndLimitParameters(t *testing.T) {
 		if !reflect.DeepEqual(actual, tt.entriesExpected) {
 			t.Fatalf("Unexpected response: got %+v want %+v", actual, tt.entriesExpected)
 		}
+	}
+}
+
+func TestRecentFailsWhenDatastoreFailsToRetrieveEntries(t *testing.T) {
+	ms := mock.MockDatastore{
+		Usernames: []types.Username{
+			"bob",
+		},
+		ReadEntriesErr: errors.New("dummy error for MockDatastore.GetEntries()"),
+	}
+	r := defaultReader{
+		store: &ms,
+	}
+
+	_, err := r.Recent(0, 20)
+	if err == nil {
+		t.Fatalf("Expected call to Recent to fail")
 	}
 }

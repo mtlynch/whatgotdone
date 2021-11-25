@@ -86,6 +86,23 @@
     >
       This user has not submitted any recent updates.
     </p>
+    <template v-if="canEdit">
+      <h2>Export</h2>
+      <p>
+        Download a backup of your account data, including all What Got Done
+        drafts, entries, and preferences.
+      </p>
+
+      <b-button
+        variant="primary"
+        v-on:click="onExport"
+        data-test-id="export-data-btn"
+        >Download</b-button
+      >
+      <a class="d-none" ref="file-download-helper"
+        ><!-- Dummy element to allow file downloads --></a
+      >
+    </template>
   </div>
 </template>
 
@@ -94,6 +111,7 @@ import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
 
 import {getEntriesFromUser} from '@/controllers/Entries.js';
+import {exportGet} from '@/controllers/Export.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
@@ -198,6 +216,24 @@ export default {
     onUnfollow: function () {
       unfollow(this.username).then(() => {
         this.$store.commit('removeFollowedUser', this.username);
+      });
+    },
+    onExport: function () {
+      exportGet().then((exportedData) => {
+        const blobURL = window.URL.createObjectURL(
+          new Blob([JSON.stringify(exportedData, null, 2)], {
+            type: 'text/json',
+          })
+        );
+        const downloadHelper = this.$refs['file-download-helper'];
+        downloadHelper.style = 'display: none';
+        downloadHelper.href = blobURL;
+        const timestamp = new Date()
+          .toISOString()
+          .replace(/:/g, '')
+          .replace(/\.\d+/g, '');
+        downloadHelper.download = `whatgotdone-${this.username}-${timestamp}.json`;
+        downloadHelper.click();
       });
     },
   },

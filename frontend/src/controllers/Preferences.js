@@ -4,7 +4,6 @@ export function getPreferences() {
   return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/preferences`, {
     credentials: 'include',
   }).then((response) => {
-    console.log(response);
     // A 404 is not an error.
     if (response.status === 404) {
       return Promise.resolve({
