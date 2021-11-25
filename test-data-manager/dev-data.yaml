@@ -1,5 +1,12 @@
 perUserEntries:
   - username: joe
+    profile:
+      about: |2-
+        I'm Joe.
+
+        What's up?
+      email: joe@example.com
+      twitter: da1truejoe
     drafts:
       - date: 2020-03-13
         lastModified: "2020-03-11T00:00:00.000000Z"
@@ -24,11 +31,3 @@ perUserEntries:
           * Went fishing.
           * Ate an entire pizza in one bite.
           * Saw the movie *Knives Out*.
-profiles:
-  joe:
-    about: |2-
-      I'm Joe.
-
-      What's up?
-    email: joe@example.com
-    twitter: da1truejoe

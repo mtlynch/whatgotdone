@@ -12,21 +12,21 @@ import (
 )
 
 type (
-	userEntries struct {
-		Username types.Username       `yaml:"username"`
-		Drafts   []types.JournalEntry `yaml:"drafts"`
-		Entries  []types.JournalEntry `yaml:"entries"`
-	}
-
 	profile struct {
 		About   string `yaml:"about"`
 		Email   string `yaml:"email"`
 		Twitter string `yaml:"twitter"`
 	}
 
+	userEntries struct {
+		Username types.Username       `yaml:"username"`
+		Profile  profile              `yaml:"profile"`
+		Drafts   []types.JournalEntry `yaml:"drafts"`
+		Entries  []types.JournalEntry `yaml:"entries"`
+	}
+
 	initData struct {
-		PerUserEntries []userEntries      `yaml:"perUserEntries"`
-		Profiles       map[string]profile `yaml:"profiles"`
+		PerUserEntries []userEntries `yaml:"perUserEntries"`
 	}
 )
 
