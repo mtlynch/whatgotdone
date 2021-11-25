@@ -2,7 +2,6 @@ runtime: go116
 # Circle CI generates the env_variables.yaml file during deployment.
 includes:
   - env_variables.yaml
-main: ./backend
 handlers:
   - url: /.*
     script: auto

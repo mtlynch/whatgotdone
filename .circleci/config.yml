@@ -125,6 +125,13 @@ jobs:
           name: Configure gcloud project
           command: gcloud config set project "${GCLOUD_PROJECT}"
       - run:
+          name: Copy frontend/dist folder into backend
+          # This is really hacky, but we're migrating away from AppEngine
+          # soon, so this will go away.
+          command: |
+            mkdir backend/frontend && \
+            cp -R frontend/dist backend/frontend/
+      - run:
           name: Deploy to AppEngine
           command: |
             cd backend && \
