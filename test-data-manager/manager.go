@@ -8,6 +8,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/datastore/firestore"
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func NewManager(baseData initData) manager {
@@ -31,13 +32,19 @@ func (m *manager) Reset() error {
 	m.wiper.Wipe()
 	for _, perUserEntries := range m.baseData.PerUserEntries {
 		for _, d := range perUserEntries.Drafts {
-			err := m.datastore.InsertDraft(perUserEntries.Username, d)
+			err := m.datastore.InsertDraft(perUserEntries.Username, types.JournalEntry{
+				Date:     d.Date,
+				Markdown: d.Markdown,
+			})
 			if err != nil {
 				return err
 			}
 		}
 		for _, e := range perUserEntries.Entries {
-			err := m.datastore.InsertEntry(perUserEntries.Username, e)
+			err := m.datastore.InsertEntry(perUserEntries.Username, types.JournalEntry{
+				Date:     e.Date,
+				Markdown: e.Markdown,
+			})
 			if err != nil {
 				return err
 			}

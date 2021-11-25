@@ -12,6 +12,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/backend/types/export"
 )
 
 func TestExportPopulatedUserAccount(t *testing.T) {
@@ -82,7 +83,7 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 	}
 
 	exportExpected := exportedUserData{
-		Drafts: []exportedEntry{
+		Drafts: []export.JournalEntry{
 			{
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
@@ -94,7 +95,7 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 				Markdown:     "bought a new car",
 			},
 		},
-		Entries: []exportedEntry{
+		Entries: []export.JournalEntry{
 			{
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
@@ -150,8 +151,8 @@ func TestExportEmptyUserAccount(t *testing.T) {
 	}
 
 	exportExpected := exportedUserData{
-		Entries: []exportedEntry{},
-		Drafts:  []exportedEntry{},
+		Entries: []export.JournalEntry{},
+		Drafts:  []export.JournalEntry{},
 	}
 	if !reflect.DeepEqual(response, exportExpected) {
 		t.Fatalf("Unexpected response: got %#v want %#v", response, exportExpected)
