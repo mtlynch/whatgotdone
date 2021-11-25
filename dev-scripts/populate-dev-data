@@ -17,10 +17,8 @@ cd "${SCRIPT_DIR}/.."
 
 . dev.env
 
-readonly BUILD_DIR="$(mktemp -d)"
-
 pushd test-data-manager
-go build --tags "dev" -o "${BUILD_DIR}" .
+go build --tags "dev" -o bin/test-data-manager .
 popd
 
-"${BUILD_DIR}/test-data-manager" -source "test-data-manager/dev-data.yaml"
+test-data-manager/bin/test-data-manager -source "test-data-manager/dev-data.yaml"

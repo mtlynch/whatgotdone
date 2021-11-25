@@ -15,13 +15,15 @@ import (
 func main() {
 	log.Print("Starting bulk firestore tweak script")
 
-	source := flag.String("source", "dev-data.yaml", "Path to YAML file with data to load")
+	source := flag.String("source", "dev-data.yaml", "Path to JSON or YAML file with data to load")
 	keepAlive := flag.Bool("keepAlive", false, "Stay alive after completing initialization")
 	flag.Parse()
 
 	log.Printf("source=%s", *source)
 
-	mgr := NewManager(loadYaml(*source))
+	data := loadFromFile(*source)
+
+	mgr := NewManager(data)
 
 	if *keepAlive {
 		s := NewServer(mgr)
