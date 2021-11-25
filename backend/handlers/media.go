@@ -21,12 +21,6 @@ func (s *defaultServer) mediaPut() http.HandlerFunc {
 			return
 		}
 
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must be logged in to upload an image or video", http.StatusForbidden)
-			return
-		}
-
 		mediaFile, contentType, err := mediaFileFromRequest(w, r)
 		if err != nil {
 			log.Printf("failed to read media from request: %v", err)
@@ -34,6 +28,7 @@ func (s *defaultServer) mediaPut() http.HandlerFunc {
 			return
 		}
 
+		username := usernameFromContext(r.Context())
 		path, err := mediaPath(contentType, username)
 		if err != nil {
 			log.Printf("failed to generate media path: %v", err)

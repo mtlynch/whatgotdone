@@ -9,17 +9,9 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
-
-func (ds *mockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
-	return ds.userProfile, nil
-}
-
-func (ds *mockDatastore) SetUserProfile(username types.Username, p types.UserProfile) error {
-	ds.userProfile = p
-	return nil
-}
 
 func TestUserPost(t *testing.T) {
 	var userPostTests = []struct {
@@ -109,7 +101,7 @@ func TestUserPost(t *testing.T) {
 		},
 	}
 
-	ds := mockDatastore{}
+	ds := mock.MockDatastore{}
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
@@ -137,9 +129,9 @@ func TestUserPost(t *testing.T) {
 			t.Fatalf("for input [%s], handler returned wrong status code: got %v want %v",
 				tt.requestBody, status, tt.httpStatusExpected)
 		}
-		if tt.httpStatusExpected == http.StatusOK && !reflect.DeepEqual(ds.userProfile, tt.userProfileExpected) {
+		if tt.httpStatusExpected == http.StatusOK && !reflect.DeepEqual(ds.UserProfile, tt.userProfileExpected) {
 			t.Fatalf("for input [%s], unexpected user profile: got %+v want %+v",
-				tt.requestBody, ds.userProfile, tt.userProfileExpected)
+				tt.requestBody, ds.UserProfile, tt.userProfileExpected)
 		}
 	}
 }

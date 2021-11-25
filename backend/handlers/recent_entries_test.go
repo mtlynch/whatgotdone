@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -40,7 +41,7 @@ func TestRecentEntriesHandlerReturnsRecentEntries(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore:      &mockDatastore{},
+		datastore:      &mock.MockDatastore{},
 		entriesReader:  &mer,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
@@ -97,7 +98,7 @@ func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore:      &mockDatastore{},
+		datastore:      &mock.MockDatastore{},
 		entriesReader:  &mer,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
@@ -157,7 +158,7 @@ func TestRecentEntriesHandlerReturnsEmptyArrayWhenEntriesReaderIsEmpty(t *testin
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore:      &mockDatastore{},
+		datastore:      &mock.MockDatastore{},
 		entriesReader:  &mer,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),

@@ -19,12 +19,6 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must be logged in to upload a profile photo", http.StatusForbidden)
-			return
-		}
-
 		avatarFile, contentType, err := avatarFileFromRequest(w, r)
 		if err != nil {
 			log.Printf("failed to read profile photo from request: %v", err)
@@ -49,6 +43,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
+		username := usernameFromContext(r.Context())
 		const avatarThumbnailWidth = 40
 		const avatarLargeWidth = 300
 		for _, resizedAvatar := range image.Resize(avatarRawImg, []int{avatarLargeWidth, avatarThumbnailWidth}) {
@@ -79,11 +74,7 @@ func (s *defaultServer) userAvatarDelete() http.HandlerFunc {
 			return
 		}
 
-		username, err := s.loggedInUser(r)
-		if err != nil {
-			http.Error(w, "You must be logged in to delete your profile photo", http.StatusForbidden)
-			return
-		}
+		username := usernameFromContext(r.Context())
 
 		path := fmt.Sprintf("avatars/%s/", username)
 		if err := s.gcsClient.DeletePath(path); err != nil {

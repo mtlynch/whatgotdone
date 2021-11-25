@@ -8,17 +8,33 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func TestEntriesHandler(t *testing.T) {
 	entries := []types.JournalEntry{
-		{Date: "2019-03-22", LastModified: "2019-03-24", Markdown: "Ate some crackers"},
-		{Date: "2019-03-15", LastModified: "2019-03-15", Markdown: "Took a nap"},
-		{Date: "2019-03-08", LastModified: "2019-03-09", Markdown: "Watched the movie *The Royal Tenenbaums*."},
+		{
+			Author:       "dummyUser",
+			Date:         "2019-03-22",
+			LastModified: "2019-03-24",
+			Markdown:     "Ate some crackers",
+		},
+		{
+			Author:       "dummyUser",
+			Date:         "2019-03-15",
+			LastModified: "2019-03-15",
+			Markdown:     "Took a nap",
+		},
+		{
+			Author:       "dummyUser",
+			Date:         "2019-03-08",
+			LastModified: "2019-03-09",
+			Markdown:     "Watched the movie *The Royal Tenenbaums*.",
+		},
 	}
-	ds := mockDatastore{
-		journalEntries: entries,
+	ds := mock.MockDatastore{
+		JournalEntries: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -51,8 +67,8 @@ func TestEntriesHandler(t *testing.T) {
 	}
 }
 func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
-	ds := mockDatastore{
-		journalEntries: []types.JournalEntry{},
+	ds := mock.MockDatastore{
+		JournalEntries: []types.JournalEntry{},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -80,7 +96,7 @@ func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
 
-	expected := []types.JournalEntry{}
+	var expected []types.JournalEntry
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)
 	}
@@ -88,8 +104,8 @@ func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
 
 func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
 	entries := []types.JournalEntry{}
-	ds := mockDatastore{
-		journalEntries: entries,
+	ds := mock.MockDatastore{
+		JournalEntries: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -115,8 +131,8 @@ func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
 
 func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	entries := []types.JournalEntry{}
-	ds := mockDatastore{
-		journalEntries: entries,
+	ds := mock.MockDatastore{
+		JournalEntries: entries,
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
