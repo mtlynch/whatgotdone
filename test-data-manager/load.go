@@ -9,13 +9,14 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/backend/types/export"
 )
 
 type (
 	userEntries struct {
-		Username types.Username       `yaml:"username"`
-		Drafts   []types.JournalEntry `yaml:"drafts"`
-		Entries  []types.JournalEntry `yaml:"entries"`
+		Username types.Username        `yaml:"username"`
+		Drafts   []export.JournalEntry `yaml:"drafts"`
+		Entries  []export.JournalEntry `yaml:"entries"`
 	}
 
 	initData struct {

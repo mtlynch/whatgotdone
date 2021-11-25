@@ -11,25 +11,20 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/dates"
 	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/backend/types/export"
 )
 
 type (
-	exportedEntry struct {
-		Date         types.EntryDate `json:"date"`
-		Markdown     string          `json:"markdown"`
-		LastModified string          `json:"lastModified"`
-	}
-
 	exportedPreferences struct {
 		EntryTemplate string `json:"entryTemplate"`
 	}
 
 	exportedUserData struct {
-		Entries     []exportedEntry     `json:"entries"`
-		Drafts      []exportedEntry     `json:"drafts"`
-		Following   []types.Username    `json:"following"`
-		Profile     profilePublic       `json:"profile"`
-		Preferences exportedPreferences `json:"preferences"`
+		Entries     []export.JournalEntry `json:"entries"`
+		Drafts      []export.JournalEntry `json:"drafts"`
+		Following   []types.Username      `json:"following"`
+		Profile     profilePublic         `json:"profile"`
+		Preferences exportedPreferences   `json:"preferences"`
 	}
 )
 
@@ -156,10 +151,10 @@ func (s defaultServer) exportUserDrafts(username types.Username) ([]types.Journa
 	return drafts, nil
 }
 
-func entriesToExportedEntries(entries []types.JournalEntry, author types.Username) []exportedEntry {
-	p := []exportedEntry{}
+func entriesToExportedEntries(entries []types.JournalEntry, author types.Username) []export.JournalEntry {
+	p := []export.JournalEntry{}
 	for _, entry := range entries {
-		p = append(p, exportedEntry{
+		p = append(p, export.JournalEntry{
 			Date:         entry.Date,
 			Markdown:     entry.Markdown,
 			LastModified: entry.LastModified,
