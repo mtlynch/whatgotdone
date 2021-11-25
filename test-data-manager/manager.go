@@ -31,6 +31,12 @@ func (m *manager) Reset() error {
 	log.Printf("%+v", m.baseData.PerUserEntries)
 	m.wiper.Wipe()
 	for _, perUserEntries := range m.baseData.PerUserEntries {
+		err := m.datastore.SetPreferences(perUserEntries.Username, types.Preferences{
+			EntryTemplate: perUserEntries.Preferences.EntryTemplate,
+		})
+		if err != nil {
+			return err
+		}
 		for _, d := range perUserEntries.Drafts {
 			err := m.datastore.InsertDraft(perUserEntries.Username, types.JournalEntry{
 				Date:     d.Date,

@@ -1,5 +1,7 @@
 perUserEntries:
   - username: staging_jimmy
+    preferences:
+      entry_template: "This is how my week went..."
     drafts:
       - date: 2020-03-13
         lastModified: "2020-03-11T00:00:00.000000Z"
