@@ -1,5 +1,8 @@
-perUserEntries:
-  - username: staging_jimmy
+user_data:
+  staging_jimmy:
+    profile:
+      about_markdown: Hello, I am Staging Jimmy.
+      email_address: staging.jimmy@example.com
     preferences:
       entry_template: "This is how my week went..."
     drafts:

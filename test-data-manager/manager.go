@@ -28,17 +28,25 @@ type manager struct {
 
 func (m *manager) Reset() error {
 	log.Printf("resetting datastore data")
-	log.Printf("%+v", m.baseData.PerUserEntries)
 	m.wiper.Wipe()
-	for _, perUserEntries := range m.baseData.PerUserEntries {
-		err := m.datastore.SetPreferences(perUserEntries.Username, types.Preferences{
-			EntryTemplate: perUserEntries.Preferences.EntryTemplate,
+	for username, ud := range m.baseData.UserData {
+		err := m.datastore.SetPreferences(types.Username(username), types.Preferences{
+			EntryTemplate: ud.Preferences.EntryTemplate,
 		})
 		if err != nil {
 			return err
 		}
-		for _, d := range perUserEntries.Drafts {
-			err := m.datastore.InsertDraft(perUserEntries.Username, types.JournalEntry{
+		err = m.datastore.SetUserProfile(types.Username(username), types.UserProfile{
+			AboutMarkdown:   ud.Profile.AboutMarkdown,
+			EmailAddress:    ud.Profile.EmailAddress,
+			TwitterHandle:   ud.Profile.TwitterHandle,
+			MastodonAddress: ud.Profile.MastodonAddress,
+		})
+		if err != nil {
+			return err
+		}
+		for _, d := range ud.Drafts {
+			err := m.datastore.InsertDraft(types.Username(username), types.JournalEntry{
 				Date:     d.Date,
 				Markdown: d.Markdown,
 			})
@@ -46,8 +54,8 @@ func (m *manager) Reset() error {
 				return err
 			}
 		}
-		for _, e := range perUserEntries.Entries {
-			err := m.datastore.InsertEntry(perUserEntries.Username, types.JournalEntry{
+		for _, e := range ud.Entries {
+			err := m.datastore.InsertEntry(types.Username(username), types.JournalEntry{
 				Date:     e.Date,
 				Markdown: e.Markdown,
 			})
