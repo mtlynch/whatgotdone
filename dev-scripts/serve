@@ -11,7 +11,12 @@ set -x
 
 ./dev-scripts/populate-dev-data
 
+SCREEN_SESSION_NAME="whatgotdone-frontend"
+
+# Kill any previous frontend hot reloading screen session.
+screen -X -S "${SCREEN_SESSION_NAME}" quit || true
+
 # Run the hot reloading frontend server in a background screen session.
-screen -Sdm whatgotdone-frontend ./dev-scripts/serve-frontend
+screen -Sdm "${SCREEN_SESSION_NAME}" ./dev-scripts/serve-frontend
 
 ./dev-scripts/serve-backend
