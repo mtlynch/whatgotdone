@@ -1,12 +1,15 @@
-perUserEntries:
-  - username: joe
+user_data:
+  joe:
     profile:
       about: |2-
         I'm Joe.
 
         What's up?
-      email: joe@example.com
+      about_markdown: Hello, I am Staging Jimmy.
+      email_address: joe@example.com
       twitter: da1truejoe
+    preferences:
+      entry_template: "This is how my week went..."
     drafts:
       - date: 2020-03-13
         lastModified: "2020-03-11T00:00:00.000000Z"

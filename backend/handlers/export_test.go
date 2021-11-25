@@ -12,6 +12,7 @@ import (
 
 	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
 	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/backend/types/export"
 )
 
 func TestExportPopulatedUserAccount(t *testing.T) {
@@ -78,14 +79,14 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
-	var response exportedUserData
+	var response export.UserData
 	err = json.Unmarshal(w.Body.Bytes(), &response)
 	if err != nil {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
 
-	exportExpected := exportedUserData{
-		Drafts: []exportedEntry{
+	exportExpected := export.UserData{
+		Drafts: []export.JournalEntry{
 			{
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
@@ -97,7 +98,7 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 				Markdown:     "bought a new car",
 			},
 		},
-		Entries: []exportedEntry{
+		Entries: []export.JournalEntry{
 			{
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
@@ -105,10 +106,10 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 			},
 		},
 		Following: []types.Username{types.Username("dummyUserC")},
-		Preferences: exportedPreferences{
+		Preferences: export.Preferences{
 			EntryTemplate: "# My weekly template",
 		},
-		Profile: profilePublic{
+		Profile: export.UserProfile{
 			AboutMarkdown: "I'm just a dummy user",
 			EmailAddress:  "dummy@example.com",
 		},
@@ -146,15 +147,15 @@ func TestExportEmptyUserAccount(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
-	var response exportedUserData
+	var response export.UserData
 	err = json.Unmarshal(w.Body.Bytes(), &response)
 	if err != nil {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
 
-	exportExpected := exportedUserData{
-		Entries: []exportedEntry{},
-		Drafts:  []exportedEntry{},
+	exportExpected := export.UserData{
+		Entries: []export.JournalEntry{},
+		Drafts:  []export.JournalEntry{},
 	}
 	if !reflect.DeepEqual(response, exportExpected) {
 		t.Fatalf("Unexpected response: got %#v want %#v", response, exportExpected)

@@ -11,26 +11,7 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/dates"
 	"github.com/mtlynch/whatgotdone/backend/types"
-)
-
-type (
-	exportedEntry struct {
-		Date         types.EntryDate `json:"date"`
-		Markdown     string          `json:"markdown"`
-		LastModified string          `json:"lastModified"`
-	}
-
-	exportedPreferences struct {
-		EntryTemplate string `json:"entryTemplate"`
-	}
-
-	exportedUserData struct {
-		Entries     []exportedEntry     `json:"entries"`
-		Drafts      []exportedEntry     `json:"drafts"`
-		Following   []types.Username    `json:"following"`
-		Profile     profilePublic       `json:"profile"`
-		Preferences exportedPreferences `json:"preferences"`
-	}
+	"github.com/mtlynch/whatgotdone/backend/types/export"
 )
 
 func (s defaultServer) exportGet() http.HandlerFunc {
@@ -48,13 +29,13 @@ func (s defaultServer) exportGet() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) exportUserData(username types.Username) (exportedUserData, error) {
+func (s defaultServer) exportUserData(username types.Username) (export.UserData, error) {
 	log.Printf("starting export for %s", username)
 
 	log.Printf("exporting(%s): unpublished drafts", username)
 	drafts, err := s.exportUserDrafts(username)
 	if err != nil {
-		return exportedUserData{}, err
+		return export.UserData{}, err
 	}
 
 	log.Printf("exporting(%s): published entries", username)
@@ -63,7 +44,7 @@ func (s defaultServer) exportUserData(username types.Username) (exportedUserData
 			ByUsers: []types.Username{username},
 		})
 	if err != nil {
-		return exportedUserData{}, err
+		return export.UserData{}, err
 	}
 
 	log.Printf("exporting(%s): preferences", username)
@@ -71,7 +52,7 @@ func (s defaultServer) exportUserData(username types.Username) (exportedUserData
 	if _, ok := err.(datastore.PreferencesNotFoundError); ok {
 		prefs = types.Preferences{}
 	} else if err != nil {
-		return exportedUserData{}, err
+		return export.UserData{}, err
 	}
 
 	log.Printf("exporting(%s): user profile", username)
@@ -79,23 +60,23 @@ func (s defaultServer) exportUserData(username types.Username) (exportedUserData
 	if _, ok := err.(datastore.UserProfileNotFoundError); ok {
 		profile = types.UserProfile{}
 	} else if err != nil {
-		return exportedUserData{}, err
+		return export.UserData{}, err
 	}
 
 	log.Printf("exporting(%s): followed users", username)
 	following, err := s.datastore.Following(username)
 	if err != nil {
-		return exportedUserData{}, err
+		return export.UserData{}, err
 	}
 
 	log.Printf("finished export for %s", username)
 
-	return exportedUserData{
+	return export.UserData{
 		Entries:   entriesToExportedEntries(entries, username),
 		Drafts:    entriesToExportedEntries(drafts, username),
 		Following: following,
-		Profile:   profileToPublic(profile),
-		Preferences: exportedPreferences{
+		Profile:   profileToExported(profile),
+		Preferences: export.Preferences{
 			EntryTemplate: prefs.EntryTemplate,
 		},
 	}, nil
@@ -159,14 +140,23 @@ func (s defaultServer) exportUserDrafts(username types.Username) ([]types.Journa
 	return drafts, nil
 }
 
-func entriesToExportedEntries(entries []types.JournalEntry, author types.Username) []exportedEntry {
-	p := []exportedEntry{}
+func entriesToExportedEntries(entries []types.JournalEntry, author types.Username) []export.JournalEntry {
+	p := []export.JournalEntry{}
 	for _, entry := range entries {
-		p = append(p, exportedEntry{
+		p = append(p, export.JournalEntry{
 			Date:         entry.Date,
 			Markdown:     entry.Markdown,
 			LastModified: entry.LastModified,
 		})
 	}
 	return p
+}
+
+func profileToExported(p types.UserProfile) export.UserProfile {
+	return export.UserProfile{
+		AboutMarkdown:   p.AboutMarkdown,
+		TwitterHandle:   p.TwitterHandle,
+		EmailAddress:    p.EmailAddress,
+		MastodonAddress: p.MastodonAddress,
+	}
 }

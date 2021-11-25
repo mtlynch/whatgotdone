@@ -26,25 +26,37 @@ func NewManager(baseData initData) manager {
 
 func (m *manager) Reset() error {
 	log.Printf("resetting datastore data")
-	log.Printf("%+v", m.baseData.PerUserEntries)
 	wipeDb()
-	for _, export := range m.baseData.PerUserEntries {
-		err := m.datastore.SetUserProfile(export.Username, types.UserProfile{
-			AboutMarkdown: types.UserBio(export.Profile.About),
-			EmailAddress:  types.EmailAddress(export.Profile.Email),
-			TwitterHandle: types.TwitterHandle(export.Profile.Twitter),
+	for username, ud := range m.baseData.UserData {
+		err := m.datastore.SetPreferences(types.Username(username), types.Preferences{
+			EntryTemplate: ud.Preferences.EntryTemplate,
 		})
 		if err != nil {
 			return err
 		}
-		for _, d := range export.Drafts {
-			err := m.datastore.InsertDraft(export.Username, d)
+		err = m.datastore.SetUserProfile(types.Username(username), types.UserProfile{
+			AboutMarkdown:   ud.Profile.AboutMarkdown,
+			EmailAddress:    ud.Profile.EmailAddress,
+			TwitterHandle:   ud.Profile.TwitterHandle,
+			MastodonAddress: ud.Profile.MastodonAddress,
+		})
+		if err != nil {
+			return err
+		}
+		for _, d := range ud.Drafts {
+			err := m.datastore.InsertDraft(types.Username(username), types.JournalEntry{
+				Date:     d.Date,
+				Markdown: d.Markdown,
+			})
 			if err != nil {
 				return err
 			}
 		}
-		for _, e := range export.Entries {
-			err := m.datastore.InsertEntry(export.Username, e)
+		for _, e := range ud.Entries {
+			err := m.datastore.InsertEntry(types.Username(username), types.JournalEntry{
+				Date:     e.Date,
+				Markdown: e.Markdown,
+			})
 			if err != nil {
 				return err
 			}

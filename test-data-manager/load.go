@@ -8,25 +8,12 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"github.com/mtlynch/whatgotdone/backend/types"
+	"github.com/mtlynch/whatgotdone/backend/types/export"
 )
 
 type (
-	profile struct {
-		About   string `yaml:"about"`
-		Email   string `yaml:"email"`
-		Twitter string `yaml:"twitter"`
-	}
-
-	userEntries struct {
-		Username types.Username       `yaml:"username"`
-		Profile  profile              `yaml:"profile"`
-		Drafts   []types.JournalEntry `yaml:"drafts"`
-		Entries  []types.JournalEntry `yaml:"entries"`
-	}
-
 	initData struct {
-		PerUserEntries []userEntries `yaml:"perUserEntries"`
+		UserData map[string]export.UserData `yaml:"user_data"`
 	}
 )
 
