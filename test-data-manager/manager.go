@@ -36,6 +36,15 @@ func (m *manager) Reset() error {
 		if err != nil {
 			return err
 		}
+		err = m.datastore.SetUserProfile(types.Username(username), types.UserProfile{
+			AboutMarkdown:   ud.Profile.AboutMarkdown,
+			EmailAddress:    ud.Profile.EmailAddress,
+			TwitterHandle:   ud.Profile.TwitterHandle,
+			MastodonAddress: ud.Profile.MastodonAddress,
+		})
+		if err != nil {
+			return err
+		}
 		for _, d := range ud.Drafts {
 			err := m.datastore.InsertDraft(types.Username(username), types.JournalEntry{
 				Date:     d.Date,
