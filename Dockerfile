@@ -20,7 +20,7 @@ RUN GOOS=linux GOARCH=amd64 \
       -tags "netgo $GO_BUILD_TAGS" \
       -ldflags '-w -extldflags "-static"' \
       -o /app/main \
-      backend/main.go
+      main.go
 
 FROM debian:stable-20211011-slim AS litestream_downloader
 
