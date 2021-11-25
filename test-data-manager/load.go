@@ -3,8 +3,10 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 
@@ -13,17 +15,23 @@ import (
 
 type (
 	initData struct {
-		UserData map[string]export.UserData `yaml:"user_data"`
+		UserData map[string]export.UserData `json:"userData" yaml:"user_data"`
 	}
 )
 
-func loadYaml(filename string) initData {
+func loadFromFile(filename string) initData {
 	b, err := ioutil.ReadFile(filename)
 	if err != nil {
 		panic(err)
 	}
 	var d initData
-	err = yaml.Unmarshal(b, &d)
+
+	unmarshal := yaml.Unmarshal
+	if strings.HasSuffix(filename, ".json") {
+		unmarshal = json.Unmarshal
+	}
+
+	err = unmarshal(b, &d)
 	if err != nil {
 		log.Fatalf("error: %v", err)
 	}
