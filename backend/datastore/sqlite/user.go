@@ -44,7 +44,7 @@ func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
 
 // SetUserProfile updates the given user's profile.
 func (d db) SetUserProfile(username types.Username, profile types.UserProfile) error {
-	log.Printf("saving preferences to datastore: %s -> %+v", username, profile)
+	log.Printf("saving user profile to datastore: %s -> %+v", username, profile)
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO user_profiles(
 		username,
