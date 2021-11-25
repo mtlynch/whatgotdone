@@ -101,7 +101,8 @@ jobs:
           command: curl -L https://fly.io/install.sh | sh -s "${FLYCTL_VERSION}"
       - run:
           name: Deploy to fly.io
-          command: "${HOME}/.fly/bin/flyctl" deploy --access-token "${FLY_ACCESS_TOKEN}"
+          command: |
+            "${HOME}/.fly/bin/flyctl" deploy --access-token "${FLY_ACCESS_TOKEN}"
 workflows:
   version: 2
   test-deploy:
@@ -111,7 +112,6 @@ workflows:
       - test-backend
       - integration
       - deploy:
-
           requires:
             - build-frontend
             - test-backend
