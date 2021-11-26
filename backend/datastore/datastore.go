@@ -11,7 +11,8 @@ import (
 )
 
 type EntryFilter struct {
-	ByUsers []types.Username
+	ByUsers   []types.Username
+	MinLength int32
 }
 
 // Datastore represents the What Got Done datastore. It's responsible for

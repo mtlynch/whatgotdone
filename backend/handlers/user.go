@@ -94,8 +94,6 @@ func (s defaultServer) userExists(username types.Username) (bool, error) {
 		return false, err
 	}
 
-	// TODO: Verify that ReadEntries returns empty slice on no results instead of
-	// returning an error.
 	if len(entries) > 0 {
 		return true, nil
 	}

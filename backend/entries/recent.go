@@ -11,8 +11,11 @@ import (
 type journalEntries []types.JournalEntry
 
 func (r defaultReader) Recent(start, limit int) ([]types.JournalEntry, error) {
-	// TODO: Filter by start date and min entry length.
-	entries, err := r.store.ReadEntries(datastore.EntryFilter{})
+	// TODO: Filter by start date.
+	entries, err := r.store.ReadEntries(datastore.EntryFilter{
+		// Filter low-effort posts.
+		MinLength: 30,
+	})
 	if err != nil {
 		log.Printf("Failed to retrieve entries: %s", err)
 		return journalEntries{}, err
@@ -28,7 +31,7 @@ func (r defaultReader) RecentFollowing(username types.Username, start, limit int
 		return journalEntries{}, err
 	}
 
-	// TODO: Filter by start date and min entry length.
+	// TODO: Filter by start date.
 	entries, err := r.store.ReadEntries(datastore.EntryFilter{
 		ByUsers: following,
 	})

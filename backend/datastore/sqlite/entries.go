@@ -60,6 +60,12 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 			values = append(values, string(u))
 		}
 	}
+
+	if filter.MinLength != 0 {
+		whereClauses = append(whereClauses, "LENGTH(markdown) > ?")
+		values = append(values, filter.MinLength)
+	}
+
 	stmt, err := d.ctx.Prepare(fmt.Sprintf(`
 		SELECT
 			username,
