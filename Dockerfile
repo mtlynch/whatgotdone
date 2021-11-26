@@ -46,7 +46,7 @@ COPY --from=backend_builder /app/main /app/main
 COPY --from=litestream_downloader /litestream/litestream /app/litestream
 COPY ./litestream.yml /etc/litestream.yml
 COPY ./docker_entrypoint /app/docker_entrypoint
-COPY ./*.service-account.json /app/
+COPY ./*service-account.json /app/
 
 WORKDIR /app
 
