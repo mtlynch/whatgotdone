@@ -48,7 +48,7 @@ func (m *manager) Reset() error {
 		for _, d := range ud.Drafts {
 			err := m.datastore.InsertDraft(types.Username(username), types.JournalEntry{
 				Date:         d.Date,
-				Markdown:     d.Markdown,
+				Markdown:     canonicalizeMarkdown(d.Markdown),
 				LastModified: canonicalizeDatetime(d.LastModified),
 			})
 			if err != nil {
@@ -58,7 +58,7 @@ func (m *manager) Reset() error {
 		for _, e := range ud.Entries {
 			err := m.datastore.InsertEntry(types.Username(username), types.JournalEntry{
 				Date:         e.Date,
-				Markdown:     e.Markdown,
+				Markdown:     canonicalizeMarkdown(e.Markdown),
 				LastModified: canonicalizeDatetime(e.LastModified),
 			})
 			if err != nil {
@@ -125,4 +125,8 @@ func parseDatetime(s string) (time.Time, error) {
 		return time.ParseInLocation("2006-01-02T15:04:05Z", s, time.UTC)
 	}
 	return time.ParseInLocation("2006-01-02T15:04:05-07:00", s, time.UTC)
+}
+
+func canonicalizeMarkdown(s string) string {
+	return strings.ReplaceAll(s, "https://storage.googleapis.com/whatgotdone-public/", "https://media.whatgotdone.com/")
 }
