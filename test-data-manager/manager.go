@@ -63,6 +63,18 @@ func (m *manager) Reset() error {
 				return err
 			}
 		}
+		for date, reactions := range ud.Reactions {
+			for _, r := range reactions {
+				err := m.datastore.AddReaction(types.Username(username), date, types.Reaction{
+					Username:  r.Username,
+					Symbol:    r.Symbol,
+					Timestamp: r.Timestamp,
+				})
+				if err != nil {
+					return err
+				}
+			}
+		}
 	}
 	return nil
 }
