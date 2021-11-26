@@ -44,6 +44,12 @@ func (s defaultServer) exportUserData(username types.Username) (export.UserData,
 		return export.UserData{}, err
 	}
 
+	log.Printf("exporting(%s): reactions", username)
+	reactions, err := s.exportReactions(username, entries)
+	if err != nil {
+		return export.UserData{}, err
+	}
+
 	log.Printf("exporting(%s): preferences", username)
 	prefs, err := s.datastore.GetPreferences(username)
 	if _, ok := err.(datastore.PreferencesNotFoundError); ok {
@@ -70,6 +76,7 @@ func (s defaultServer) exportUserData(username types.Username) (export.UserData,
 
 	return export.UserData{
 		Entries:   entriesToExportedEntries(entries, username),
+		Reactions: reactions,
 		Drafts:    entriesToExportedEntries(drafts, username),
 		Following: following,
 		Profile:   profileToExported(profile),
@@ -147,6 +154,61 @@ func entriesToExportedEntries(entries []types.JournalEntry, author types.Usernam
 		})
 	}
 	return p
+}
+
+func (s defaultServer) exportReactions(username types.Username, entries []types.JournalEntry) (map[types.EntryDate][]export.Reaction, error) {
+	type result struct {
+		date      types.EntryDate
+		reactions []export.Reaction
+		err       error
+	}
+	c := make(chan result)
+	var wg sync.WaitGroup
+	wg.Add(len(entries))
+
+	for _, entry := range entries {
+		go func(date types.EntryDate) {
+			defer wg.Done()
+			reactions, err := s.datastore.GetReactions(username, date)
+			if len(reactions) == 0 {
+				return
+			}
+			// Sort reactions in ascending order of timestamp.
+			sort.Slice(reactions, func(i, j int) bool {
+				return reactions[i].Timestamp < reactions[j].Timestamp
+			})
+			var exportedReactions []export.Reaction
+			for _, r := range reactions {
+				exportedReactions = append(exportedReactions, export.Reaction{
+					Username:  r.Username,
+					Symbol:    r.Symbol,
+					Timestamp: r.Timestamp,
+				})
+			}
+			c <- result{date, exportedReactions, err}
+		}(entry.Date)
+	}
+
+	go func() {
+		wg.Wait()
+		close(c)
+	}()
+
+	reactions := map[types.EntryDate][]export.Reaction{}
+	var err error
+	for res := range c {
+		if res.err == nil {
+			reactions[res.date] = res.reactions
+			continue
+		}
+		// Don't exit immediately because otherwise we'd leak the chan. Instead,
+		// save the first error we encounter.
+		if err == nil && res.err != nil {
+			err = res.err
+		}
+	}
+
+	return reactions, nil
 }
 
 func profileToExported(p types.UserProfile) export.UserProfile {
