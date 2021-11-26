@@ -61,6 +61,12 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 		}
 	}
 
+	// TODO: This is a workaround to treat zero-length entries as deleted.
+	// Instead, we should delete the entries properly.
+	if filter.MinLength == 0 {
+		filter.MinLength = 1
+	}
+
 	if filter.MinLength != 0 {
 		whereClauses = append(whereClauses, "LENGTH(markdown) > ?")
 		values = append(values, filter.MinLength)
