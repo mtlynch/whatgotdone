@@ -76,7 +76,7 @@ func (m *manager) Reset() error {
 				err := m.datastore.AddReaction(types.Username(username), date, types.Reaction{
 					Username:  r.Username,
 					Symbol:    r.Symbol,
-					Timestamp: r.Timestamp,
+					Timestamp: canonicalizeDatetime(r.Timestamp),
 				})
 				if err != nil {
 					return err
