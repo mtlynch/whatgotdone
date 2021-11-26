@@ -33,6 +33,11 @@ user_data:
           * Went fishing.
           * Ate an entire pizza in one bite.
           * Saw the movie *Knives Out*.
+    reactions:
+      "2020-03-13":
+        - username: bob
+          symbol: "👍"
+          timestamp: "2021-07-11T02:13:02Z"
   bob:
     drafts:
       - date: 2021-11-26
