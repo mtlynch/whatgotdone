@@ -20,6 +20,12 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 		JournalDrafts: []types.JournalEntry{
 			{
 				Author:       "dummyUserA",
+				Date:         types.EntryDate("2021-11-12"),
+				LastModified: "2021-11-12",
+				Markdown:     "thought about fishing",
+			},
+			{
+				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
 				Markdown:     "went to the store today",
@@ -34,9 +40,26 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 		JournalEntries: []types.JournalEntry{
 			{
 				Author:       "dummyUserA",
+				Date:         types.EntryDate("2021-11-12"),
+				LastModified: "2021-11-12",
+				Markdown:     "thought about fishing",
+			},
+			{
+				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
 				Markdown:     "went to the store today",
+			},
+		},
+		Reactions: map[types.Username]map[types.EntryDate][]types.Reaction{
+			"dummyUserA": {
+				"2021-11-19": []types.Reaction{
+					{
+						Username:  types.Username("dummyUserB"),
+						Symbol:    "👍",
+						Timestamp: "2021-11-20T11:57:02-04:00",
+					},
+				},
 			},
 		},
 		UserFollows: map[types.Username][]types.Username{
@@ -88,6 +111,11 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 	exportExpected := export.UserData{
 		Drafts: []export.JournalEntry{
 			{
+				Date:         types.EntryDate("2021-11-12"),
+				LastModified: "2021-11-12",
+				Markdown:     "thought about fishing",
+			},
+			{
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
 				Markdown:     "went to the store today",
@@ -100,9 +128,23 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 		},
 		Entries: []export.JournalEntry{
 			{
+				Date:         types.EntryDate("2021-11-12"),
+				LastModified: "2021-11-12",
+				Markdown:     "thought about fishing",
+			},
+			{
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
 				Markdown:     "went to the store today",
+			},
+		},
+		Reactions: map[types.EntryDate][]export.Reaction{
+			"2021-11-19": {
+				{
+					Username:  types.Username("dummyUserB"),
+					Symbol:    "👍",
+					Timestamp: "2021-11-20T11:57:02-04:00",
+				},
 			},
 		},
 		Following: []types.Username{types.Username("dummyUserC")},
@@ -154,8 +196,9 @@ func TestExportEmptyUserAccount(t *testing.T) {
 	}
 
 	exportExpected := export.UserData{
-		Entries: []export.JournalEntry{},
-		Drafts:  []export.JournalEntry{},
+		Entries:   []export.JournalEntry{},
+		Reactions: map[types.EntryDate][]export.Reaction{},
+		Drafts:    []export.JournalEntry{},
 	}
 	if !reflect.DeepEqual(response, exportExpected) {
 		t.Fatalf("Unexpected response: got %#v want %#v", response, exportExpected)
