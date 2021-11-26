@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"strings"
@@ -30,7 +31,12 @@ func (d db) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 	var markdown string
 	var lastModified string
 	err = stmt.QueryRow(username, date).Scan(&markdown, &lastModified)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return types.JournalEntry{}, datastore.EntryNotFoundError{
+			Username: username,
+			Date:     date,
+		}
+	} else if err != nil {
 		return types.JournalEntry{}, err
 	}
 

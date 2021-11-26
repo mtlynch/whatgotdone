@@ -1,8 +1,10 @@
 package sqlite
 
 import (
+	"database/sql"
 	"log"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -30,6 +32,11 @@ func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
 		mastodon      string
 	)
 	err = stmt.QueryRow(username).Scan(&aboutMarkdown, &email, &twitter, &mastodon)
+	if err == sql.ErrNoRows {
+		return types.UserProfile{}, datastore.UserProfileNotFoundError{
+			Username: username,
+		}
+	}
 	if err != nil {
 		return types.UserProfile{}, err
 	}

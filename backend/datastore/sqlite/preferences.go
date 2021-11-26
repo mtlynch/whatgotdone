@@ -25,7 +25,9 @@ func (d db) GetPreferences(username types.Username) (types.Preferences, error) {
 	var entryTemplate string
 	err = stmt.QueryRow(username).Scan(&entryTemplate)
 	if err == sql.ErrNoRows {
-		return types.Preferences{}, datastore.PreferencesNotFoundError{Username: username}
+		return types.Preferences{}, datastore.PreferencesNotFoundError{
+			Username: username,
+		}
 	} else if err != nil {
 		return types.Preferences{}, err
 	}

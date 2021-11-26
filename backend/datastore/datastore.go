@@ -98,15 +98,6 @@ func (f PageViewsNotFoundError) Error() string {
 	return fmt.Sprintf("No page view count found for path %s", f.Path)
 }
 
-type FollowAlreadyExistsError struct {
-	Leader   types.Username
-	Follower types.Username
-}
-
-func (f FollowAlreadyExistsError) Error() string {
-	return fmt.Sprintf("Cannot create a follow from %s -> %s because the follow already exists", f.Follower, f.Leader)
-}
-
 // PreferencesNotFoundError occurs when no profile exists for the given
 // username. The user might exist, but they have not set preferences.
 type PreferencesNotFoundError struct {
