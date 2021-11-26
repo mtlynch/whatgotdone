@@ -36,8 +36,7 @@ func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
 		return types.UserProfile{}, datastore.UserProfileNotFoundError{
 			Username: username,
 		}
-	}
-	if err != nil {
+	} else if err != nil {
 		return types.UserProfile{}, err
 	}
 
