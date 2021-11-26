@@ -16,3 +16,6 @@ data/
 
 # Code coverage artifacts
 .coverage*
+
+# Production environment variables
+prod.env
