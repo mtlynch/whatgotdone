@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]]; then
+  echo "specify a backup path"
+  exit 1
+fi
+
+set -ux
+
+readonly JSON_SOURCE="$1"
+
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
+echo "Populating local DB"
+pushd test-data-manager
+go build --tags "dev" -o bin/test-data-manager .
+popd
+
+test-data-manager/bin/test-data-manager -source "${JSON_SOURCE}"
+
+. prod.env
+flyctl suspend "${FLY_APP_NAME}"
+
+echo "Replacing remote DB"
+
+DB_PATH="data/store.db" litestream replicate -config litestream.yml -exec "sleep 30"
+
+flyctl resume "${FLY_APP_NAME}"
