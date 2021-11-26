@@ -61,6 +61,12 @@ func (m *manager) Reset() error {
 				return err
 			}
 		}
+		for _, leader := range ud.Following {
+			err := m.datastore.InsertFollow(leader, types.Username(username))
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
