@@ -36,6 +36,22 @@ func (s defaultServer) requireAuthentication(fn http.HandlerFunc) http.HandlerFu
 	}
 }
 
+func (s defaultServer) requireAdmin(fn http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := r.Context().Value(contextKeyUsername).(types.Username)
+		if !ok {
+			panic("expected to find username in context, but found none")
+		}
+
+		if !isAdminUser(u) {
+			http.Error(w, "Admin privileges required", http.StatusForbidden)
+			return
+		}
+
+		fn(w, r)
+	}
+}
+
 func usernameFromContext(ctx context.Context) types.Username {
 	u, ok := ctx.Value(contextKeyUsername).(types.Username)
 	if !ok {
