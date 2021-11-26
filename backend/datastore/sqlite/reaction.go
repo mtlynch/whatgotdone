@@ -64,7 +64,7 @@ func (d db) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, r
 		reacting_user,
 		reaction,
 		timestamp)
-	values(?,?,?,?,datetime('now'))`, entryAuthor, entryDate, reaction.Username, reaction.Symbol)
+	values(?,?,?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, entryAuthor, entryDate, reaction.Username, reaction.Symbol)
 	return err
 }
 

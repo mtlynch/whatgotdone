@@ -15,7 +15,7 @@ func (d db) InsertPageViews(path string, pageViews int) error {
 		path,
 		views,
 		last_updated)
-	values(?,?,datetime('now'))`, path, pageViews)
+	values(?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, path, pageViews)
 	return err
 }
 
