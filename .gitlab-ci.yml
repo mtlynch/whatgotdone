@@ -1,0 +1,53 @@
+stages:
+  - build
+  - deploy
+
+check_whitespace:
+  stage: build
+  image: cimg/base:2020.01
+  script:
+    - dev-scripts/check-trailing-whitespace
+    - dev-scripts/check-trailing-newline
+
+build_frontend:
+  image: node:12.18.4-alpine
+  script:
+    - npm --prefix frontend install
+    - npm --prefix frontend run check-format
+    - npm --prefix frontend run lint
+    - npm --prefix frontend run test:unit
+    - npm --prefix frontend run build
+
+test-backend:
+  stage: build
+  image: golang:1.16
+  scripts:
+    - dev-scripts/run-go-tests
+    - dev-scripts/check-go-formatting
+  artifacts:
+    paths:
+      - backend/.coverage.html
+
+integration:
+  stage: build
+  services:
+    - docker:dind
+  scripts:
+    - echo "$INTEGRATION_CLIENT_SECRET" | base64 --decode > service-account-creds-integration.json
+    - dev-scripts/run-integration-tests
+  artifacts:
+    paths:
+      - integration/cypress/videos
+      - integration/cypress/screenshots
+
+deploy:
+  stage: deploy
+  image: cimg/base:2020.01
+  variables:
+    # The flyctl changes too much to use a specific version, so use the latest for the
+    # time being.
+    # https://github.com/superfly/flyctl/issues/394#issuecomment-815890166
+    FLYCTL_VERSION: "latest"
+  scripts:
+    - curl -L https://fly.io/install.sh | sh -s "${FLYCTL_VERSION}"
+    - ${HOME}/.fly/bin/flyctl deploy --access-token "${FLY_ACCESS_TOKEN}"
