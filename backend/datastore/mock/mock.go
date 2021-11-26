@@ -15,7 +15,7 @@ type MockDatastore struct {
 	JournalEntries  []types.JournalEntry
 	JournalDrafts   []types.JournalEntry
 	Usernames       []types.Username
-	Reactions       []types.Reaction
+	Reactions       map[types.Username]map[types.EntryDate][]types.Reaction
 	UserFollows     map[types.Username][]types.Username
 	UserPreferences map[types.Username]types.Preferences
 	PageViewCounts  []ga.PageViewCount
@@ -71,23 +71,46 @@ func (ds *MockDatastore) InsertDraft(username types.Username, j types.JournalEnt
 }
 
 func (ds *MockDatastore) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
-	return ds.Reactions, nil
+	for username, reactionsByDate := range ds.Reactions {
+		if entryAuthor != username {
+			continue
+		}
+		for date, reactions := range reactionsByDate {
+			if date != entryDate {
+				continue
+			}
+			return reactions, nil
+		}
+	}
+	return []types.Reaction{}, nil
 }
 
 func (ds *MockDatastore) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error {
-	ds.Reactions = append(ds.Reactions, reaction)
+	reactionsToAuthor, ok := ds.Reactions[entryAuthor]
+	if !ok {
+		reactionsToAuthor = map[types.EntryDate][]types.Reaction{}
+		ds.Reactions[entryAuthor] = reactionsToAuthor
+	}
+	reactionsToAuthor[entryDate] = append(reactionsToAuthor[entryDate], reaction)
 	return nil
 }
 
 func (ds *MockDatastore) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, user types.Username) error {
-	toDelete := -1
-	for i, r := range ds.Reactions {
-		if r.Username == user {
-			toDelete = i
+	for username, reactionsByDate := range ds.Reactions {
+		if entryAuthor != username {
+			continue
 		}
-	}
-	if toDelete >= 0 {
-		ds.Reactions = append(ds.Reactions[:toDelete], ds.Reactions[toDelete+1:]...)
+		toDelete := -1
+		for i, r := range reactionsByDate[entryDate] {
+			if r.Username == user {
+				toDelete = i
+				break
+			}
+		}
+		if toDelete >= 0 {
+			ds.Reactions[username][entryDate] = append(ds.Reactions[username][entryDate][:toDelete], ds.Reactions[username][entryDate][toDelete+1:]...)
+			break
+		}
 	}
 	return nil
 }
