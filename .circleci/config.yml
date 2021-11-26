@@ -97,6 +97,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Retrieve Google Analytics service account client secret from CircleCI
+          command: |
+            echo "$GOOGLE_ANALYTICS_SERVICE_ACCOUNT_PROD" | \
+              base64 --decode > "google-analytics-service-account.json"
+      - run:
           name: Install flyctl
           command: curl -L https://fly.io/install.sh | sh -s "${FLYCTL_VERSION}"
       - run:
