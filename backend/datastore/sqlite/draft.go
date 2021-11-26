@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"log"
+	"strings"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -61,6 +62,6 @@ func (d db) InsertDraft(username types.Username, j types.JournalEntry) error {
 		markdown,
 		is_draft,
 		last_modified)
-	values(?,?,?,1,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, username, j.Date, j.Markdown)
+	values(?,?,?,1,?)`, username, j.Date, j.Markdown, strings.ReplaceAll(j.LastModified, "T", " "))
 	return err
 }

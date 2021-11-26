@@ -134,7 +134,7 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 // InsertEntry saves an entry to the datastore, overwriting any existing entry
 // with the same name and username.
 func (d db) InsertEntry(username types.Username, j types.JournalEntry) error {
-	log.Printf("saving entry to datastore: %s -> %+v", username, j.Date)
+	log.Printf("saving entry to datastore: %s -> %+v - %v", username, j.Date, j.LastModified)
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO journal_entries(
 		username,
@@ -142,6 +142,6 @@ func (d db) InsertEntry(username types.Username, j types.JournalEntry) error {
 		markdown,
 		is_draft,
 		last_modified)
-	values(?,?,?,0,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, username, j.Date, j.Markdown)
+	values(?,?,?,0,?)`, username, j.Date, j.Markdown, strings.ReplaceAll(j.LastModified, "T", " "))
 	return err
 }

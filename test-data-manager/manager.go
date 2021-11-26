@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
@@ -45,8 +47,9 @@ func (m *manager) Reset() error {
 		}
 		for _, d := range ud.Drafts {
 			err := m.datastore.InsertDraft(types.Username(username), types.JournalEntry{
-				Date:     d.Date,
-				Markdown: d.Markdown,
+				Date:         d.Date,
+				Markdown:     d.Markdown,
+				LastModified: canonicalizeDatetime(d.LastModified),
 			})
 			if err != nil {
 				return err
@@ -54,8 +57,9 @@ func (m *manager) Reset() error {
 		}
 		for _, e := range ud.Entries {
 			err := m.datastore.InsertEntry(types.Username(username), types.JournalEntry{
-				Date:     e.Date,
-				Markdown: e.Markdown,
+				Date:         e.Date,
+				Markdown:     e.Markdown,
+				LastModified: canonicalizeDatetime(e.LastModified),
 			})
 			if err != nil {
 				return err
@@ -106,4 +110,19 @@ func wipeDb() {
 			log.Fatalln(err)
 		}
 	}
+}
+
+func canonicalizeDatetime(s string) string {
+	t, err := parseDatetime(s)
+	if err != nil {
+		panic(err)
+	}
+	return t.Format("2006-01-02 15:04:05Z")
+}
+
+func parseDatetime(s string) (time.Time, error) {
+	if strings.HasSuffix(s, "Z") {
+		return time.ParseInLocation("2006-01-02T15:04:05Z", s, time.UTC)
+	}
+	return time.ParseInLocation("2006-01-02T15:04:05-07:00", s, time.UTC)
 }
