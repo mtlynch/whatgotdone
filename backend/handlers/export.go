@@ -29,34 +29,6 @@ func (s defaultServer) exportGet() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) exportAllGet() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		users, err := s.datastore.Users()
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Failed to get user list: %s", err), http.StatusInternalServerError)
-			return
-		}
-
-		type fullExport struct {
-			UserData map[types.Username]export.UserData `json:"userData"`
-		}
-		fe := fullExport{
-			UserData: map[types.Username]export.UserData{},
-		}
-		for _, u := range users {
-			d, err := s.exportUserData(u)
-			if err != nil {
-				log.Printf("Failed to export user data for %s: %v", u, err)
-				http.Error(w, fmt.Sprintf("Failed to export user data: %s", err), http.StatusInternalServerError)
-				return
-			}
-			fe.UserData[u] = d
-		}
-
-		respondOK(w, fe)
-	}
-}
-
 func (s defaultServer) exportUserData(username types.Username) (export.UserData, error) {
 	log.Printf("starting export for %s", username)
 
