@@ -27,7 +27,6 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/draft/{date}", s.requireAuthentication(s.draftGet())).Methods(http.MethodGet)
 	api.HandleFunc("/draft/{date}", s.requireAuthentication(s.draftPut())).Methods(http.MethodPut)
 	api.HandleFunc("/export", s.requireAuthentication(s.exportGet())).Methods(http.MethodGet)
-	api.HandleFunc("/export/all", s.requireAuthentication(s.requireAdmin(s.exportAllGet()))).Methods(http.MethodGet)
 	api.HandleFunc("/media", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/media", s.requireAuthentication(s.mediaPut())).Methods(http.MethodPut)
 	api.HandleFunc("/pageViews", allowOptions()).Methods(http.MethodOptions)
