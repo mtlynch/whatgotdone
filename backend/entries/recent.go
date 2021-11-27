@@ -75,7 +75,7 @@ func (e journalEntries) Less(i, j int) bool {
 	if e[i].Date > e[j].Date {
 		return false
 	}
-	return e[i].LastModified < e[j].LastModified
+	return e[i].LastModified.Before(e[j].LastModified)
 }
 
 func min(a, b int) int {

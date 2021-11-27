@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/gorilla/mux"
 
@@ -15,7 +16,7 @@ import (
 
 func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 	drafts := []types.JournalEntry{
-		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+		{Date: "2019-04-19", LastModified: mustParseTime("2019-04-19T00:00:00Z"), Markdown: "Drove to the zoo"},
 	}
 	ds := mock.MockDatastore{
 		JournalDrafts: drafts,
@@ -45,7 +46,7 @@ func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 
 func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 	drafts := []types.JournalEntry{
-		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+		{Date: "2019-04-19", LastModified: mustParseTime("2019-04-19T00:00:00Z"), Markdown: "Drove to the zoo"},
 	}
 	ds := mock.MockDatastore{
 		JournalDrafts: drafts,
@@ -80,7 +81,7 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 
 func TestDraftHandlerWhenDateMatches(t *testing.T) {
 	drafts := []types.JournalEntry{
-		{Date: "2019-04-19", LastModified: "2019-04-19", Markdown: "Drove to the zoo"},
+		{Date: "2019-04-19", LastModified: mustParseTime("2019-04-19T00:00:00Z"), Markdown: "Drove to the zoo"},
 	}
 	ds := mock.MockDatastore{
 		JournalDrafts: drafts,
@@ -189,4 +190,12 @@ func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusBadRequest)
 	}
+}
+
+func mustParseTime(ts string) time.Time {
+	t, err := time.Parse("2006-01-02T15:04:05Z", ts)
+	if err != nil {
+		panic(err)
+	}
+	return t
 }

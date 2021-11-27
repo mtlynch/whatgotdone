@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -59,9 +58,8 @@ func (s *defaultServer) entryPut() http.HandlerFunc {
 		}
 
 		j := types.JournalEntry{
-			Date:         date,
-			LastModified: time.Now().Format(time.RFC3339),
-			Markdown:     t.EntryContent,
+			Date:     date,
+			Markdown: t.EntryContent,
 		}
 
 		username := usernameFromContext(r.Context())

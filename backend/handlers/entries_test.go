@@ -17,19 +17,19 @@ func TestEntriesHandler(t *testing.T) {
 		{
 			Author:       "dummyUser",
 			Date:         "2019-03-22",
-			LastModified: "2019-03-24",
+			LastModified: mustParseTime("2019-03-24T00:00:00Z"),
 			Markdown:     "Ate some crackers",
 		},
 		{
 			Author:       "dummyUser",
 			Date:         "2019-03-15",
-			LastModified: "2019-03-15",
+			LastModified: mustParseTime("2019-03-15T00:00:00Z"),
 			Markdown:     "Took a nap",
 		},
 		{
 			Author:       "dummyUser",
 			Date:         "2019-03-08",
-			LastModified: "2019-03-09",
+			LastModified: mustParseTime("2019-03-09T00:00:00Z"),
 			Markdown:     "Watched the movie *The Royal Tenenbaums*.",
 		},
 	}
