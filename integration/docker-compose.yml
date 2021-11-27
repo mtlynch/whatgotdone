@@ -30,7 +30,7 @@ services:
       - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
       - PUBLIC_GCS_BUCKET=whatgotdone-public-staging
     volumes:
-      - ../service-account-creds-staging.json:/app/service-account-creds-staging.json
+      - ../gcp-service-account-staging.json:/app/gcp-service-account-staging.json
       - ./:/app/integration
       - wgt_data:/app/data
   cypress:

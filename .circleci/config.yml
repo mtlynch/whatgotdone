@@ -77,7 +77,7 @@ jobs:
           name: Retrieve integration service account credentials (JSON) from CircleCI
           command: |
             echo "$INTEGRATION_CLIENT_SECRET" | \
-              base64 --decode > service-account-creds-integration.json
+              base64 --decode > gcp-service-account-integration.json
       - run:
           name: Perform integration tests.
           command: dev-scripts/run-integration-tests
@@ -100,7 +100,7 @@ jobs:
           name: Retrieve Google Analytics service account client secret from CircleCI
           command: |
             echo "$GOOGLE_ANALYTICS_SERVICE_ACCOUNT_PROD" | \
-              base64 --decode > "google-analytics-service-account.json"
+              base64 --decode > gcp-service-account-prod.json
       - run:
           name: Install flyctl
           command: curl -L https://fly.io/install.sh | sh -s "${FLYCTL_VERSION}"

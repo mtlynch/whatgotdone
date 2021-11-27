@@ -113,7 +113,7 @@ What Got Done supports pulling metrics from Google Analytics into the page conte
 1. Enable the [Google Analytics Reporting API](https://console.cloud.google.com/apis/library/analyticsreporting.googleapis.com) in your Google Cloud Platform project.
 1. Create a [service account](https://console.cloud.google.com/iam-admin/serviceaccounts) in Google Cloud Platform console for your What Got Done project.
    1. Assign the service account no permissions/roles, but save its private key as JSON.
-   1. Click "Create Key" to create a private key and save it in JSON format as `google-analytics-service-account.json` in the What Got Done root directory.
+   1. Click "Create Key" to create a private key and save it in JSON format as `gcp-service-account-prod.json` in the What Got Done root directory.
 1. In Google Analytics, open Admin > View > View User Management and add the email address of the service account you just created (it will have an email like `[name]@[project ID].iam.gserviceaccount.com`.
    1. Grant the user only "Read & Analyze" permissions.
 1. In Google Analytics, open Admin > View > View Settings
