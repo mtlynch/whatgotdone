@@ -1,5 +1,8 @@
 runtime: go116
 instance_class: B8
+basic_scaling:
+  max_instances: 1
+  idle_timeout: 10m
 # Circle CI generates the env_variables.yaml file during deployment.
 includes:
   - env_variables.yaml
