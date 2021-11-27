@@ -4,6 +4,8 @@ COPY ./frontend /app/frontend
 WORKDIR /app/frontend
 
 ARG NPM_BUILD_MODE="development"
+RUN echo "npm build mode: ${NPM_BUILD_MODE}"
+
 RUN npm install
 RUN npm run build -- --mode "$NPM_BUILD_MODE"
 
@@ -15,6 +17,7 @@ WORKDIR /app/backend
 
 ARG GO_BUILD_TAGS="dev"
 
+RUN echo "Go build tags: ${GO_BUILD_TAGS}"
 RUN GOOS=linux GOARCH=amd64 \
     go build \
       -tags "netgo $GO_BUILD_TAGS" \
