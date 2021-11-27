@@ -20,6 +20,7 @@ set -u
 pushd backend
 go test -v $flags ./...
 go vet ./...
+
 if [ ! -z "$quick_test" ]; then
   go tool cover -html .coverage.out -o .coverage.html
 fi
