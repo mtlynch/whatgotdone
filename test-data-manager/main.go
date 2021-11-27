@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	log.Print("Starting bulk firestore tweak script")
+	log.Print("Starting test-data-manager script")
 
 	source := flag.String("source", "dev-data.yaml", "Path to JSON or YAML file with data to load")
 	keepAlive := flag.Bool("keepAlive", false, "Stay alive after completing initialization")

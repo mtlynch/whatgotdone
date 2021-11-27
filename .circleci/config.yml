@@ -120,8 +120,7 @@ workflows:
           requires:
             - build-frontend
             - test-backend
-          # TODO: Uncomment this before we merge into master
-          #  - integration
-          #filters:
-          #  branches:
-          #    only: master
+            - integration
+          filters:
+            branches:
+              only: master
