@@ -57,7 +57,7 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 					{
 						Username:  types.Username("dummyUserB"),
 						Symbol:    "👍",
-						Timestamp: "2021-11-20T11:57:02-04:00",
+						Timestamp: mustParseTime("2021-11-20T11:57:02Z"),
 					},
 				},
 			},
@@ -143,7 +143,7 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 				{
 					Username:  types.Username("dummyUserB"),
 					Symbol:    "👍",
-					Timestamp: "2021-11-20T11:57:02-04:00",
+					Timestamp: "2021-11-20T11:57:02Z",
 				},
 			},
 		},
