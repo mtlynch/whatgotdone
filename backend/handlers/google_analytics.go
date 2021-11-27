@@ -90,11 +90,6 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			return
 		}
 
-		if !isAuthenticatedRequest(r) {
-			http.Error(w, "Refreshes of Google Analytics data must come from within AppEngine", http.StatusForbidden)
-			return
-		}
-
 		pvcs, err := s.googleAnalyticsFetcher.PageViewsByPath("2019-01-01", "today")
 		if err != nil {
 			log.Printf("failed to refresh Google Analytics data: %v", err)
@@ -173,9 +168,4 @@ func parseJournalEntryPath(path string) (types.Username, types.EntryDate, bool) 
 		return "", "", false
 	}
 	return user, entryDate, true
-}
-
-func isAuthenticatedRequest(r *http.Request) bool {
-	// TODO: Actually authenticate this.
-	return true
 }
