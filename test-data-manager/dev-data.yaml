@@ -1,36 +1,49 @@
 user_data:
-  staging_jimmy:
+  joe:
     profile:
-      about_markdown: Hello, I am Staging Jimmy.
-      email_address: staging.jimmy@example.com
+      about_markdown: |2-
+        I'm Joe.
+
+        What's up?
+      email_address: joe@example.com
+      twitter_handle: da1truejoe
+    following:
+      - bob
     preferences:
       entry_template: "This is how my week went..."
     drafts:
       - date: 2020-03-13
-        lastModified: "2020-03-11T00:00:00.000000Z"
         markdown: |2-
-          Today was a productive day. I created a test data manager for What Got
-          Done!
+          Today was a productive day. I created a test data manager for What Got Done!
+
+          Then, I added a filter to the recent entries API to filter short entries from the default view.
       - date: 2020-03-06
-        lastModified: "2020-03-06T00:00:00.000000Z"
         markdown: |2-
           * Went fishing.
           * Ate an entire pizza in one bite.
           * Saw the movie *Knives Out*.
     entries:
       - date: 2020-03-13
-        lastModified: "2020-03-11T00:00:00.000000Z"
         markdown: |2-
-          Today was a productive day. I created a test data manager for What Got
-          Done!
+          Today was a productive day. I created a test data manager for What Got Done!
+
+          Then, I added a filter to the recent entries API to filter short entries from the default view.
       - date: 2020-03-06
-        lastModified: "2020-03-06T00:00:00.000000Z"
         markdown: |2-
           * Went fishing.
           * Ate an entire pizza in one bite.
           * Saw the movie *Knives Out*.
     reactions:
       "2020-03-13":
-        - username: loving_lenny
+        - username: bob
           symbol: "👍"
           timestamp: "2021-07-11T02:13:02Z"
+  bob:
+    drafts:
+      - date: 2021-11-26
+        markdown: |2-
+          Ate a breakfast of champions! Then had a lunch of regular people.
+    entries:
+      - date: 2021-11-26
+        markdown: |2-
+          Ate a breakfast of champions! Then had a lunch of regular people.

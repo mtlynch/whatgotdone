@@ -10,21 +10,23 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
+type EntryFilter struct {
+	ByUsers   []types.Username
+	MinLength int32
+}
+
 // Datastore represents the What Got Done datastore. It's responsible for
 // storing and retrieving all persistent data (journal entries, journal drafts,
 // reactions).
 type Datastore interface {
-	// Users returns all the users who have saved drafts, profiles, or
-	// preferences.
-	Users() ([]types.Username, error)
 	// GetUserProfile returns profile information for the given user.
 	GetUserProfile(username types.Username) (types.UserProfile, error)
 	// SetUserProfile updates the given user's profile.
 	SetUserProfile(username types.Username, profile types.UserProfile) error
 	// GetEntry returns the published entry for the given date.
 	GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error)
-	// GetEntries returns all published entries for the given user.
-	GetEntries(username types.Username) ([]types.JournalEntry, error)
+	// ReadEntries returns all published entries matching the given filter.
+	ReadEntries(filter EntryFilter) ([]types.JournalEntry, error)
 	// GetDraft returns an entry draft for the given user for the given date.
 	GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error)
 	// InsertEntry saves an entry to the datastore, overwriting any existing entry
@@ -94,15 +96,6 @@ type PageViewsNotFoundError struct {
 
 func (f PageViewsNotFoundError) Error() string {
 	return fmt.Sprintf("No page view count found for path %s", f.Path)
-}
-
-type FollowAlreadyExistsError struct {
-	Leader   types.Username
-	Follower types.Username
-}
-
-func (f FollowAlreadyExistsError) Error() string {
-	return fmt.Sprintf("Cannot create a follow from %s -> %s because the follow already exists", f.Follower, f.Leader)
 }
 
 // PreferencesNotFoundError occurs when no profile exists for the given

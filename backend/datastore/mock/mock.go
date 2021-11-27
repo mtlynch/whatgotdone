@@ -20,12 +20,8 @@ type MockDatastore struct {
 	UserPreferences map[types.Username]types.Preferences
 	PageViewCounts  []ga.PageViewCount
 	UserProfile     types.UserProfile
-	GetEntriesErr   error
+	ReadEntriesErr  error
 	mu              sync.Mutex
-}
-
-func (ds *MockDatastore) Users() ([]types.Username, error) {
-	return ds.Usernames, nil
 }
 
 func (ds *MockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
@@ -46,8 +42,23 @@ func (ds *MockDatastore) GetEntry(username types.Username, date types.EntryDate)
 	return types.JournalEntry{}, errors.New("mock not found")
 }
 
-func (ds *MockDatastore) GetEntries(username types.Username) ([]types.JournalEntry, error) {
-	return ds.JournalEntries, ds.GetEntriesErr
+func (ds *MockDatastore) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error) {
+	if ds.ReadEntriesErr != nil {
+		return []types.JournalEntry{}, ds.ReadEntriesErr
+	}
+	var entries []types.JournalEntry
+	for _, e := range ds.JournalEntries {
+		if len(filter.ByUsers) == 0 {
+			entries = append(entries, e)
+			continue
+		}
+		for _, u := range filter.ByUsers {
+			if e.Author == u {
+				entries = append(entries, e)
+			}
+		}
+	}
+	return entries, nil
 }
 
 func (ds *MockDatastore) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {

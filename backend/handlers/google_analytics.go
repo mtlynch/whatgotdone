@@ -90,13 +90,6 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 			return
 		}
 
-		// Verify the request came from AppEngine so that external users can't
-		// force the server to exceed Google Analytics rate limits.
-		if !isAppEngineInternalRequest(r) {
-			http.Error(w, "Refreshes of Google Analytics data must come from within AppEngine", http.StatusForbidden)
-			return
-		}
-
 		pvcs, err := s.googleAnalyticsFetcher.PageViewsByPath("2019-01-01", "today")
 		if err != nil {
 			log.Printf("failed to refresh Google Analytics data: %v", err)
@@ -175,13 +168,4 @@ func parseJournalEntryPath(path string) (types.Username, types.EntryDate, bool) 
 		return "", "", false
 	}
 	return user, entryDate, true
-}
-
-func isAppEngineInternalRequest(r *http.Request) bool {
-	cronHeader := r.Header.Get("X-Appengine-Cron")
-	if cronHeader != "true" {
-		log.Printf("X-Appengine-Cron=[%v]", cronHeader)
-		return false
-	}
-	return true
 }

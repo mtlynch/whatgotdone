@@ -39,7 +39,10 @@ func (s defaultServer) exportUserData(username types.Username) (export.UserData,
 	}
 
 	log.Printf("exporting(%s): published entries", username)
-	entries, err := s.datastore.GetEntries(username)
+	entries, err := s.datastore.ReadEntries(
+		datastore.EntryFilter{
+			ByUsers: []types.Username{username},
+		})
 	if err != nil {
 		return export.UserData{}, err
 	}

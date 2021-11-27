@@ -9,8 +9,6 @@ set -u
 # Echo commands
 set -x
 
-./dev-scripts/start-firestore-emulator
-
 ./dev-scripts/populate-dev-data
 
 SCREEN_SESSION_NAME="whatgotdone-frontend"

@@ -10,9 +10,10 @@
 
 What Got Done has a simple architecture consisting of the following parts:
 
-* **What Got Done Backend**: A Go HTTP service (running on AppEngine) that handles all HTTP requests, datastore requests, and user authentication (via UserKit).
+* **What Got Done Backend**: A Go HTTP service that handles all HTTP requests, datastore requests, and user authentication (via UserKit).
 * **What Got Done Frontend**: A Vue2 app that renders pages in the user's browser.
-* [**Cloud Firestore**](https://cloud.google.com/firestore/): What Got Done's storage provider.
+* [**SQLite**](https://www.sqlite.org/): What Got Done's storage provider.
+* [**Litestream**](https://litestream.io): (optional) Syncs What Got Done's SQLite database to cloud storage.
 * [**UserKit**](https://userkit.io): A third-party service that manages What Got Done's user authentication.
 
 ### Page Rendering Flow
@@ -27,17 +28,10 @@ The Go backend handles all of What Got Done's `/api/*` routes. These routes are 
 
 What Got Done uses [UserKit](https://docs.userkit.io/) for user authentication. For user signup, user login, and password reset, What Got Done loads the UserKit UI widgets in JavaScript. On the backend, the `auth` package is responsible for translating UserKit auth tokens into What Got Done usernames.
 
-### Datastore
-
-What Got Done uses [Google Cloud Firestore](https://firebase.google.com/docs/firestore) for data storage.
-
-Only the What Got Done backend can access the Firestore database. Specifically, the `datastore` package manages all interactions with Firestore.
-
 ### Integration tests
 
 What Got Done's integration tests use Cypress and follow the testing pattern defined in the article [End-to-End Testing Web Apps: The Painless Way](https://mtlynch.io/painless-web-app-testing/). The testing architecture consists of four Docker containers (see [docker-compose.yml](https://github.com/mtlynch/whatgotdone/blob/master/integration/docker-compose.yml)):
 
-* Cloud Firestore emulator
 * What Got Done container
 * Cypress container
 * Test data manager
@@ -80,7 +74,6 @@ Run the following command to start a What Got Done development server:
 ./dev-scripts/serve
 ```
 
-1. Launches new [Google Cloud Firestore Emulator](https://cloud.google.com/sdk/gcloud/reference/beta/emulators/firestore/) and populates it with test data.
 1. Builds the Vue frontend.
 1. Starts a hot reloading server for the Vue frontend.
 1. Starts a hot reloading server for the backend.
@@ -107,7 +100,7 @@ go test ./...
 
 ### Optional: Run integration tests
 
-Integration tests run all components together using a local Firestore emulator as the datastore and [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
+Integration tests run all components together using [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
 
 ```bash
 dev-scripts/run-integration-tests

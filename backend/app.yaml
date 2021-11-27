@@ -1,9 +1,0 @@
-runtime: go116
-# Circle CI generates the env_variables.yaml file during deployment.
-includes:
-  - env_variables.yaml
-handlers:
-  - url: /.*
-    script: auto
-    secure: always
-    redirect_http_response_code: 301

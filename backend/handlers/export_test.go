@@ -19,16 +19,19 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 	ds := mock.MockDatastore{
 		JournalDrafts: []types.JournalEntry{
 			{
+				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-12"),
 				LastModified: "2021-11-12",
 				Markdown:     "thought about fishing",
 			},
 			{
+				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
 				Markdown:     "went to the store today",
 			},
 			{
+				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-26"),
 				LastModified: "2021-11-20",
 				Markdown:     "bought a new car",
@@ -36,11 +39,13 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 		},
 		JournalEntries: []types.JournalEntry{
 			{
+				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-12"),
 				LastModified: "2021-11-12",
 				Markdown:     "thought about fishing",
 			},
 			{
+				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-19"),
 				LastModified: "2021-11-19",
 				Markdown:     "went to the store today",

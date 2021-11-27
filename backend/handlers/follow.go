@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -35,11 +34,6 @@ func (s defaultServer) followPut() http.HandlerFunc {
 		}
 
 		err = s.datastore.InsertFollow(leader, follower)
-		if _, ok := err.(datastore.FollowAlreadyExistsError); ok {
-			log.Printf("tried to re-follow when %s -> %s when follow already existed", follower, leader)
-			http.Error(w, "You're already following this user", http.StatusBadRequest)
-			return
-		}
 		if err != nil {
 			log.Printf("failed to add follower: %s->%s - %s", follower, leader, err)
 			http.Error(w, "Failed to follow user", http.StatusInternalServerError)

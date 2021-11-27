@@ -8,15 +8,12 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/handlers"
-
-	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
 
 func main() {
-	log.Print("Starting bulk firestore tweak script")
+	log.Print("Starting test-data-manager script")
 
 	source := flag.String("source", "dev-data.yaml", "Path to JSON or YAML file with data to load")
 	keepAlive := flag.Bool("keepAlive", false, "Stay alive after completing initialization")
@@ -44,20 +41,5 @@ func main() {
 		mgr.Reset()
 	}
 
-	log.Print("Exiting bulk firestore tweak script")
-}
-
-func waitForDatastore(ds datastore.Datastore) {
-	retries := 10
-	for i := 0; i < retries; i++ {
-		log.Printf("contacting datastore - attempt #%d", i)
-		_, err := ds.GetUserProfile("dummy_user")
-		if _, ok := err.(datastore.UserProfileNotFoundError); ok {
-			log.Print("successfully contacted datastore")
-			return
-		}
-		log.Printf("datastore not yet ready (%v), retrying...", err)
-		time.Sleep(100 * time.Millisecond)
-	}
-	panic("Failed to connect to datastore")
+	log.Print("Exiting test-data-manager script")
 }

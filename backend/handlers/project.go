@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/handlers/entry"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -25,7 +26,9 @@ func (s *defaultServer) projectGet() http.HandlerFunc {
 			return
 		}
 
-		entries, err := s.datastore.GetEntries(username)
+		entries, err := s.datastore.ReadEntries(datastore.EntryFilter{
+			ByUsers: []types.Username{username},
+		})
 		if err != nil {
 			log.Printf("Failed to retrieve entries: %s", err)
 			http.Error(w, fmt.Sprintf("Failed to retrieve entries for %s", username), http.StatusInternalServerError)
