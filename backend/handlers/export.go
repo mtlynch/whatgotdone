@@ -178,14 +178,14 @@ func (s defaultServer) exportReactions(username types.Username, entries []types.
 			}
 			// Sort reactions in ascending order of timestamp.
 			sort.Slice(reactions, func(i, j int) bool {
-				return reactions[i].Timestamp < reactions[j].Timestamp
+				return reactions[i].Timestamp.Before(reactions[j].Timestamp)
 			})
 			var exportedReactions []export.Reaction
 			for _, r := range reactions {
 				exportedReactions = append(exportedReactions, export.Reaction{
 					Username:  r.Username,
 					Symbol:    r.Symbol,
-					Timestamp: r.Timestamp,
+					Timestamp: r.Timestamp.Format(time.RFC3339),
 				})
 			}
 			c <- result{date, exportedReactions, err}

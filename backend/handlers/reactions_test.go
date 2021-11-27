@@ -61,8 +61,8 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 		Reactions: map[types.Username]map[types.EntryDate][]types.Reaction{
 			"dummyUser": {
 				"2019-07-12": {
-					{Username: "dummyUserA", Symbol: "🎉", Timestamp: "2019-07-09T14:56:29-04:00"},
-					{Username: "dummyUserB", Symbol: "👍", Timestamp: "2019-07-09T11:57:02-04:00"},
+					{Username: "dummyUserA", Symbol: "🎉", Timestamp: mustParseTime("2019-07-09T14:56:29Z")},
+					{Username: "dummyUserB", Symbol: "👍", Timestamp: mustParseTime("2019-07-09T11:57:02Z")},
 				},
 			},
 		},
@@ -94,8 +94,8 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 	}
 
 	expected := []types.Reaction{
-		{Username: "dummyUserA", Symbol: "🎉", Timestamp: "2019-07-09T14:56:29-04:00"},
-		{Username: "dummyUserB", Symbol: "👍", Timestamp: "2019-07-09T11:57:02-04:00"},
+		{Username: "dummyUserA", Symbol: "🎉", Timestamp: mustParseTime("2019-07-09T14:56:29Z")},
+		{Username: "dummyUserB", Symbol: "👍", Timestamp: mustParseTime("2019-07-09T11:57:02Z")},
 	}
 	if !reflect.DeepEqual(response, expected) {
 		t.Fatalf("Unexpected response: got %v want %v", response, expected)

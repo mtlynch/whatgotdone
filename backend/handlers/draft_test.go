@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/gorilla/mux"
 
@@ -189,4 +190,12 @@ func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusBadRequest)
 	}
+}
+
+func mustParseTime(ts string) time.Time {
+	t, err := time.Parse("2006-01-02T15:04:05Z", ts)
+	if err != nil {
+		panic(err)
+	}
+	return t
 }

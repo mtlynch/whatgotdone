@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
@@ -69,10 +70,14 @@ func (m *manager) Reset() error {
 		}
 		for date, reactions := range ud.Reactions {
 			for _, r := range reactions {
-				err := m.datastore.AddReaction(types.Username(username), date, types.Reaction{
+				ts, err := time.ParseInLocation(time.RFC3339, r.Timestamp, time.UTC)
+				if err != nil {
+					return err
+				}
+				err = m.datastore.AddReaction(types.Username(username), date, types.Reaction{
 					Username:  r.Username,
 					Symbol:    r.Symbol,
-					Timestamp: r.Timestamp,
+					Timestamp: ts,
 				})
 				if err != nil {
 					return err
