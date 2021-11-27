@@ -10,6 +10,5 @@ services:
       - 3001:3001
     environment:
       - PORT=3001
-      - GOOGLE_CLOUD_PROJECT=dummy-local-gcp-project
       - CSRF_SECRET_SEED=dummy-dev-secret-seed
       - USERKIT_SECRET=dummy.dummy
