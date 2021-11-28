@@ -8,7 +8,6 @@ export function uploadMedia(media) {
     credentials: 'include',
     headers: {
       'X-CSRF-Token': getCsrfToken(),
-      'Content-Type': 'multipart/form-data',
     },
     body: formData,
   }).then(processJsonResponse);
