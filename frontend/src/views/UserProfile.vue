@@ -57,14 +57,14 @@
         >Edit</b-button
       >
       <b-button
-        class="follow-btn"
+        data-test-id="follow-btn"
         v-if="canFollow"
         variant="primary"
         v-on:click="onFollow"
         >Follow</b-button
       >
       <b-button
-        class="unfollow-btn"
+        data-test-id="unfollow-btn"
         v-if="canUnfollow"
         variant="primary"
         v-on:click="onUnfollow"
@@ -209,14 +209,12 @@ export default {
       });
     },
     onFollow: function () {
-      follow(this.username).then(() => {
-        this.$store.commit('addFollowedUser', this.username);
-      });
+      this.$store.commit('addFollowedUser', this.username);
+      follow(this.username);
     },
     onUnfollow: function () {
-      unfollow(this.username).then(() => {
-        this.$store.commit('removeFollowedUser', this.username);
-      });
+      this.$store.commit('removeFollowedUser', this.username);
+      unfollow(this.username);
     },
     onExport: function () {
       exportGet().then((exportedData) => {
