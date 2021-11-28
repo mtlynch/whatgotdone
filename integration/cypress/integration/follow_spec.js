@@ -30,9 +30,9 @@ it("follows a user", () => {
 
   cy.visit("/leader_lenny");
   cy.wait("@getFollowing");
-  cy.get(".follow-btn").click();
-  cy.get(".unfollow-btn").should("exist");
-  cy.get(".follow-btn").should("not.exist");
+  cy.get('[data-test-id="follow-btn"]').click();
+  cy.get('[data-test-id="unfollow-btn"]').should("exist");
+  cy.get('[data-test-id="follow-btn"]').should("not.exist");
 
   cy.visit("/feed");
   cy.wait("@getFollowing");
@@ -40,7 +40,7 @@ it("follows a user", () => {
 
   cy.visit("/leader_lenny");
   cy.wait("@getFollowing");
-  cy.get(".unfollow-btn").click();
-  cy.get(".follow-btn").should("exist");
-  cy.get(".unfollow-btn").should("not.exist");
+  cy.get('[data-test-id="unfollow-btn"]').click();
+  cy.get('[data-test-id="follow-btn"]').should("exist");
+  cy.get('[data-test-id="unfollow-btn"]').should("not.exist");
 });
