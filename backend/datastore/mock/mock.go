@@ -2,7 +2,6 @@ package mock
 
 import (
 	"errors"
-	"sync"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
@@ -21,7 +20,6 @@ type MockDatastore struct {
 	PageViewCounts  []ga.PageViewCount
 	UserProfile     types.UserProfile
 	ReadEntriesErr  error
-	mu              sync.Mutex
 }
 
 func (ds *MockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
@@ -126,13 +124,8 @@ func (ds *MockDatastore) DeleteReaction(entryAuthor types.Username, entryDate ty
 	return nil
 }
 
-func (ds *MockDatastore) InsertPageViews(path string, pageViews int) error {
-	ds.mu.Lock()
-	defer ds.mu.Unlock()
-	ds.PageViewCounts = append(ds.PageViewCounts, ga.PageViewCount{
-		Path:  path,
-		Views: pageViews,
-	})
+func (ds *MockDatastore) InsertPageViews(pvc []ga.PageViewCount) error {
+	ds.PageViewCounts = pvc
 	return nil
 }
 

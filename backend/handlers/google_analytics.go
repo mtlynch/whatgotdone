@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
@@ -94,17 +93,14 @@ func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
 		}
 		pvcs = coalescePageViews(pvcs)
 		pvcs = s.filterNonEntries(pvcs)
-		var wg sync.WaitGroup
-		for _, pvc := range pvcs {
-			wg.Add(1)
-			go func(pvc ga.PageViewCount) {
-				defer wg.Done()
-				if err := s.datastore.InsertPageViews(pvc.Path, pvc.Views); err != nil {
-					log.Printf("failed to store pageviews in datastore %v: %v", pvc, err)
-				}
-			}(pvc)
+
+		err = s.datastore.InsertPageViews(pvcs)
+		if err != nil {
+			log.Printf("failed to store Google Analytics data: %v", err)
+			http.Error(w, "Failed to save Google Analytics data", http.StatusInternalServerError)
+			return
 		}
-		wg.Wait()
+
 		respondOK(w, true)
 	}
 }
