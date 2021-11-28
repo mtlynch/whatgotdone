@@ -44,10 +44,10 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			return
 		}
 
-		views, err := s.datastore.GetPageViews(path)
+		pv, err := s.datastore.GetPageViews(path)
 		if _, ok := err.(datastore.PageViewsNotFoundError); ok {
 			if s.wasEntryPublishedRecently(user, entryDate) {
-				views = 1
+				pv.PageViews = 1
 				err = nil
 			} else {
 				log.Printf("No pageviews found for %s", path)
@@ -60,12 +60,19 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 			return
 		}
 
-		response := pageViewResponse{
-			Path:  path,
-			Views: views,
-		}
+		go func(lastUpdate time.Time) {
+			d := time.Since(lastUpdate)
+			log.Printf("last pageview update was %s ago", d)
+			if d < (time.Minute * 3) {
+				return
+			}
+			s.refreshGoogleAnalytics()
+		}(pv.LastUpdated)
 
-		respondOK(w, response)
+		respondOK(w, pageViewResponse{
+			Path:  path,
+			Views: pv.PageViews,
+		})
 	}
 }
 
@@ -77,31 +84,25 @@ func (s defaultServer) wasEntryPublishedRecently(username types.Username, entryD
 	return time.Now().Sub(entry.LastModified).Minutes() < 15
 }
 
-func (s *defaultServer) refreshGoogleAnalytics() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if s.googleAnalyticsFetcher == nil {
-			log.Print("Can't refresh Google Analytics because fetcher is not loaded")
-			http.Error(w, "Google Analytics fetcher is not loaded", http.StatusInternalServerError)
-			return
-		}
+func (s *defaultServer) refreshGoogleAnalytics() {
+	if s.googleAnalyticsFetcher == nil {
+		log.Print("Can't refresh Google Analytics because fetcher is not loaded")
+		return
+	}
+	log.Printf("refreshing Google Analytics data")
 
-		pvcs, err := s.googleAnalyticsFetcher.PageViewsByPath("2019-01-01", "today")
-		if err != nil {
-			log.Printf("failed to refresh Google Analytics data: %v", err)
-			http.Error(w, "Failed to refresh Google Analytics data", http.StatusInternalServerError)
-			return
-		}
-		pvcs = coalescePageViews(pvcs)
-		pvcs = s.filterNonEntries(pvcs)
+	pvcs, err := s.googleAnalyticsFetcher.PageViewsByPath("2019-01-01", "today")
+	if err != nil {
+		log.Printf("failed to refresh Google Analytics data: %v", err)
+		return
+	}
+	pvcs = coalescePageViews(pvcs)
+	pvcs = s.filterNonEntries(pvcs)
 
-		err = s.datastore.InsertPageViews(pvcs)
-		if err != nil {
-			log.Printf("failed to store Google Analytics data: %v", err)
-			http.Error(w, "Failed to save Google Analytics data", http.StatusInternalServerError)
-			return
-		}
-
-		respondOK(w, true)
+	err = s.datastore.InsertPageViews(pvcs)
+	if err != nil {
+		log.Printf("failed to store Google Analytics data: %v", err)
+		return
 	}
 }
 

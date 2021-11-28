@@ -6,15 +6,23 @@ package datastore
 
 import (
 	"fmt"
+	"time"
 
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-type EntryFilter struct {
-	ByUsers   []types.Username
-	MinLength int32
-}
+type (
+	EntryFilter struct {
+		ByUsers   []types.Username
+		MinLength int32
+	}
+
+	PageViewRecord struct {
+		PageViews   int
+		LastUpdated time.Time
+	}
+)
 
 // Datastore represents the What Got Done datastore. It's responsible for
 // storing and retrieving all persistent data (journal entries, journal drafts,
@@ -46,7 +54,7 @@ type Datastore interface {
 	// InsertPageViews stores the set of pageview data for What Got Done routes.
 	InsertPageViews(pvc []ga.PageViewCount) error
 	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
-	GetPageViews(path string) (int, error)
+	GetPageViews(path string) (PageViewRecord, error)
 	// InsertFollow adds a following relationship to the datastore.
 	InsertFollow(leader, follower types.Username) error
 	// DeleteFollow removes a following relationship from the datastore.

@@ -31,26 +31,36 @@ func (d db) InsertPageViews(pvcs []ga.PageViewCount) error {
 }
 
 // GetPageViews retrieves the count of pageviews for a given What Got Done route.
-func (d db) GetPageViews(path string) (int, error) {
+func (d db) GetPageViews(path string) (datastore.PageViewRecord, error) {
 	stmt, err := d.ctx.Prepare(`
 	SELECT
-		views
+		views,
+		last_updated
 	FROM
 		pageviews
 	WHERE
 		path=?`)
 	if err != nil {
-		return 0, err
+		return datastore.PageViewRecord{}, err
 	}
 	defer stmt.Close()
 
 	var pageViews int
-	err = stmt.QueryRow(path).Scan(&pageViews)
+	var lastUpdatedRaw string
+	err = stmt.QueryRow(path).Scan(&pageViews, &lastUpdatedRaw)
 	if err == sql.ErrNoRows {
-		return 0, datastore.PageViewsNotFoundError{Path: path}
+		return datastore.PageViewRecord{}, datastore.PageViewsNotFoundError{Path: path}
 	} else if err != nil {
-		return 0, err
+		return datastore.PageViewRecord{}, err
 	}
 
-	return pageViews, nil
+	t, err := parseDatetime(lastUpdatedRaw)
+	if err != nil {
+		return datastore.PageViewRecord{}, err
+	}
+
+	return datastore.PageViewRecord{
+		PageViews:   pageViews,
+		LastUpdated: t,
+	}, nil
 }

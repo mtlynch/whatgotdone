@@ -5,9 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"reflect"
-	"sort"
 	"testing"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
@@ -60,13 +59,20 @@ func TestPageViewsGet(t *testing.T) {
 
 	ds := mock.MockDatastore{
 		Usernames: []types.Username{"jimmy123"},
-		PageViewCounts: []ga.PageViewCount{
+		JournalEntries: []types.JournalEntry{
 			{
-				Path:  "/jimmy123/2020-01-17",
-				Views: 5,
+				Author: types.Username("jimmy123"),
+				Date:   types.EntryDate("2020-01-17"),
 			},
 		},
+		LastPageViewUpdate: time.Now().Add(time.Minute * -1),
 	}
+	ds.InsertPageViews([]ga.PageViewCount{
+		{
+			Path:  "/jimmy123/2020-01-17",
+			Views: 5,
+		},
+	})
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:      &ds,
@@ -111,7 +117,7 @@ func (f mockGoogleAnalyticsFetcher) PageViewsByPath(_, _ string) ([]ga.PageViewC
 	return f.PageViewCounts, nil
 }
 
-func TestRefreshGoogleAnalytics(t *testing.T) {
+func TestPageViewsGetUpdatesPageViewsWhenRecordsAreStale(t *testing.T) {
 	mf := mockGoogleAnalyticsFetcher{
 		PageViewCounts: []ga.PageViewCount{
 			{
@@ -147,22 +153,39 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 
 	ds := mock.MockDatastore{
 		Usernames: []types.Username{"joe", "mary"},
+		JournalEntries: []types.JournalEntry{
+			{
+				Author: types.Username("joe"),
+				Date:   types.EntryDate("2020-04-24"),
+			},
+		},
+		LastPageViewUpdate:     time.Now().Add(time.Minute * -10),
+		CallsToInsertPageViews: make(chan bool),
 	}
+
+	go func() {
+		ds.InsertPageViews([]ga.PageViewCount{
+			{
+				Path:  "/joe/2020-04-24",
+				Views: 5,
+			},
+		})
+	}()
+	<-ds.CallsToInsertPageViews
+
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:              &ds,
 		router:                 router,
 		csrfMiddleware:         dummyCsrfMiddleware(),
-		googleAnalyticsFetcher: mf,
+		googleAnalyticsFetcher: &mf,
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/tasks/refreshGoogleAnalytics", nil)
+	req, err := http.NewRequest("GET", "/api/pageViews?path="+url.QueryEscape("/joe/2020-04-24"), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	req.Header.Set("X-Appengine-Cron", "true")
-
 	w := httptest.NewRecorder()
 	s.router.ServeHTTP(w, req)
 
@@ -170,22 +193,38 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := []ga.PageViewCount{
-		{
-			Path:  "/joe/2020-04-17",
-			Views: 8,
-		},
-		{
-			Path:  "/joe/2020-04-24",
-			Views: 11,
-		},
-		{
-			Path:  "/mary/2020-04-17",
-			Views: 25,
-		},
+	var response pageViewResponse
+	err = json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
-	sort.Slice(ds.PageViewCounts, func(i, j int) bool { return ds.PageViewCounts[i].Path < ds.PageViewCounts[j].Path })
-	if !reflect.DeepEqual(ds.PageViewCounts, expected) {
-		t.Fatalf("Unexpected response: got %v want %v", ds.PageViewCounts, expected)
+	viewsExpected := 5
+	if response.Views != viewsExpected {
+		t.Fatalf("unexpected view count: got %v want %v", response.Views, viewsExpected)
+	}
+
+	// Wait for an async call to ds.InsertPageViews.
+	select {
+	case <-ds.CallsToInsertPageViews:
+	case <-time.After(3 * time.Second):
+		t.Fatal("timed out waiting for call to ds.InsertPageViews")
+	}
+
+	var expected = []struct {
+		path          string
+		viewsExpected int
+	}{
+		{"/joe/2020-04-17", 8},
+		{"/joe/2020-04-24", 11},
+		{"/mary/2020-04-17", 25},
+	}
+	for _, tt := range expected {
+		pvr, err := ds.GetPageViews(tt.path)
+		if err != nil {
+			t.Fatalf("unexpected response from GetPageViews: %v", err)
+		}
+		if pvr.PageViews != tt.viewsExpected {
+			t.Fatalf("unexpected view count for %s - got: %d, want %d", tt.path, pvr.PageViews, tt.viewsExpected)
+		}
 	}
 }

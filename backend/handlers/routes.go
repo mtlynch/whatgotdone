@@ -49,7 +49,6 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/user", s.requireAuthentication(s.userPost())).Methods(http.MethodPost)
 	api.HandleFunc("/logout", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/logout", s.logoutPost()).Methods(http.MethodPost)
-	api.HandleFunc("/tasks/refreshGoogleAnalytics", s.refreshGoogleAnalytics()).Methods(http.MethodGet)
 
 	// Catchall for when no API route matches.
 	api.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

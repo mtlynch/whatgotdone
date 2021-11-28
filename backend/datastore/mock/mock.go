@@ -2,6 +2,9 @@ package mock
 
 import (
 	"errors"
+	"fmt"
+	"sync"
+	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
@@ -11,15 +14,18 @@ import (
 // MockDatastore is a mock implementation of the datstore.Datastore interface
 // for testing.
 type MockDatastore struct {
-	JournalEntries  []types.JournalEntry
-	JournalDrafts   []types.JournalEntry
-	Usernames       []types.Username
-	Reactions       map[types.Username]map[types.EntryDate][]types.Reaction
-	UserFollows     map[types.Username][]types.Username
-	UserPreferences map[types.Username]types.Preferences
-	PageViewCounts  []ga.PageViewCount
-	UserProfile     types.UserProfile
-	ReadEntriesErr  error
+	JournalEntries         []types.JournalEntry
+	JournalDrafts          []types.JournalEntry
+	Usernames              []types.Username
+	Reactions              map[types.Username]map[types.EntryDate][]types.Reaction
+	UserFollows            map[types.Username][]types.Username
+	UserPreferences        map[types.Username]types.Preferences
+	pageViewCounts         []ga.PageViewCount
+	LastPageViewUpdate     time.Time
+	UserProfile            types.UserProfile
+	ReadEntriesErr         error
+	mu                     sync.Mutex
+	CallsToInsertPageViews chan bool
 }
 
 func (ds *MockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
@@ -32,12 +38,12 @@ func (ds *MockDatastore) SetUserProfile(username types.Username, p types.UserPro
 }
 
 func (ds *MockDatastore) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
-	if (username == types.Username("jimmy123")) && (date == types.EntryDate("2020-01-17")) {
-		return types.JournalEntry{
-			Markdown: "dummy journal content",
-		}, nil
+	for _, entry := range ds.JournalEntries {
+		if entry.Author == username && entry.Date == date {
+			return entry, nil
+		}
 	}
-	return types.JournalEntry{}, errors.New("mock not found")
+	return types.JournalEntry{}, errors.New("mock journal entry not found")
 }
 
 func (ds *MockDatastore) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error) {
@@ -125,17 +131,32 @@ func (ds *MockDatastore) DeleteReaction(entryAuthor types.Username, entryDate ty
 }
 
 func (ds *MockDatastore) InsertPageViews(pvc []ga.PageViewCount) error {
-	ds.PageViewCounts = pvc
+	ds.mu.Lock()
+	defer ds.mu.Unlock()
+	defer func() {
+		if ds.CallsToInsertPageViews == nil {
+			return
+		}
+		ds.CallsToInsertPageViews <- true
+	}()
+
+	ds.pageViewCounts = pvc
 	return nil
 }
 
-func (ds *MockDatastore) GetPageViews(path string) (int, error) {
-	for _, pvc := range ds.PageViewCounts {
+func (ds *MockDatastore) GetPageViews(path string) (datastore.PageViewRecord, error) {
+	ds.mu.Lock()
+	defer ds.mu.Unlock()
+
+	for _, pvc := range ds.pageViewCounts {
 		if pvc.Path == path {
-			return pvc.Views, nil
+			return datastore.PageViewRecord{
+				PageViews:   pvc.Views,
+				LastUpdated: ds.LastPageViewUpdate,
+			}, nil
 		}
 	}
-	return 0, errors.New("no pageview results found")
+	return datastore.PageViewRecord{}, fmt.Errorf("no mock pageview results found for %s", path)
 }
 
 func (ds *MockDatastore) InsertFollow(leader, follower types.Username) error {
