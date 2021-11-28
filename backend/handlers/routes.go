@@ -88,7 +88,7 @@ func (s *defaultServer) routes() {
 	static.HandleFunc("/about", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/feed", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/recent", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/entry/edit", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/entry/edit/{date}", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/login", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/logout", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/preferences", serveIndexPage).Methods(http.MethodGet)

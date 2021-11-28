@@ -7,10 +7,13 @@ it("logs in and views profile", () => {
   cy.location("pathname").should("eq", "/staging_jimmy");
 });
 
-it("views a non-existing user profile with empty information", () => {
-  cy.visit("/nonExistentUser");
-  cy.get(".no-bio-message").should("be.visible");
-  cy.get(".no-entries-message").should("be.visible");
+it("gets 404 for non-existent user's profile page", () => {
+  cy.request({
+    url: "/nonExistentUser",
+    failOnStatusCode: false,
+  }).then((response) => {
+    expect(response.status).to.eq(404);
+  });
 });
 
 it("logs in and updates profile", () => {
