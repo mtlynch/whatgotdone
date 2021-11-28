@@ -97,9 +97,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Retrieve Google Analytics service account client secret from CircleCI
+          name: Retrieve GCP service account client secret from CircleCI
           command: |
-            echo "$GOOGLE_ANALYTICS_SERVICE_ACCOUNT_PROD" | \
+            echo "$GCP_SERVICE_ACCOUNT_PROD" | \
               base64 --decode > gcp-service-account-prod.json
       - run:
           name: Install flyctl
