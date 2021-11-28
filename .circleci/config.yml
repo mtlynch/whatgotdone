@@ -99,7 +99,7 @@ jobs:
       - run:
           name: Retrieve GCP service account client secret from CircleCI
           command: |
-            echo "$GCP_SERVICE_ACCOUNT_PROD" | \
+            echo "$GCP_SERVICE_ACCOUNT" | \
               base64 --decode > gcp-service-account-prod.json
       - run:
           name: Install flyctl
