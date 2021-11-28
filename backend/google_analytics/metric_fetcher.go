@@ -8,9 +8,10 @@ import (
 	"os"
 	"strconv"
 
+	ga "google.golang.org/api/analyticsreporting/v4"
 	"google.golang.org/api/option"
 
-	ga "google.golang.org/api/analyticsreporting/v4"
+	"github.com/mtlynch/whatgotdone/backend/datastore/gcp"
 )
 
 type (
@@ -41,8 +42,8 @@ func New() (mf MetricFetcher, err error) {
 		return mf, errors.New("Can't create MetricFetcher without Google Analytics View ID")
 	}
 
-	const keyFilePath = "google-analytics-service-account.json"
-	svc, err := ga.NewService(context.Background(), option.WithCredentialsFile(keyFilePath))
+	log.Printf("loading Google Account metric fetcher with service account: %s", gcp.ServiceAccountKeyFile)
+	svc, err := ga.NewService(context.Background(), option.WithCredentialsFile(gcp.ServiceAccountKeyFile))
 	if err != nil {
 		return defaultMetricFetcher{nil, ""}, err
 	}
