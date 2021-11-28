@@ -124,19 +124,16 @@ func (s defaultServer) exportUserDrafts(username types.Username) ([]types.Journa
 	}()
 
 	drafts := []types.JournalEntry{}
-	var err error
 	for res := range c {
 		if res.err == nil {
 			drafts = append(drafts, res.draft)
 			continue
 		}
-		if _, ok := err.(datastore.DraftNotFoundError); ok {
+		if _, ok := res.err.(datastore.DraftNotFoundError); ok {
 			continue
 		}
-		// Don't exit immediately because otherwise we'd leak the chan. Instead,
-		//  save the first error we encounter.
-		if err == nil && res.err != nil {
-			err = res.err
+		if res.err != nil {
+			return []types.JournalEntry{}, res.err
 		}
 	}
 
@@ -198,16 +195,13 @@ func (s defaultServer) exportReactions(username types.Username, entries []types.
 	}()
 
 	reactions := map[types.EntryDate][]export.Reaction{}
-	var err error
 	for res := range c {
 		if res.err == nil {
 			reactions[res.date] = res.reactions
 			continue
 		}
-		// Don't exit immediately because otherwise we'd leak the chan. Instead,
-		// save the first error we encounter.
-		if err == nil && res.err != nil {
-			err = res.err
+		if res.err != nil {
+			return map[types.EntryDate][]export.Reaction{}, res.err
 		}
 	}
 
