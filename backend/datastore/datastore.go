@@ -7,6 +7,7 @@ package datastore
 import (
 	"fmt"
 
+	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -42,8 +43,8 @@ type Datastore interface {
 	AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error
 	// DeleteReaction removes a user's reaction to a published entry.
 	DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error
-	// InsertPageViews stores the count of pageviews for a given What Got Done route.
-	InsertPageViews(path string, pageViews int) error
+	// InsertPageViews stores the set of pageview data for What Got Done routes.
+	InsertPageViews(pvc []ga.PageViewCount) error
 	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
 	GetPageViews(path string) (int, error)
 	// InsertFollow adds a following relationship to the datastore.
