@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/csrf"
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
 
 const frontendRootDir = "./frontend/dist"
@@ -24,13 +25,12 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 		fs := http.Dir(frontendRootDir)
 		file, err := fs.Open(r.URL.Path)
 		if os.IsNotExist(err) {
-			// If there's no static file that matches this route, serve the index
-			// page and let the frontend handle it.
-			serveIndexPage(w, r)
+			log.Printf("%s does not exist on the file system: %s", r.URL.Path, err)
+			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusNotFound)
 			return
 		} else if err != nil {
 			log.Printf("Failed to retrieve the file %s from the file system: %s", r.URL.Path, err)
-			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusInternalServerError)
+			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusNotFound)
 			return
 		}
 		defer file.Close()
@@ -42,13 +42,57 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 			return
 		}
 		if stat.IsDir() {
-			// If the client requested a directory, serve the index page.
-			serveIndexPage(w, r)
+			log.Printf("%s is a directory", r.URL.Path)
+			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusNotFound)
 			return
 		}
 
-		// Otherwise, serve a static file.
 		http.ServeFile(w, r, path.Join(frontendRootDir, r.URL.Path))
+	}
+}
+
+// serveEntyOr404 tries to find an entry associated with the given route or
+// returns a 404 if there's no associated entry.
+func (s defaultServer) serveEntryOr404() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username, err := usernameFromRequestPath(r)
+		if err != nil {
+			serve404(w, r)
+			return
+		}
+		if exists, err := s.userExists(username); err != nil || !exists {
+			serve404(w, r)
+			return
+		}
+
+		date, err := dateFromRequestPath(r)
+		if err != nil {
+			serve404(w, r)
+			return
+		}
+		_, err = s.datastore.GetEntry(username, date)
+		if _, ok := err.(datastore.EntryNotFoundError); ok {
+			serve404(w, r)
+			return
+		}
+		serveIndexPage(w, r)
+	}
+}
+
+// serveUserProfileOr404 tries to find a valid user associated with the given
+// route or returns a 404 if there's no associated user.
+func (s defaultServer) serveUserProfileOr404() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username, err := usernameFromRequestPath(r)
+		if err != nil {
+			serve404(w, r)
+			return
+		}
+		if exists, err := s.userExists(username); err != nil || !exists {
+			serve404(w, r)
+			return
+		}
+		serveIndexPage(w, r)
 	}
 }
 
@@ -72,6 +116,11 @@ func serveIndexPage(w http.ResponseWriter, r *http.Request) {
 	}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func serve404(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	serveIndexPage(w, r)
 }
 
 // getPageTitle returns the <title> value of the page. By default it's
