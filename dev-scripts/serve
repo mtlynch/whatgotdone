@@ -9,6 +9,10 @@ set -u
 # Echo commands
 set -x
 
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
 ./dev-scripts/populate-dev-data
 
 SCREEN_SESSION_NAME="whatgotdone-frontend"
@@ -19,4 +23,4 @@ screen -X -S "${SCREEN_SESSION_NAME}" quit || true
 # Run the hot reloading frontend server in a background screen session.
 screen -Sdm "${SCREEN_SESSION_NAME}" ./dev-scripts/serve-frontend
 
-./dev-scripts/serve-backend
+./dev-scripts/serve-backendk

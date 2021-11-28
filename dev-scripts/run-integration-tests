@@ -12,6 +12,10 @@ else
   flags="--build"
 fi
 
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
 cd integration
 npm install
 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \

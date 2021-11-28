@@ -17,6 +17,10 @@ fi
 # Exit on unset variable.
 set -u
 
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
 pushd backend
 go test -v $flags ./...
 go vet ./...

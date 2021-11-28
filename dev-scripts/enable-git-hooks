@@ -6,6 +6,10 @@ set -x
 set -e
 set -u
 
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
 # If there's an existing symlink, remove it.
 if [[ -L .git/hooks ]]
 then
@@ -17,9 +21,5 @@ if [[ -d .git/hooks ]]
 then
   rm -rf .git/hooks
 fi
-
-# Change directory to repository root.
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-cd "${SCRIPT_DIR}/.."
 
 ln --symbolic --force ../dev-scripts/git-hooks .git/hooks
