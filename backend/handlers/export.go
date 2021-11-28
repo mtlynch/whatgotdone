@@ -153,7 +153,7 @@ func entriesToExportedEntries(entries []types.JournalEntry, author types.Usernam
 		p = append(p, export.JournalEntry{
 			Date:         entry.Date,
 			Markdown:     entry.Markdown,
-			LastModified: entry.LastModified,
+			LastModified: entry.LastModified.Format(time.RFC3339),
 		})
 	}
 	return p

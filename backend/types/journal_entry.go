@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 type (
 	// Date in YYYY-MM-DD format.
 	EntryDate string
@@ -9,7 +11,7 @@ type (
 	JournalEntry struct {
 		Author       Username
 		Date         EntryDate `json:"date" yaml:"date"`
-		LastModified string    `json:"lastModified" yaml:"lastModified"`
+		LastModified time.Time `json:"lastModified" yaml:"lastModified"`
 		Markdown     string    `json:"markdown" yaml:"markdown"`
 	}
 )

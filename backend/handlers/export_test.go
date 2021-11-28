@@ -21,19 +21,19 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 			{
 				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-12"),
-				LastModified: "2021-11-12",
+				LastModified: mustParseTime("2021-11-12T00:00:00Z"),
 				Markdown:     "thought about fishing",
 			},
 			{
 				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-19"),
-				LastModified: "2021-11-19",
+				LastModified: mustParseTime("2021-11-19T00:00:00Z"),
 				Markdown:     "went to the store today",
 			},
 			{
 				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-26"),
-				LastModified: "2021-11-20",
+				LastModified: mustParseTime("2021-11-20T00:00:00Z"),
 				Markdown:     "bought a new car",
 			},
 		},
@@ -41,13 +41,13 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 			{
 				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-12"),
-				LastModified: "2021-11-12",
+				LastModified: mustParseTime("2021-11-12T00:00:00Z"),
 				Markdown:     "thought about fishing",
 			},
 			{
 				Author:       "dummyUserA",
 				Date:         types.EntryDate("2021-11-19"),
-				LastModified: "2021-11-19",
+				LastModified: mustParseTime("2021-11-19T00:00:00Z"),
 				Markdown:     "went to the store today",
 			},
 		},
@@ -112,29 +112,29 @@ func TestExportPopulatedUserAccount(t *testing.T) {
 		Drafts: []export.JournalEntry{
 			{
 				Date:         types.EntryDate("2021-11-12"),
-				LastModified: "2021-11-12",
+				LastModified: "2021-11-12T00:00:00Z",
 				Markdown:     "thought about fishing",
 			},
 			{
 				Date:         types.EntryDate("2021-11-19"),
-				LastModified: "2021-11-19",
+				LastModified: "2021-11-19T00:00:00Z",
 				Markdown:     "went to the store today",
 			},
 			{
 				Date:         types.EntryDate("2021-11-26"),
-				LastModified: "2021-11-20",
+				LastModified: "2021-11-20T00:00:00Z",
 				Markdown:     "bought a new car",
 			},
 		},
 		Entries: []export.JournalEntry{
 			{
 				Date:         types.EntryDate("2021-11-12"),
-				LastModified: "2021-11-12",
+				LastModified: "2021-11-12T00:00:00Z",
 				Markdown:     "thought about fishing",
 			},
 			{
 				Date:         types.EntryDate("2021-11-19"),
-				LastModified: "2021-11-19",
+				LastModified: "2021-11-19T00:00:00Z",
 				Markdown:     "went to the store today",
 			},
 		},

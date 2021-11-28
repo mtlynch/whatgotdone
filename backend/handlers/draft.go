@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -61,14 +60,11 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 			return
 		}
 
-		j := types.JournalEntry{
-			Date:         date,
-			LastModified: time.Now().Format(time.RFC3339),
-			Markdown:     t.EntryContent,
-		}
-
 		username := usernameFromContext(r.Context())
-		err = s.datastore.InsertDraft(username, j)
+		err = s.datastore.InsertDraft(username, types.JournalEntry{
+			Date:     date,
+			Markdown: t.EntryContent,
+		})
 		if err != nil {
 			log.Printf("Failed to update draft entry: %s", err)
 			http.Error(w, "Failed to update draft entry", http.StatusInternalServerError)
