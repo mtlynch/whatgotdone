@@ -13,6 +13,6 @@ export function uploadMedia(media) {
   })
     .then(processJsonResponse)
     .then((result) => {
-      Promise.resolve(result.url);
+      return Promise.resolve(result.url);
     });
 }
