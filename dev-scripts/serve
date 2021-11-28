@@ -23,4 +23,4 @@ screen -X -S "${SCREEN_SESSION_NAME}" quit || true
 # Run the hot reloading frontend server in a background screen session.
 screen -Sdm "${SCREEN_SESSION_NAME}" ./dev-scripts/serve-frontend
 
-./dev-scripts/serve-backendk
+./dev-scripts/serve-backend
