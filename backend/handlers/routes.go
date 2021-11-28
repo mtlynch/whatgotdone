@@ -59,9 +59,42 @@ func (s *defaultServer) routes() {
 	static.Use(enableCsp)
 	static.Use(s.enableCsrf)
 	static.HandleFunc("/sitemap.xml", s.sitemapGet()).Methods(http.MethodGet)
+	static.PathPrefix("/css/").HandlerFunc(s.serveStaticResource()).Methods(http.MethodGet)
+	static.PathPrefix("/js/").HandlerFunc(s.serveStaticResource()).Methods(http.MethodGet)
+	static.PathPrefix("/images/").HandlerFunc(s.serveStaticResource()).Methods(http.MethodGet)
+
+	// Add all the root-level static resources.
+	for _, f := range []string{
+		"android-chrome-192x192.png",
+		"android-chrome-256x256.png",
+		"apple-touch-icon.png",
+		"browserconfig.xml",
+		"favicon-16x16.png",
+		"favicon-32x32.png",
+		"favicon.ico",
+		"mstile-150x150.png",
+		"robots.txt",
+		"site.webmanifest",
+	} {
+		static.PathPrefix("/" + f).HandlerFunc(s.serveStaticResource()).Methods(http.MethodGet)
+	}
 
 	// Serve index.html, the base page HTML before Vue rendering happens, and
 	// render certain page elements server-side.
-	static.HandleFunc("/{username}/{date}", s.serveStaticResource()).Methods(http.MethodGet)
-	static.PathPrefix("/").HandlerFunc(s.serveStaticResource()).Methods(http.MethodGet)
+	static.HandleFunc("/{username}/{date}", s.serveEntryOr404()).Methods(http.MethodGet)
+	static.HandleFunc("/{username}/project/{project}", serveIndexPage).Methods(http.MethodGet)
+
+	static.HandleFunc("/about", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/feed", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/recent", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/entry/edit/{date}", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/login", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/logout", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/preferences", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/privacy-policy", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/profile/edit", serveIndexPage).Methods(http.MethodGet)
+
+	static.HandleFunc("/{username}", s.serveUserProfileOr404()).Methods(http.MethodGet)
+	static.HandleFunc("/", serveIndexPage).Methods(http.MethodGet)
+	static.PathPrefix("/").HandlerFunc(serve404).Methods(http.MethodGet)
 }

@@ -1,9 +1,3 @@
-it("reaction buttons should not appear when the post is missing", () => {
-  cy.visit("/staging_jimmy/2000-01-07");
-
-  cy.get(".reaction-buttons").should("not.exist");
-});
-
 it("logs in and reacts to an entry", () => {
   cy.intercept("POST", "https://api.userkit.io/v1/widget/login").as(
     "postUserKitLogin"
