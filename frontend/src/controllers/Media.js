@@ -10,5 +10,9 @@ export function uploadMedia(media) {
       'X-CSRF-Token': getCsrfToken(),
     },
     body: formData,
-  }).then(processJsonResponse);
+  })
+    .then(processJsonResponse)
+    .then((result) => {
+      Promise.resolve(result.url);
+    });
 }
