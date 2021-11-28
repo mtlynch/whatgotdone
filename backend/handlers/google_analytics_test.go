@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"reflect"
 	"sort"
 	"testing"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
@@ -60,12 +62,19 @@ func TestPageViewsGet(t *testing.T) {
 
 	ds := mock.MockDatastore{
 		Usernames: []types.Username{"jimmy123"},
+		JournalEntries: []types.JournalEntry{
+			{
+				Author: types.Username("jimmy123"),
+				Date:   types.EntryDate("2020-01-17"),
+			},
+		},
 		PageViewCounts: []ga.PageViewCount{
 			{
 				Path:  "/jimmy123/2020-01-17",
 				Views: 5,
 			},
 		},
+		LastPageViewUpdate: time.Now().Add(time.Minute * -1),
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -104,14 +113,16 @@ func TestPageViewsGet(t *testing.T) {
 }
 
 type mockGoogleAnalyticsFetcher struct {
-	PageViewCounts []ga.PageViewCount
+	PageViewCounts         []ga.PageViewCount
+	CallsToPageViewsByPath chan bool
 }
 
 func (f mockGoogleAnalyticsFetcher) PageViewsByPath(_, _ string) ([]ga.PageViewCount, error) {
+	f.CallsToPageViewsByPath <- true
 	return f.PageViewCounts, nil
 }
 
-func TestRefreshGoogleAnalytics(t *testing.T) {
+func TestPageViewsGetUpdatesPageViewsWhenRecordsAreStale(t *testing.T) {
 	mf := mockGoogleAnalyticsFetcher{
 		PageViewCounts: []ga.PageViewCount{
 			{
@@ -143,10 +154,24 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 				Views: 2,
 			},
 		},
+		CallsToPageViewsByPath: make(chan bool),
 	}
 
 	ds := mock.MockDatastore{
 		Usernames: []types.Username{"joe", "mary"},
+		JournalEntries: []types.JournalEntry{
+			{
+				Author: types.Username("joe"),
+				Date:   types.EntryDate("2020-04-24"),
+			},
+		},
+		LastPageViewUpdate: time.Now().Add(time.Minute * -10),
+		PageViewCounts: []ga.PageViewCount{
+			{
+				Path:  "/joe/2020-04-24",
+				Views: 5,
+			},
+		},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -157,17 +182,32 @@ func TestRefreshGoogleAnalytics(t *testing.T) {
 	}
 	s.routes()
 
-	req, err := http.NewRequest("GET", "/api/tasks/refreshGoogleAnalytics", nil)
+	req, err := http.NewRequest("GET", "/api/pageViews?path="+url.QueryEscape("/joe/2020-04-24"), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	req.Header.Set("X-Appengine-Cron", "true")
-
 	w := httptest.NewRecorder()
 	s.router.ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	var response pageViewResponse
+	err = json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
+	}
+	viewsExpected := 5
+	if response.Views != viewsExpected {
+		t.Fatalf("unexpected view count: got %v want %v", response.Views, viewsExpected)
+	}
+
+	// Wait for an async call to PageViewsByPath
+	select {
+	case <-mf.CallsToPageViewsByPath:
+	case <-time.After(3 * time.Second):
+		log.Fatal("timed out waiting for call to Google Analytics metric fetcher")
 	}
 
 	expected := []ga.PageViewCount{
