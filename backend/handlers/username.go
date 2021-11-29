@@ -27,6 +27,7 @@ func (s defaultServer) requireAuthentication(fn http.HandlerFunc) http.HandlerFu
 
 		username, err := s.authenticator.UserFromAuthToken(tokenCookie.Value)
 		if err != nil {
+			log.Printf("failed to get username from auth token: %v", err)
 			http.Error(w, "Authentication required", http.StatusForbidden)
 			return
 		}
