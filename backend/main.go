@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	gorilla "github.com/gorilla/handlers"
+	muxHandlers "github.com/gorilla/handlers"
 
 	"github.com/mtlynch/whatgotdone/backend/handlers"
 )
@@ -15,7 +15,7 @@ func main() {
 	log.Print("Starting whatgotdone server")
 
 	s := handlers.New()
-	http.Handle("/", gorilla.ProxyHeaders(gorilla.LoggingHandler(os.Stdout, s.Router())))
+	http.Handle("/", muxHandlers.LoggingHandler(os.Stdout, s.Router()))
 
 	port := os.Getenv("PORT")
 	if port == "" {
