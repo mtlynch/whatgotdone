@@ -17,7 +17,7 @@ services:
       - wgt_data:/app/test-data-manager/data
     command:
       ["-source", "/app/test-data-manager/integration-data.yaml", "-keepAlive"]
-  whatgotdone:
+  whatgotdone_backend:
     build:
       context: ../
       args:
@@ -32,6 +32,19 @@ services:
       - ../gcp-service-account-staging.json:/app/gcp-service-account-staging.json
       - ./:/app/integration
       - wgt_data:/app/data
+  # Run What Got Done behind an nginx proxy to better simulate how it will run
+  # in production.
+  whatgotdone:
+    image: "nginx:latest"
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    logging:
+      # nginx's logs are duplicates of whatgotdone_backend
+      driver: none
+    depends_on:
+      - whatgotdone_backend
   cypress:
     image: "mtlynch/cypress:8.1.0-chrome91-2"
     command: ["--browser", "chrome"]
@@ -39,7 +52,7 @@ services:
       - whatgotdone
       - test_data_manager
     environment:
-      - CYPRESS_baseUrl=http://whatgotdone:3123
+      - CYPRESS_baseUrl=http://whatgotdone
       - CYPRESS_testDataManagerUrl=http://test_data_manager:5200
       # Uncomment the following line for verbose Cypress debugging output.
       #- DEBUG=cypress:server:request,cypress:server:server,cypress:server:proxy,cypress:network:agent,cypress:server:browsers
