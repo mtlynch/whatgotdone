@@ -1,18 +1,17 @@
-# fly.toml file generated for whatgotdone on 2021-11-13T16:51:31-05:00
+# fly.toml file generated for whatgotdone-dev on 2021-11-29T20:02:14-05:00
 
-app = "whatgotdone"
+app = "whatgotdone-dev"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [env]
-  LITESTREAM_BUCKET = "whatgotdone-backup"
-  LITESTREAM_ENDPOINT = "s3.us-west-002.backblazeb2.com"
   PORT = "8080"
+  USERKIT_SECRET = "dummy.dummy"
 
 [build.args]
-  NPM_BUILD_MODE="production"
+  NPM_BUILD_MODE="development"
   GO_BUILD_TAGS=""
 
 [experimental]
