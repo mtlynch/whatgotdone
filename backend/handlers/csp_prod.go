@@ -3,7 +3,7 @@
 package handlers
 
 func extraScriptSrcSources() []string {
-	return []string{"'unsafe-eval'"}
+	return []string{}
 }
 
 func extraStyleSrcSources() []string {

@@ -28,7 +28,7 @@ services:
       - CSRF_SECRET_SEED=dummy-staging-seed
       - USERKIT_SECRET=dummy.dummy
       - PUBLIC_GCS_BUCKET=whatgotdone-public-staging
-      - ENABLE_PROXY=yes
+      - BEHIND_PROXY=yes
     volumes:
       - ../gcp-service-account-staging.json:/app/gcp-service-account-staging.json
       - ./:/app/integration
