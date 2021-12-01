@@ -8,3 +8,4 @@ dbs:
         path: db
         endpoint: ${LITESTREAM_ENDPOINT}
         force-path-style: true
+        retention: 720h # 30 days
