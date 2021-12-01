@@ -1,6 +1,4 @@
-# fly.toml file generated for whatgotdone-dev on 2021-11-29T20:02:14-05:00
-
-app = "whatgotdone-dev"
+app = "whatgotdone"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
@@ -8,7 +6,7 @@ processes = []
 
 [env]
   PORT = "8080"
-  USERKIT_SECRET = "dummy.dummy"
+  BEHIND_PROXY = "yes"
 
 [build.args]
   NPM_BUILD_MODE="development"

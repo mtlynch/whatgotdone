@@ -22,11 +22,6 @@ func getCsrfSeed() string {
 func (s defaultServer) enableCsrf(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-CSRF-Token", csrf.Token(r))
-		for key, values := range r.Header {
-			for _, value := range values {
-				log.Printf("%s: %v", key, value)
-			}
-		}
 		s.csrfMiddleware(h).ServeHTTP(w, r)
 	})
 }
