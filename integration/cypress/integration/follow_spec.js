@@ -1,21 +1,9 @@
 it("follows a user", () => {
   cy.intercept("GET", "/api/draft/*").as("getDraft");
-  cy.intercept("GET", "/api/user/*/following").as("getFollowing");
+  cy.intercept("GET", "/api/user/follower_frank/following").as("getFollowing");
+  cy.intercept("PUT", "/api/follow/leader_lenny").as("putFollow");
+  cy.intercept("DELETE", "/api/follow/leader_lenny").as("deleteFollow");
   cy.intercept("POST", "/api/logout").as("logout");
-
-  // Log in as a leader user and create an entry.
-  cy.login("leader_lenny");
-  cy.location("pathname").should("include", "/entry/edit");
-  cy.wait("@getDraft");
-
-  cy.get(".editor-content .ProseMirror")
-    .clear()
-    .type("It's good to be the leader, as other users love to follow me!");
-  cy.get("form").submit();
-  cy.location("pathname").should("include", "/leader_lenny/");
-
-  cy.visit("/logout");
-  cy.wait("@logout");
 
   // Log in as a follow user to follow.
   cy.login("follower_frank");
@@ -31,6 +19,7 @@ it("follows a user", () => {
   cy.visit("/leader_lenny");
   cy.wait("@getFollowing");
   cy.get('[data-test-id="follow-btn"]').click();
+  cy.wait("@putFollow");
   cy.get('[data-test-id="unfollow-btn"]').should("exist");
   cy.get('[data-test-id="follow-btn"]').should("not.exist");
 
@@ -41,6 +30,7 @@ it("follows a user", () => {
   cy.visit("/leader_lenny");
   cy.wait("@getFollowing");
   cy.get('[data-test-id="unfollow-btn"]').click();
+  cy.wait("@deleteFollow");
   cy.get('[data-test-id="follow-btn"]').should("exist");
   cy.get('[data-test-id="unfollow-btn"]').should("not.exist");
 });
