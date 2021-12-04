@@ -15,7 +15,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if s.gcsClient == nil {
 			log.Printf("can't accept avatar upload because GCS is disabled")
-			http.Error(w, fmt.Sprintf("User profile photo uploading is disabled"), http.StatusBadRequest)
+			http.Error(w, "User profile photo uploading is disabled", http.StatusBadRequest)
 			return
 		}
 
@@ -70,7 +70,7 @@ func (s *defaultServer) userAvatarDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if s.gcsClient == nil {
 			log.Printf("can't accept avatar delete because GCS is disabled")
-			http.Error(w, fmt.Sprintf("User profile photo deleting is disabled"), http.StatusBadRequest)
+			http.Error(w, "User profile photo deleting is disabled", http.StatusBadRequest)
 			return
 		}
 

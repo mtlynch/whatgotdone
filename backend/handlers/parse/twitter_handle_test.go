@@ -28,32 +28,32 @@ func TestTwitterHandle(t *testing.T) {
 		{
 			"single-character handle is invalid",
 			"j",
-			InvalidTwitterHandleError,
+			ErrInvalidTwitterHandle,
 		},
 		{
 			"empty string is invalid",
 			"",
-			InvalidTwitterHandleError,
+			ErrInvalidTwitterHandle,
 		},
 		{
 			"undefined value is invalid",
 			"undefined",
-			InvalidTwitterHandleError,
+			ErrInvalidTwitterHandle,
 		},
 		{
 			"handle with leading @ is invalid",
 			"@jack",
-			InvalidTwitterHandleError,
+			ErrInvalidTwitterHandle,
 		},
 		{
 			"handle with more than 15 characters is invalid",
 			"jackandjillwentup",
-			InvalidTwitterHandleError,
+			ErrInvalidTwitterHandle,
 		},
 		{
 			"handle with illegal characters is invalid",
 			"jack.and.jill",
-			InvalidTwitterHandleError,
+			ErrInvalidTwitterHandle,
 		},
 	}
 

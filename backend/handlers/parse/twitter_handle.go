@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	InvalidTwitterHandleError = errors.New("invalid twitter handle")
+	ErrInvalidTwitterHandle = errors.New("invalid twitter handle")
 
 	twitterHandlePattern = regexp.MustCompile("^[A-Za-z0-9_]{4,15}$")
 )
@@ -17,11 +17,11 @@ var (
 // a legal Twitter handle.
 func TwitterHandle(handle string) (types.TwitterHandle, error) {
 	if isUndefinedFromJavascript(handle) {
-		return types.TwitterHandle(""), InvalidTwitterHandleError
+		return types.TwitterHandle(""), ErrInvalidTwitterHandle
 	}
 
 	if !twitterHandlePattern.MatchString(handle) {
-		return types.TwitterHandle(""), InvalidTwitterHandleError
+		return types.TwitterHandle(""), ErrInvalidTwitterHandle
 	}
 	return types.TwitterHandle(handle), nil
 }

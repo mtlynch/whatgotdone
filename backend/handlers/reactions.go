@@ -110,12 +110,12 @@ func reactionSymbolFromRequest(r *http.Request) (string, error) {
 	}
 
 	if rr.ReactionSymbol == nil {
-		return "", errors.New(`Request is missing required field: "reactionSymbol"`)
+		return "", errors.New(`request is missing required field: "reactionSymbol"`)
 	}
 
 	reactionSymbol := *rr.ReactionSymbol
 	if !isValidReaction(reactionSymbol) {
-		return "", fmt.Errorf("Invalid reaction choice: %s", reactionSymbol)
+		return "", fmt.Errorf("invalid reaction choice: %s", reactionSymbol)
 	}
 
 	return reactionSymbol, nil
