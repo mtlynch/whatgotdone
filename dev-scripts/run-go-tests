@@ -24,7 +24,8 @@ cd "${SCRIPT_DIR}/.."
 # Install staticcheck if it's not present.
 STATICCHECK_PATH="$(go env GOPATH)/bin/staticcheck"
 if [ ! -f "${STATICCHECK_PATH}" ]; then
-    go install honnef.co/go/tools/cmd/staticcheck@latest
+    STATICCHECK_VERSION="2021.1.2"
+    go install "honnef.co/go/tools/cmd/staticcheck@${STATICCHECK_VERSION}"
 fi
 
 pushd backend
