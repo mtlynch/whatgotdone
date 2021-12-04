@@ -21,9 +21,16 @@ set -u
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
+# Install staticcheck if it's not present.
+STATICCHECK_PATH="$(go env GOPATH)/bin/staticcheck"
+if [ ! -f "${STATICCHECK_PATH}" ]; then
+    go install honnef.co/go/tools/cmd/staticcheck@latest
+fi
+
 pushd backend
 go test -v $flags ./...
 go vet ./...
+$STATICCHECK_PATH ./...
 
 if [ ! -z "$quick_test" ]; then
   go tool cover -html .coverage.out -o .coverage.html
@@ -32,4 +39,5 @@ popd
 
 pushd test-data-manager
 go vet -tags dev ./...
+$STATICCHECK_PATH ./...
 popd

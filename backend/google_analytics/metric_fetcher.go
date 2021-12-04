@@ -39,7 +39,7 @@ func New() (mf MetricFetcher, err error) {
 	viewID := os.Getenv("GOOGLE_ANALYTICS_VIEW_ID")
 	if viewID == "" {
 		log.Printf("GOOGLE_ANALYTICS_VIEW_ID is not set, skipping Google Analytics updates")
-		return mf, errors.New("Can't create MetricFetcher without Google Analytics View ID")
+		return mf, errors.New("can't create MetricFetcher without Google Analytics View ID")
 	}
 
 	log.Printf("loading Google Account metric fetcher with service account: %s", gcp.ServiceAccountKeyFile)

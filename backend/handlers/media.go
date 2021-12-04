@@ -17,7 +17,7 @@ func (s *defaultServer) mediaPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if s.gcsClient == nil {
 			log.Printf("can't accept media upload because media uploads are disabled")
-			http.Error(w, fmt.Sprintf("Media uploading is disabled"), http.StatusBadRequest)
+			http.Error(w, "Media uploading is disabled", http.StatusBadRequest)
 			return
 		}
 

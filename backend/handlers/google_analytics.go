@@ -81,7 +81,7 @@ func (s defaultServer) wasEntryPublishedRecently(username types.Username, entryD
 	if err != nil {
 		return false
 	}
-	return time.Now().Sub(entry.LastModified).Minutes() < 15
+	return time.Since(entry.LastModified).Minutes() < 15
 }
 
 func (s *defaultServer) refreshGoogleAnalytics() {

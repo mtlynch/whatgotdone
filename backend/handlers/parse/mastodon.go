@@ -18,7 +18,7 @@ func MastodonAddress(address string) (types.MastodonAddress, error) {
 	// A Mastodon address follows the same rules as an email address, except it
 	// can't have a name portion separated by angle brackets.
 	if strings.ContainsAny(address, illegalMastodonAddressCharacters) {
-		return types.MastodonAddress(""), errors.New("Mastodon address contains illegal characters")
+		return types.MastodonAddress(""), errors.New("mastodon address contains illegal characters")
 	}
 
 	a, err := mail.ParseAddress(address)
