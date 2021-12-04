@@ -33,14 +33,7 @@ func (s defaultServer) reactionsGet() http.HandlerFunc {
 			return
 		}
 
-		reactionsFiltered := []types.Reaction{}
-		for _, reaction := range reactions {
-			if reaction.Symbol != "" {
-				reactionsFiltered = append(reactionsFiltered, reaction)
-			}
-		}
-
-		respondOK(w, reactionsFiltered)
+		respondOK(w, reactions)
 	}
 }
 
