@@ -55,6 +55,7 @@ func (s *defaultServer) entryPut() http.HandlerFunc {
 		if err != nil {
 			log.Printf("Failed to decode request: %s", err)
 			http.Error(w, "Failed to decode request", http.StatusBadRequest)
+			return
 		}
 
 		j := types.JournalEntry{
