@@ -41,3 +41,18 @@ export function saveDraft(entryDate, entryContent) {
     });
   });
 }
+
+export function draftDelete(entryDate) {
+  return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/draft/${entryDate}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {'X-CSRF-Token': getCsrfToken()},
+  }).then((response) => {
+    if (response.ok) {
+      return Promise.resolve();
+    }
+    return response.text().then((error) => {
+      return Promise.reject(error);
+    });
+  });
+}

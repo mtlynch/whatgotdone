@@ -35,3 +35,19 @@ export function saveEntry(entryDate, entryContent) {
     body: JSON.stringify({entryContent: entryContent}),
   }).then(processJsonResponse);
 }
+
+export function entryDelete(entryDate) {
+  return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/entry/${entryDate}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {'X-CSRF-Token': getCsrfToken()},
+  }).then((response) => {
+    if (response.ok) {
+      return Promise.resolve();
+    } else {
+      return response.text().then((error) => {
+        return Promise.reject(error);
+      });
+    }
+  });
+}

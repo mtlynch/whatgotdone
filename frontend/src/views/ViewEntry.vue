@@ -43,12 +43,15 @@
         ><font-awesome-icon :icon="['fab', 'twitter']" class="mr-3" /> Share on
         Twitter</b-button
       >
-      <b-button
-        :to="'/entry/edit/' + this.entryDate"
-        variant="primary"
-        class="d-inline-block ml-auto edit-btn"
-        >Edit</b-button
-      >
+      <div class="ml-auto">
+        <b-button variant="danger" @click="onDelete">Unpublish</b-button>
+        <b-button
+          :to="'/entry/edit/' + this.entryDate"
+          variant="primary"
+          class="ml-2"
+          >Edit</b-button
+        >
+      </div>
     </div>
     <Reactions
       :entryAuthor="entryAuthor"
@@ -61,7 +64,7 @@
 <script>
 import moment from 'moment';
 
-import {getEntriesFromUser} from '@/controllers/Entries.js';
+import {entryDelete, getEntriesFromUser} from '@/controllers/Entries.js';
 import {thisFriday} from '@/controllers/EntryDates.js';
 
 import Journal from '@/components/Journal.vue';
@@ -99,6 +102,11 @@ export default {
         .finally(() => {
           this.isLoading = false;
         });
+    },
+    onDelete: function () {
+      entryDelete(this.entryDate).then(() => {
+        this.$router.push('/entry/edit/' + this.entryDate);
+      });
     },
   },
   computed: {

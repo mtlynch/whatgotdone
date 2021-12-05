@@ -77,8 +77,16 @@ func (ds *MockDatastore) GetDraft(username types.Username, date types.EntryDate)
 	}
 }
 
+func (ds *MockDatastore) DeleteDraft(username types.Username, date types.EntryDate) error {
+	return errors.New("MockDatastore does not implement DeleteDraft")
+}
+
 func (ds *MockDatastore) InsertEntry(username types.Username, j types.JournalEntry) error {
 	return nil
+}
+
+func (ds *MockDatastore) DeleteEntry(username types.Username, date types.EntryDate) error {
+	return errors.New("MockDatastore does not implement DeleteEntry")
 }
 
 func (ds *MockDatastore) InsertDraft(username types.Username, j types.JournalEntry) error {

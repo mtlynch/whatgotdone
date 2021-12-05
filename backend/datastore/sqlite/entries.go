@@ -67,12 +67,6 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 		}
 	}
 
-	// TODO: This is a workaround to treat zero-length entries as deleted.
-	// Instead, we should delete the entries properly.
-	if filter.MinLength == 0 {
-		filter.MinLength = 1
-	}
-
 	if filter.MinLength != 0 {
 		whereClauses = append(whereClauses, "LENGTH(markdown) > ?")
 		values = append(values, filter.MinLength)
@@ -143,5 +137,19 @@ func (d db) InsertEntry(username types.Username, j types.JournalEntry) error {
 		is_draft,
 		last_modified)
 	values(?,?,?,0,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, username, j.Date, j.Markdown)
+	return err
+}
+
+// DeleteDraft deletes a draft from the datastore.
+func (d db) DeleteEntry(username types.Username, date types.EntryDate) error {
+	log.Printf("deleting entry from datastore: %s -> %+v", username, date)
+	_, err := d.ctx.Exec(`
+	DELETE FROM
+		journal_entries
+	WHERE
+		username=? AND
+		date=? AND
+		is_draft=0
+	`, username, date)
 	return err
 }

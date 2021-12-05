@@ -59,8 +59,8 @@ import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import _ from 'lodash';
 
-import {getDraft, saveDraft} from '@/controllers/Drafts.js';
-import {saveEntry} from '@/controllers/Entries.js';
+import {draftDelete, getDraft, saveDraft} from '@/controllers/Drafts.js';
+import {entryDelete, saveEntry} from '@/controllers/Entries.js';
 import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
 
 import JournalPreview from '@/components/JournalPreview.vue';
@@ -90,6 +90,9 @@ export default {
     username() {
       return this.$store.state.username;
     },
+    entryHasContent() {
+      return this.entryContent.trim() !== '';
+    },
   },
   methods: {
     loadEntryContent() {
@@ -115,22 +118,34 @@ export default {
     handleSaveDraft() {
       this.changesSaved = false;
       this.saveLabel = 'Saving';
-      saveDraft(this.date, this.entryContent)
-        .then(() => {
-          this.changesSaved = true;
-          this.saveLabel = 'Changes Saved';
-        })
-        .catch(() => {
-          this.changesSaved = false;
+      if (this.entryHasContent) {
+        saveDraft(this.date, this.entryContent)
+          .then(() => {
+            this.changesSaved = true;
+            this.saveLabel = 'Changes Saved';
+          })
+          .catch(() => {
+            this.changesSaved = false;
+          });
+      } else {
+        draftDelete(this.date).then(() => {
+          // TODO
         });
+      }
     },
     debouncedSaveDraft: _.debounce(function () {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
-      saveEntry(this.date, this.entryContent).then((result) => {
-        this.$router.push(result.path);
-      });
+      if (this.entryHasContent) {
+        saveEntry(this.date, this.entryContent).then((result) => {
+          this.$router.push(result.path);
+        });
+      } else {
+        entryDelete(this.date).then(() => {
+          // TODO: Report deletion
+        });
+      }
     },
   },
   created() {
