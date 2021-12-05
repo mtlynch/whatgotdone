@@ -11,7 +11,7 @@ import (
 	ga "google.golang.org/api/analyticsreporting/v4"
 	"google.golang.org/api/option"
 
-	"github.com/mtlynch/whatgotdone/backend/datastore/gcp"
+	"github.com/mtlynch/whatgotdone/backend/gcp"
 )
 
 type (

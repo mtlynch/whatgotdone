@@ -7,7 +7,7 @@ import (
 	"cloud.google.com/go/storage"
 	"google.golang.org/api/option"
 
-	"github.com/mtlynch/whatgotdone/backend/datastore/gcp"
+	"github.com/mtlynch/whatgotdone/backend/gcp"
 )
 
 func newGcsClient(ctx context.Context) (*storage.Client, error) {
