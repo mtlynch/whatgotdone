@@ -53,7 +53,7 @@ func (d db) GetDraft(username types.Username, date types.EntryDate) (types.Journ
 // InsertDraft saves an entry draft to the datastore, overwriting any existing
 // entry with the same name and username.
 func (d db) InsertDraft(username types.Username, j types.JournalEntry) error {
-	log.Printf("saving draft to datastore: %s -> %+v", username, j.Date)
+	log.Printf("saving draft to datastore: %s -> %+v (%d characters)", username, j.Date, len(j.Markdown))
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO journal_entries(
 		username,
