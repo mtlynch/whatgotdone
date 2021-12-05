@@ -41,23 +41,23 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 
 func (s defaultServer) draftPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		date, err := dateFromRequestPath(r)
+		if err != nil {
+			log.Printf("Invalid date: %s", date)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
 		type draftRequest struct {
 			EntryContent string `json:"entryContent"`
 		}
 
 		var t draftRequest
 		decoder := json.NewDecoder(r.Body)
-		err := decoder.Decode(&t)
+		err = decoder.Decode(&t)
 		if err != nil {
 			log.Printf("Failed to decode request: %s", err)
 			http.Error(w, "Failed to decode request", http.StatusBadRequest)
-			return
-		}
-
-		date, err := dateFromRequestPath(r)
-		if err != nil {
-			log.Printf("Invalid date: %s", date)
-			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
