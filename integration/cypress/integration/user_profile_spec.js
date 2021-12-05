@@ -24,7 +24,7 @@ it("logs in and updates profile", () => {
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/staging_jimmy");
-  cy.get(".edit-btn").click();
+  cy.get('[data-test-id="edit-btn"]').click();
 
   // Wait for page to pull down existing profile.
   cy.wait("@getUserProfile");
@@ -53,7 +53,7 @@ it("logs in and sets profile photo", () => {
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/staging_jimmy");
-  cy.get(".edit-btn").click();
+  cy.get('[data-test-id="edit-btn"]').click();
 
   // Wait for page to pull down existing profile.
   cy.wait("@getUserProfile");
@@ -63,7 +63,7 @@ it("logs in and sets profile photo", () => {
 
   cy.visit("/staging_jimmy");
 
-  cy.get(".edit-btn").click();
+  cy.get('[data-test-id="edit-btn"]').click();
   // Wait for page to pull down existing profile.
   cy.wait("@getUserProfile");
 
