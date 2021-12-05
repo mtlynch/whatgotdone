@@ -1,4 +1,4 @@
-// +build staging
+//go:build staging
 
 package gcp
 

@@ -1,5 +1,4 @@
-// +build !dev
-// +build !staging
+//go:build !dev && !staging
 
 package gcp
 

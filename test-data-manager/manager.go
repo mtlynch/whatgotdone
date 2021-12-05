@@ -1,4 +1,4 @@
-// +build dev staging
+//go:build dev || staging
 
 package main
 
