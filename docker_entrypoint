@@ -28,6 +28,9 @@ readonly IS_LITESTREAM_ENABLED="$(is_litestream_enabled)"
 set -x
 
 if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
+  # Print the litestream version so that logs pick up which version
+  # we're running.
+  litestream version
 
   export readonly DB_PATH="/app/data/store.db"
 
