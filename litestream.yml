@@ -10,4 +10,6 @@ dbs:
         force-path-style: true
         retention: 720h # 30 days
         snapshot-interval: 24h
-        validation-interval: 12h
+        # The 13m is to prevent snapshot and validations from happening concurrently.
+        # https://github.com/benbjohnson/litestream/issues/253
+        validation-interval: 12h13m
