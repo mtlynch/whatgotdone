@@ -15,11 +15,13 @@ jobs:
   build-frontend:
     docker:
       - image: node:12.18.4-alpine
+    environment:
+      NODE_ENV: production
     steps:
       - checkout
       - run:
-          name: Download npm packages
-          command: npm --prefix ./frontend install
+          name: Download npm packages (including dev dependencies)
+          command: npm --production=false --prefix ./frontend install
       - run:
           name: Check JavaScript formatting
           command: npm --prefix ./frontend run check-format
