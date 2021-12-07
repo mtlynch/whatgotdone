@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 // ProjectNotFoundError occurs when an entry does not contain the given project.
@@ -18,8 +20,8 @@ func (f ProjectNotFoundError) Error() string {
 
 // ReadProject reads the body of a project, starting from a project header and
 // ending at the following project header or the end of the entry.
-func ReadProject(markdown string, project string) (string, error) {
-	scanner := bufio.NewScanner(strings.NewReader(markdown))
+func ReadProject(markdown types.EntryContent, project string) (string, error) {
+	scanner := bufio.NewScanner(strings.NewReader(string(markdown)))
 	for scanner.Scan() {
 		// TODO(mtlynch): Strip formatting from line.
 		if readHeading(scanner.Text()) == project {

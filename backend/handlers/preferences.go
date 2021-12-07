@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/handlers/parse"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -26,7 +26,7 @@ func (s defaultServer) preferencesGet() http.HandlerFunc {
 		respondOK(w, struct {
 			EntryTemplate string `json:"entryTemplate"`
 		}{
-			EntryTemplate: prefs.EntryTemplate,
+			EntryTemplate: string(prefs.EntryTemplate),
 		})
 	}
 }
@@ -59,7 +59,13 @@ func preferencesFromRequest(r *http.Request) (types.Preferences, error) {
 	if err != nil {
 		return types.Preferences{}, err
 	}
+
+	et, err := parse.EntryContent(pr.EntryTemplate)
+	if err != nil {
+		return types.Preferences{}, err
+	}
+
 	return types.Preferences{
-		EntryTemplate: strings.TrimSpace(pr.EntryTemplate),
+		EntryTemplate: et,
 	}, nil
 }

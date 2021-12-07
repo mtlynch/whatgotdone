@@ -49,7 +49,7 @@ func (d db) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 		Author:       username,
 		Date:         date,
 		LastModified: t,
-		Markdown:     markdown,
+		Markdown:     types.EntryContent(markdown),
 	}, nil
 }
 
@@ -124,7 +124,7 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 			Author:       types.Username(usernameRaw),
 			Date:         types.EntryDate(date.Format("2006-01-02")),
 			LastModified: t,
-			Markdown:     markdown,
+			Markdown:     types.EntryContent(markdown),
 		})
 	}
 

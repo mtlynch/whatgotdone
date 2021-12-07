@@ -84,7 +84,7 @@ func (s defaultServer) exportUserData(username types.Username) (export.UserData,
 		Following: following,
 		Profile:   profileToExported(profile),
 		Preferences: export.Preferences{
-			EntryTemplate: prefs.EntryTemplate,
+			EntryTemplate: string(prefs.EntryTemplate),
 		},
 	}, nil
 }
@@ -149,7 +149,7 @@ func entriesToExportedEntries(entries []types.JournalEntry, author types.Usernam
 	for _, entry := range entries {
 		p = append(p, export.JournalEntry{
 			Date:         entry.Date,
-			Markdown:     entry.Markdown,
+			Markdown:     string(entry.Markdown),
 			LastModified: entry.LastModified.Format(time.RFC3339),
 		})
 	}
