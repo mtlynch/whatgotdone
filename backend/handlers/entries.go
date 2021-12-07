@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -45,22 +44,16 @@ func (s *defaultServer) entryPut() http.HandlerFunc {
 			return
 		}
 
-		type entryRequest struct {
-			EntryContent string `json:"entryContent"`
-		}
-
-		var t entryRequest
-		decoder := json.NewDecoder(r.Body)
-		err = decoder.Decode(&t)
+		c, err := entryContentFromRequest(r)
 		if err != nil {
-			log.Printf("Failed to decode request: %s", err)
-			http.Error(w, "Failed to decode request", http.StatusBadRequest)
+			log.Printf("Invalid entry request: %v", err)
+			http.Error(w, fmt.Sprintf("Invalid entry request: %v", err), http.StatusBadRequest)
 			return
 		}
 
 		j := types.JournalEntry{
 			Date:     date,
-			Markdown: t.EntryContent,
+			Markdown: c,
 		}
 
 		username := usernameFromContext(r.Context())

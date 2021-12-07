@@ -3,26 +3,28 @@ package entry
 import (
 	"strings"
 	"testing"
+
+	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func TestReadProject(t *testing.T) {
 	var tests = []struct {
 		explanation         string
-		markdown            string
+		markdown            types.EntryContent
 		project             string
 		projectBodyExpected string
 		errExpected         error
 	}{
 		{
 			"finds project when it starts an entry",
-			`# Donuts
+			types.EntryContent(`# Donuts
 
 * Donuts are delicious
 * Multiple studies confirm this
 
 # Soup
 
-* Soup is reportedly not as delicious as donuts`,
+* Soup is reportedly not as delicious as donuts`),
 			"donuts",
 			`* Donuts are delicious
 * Multiple studies confirm this`,
@@ -30,7 +32,7 @@ func TestReadProject(t *testing.T) {
 		},
 		{
 			"finds project when it is in the middle of an entry",
-			`# Kittens
+			types.EntryContent(`# Kittens
 
 * Adopted 17 kittens
 * Named all of them mittens
@@ -42,7 +44,7 @@ func TestReadProject(t *testing.T) {
 
 # Soup
 
-* Soup is reportedly not as delicious as donuts`,
+* Soup is reportedly not as delicious as donuts`),
 			"donuts",
 			`* Donuts are delicious
 * Multiple studies confirm this`,
@@ -50,7 +52,7 @@ func TestReadProject(t *testing.T) {
 		},
 		{
 			"finds project when it is at the end of an entry",
-			`# Kittens
+			types.EntryContent(`# Kittens
 
 * Adopted 17 kittens
 * Named all of them mittens
@@ -62,7 +64,7 @@ func TestReadProject(t *testing.T) {
 # Donuts
 
 * Donuts are delicious
-* Multiple studies confirm this`,
+* Multiple studies confirm this`),
 			"donuts",
 			`* Donuts are delicious
 * Multiple studies confirm this`,
@@ -70,14 +72,14 @@ func TestReadProject(t *testing.T) {
 		},
 		{
 			"finds project when it's a hyperlink",
-			`# [Donuts](https://donutpalace.com)
+			types.EntryContent(`# [Donuts](https://donutpalace.com)
 
 * Donuts are delicious
 * Multiple studies confirm this
 
 # Soup
 
-* Soup is reportedly not as delicious as donuts`,
+* Soup is reportedly not as delicious as donuts`),
 			"donuts",
 			`* Donuts are delicious
 * Multiple studies confirm this`,
@@ -85,7 +87,7 @@ func TestReadProject(t *testing.T) {
 		},
 		{
 			"canonicalizes multi-word project",
-			`# Kittens
+			types.EntryContent(`# Kittens
 
 * Adopted 17 kittens
 * Named all of them mittens
@@ -97,7 +99,7 @@ func TestReadProject(t *testing.T) {
 
 # Soup
 
-* Soup is reportedly not as delicious as donuts`,
+* Soup is reportedly not as delicious as donuts`),
 			"donut-updates",
 			`* Donuts are delicious
 * Multiple studies confirm this`,
@@ -105,7 +107,7 @@ func TestReadProject(t *testing.T) {
 		},
 		{
 			"canonicalizes header dots into dashes",
-			`# Kittens
+			types.EntryContent(`# Kittens
 
 * Adopted 17 kittens
 * Named all of them mittens
@@ -117,7 +119,7 @@ func TestReadProject(t *testing.T) {
 
 # Soup
 
-* Soup is reportedly not as delicious as donuts`,
+* Soup is reportedly not as delicious as donuts`),
 			"donuts-com",
 			`* Donuts are delicious
 * Multiple studies confirm this`,
@@ -125,7 +127,7 @@ func TestReadProject(t *testing.T) {
 		},
 		{
 			"ignores headers within code blocks",
-			strings.ReplaceAll(`# Kittens
+			types.EntryContent(strings.ReplaceAll(`# Kittens
 
 Wrote this code sample:
 
@@ -139,7 +141,7 @@ print('Hello, world!')
 
 # Soup
 
-* Soup is reportedly not as delicious as donuts`, "'''", "```"),
+* Soup is reportedly not as delicious as donuts`, "'''", "```")),
 			"kittens",
 			strings.ReplaceAll(`Wrote this code sample:
 
@@ -154,14 +156,14 @@ print('Hello, world!')
 		},
 		{
 			"returns ProjectNotFoundError when no project matches",
-			`# Donuts
+			types.EntryContent(`# Donuts
 
 * Donuts are delicious
 * Multiple studies confirm this
 
 # Soup
 
-* Soup is reportedly not as delicious as donuts`,
+* Soup is reportedly not as delicious as donuts`),
 			"pineapples",
 			"",
 			ProjectNotFoundError{

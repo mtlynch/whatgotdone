@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
+	"github.com/mtlynch/whatgotdone/backend/handlers/parse"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -34,7 +36,7 @@ func (s defaultServer) draftGet() http.HandlerFunc {
 		respondOK(w, struct {
 			Markdown string `json:"markdown"`
 		}{
-			Markdown: draftMarkdown,
+			Markdown: string(draftMarkdown),
 		})
 	}
 }
@@ -48,23 +50,17 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 			return
 		}
 
-		type draftRequest struct {
-			EntryContent string `json:"entryContent"`
-		}
-
-		var t draftRequest
-		decoder := json.NewDecoder(r.Body)
-		err = decoder.Decode(&t)
+		entryContent, err := entryContentFromRequest(r)
 		if err != nil {
-			log.Printf("Failed to decode request: %s", err)
-			http.Error(w, "Failed to decode request", http.StatusBadRequest)
+			log.Printf("Invalid draft request: %v", err)
+			http.Error(w, fmt.Sprintf("Invalid draft request: %v", err), http.StatusBadRequest)
 			return
 		}
 
 		username := usernameFromContext(r.Context())
 		err = s.datastore.InsertDraft(username, types.JournalEntry{
 			Date:     date,
-			Markdown: t.EntryContent,
+			Markdown: entryContent,
 		})
 		if err != nil {
 			log.Printf("Failed to update draft entry: %s", err)
@@ -74,7 +70,7 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 	}
 }
 
-func (s defaultServer) savedDraftOrEntryTemplate(username types.Username, date types.EntryDate) (string, error) {
+func (s defaultServer) savedDraftOrEntryTemplate(username types.Username, date types.EntryDate) (types.EntryContent, error) {
 	// First, check if there's a saved draft.
 	d, err := s.datastore.GetDraft(username, date)
 	if err == nil && d.Markdown != "" {
@@ -95,4 +91,17 @@ func (s defaultServer) savedDraftOrEntryTemplate(username types.Username, date t
 		return "", err
 	}
 	return prefs.EntryTemplate, nil
+}
+
+func entryContentFromRequest(r *http.Request) (types.EntryContent, error) {
+	cr := struct {
+		EntryContent string `json:"entryContent"`
+	}{}
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&cr)
+	if err != nil {
+		return types.EntryContent(""), err
+	}
+
+	return parse.EntryContent(cr.EntryContent)
 }

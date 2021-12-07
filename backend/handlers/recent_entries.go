@@ -98,7 +98,7 @@ func entriesToPublicEntries(entries []types.JournalEntry) entriesPublic {
 		p = append(p, entryPublic{
 			Author:   entry.Author,
 			Date:     entry.Date,
-			Markdown: entry.Markdown,
+			Markdown: string(entry.Markdown),
 		})
 	}
 	return p

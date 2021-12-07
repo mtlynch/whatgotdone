@@ -33,7 +33,7 @@ func (d db) GetPreferences(username types.Username) (types.Preferences, error) {
 	}
 
 	return types.Preferences{
-		EntryTemplate: entryTemplate,
+		EntryTemplate: types.EntryContent(entryTemplate),
 	}, nil
 }
 

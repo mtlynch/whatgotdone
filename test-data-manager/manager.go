@@ -30,7 +30,7 @@ func (m *manager) Reset() error {
 	wipeDb()
 	for username, ud := range m.baseData.UserData {
 		err := m.datastore.SetPreferences(types.Username(username), types.Preferences{
-			EntryTemplate: ud.Preferences.EntryTemplate,
+			EntryTemplate: types.EntryContent(ud.Preferences.EntryTemplate),
 		})
 		if err != nil {
 			return err
@@ -47,7 +47,7 @@ func (m *manager) Reset() error {
 		for _, d := range ud.Drafts {
 			err := m.datastore.InsertDraft(types.Username(username), types.JournalEntry{
 				Date:     d.Date,
-				Markdown: d.Markdown,
+				Markdown: types.EntryContent(d.Markdown),
 			})
 			if err != nil {
 				return err
@@ -56,7 +56,7 @@ func (m *manager) Reset() error {
 		for _, e := range ud.Entries {
 			err := m.datastore.InsertEntry(types.Username(username), types.JournalEntry{
 				Date:     e.Date,
-				Markdown: e.Markdown,
+				Markdown: types.EntryContent(e.Markdown),
 			})
 			if err != nil {
 				return err

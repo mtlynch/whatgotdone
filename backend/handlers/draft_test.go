@@ -81,7 +81,7 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 
 func TestDraftHandlerWhenDateMatches(t *testing.T) {
 	drafts := []types.JournalEntry{
-		{Date: "2019-04-19", LastModified: mustParseTime("2019-04-19T00:00:00Z"), Markdown: "Drove to the zoo"},
+		{Date: "2019-04-19", LastModified: mustParseTime("2019-04-19T00:00:00Z"), Markdown: types.EntryContent("Drove to the zoo")},
 	}
 	ds := mock.MockDatastore{
 		JournalDrafts: drafts,
@@ -121,7 +121,7 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 		t.Fatalf("Response is not valid JSON: %v", w.Body.String())
 	}
 
-	if resp.Markdown != drafts[0].Markdown {
+	if resp.Markdown != string(drafts[0].Markdown) {
 		t.Fatalf("Unexpected response: got %v want %v", resp.Markdown, drafts[0].Markdown)
 	}
 }
