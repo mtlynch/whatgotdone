@@ -94,10 +94,9 @@ func (s defaultServer) savedDraftOrEntryTemplate(username types.Username, date t
 }
 
 func entryContentFromRequest(r *http.Request) (types.EntryContent, error) {
-	type contentRequest struct {
+	cr := struct {
 		EntryContent string `json:"entryContent"`
-	}
-	var cr contentRequest
+	}{}
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&cr)
 	if err != nil {
