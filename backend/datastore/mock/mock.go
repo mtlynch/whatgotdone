@@ -78,16 +78,13 @@ func (ds *MockDatastore) GetDraft(username types.Username, date types.EntryDate)
 }
 
 func (ds *MockDatastore) DeleteDraft(username types.Username, date types.EntryDate) error {
-	deleteIdx := -1
 	for i, draft := range ds.JournalDrafts {
 		if draft.Author == username && draft.Date == date {
-			deleteIdx = i
+			ds.JournalDrafts = append(ds.JournalDrafts[:i], ds.JournalDrafts[i+1:]...)
+			return nil
 		}
 	}
-	if deleteIdx <= 0 {
-		return errors.New("draft not found")
-	}
-	ds.JournalDrafts = append(ds.JournalDrafts[:deleteIdx], ds.JournalDrafts[deleteIdx+1:]...)
+
 	return nil
 }
 
@@ -96,16 +93,13 @@ func (ds *MockDatastore) InsertEntry(username types.Username, j types.JournalEnt
 }
 
 func (ds *MockDatastore) DeleteEntry(username types.Username, date types.EntryDate) error {
-	deleteIdx := -1
 	for i, entry := range ds.JournalEntries {
 		if entry.Author == username && entry.Date == date {
-			deleteIdx = i
+			ds.JournalEntries = append(ds.JournalEntries[:i], ds.JournalEntries[i+1:]...)
+			return nil
 		}
 	}
-	if deleteIdx <= 0 {
-		return errors.New("entry not found")
-	}
-	ds.JournalEntries = append(ds.JournalEntries[:deleteIdx], ds.JournalEntries[deleteIdx+1:]...)
+
 	return nil
 }
 
