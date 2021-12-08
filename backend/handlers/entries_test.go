@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -153,5 +154,75 @@ func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	if status := w.Code; status != http.StatusBadRequest {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusBadRequest)
+	}
+}
+
+func TestDeleteEntryDeletesMatchingEntry(t *testing.T) {
+	ds := mock.MockDatastore{
+		JournalEntries: []types.JournalEntry{
+			{
+				Author:       "dummyUser",
+				Date:         "2019-03-22",
+				LastModified: mustParseTime("2019-03-24T00:00:00Z"),
+				Markdown:     "Ate some crackers",
+			},
+			{
+				Author:       "dummyUser",
+				Date:         "2019-03-15",
+				LastModified: mustParseTime("2019-03-15T00:00:00Z"),
+				Markdown:     "Took a nap",
+			},
+			{
+				Author:       "dummyUser",
+				Date:         "2019-03-08",
+				LastModified: mustParseTime("2019-03-09T00:00:00Z"),
+				Markdown:     "Watched the movie *The Royal Tenenbaums*.",
+			},
+		},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]types.Username{
+				"mock_token_A": "dummyUser",
+			},
+		},
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+
+	req, err := http.NewRequest("DELETE", "/api/entry/2019-03-15", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	statusExpected := http.StatusOK
+	if status := w.Code; status != statusExpected {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, statusExpected)
+	}
+
+	entriesExpected := []types.JournalEntry{
+		{
+			Author:       "dummyUser",
+			Date:         "2019-03-22",
+			LastModified: mustParseTime("2019-03-24T00:00:00Z"),
+			Markdown:     "Ate some crackers",
+		},
+		{
+			Author:       "dummyUser",
+			Date:         "2019-03-08",
+			LastModified: mustParseTime("2019-03-09T00:00:00Z"),
+			Markdown:     "Watched the movie *The Royal Tenenbaums*.",
+		},
+	}
+	if !reflect.DeepEqual(ds.JournalEntries, entriesExpected) {
+		t.Fatalf("datastore in wrong state: got %+v want %+v", ds.JournalEntries, entriesExpected)
 	}
 }

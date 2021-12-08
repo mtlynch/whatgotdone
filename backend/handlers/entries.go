@@ -50,11 +50,6 @@ func (s *defaultServer) entryPut() http.HandlerFunc {
 			return
 		}
 
-		if t.EntryContent == "" {
-			http.Error(w, "Entry must not be empty", http.StatusBadRequest)
-			return
-		}
-
 		j := types.JournalEntry{
 			Date:     date,
 			Markdown: c,
