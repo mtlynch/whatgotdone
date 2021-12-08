@@ -226,3 +226,96 @@ func TestDeleteEntryDeletesMatchingEntry(t *testing.T) {
 		t.Fatalf("datastore in wrong state: got %+v want %+v", ds.JournalEntries, entriesExpected)
 	}
 }
+
+func TestDeleteEntryReturnsOKForNonExistentEntry(t *testing.T) {
+	ds := mock.MockDatastore{
+		JournalEntries: []types.JournalEntry{
+			{
+				Author:       "dummyUser",
+				Date:         "2019-03-22",
+				LastModified: mustParseTime("2019-03-24T00:00:00Z"),
+				Markdown:     "Ate some crackers",
+			},
+		},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]types.Username{
+				"mock_token_A": "dummyUser",
+			},
+		},
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+
+	req, err := http.NewRequest("DELETE", "/api/entry/2019-03-15", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	statusExpected := http.StatusOK
+	if status := w.Code; status != statusExpected {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, statusExpected)
+	}
+
+	entriesExpected := []types.JournalEntry{
+		{
+			Author:       "dummyUser",
+			Date:         "2019-03-22",
+			LastModified: mustParseTime("2019-03-24T00:00:00Z"),
+			Markdown:     "Ate some crackers",
+		},
+	}
+	if !reflect.DeepEqual(ds.JournalEntries, entriesExpected) {
+		t.Fatalf("datastore in wrong state: got %+v want %+v", ds.JournalEntries, entriesExpected)
+	}
+}
+
+func TestDeleteEntryReturnsBadRequestForInvalidDate(t *testing.T) {
+	ds := mock.MockDatastore{
+		JournalEntries: []types.JournalEntry{
+			{
+				Author:       "dummyUser",
+				Date:         "2019-03-22",
+				LastModified: mustParseTime("2019-03-24T00:00:00Z"),
+				Markdown:     "Ate some crackers",
+			},
+		},
+	}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]types.Username{
+				"mock_token_A": "dummyUser",
+			},
+		},
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+
+	// 2019-03-16 is a Saturday, not a Friday
+	req, err := http.NewRequest("DELETE", "/api/entry/2019-03-16", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	statusExpected := http.StatusBadRequest
+	if status := w.Code; status != statusExpected {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, statusExpected)
+	}
+}
