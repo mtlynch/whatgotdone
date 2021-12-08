@@ -30,7 +30,7 @@ set -x
 if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
   # Print the litestream version so that logs pick up which version
   # we're running.
-  litestream version
+  /app/litestream version
 
   export readonly DB_PATH="/app/data/store.db"
 
