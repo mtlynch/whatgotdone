@@ -148,6 +148,9 @@ export default {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
+      if (!this.entryContent) {
+        return;
+      }
       saveEntry(this.date, this.entryContent).then((result) => {
         this.$router.push(result.path);
       });

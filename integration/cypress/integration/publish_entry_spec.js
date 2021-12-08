@@ -88,8 +88,12 @@ it("posts an update and then unpublishes it", () => {
   cy.get(".editor-content .ProseMirror")
     .clear()
     .type("felt cute, might unpublish later");
-  cy.get("[data-test-id='unpublish-btn']").click();
+  cy.get("form").submit();
+
+  cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
   cy.get(".missing-entry").should("not.exist");
+
+  cy.get("[data-test-id='unpublish-btn']").click();
 
   // Unpublishing takes the user back to the edit entry page.
   cy.location("pathname").should("eq", "/entry/edit/2019-06-28");
