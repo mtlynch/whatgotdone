@@ -44,7 +44,12 @@
         Twitter</b-button
       >
       <div class="ml-auto">
-        <b-button variant="danger" @click="onDelete">Unpublish</b-button>
+        <b-button
+          variant="danger"
+          @click="onDelete"
+          data-test-id="unpublish-btn"
+          >Unpublish</b-button
+        >
         <b-button
           :to="'/entry/edit/' + this.entryDate"
           variant="primary"

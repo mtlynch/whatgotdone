@@ -32,7 +32,13 @@
           >
             {{ saveLabel }}
           </button>
-          <button type="submit" class="btn btn-primary">Publish</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :disabled="!entryHasContent"
+          >
+            Publish
+          </button>
         </div>
       </form>
       <JournalPreview
@@ -60,7 +66,7 @@ import VueTextareaAutosize from 'vue-textarea-autosize';
 import _ from 'lodash';
 
 import {draftDelete, getDraft, saveDraft} from '@/controllers/Drafts.js';
-import {entryDelete, saveEntry} from '@/controllers/Entries.js';
+import {saveEntry} from '@/controllers/Entries.js';
 import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
 
 import JournalPreview from '@/components/JournalPreview.vue';
@@ -118,34 +124,33 @@ export default {
     handleSaveDraft() {
       this.changesSaved = false;
       this.saveLabel = 'Saving';
+
+      let saveFn = null;
       if (this.entryHasContent) {
-        saveDraft(this.date, this.entryContent)
-          .then(() => {
-            this.changesSaved = true;
-            this.saveLabel = 'Changes Saved';
-          })
-          .catch(() => {
-            this.changesSaved = false;
-          });
+        saveFn = () => {
+          return saveDraft(this.date, this.entryContent);
+        };
       } else {
-        draftDelete(this.date).then(() => {
-          // TODO
-        });
+        saveFn = () => {
+          return draftDelete(this.date);
+        };
       }
+      saveFn()
+        .then(() => {
+          this.changesSaved = true;
+          this.saveLabel = 'Changes Saved';
+        })
+        .catch(() => {
+          this.changesSaved = false;
+        });
     },
     debouncedSaveDraft: _.debounce(function () {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
-      if (this.entryHasContent) {
-        saveEntry(this.date, this.entryContent).then((result) => {
-          this.$router.push(result.path);
-        });
-      } else {
-        entryDelete(this.date).then(() => {
-          // TODO: Report deletion
-        });
-      }
+      saveEntry(this.date, this.entryContent).then((result) => {
+        this.$router.push(result.path);
+      });
     },
   },
   created() {
