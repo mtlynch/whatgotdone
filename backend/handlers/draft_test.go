@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -199,6 +200,40 @@ func mustParseTime(ts string) time.Time {
 		panic(err)
 	}
 	return t
+}
+
+func TestPutDraftRejectsEmptyDraft(t *testing.T) {
+	ds := mock.MockDatastore{}
+	router := mux.NewRouter()
+	s := defaultServer{
+		authenticator: mockAuthenticator{
+			tokensToUsers: map[string]types.Username{
+				"mock_token_A": "dummyUser",
+			},
+		},
+		datastore:      &ds,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+
+	req, err := http.NewRequest(
+		"PUT",
+		"/api/draft/2019-03-15",
+		strings.NewReader(`{"entryContent": ""}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	statusExpected := http.StatusBadRequest
+	if status := w.Code; status != statusExpected {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, statusExpected)
+	}
 }
 
 func TestDeleteDraftDeletesMatchingDraft(t *testing.T) {
