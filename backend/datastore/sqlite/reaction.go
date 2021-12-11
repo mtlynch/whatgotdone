@@ -78,6 +78,7 @@ func (d db) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate
 		entry_author=? AND
 		entry_date=? AND
 		reacting_user=?
+	LIMIT 1
 	`, entryAuthor, entryDate, reactingUser)
 	return err
 }

@@ -150,6 +150,7 @@ func (d db) DeleteEntry(username types.Username, date types.EntryDate) error {
 		username=? AND
 		date=? AND
 		is_draft=0
+	LIMIT 1
 	`, username, date)
 	return err
 }
