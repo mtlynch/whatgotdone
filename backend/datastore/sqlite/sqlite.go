@@ -25,7 +25,12 @@ func New() datastore.Datastore {
 		log.Fatalln(err)
 	}
 
-	createTableStmts := []string{
+	initStmts := []string{
+		// The Litestream documentation recommends these pragmas.
+		// https://litestream.io/tips/
+		`PRAGMA busy_timeout = 5000`,
+		`PRAGMA synchronous = NORMAL`,
+
 		`CREATE TABLE IF NOT EXISTS user_preferences (
 			username TEXT PRIMARY KEY,
 			entry_template TEXT
@@ -66,7 +71,7 @@ func New() datastore.Datastore {
 			)`,
 	}
 
-	for _, stmt := range createTableStmts {
+	for _, stmt := range initStmts {
 		_, err = ctx.Exec(stmt)
 		if err != nil {
 			log.Fatalln(err)
