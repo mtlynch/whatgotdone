@@ -77,7 +77,29 @@ func (ds *MockDatastore) GetDraft(username types.Username, date types.EntryDate)
 	}
 }
 
+func (ds *MockDatastore) DeleteDraft(username types.Username, date types.EntryDate) error {
+	for i, draft := range ds.JournalDrafts {
+		if draft.Author == username && draft.Date == date {
+			ds.JournalDrafts = append(ds.JournalDrafts[:i], ds.JournalDrafts[i+1:]...)
+			return nil
+		}
+	}
+
+	return nil
+}
+
 func (ds *MockDatastore) InsertEntry(username types.Username, j types.JournalEntry) error {
+	return nil
+}
+
+func (ds *MockDatastore) DeleteEntry(username types.Username, date types.EntryDate) error {
+	for i, entry := range ds.JournalEntries {
+		if entry.Author == username && entry.Date == date {
+			ds.JournalEntries = append(ds.JournalEntries[:i], ds.JournalEntries[i+1:]...)
+			return nil
+		}
+	}
+
 	return nil
 }
 

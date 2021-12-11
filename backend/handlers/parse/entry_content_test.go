@@ -15,6 +15,36 @@ func TestEntryContent(t *testing.T) {
 			"hello, world!",
 			nil,
 		},
+		{
+			"empty entry content is invalid",
+			"",
+			ErrEmptyEntryContent,
+		},
+		{
+			"single-space content is invalid",
+			" ",
+			ErrEmptyEntryContent,
+		},
+		{
+			"single-newline content is invalid",
+			"\n",
+			ErrEmptyEntryContent,
+		},
+		{
+			"single carriage return content is invalid",
+			"\r",
+			ErrEmptyEntryContent,
+		},
+		{
+			"tab content is invalid",
+			"\t",
+			ErrEmptyEntryContent,
+		},
+		{
+			"whitespace-only content is invalid",
+			"\t   \t\r\n \t",
+			ErrEmptyEntryContent,
+		},
 	}
 
 	for _, tt := range tests {

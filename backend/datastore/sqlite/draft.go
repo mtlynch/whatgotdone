@@ -64,3 +64,17 @@ func (d db) InsertDraft(username types.Username, j types.JournalEntry) error {
 	values(?,?,?,1,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, username, j.Date, j.Markdown)
 	return err
 }
+
+// DeleteDraft deletes a draft from the datastore.
+func (d db) DeleteDraft(username types.Username, date types.EntryDate) error {
+	log.Printf("deleting draft from datastore: %s -> %+v", username, date)
+	_, err := d.ctx.Exec(`
+	DELETE FROM
+		journal_entries
+	WHERE
+		username=? AND
+		date=? AND
+		is_draft=1
+	`, username, date)
+	return err
+}

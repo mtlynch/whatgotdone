@@ -32,7 +32,13 @@
           >
             {{ saveLabel }}
           </button>
-          <button type="submit" class="btn btn-primary">Publish</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :disabled="!entryHasContent"
+          >
+            Publish
+          </button>
         </div>
       </form>
       <JournalPreview
@@ -59,7 +65,7 @@ import Vue from 'vue';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import _ from 'lodash';
 
-import {getDraft, saveDraft} from '@/controllers/Drafts.js';
+import {draftDelete, getDraft, saveDraft} from '@/controllers/Drafts.js';
 import {saveEntry} from '@/controllers/Entries.js';
 import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
 
@@ -90,6 +96,9 @@ export default {
     username() {
       return this.$store.state.username;
     },
+    entryHasContent() {
+      return this.entryContent.trim() !== '';
+    },
   },
   methods: {
     loadEntryContent() {
@@ -115,7 +124,18 @@ export default {
     handleSaveDraft() {
       this.changesSaved = false;
       this.saveLabel = 'Saving';
-      saveDraft(this.date, this.entryContent)
+
+      let saveFn = null;
+      if (this.entryHasContent) {
+        saveFn = () => {
+          return saveDraft(this.date, this.entryContent);
+        };
+      } else {
+        saveFn = () => {
+          return draftDelete(this.date);
+        };
+      }
+      saveFn()
         .then(() => {
           this.changesSaved = true;
           this.saveLabel = 'Changes Saved';
@@ -128,6 +148,9 @@ export default {
       this.handleSaveDraft();
     }, 2500),
     handleSubmit() {
+      if (!this.entryContent) {
+        return;
+      }
       saveEntry(this.date, this.entryContent).then((result) => {
         this.$router.push(result.path);
       });

@@ -70,19 +70,40 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 	}
 }
 
+func (s *defaultServer) draftDelete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		date, err := dateFromRequestPath(r)
+		if err != nil {
+			log.Printf("Invalid date: %s", date)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		username := usernameFromContext(r.Context())
+
+		err = s.datastore.DeleteDraft(username, date)
+		if err != nil {
+			log.Printf("Failed to delete draft entry: %s", err)
+			http.Error(w, "Failed to delete entry", http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
 func (s defaultServer) savedDraftOrEntryTemplate(username types.Username, date types.EntryDate) (types.EntryContent, error) {
 	// First, check if there's a saved draft.
 	d, err := s.datastore.GetDraft(username, date)
-	if err == nil && d.Markdown != "" {
-		return d.Markdown, nil
-	}
 	if _, ok := err.(datastore.DraftNotFoundError); ok {
-		err = nil
+		// If there's no saved draft, try using the user's entry template.
+		return s.getEntryTemplate(username, date)
 	} else if err != nil {
 		return "", err
 	}
 
-	// If there's no saved draft, try using the user's entry template.
+	return d.Markdown, nil
+}
+
+func (s defaultServer) getEntryTemplate(username types.Username, date types.EntryDate) (types.EntryContent, error) {
 	prefs, err := s.datastore.GetPreferences(username)
 	if _, ok := err.(datastore.PreferencesNotFoundError); ok {
 		return "", nil

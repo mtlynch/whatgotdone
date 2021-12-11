@@ -41,9 +41,13 @@ type Datastore interface {
 	// InsertEntry saves an entry to the datastore, overwriting any existing entry
 	// with the same name and username.
 	InsertEntry(username types.Username, j types.JournalEntry) error
+	// DeleteEntry deletes an entry from the datastore.
+	DeleteEntry(username types.Username, d types.EntryDate) error
 	// InsertDraft saves an entry draft to the datastore, overwriting any existing
 	// draft with the same name and username.
 	InsertDraft(username types.Username, j types.JournalEntry) error
+	// DeleteDraft deletes a draft from the datastore.
+	DeleteDraft(username types.Username, date types.EntryDate) error
 	// GetReactions retrieves reader reactions associated with a published entry.
 	GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error)
 	// AddReaction saves a reader reaction associated with a published entry,

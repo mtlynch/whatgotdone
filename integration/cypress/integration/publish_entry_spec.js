@@ -24,6 +24,7 @@ it("logs in and posts an update", () => {
 
   cy.get(".journal-body").should("contain", entryText);
   cy.get(".view-count").should("contain", "Viewed 1 times");
+  cy.get(".missing-entry").should("not.exist");
 });
 
 it("logs in and backdates an update from a previous week", () => {
@@ -70,9 +71,10 @@ it("logs in and backdates an update from a previous week", () => {
 
   cy.get(".journal-body").should("contain", entryText);
   cy.get(".view-count").should("contain", "Viewed 1 times");
+  cy.get(".missing-entry").should("not.exist");
 });
 
-it("logs in and posts an empty update (deleting the existing entry)", () => {
+it("posts an update and then unpublishes it", () => {
   cy.intercept("GET", "/api/draft/2019-06-28").as("getDraft");
 
   cy.login("staging_jimmy");
@@ -83,14 +85,21 @@ it("logs in and posts an empty update (deleting the existing entry)", () => {
   // Wait for page to pull down the previous entry.
   cy.wait("@getDraft");
 
-  cy.get(".editor-content .ProseMirror").clear();
+  cy.get(".editor-content .ProseMirror")
+    .clear()
+    .type("felt cute, might unpublish later");
   cy.get("form").submit();
 
   cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
+  cy.get(".missing-entry").should("not.exist");
 
-  // HACK: Make sure we don't run into a timing issue where we're still seeing
-  // the cached entry.
-  cy.reload();
+  cy.get("[data-test-id='unpublish-btn']").click();
 
+  // Unpublishing takes the user back to the edit entry page.
+  cy.location("pathname").should("eq", "/entry/edit/2019-06-28");
+
+  // Go back and make sure the published entry is gone.
+  cy.go("back");
+  cy.location("pathname").should("eq", "/staging_jimmy/2019-06-28");
   cy.get(".missing-entry").should("be.visible");
 });

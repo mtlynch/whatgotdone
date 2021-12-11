@@ -30,11 +30,10 @@ func (s *defaultServer) entriesGet() http.HandlerFunc {
 	}
 }
 
-// entryPut handles HTTP POST requests for users to create new What Got
-// Done updates. The updates can be new versions of previously published
-// updates (in which case, we'll update the existing entries in the datastore)
-// or a brand new update (in which case, we'll create new entries in the
-// datastore).
+// entryPut handles HTTP PUT requests for users to create new What Got Done
+// updates. The updates can be new versions of previously published updates (in
+// which case, we'll update the existing entries in the datastore) or a brand
+// new update (in which case, we'll create new entries in the datastore).
 func (s *defaultServer) entryPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		date, err := dateFromRequestPath(r)
@@ -78,5 +77,24 @@ func (s *defaultServer) entryPut() http.HandlerFunc {
 		}{
 			Path: fmt.Sprintf("/%s/%s", username, date),
 		})
+	}
+}
+
+func (s *defaultServer) entryDelete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		date, err := dateFromRequestPath(r)
+		if err != nil {
+			log.Printf("Invalid date: %s", date)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		username := usernameFromContext(r.Context())
+		err = s.datastore.DeleteEntry(username, date)
+		if err != nil {
+			log.Printf("Failed to delete journal entry: %s", err)
+			http.Error(w, "Failed to delete entry", http.StatusInternalServerError)
+			return
+		}
 	}
 }
