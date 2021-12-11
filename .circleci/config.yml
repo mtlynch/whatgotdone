@@ -110,6 +110,7 @@ workflows:
       - integration
       - deploy:
           requires:
+            - check_whitespace
             - build-frontend
             - test-backend
             - integration
