@@ -77,7 +77,7 @@ jobs:
   deploy:
     machine:
       image: ubuntu-2004:202010-01
-    resource_class: small
+      docker_layer_caching: true
     environment:
       # The flyctl changes too much to use a specific version, so use the latest for the
       # time being.
