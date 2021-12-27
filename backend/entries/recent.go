@@ -2,7 +2,6 @@ package entries
 
 import (
 	"log"
-	"sort"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -21,7 +20,7 @@ func (r defaultReader) Recent(start, limit int) ([]types.JournalEntry, error) {
 		return journalEntries{}, err
 	}
 
-	return sortAndSliceEntries(entries, start, limit), nil
+	return sliceEntries(entries, start, limit), nil
 }
 
 func (r defaultReader) RecentFollowing(username types.Username, start, limit int) ([]types.JournalEntry, error) {
@@ -40,42 +39,14 @@ func (r defaultReader) RecentFollowing(username types.Username, start, limit int
 		return journalEntries{}, err
 	}
 
-	return sortAndSliceEntries(entries, start, limit), nil
+	return sliceEntries(entries, start, limit), nil
 }
 
-// TODO: Reimplement this in SQL.
-func sortAndSliceEntries(entries journalEntries, start, limit int) journalEntries {
-	sorted := make(journalEntries, len(entries))
-	copy(sorted, entries)
-
-	sort.Sort(sorted)
-	// Reverse the order of entries.
-	for i := len(sorted)/2 - 1; i >= 0; i-- {
-		opp := len(sorted) - 1 - i
-		sorted[i], sorted[opp] = sorted[opp], sorted[i]
-	}
-
-	start = min(len(sorted), start)
-	end := min(len(sorted), start+limit)
-	return sorted[start:end]
-}
-
-func (e journalEntries) Len() int {
-	return len(e)
-}
-
-func (e journalEntries) Swap(i, j int) {
-	e[i], e[j] = e[j], e[i]
-}
-
-func (e journalEntries) Less(i, j int) bool {
-	if e[i].Date < e[j].Date {
-		return true
-	}
-	if e[i].Date > e[j].Date {
-		return false
-	}
-	return e[i].LastModified.Before(e[j].LastModified)
+func sliceEntries(entries journalEntries, start, limit int) journalEntries {
+	// TODO: Reimplement this in SQL.
+	start = min(len(entries), start)
+	end := min(len(entries), start+limit)
+	return entries[start:end]
 }
 
 func min(a, b int) int {
