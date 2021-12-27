@@ -82,6 +82,9 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 			journal_entries
 		WHERE
 		  %s
+		ORDER BY
+			date DESC,
+			last_modified DESC
 		`, strings.Join(whereClauses, " AND ")))
 	if err != nil {
 		return []types.JournalEntry{}, err
