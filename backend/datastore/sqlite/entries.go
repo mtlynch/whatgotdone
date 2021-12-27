@@ -72,6 +72,16 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 		values = append(values, filter.MinLength)
 	}
 
+	limitClause := ""
+	if filter.Limit != 0 {
+		limitClause = fmt.Sprintf("LIMIT %d", filter.Limit)
+	}
+
+	offsetClause := ""
+	if filter.Offset != 0 {
+		offsetClause = fmt.Sprintf("OFFSET %d", filter.Offset)
+	}
+
 	stmt, err := d.ctx.Prepare(fmt.Sprintf(`
 		SELECT
 			username,
@@ -85,7 +95,9 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 		ORDER BY
 			date DESC,
 			last_modified DESC
-		`, strings.Join(whereClauses, " AND ")))
+		%s
+		%s
+		`, strings.Join(whereClauses, " AND "), limitClause, offsetClause))
 	if err != nil {
 		return []types.JournalEntry{}, err
 	}
