@@ -16,6 +16,8 @@ type (
 	EntryFilter struct {
 		ByUsers   []types.Username
 		MinLength int32
+		Offset    int32
+		Limit     int32
 	}
 
 	PageViewRecord struct {
