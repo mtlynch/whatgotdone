@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -30,10 +32,16 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			return
 		}
 
-		entries, err := s.entriesReader.Recent(start, limit)
+		// TODO: Filter by start date.
+		entries, err := s.datastore.ReadEntries(datastore.EntryFilter{
+			// Filter low-effort posts.
+			MinLength: 30,
+			Offset:    int32(start),
+			Limit:     int32(limit),
+		})
 		if err != nil {
-			log.Printf("Failed to retrieve recent entries: %v", err)
-			http.Error(w, "Failed to retrieve recent entries", http.StatusInternalServerError)
+			log.Printf("Failed to retrieve entries: %v", err)
+			http.Error(w, fmt.Sprintf("Failed to read journal entries: %v", err), http.StatusInternalServerError)
 			return
 		}
 
@@ -55,11 +63,22 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 		}
 
 		username := usernameFromContext(r.Context())
-		entries, err := s.entriesReader.RecentFollowing(username, start, limit)
+		following, err := s.datastore.Following(username)
 		if err != nil {
-			log.Printf("Failed to retrieve recent entries from users %s is following: %v", username, err)
-			http.Error(w, "Failed to retrieve recent entries from followed users", http.StatusInternalServerError)
+			log.Printf("failed to retrieve user's follow list %s: %v", username, err)
+			http.Error(w, "Failed to retrieve user's follow list", http.StatusInternalServerError)
 			return
+		}
+
+		// TODO: Filter by start date.
+		entries, err := s.datastore.ReadEntries(datastore.EntryFilter{
+			ByUsers: following,
+			Offset:  int32(start),
+			Limit:   int32(limit),
+		})
+		if err != nil {
+			log.Printf("Failed to retrieve entries: %s", err)
+			http.Error(w, "Failed to retrieve followed entries", http.StatusInternalServerError)
 		}
 
 		respondOK(w, struct {
