@@ -195,18 +195,30 @@ func TestRecentEntriesHandlerReturnsEmptyArrayWhenNoEntriesExist(t *testing.T) {
 }
 
 func TestRecentFailsWhenDatastoreFailsToRetrieveEntries(t *testing.T) {
+	router := mux.NewRouter()
 	ms := mock.MockDatastore{
 		Usernames: []types.Username{
 			"bob",
 		},
 		ReadEntriesErr: errors.New("dummy error for MockDatastore.GetEntries()"),
 	}
-	r := defaultReader{
-		store: &ms,
+	s := defaultServer{
+		datastore:      &ms,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/recentEntries?start=0&limit=15", nil)
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	_, err := r.Recent(0, 20)
-	if err == nil {
-		t.Fatalf("Expected call to Recent to fail")
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusInternalServerError {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusInternalServerError)
 	}
 }
