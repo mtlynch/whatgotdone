@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -14,35 +15,49 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-type mockEntriesReader struct {
-	entries []types.JournalEntry
-}
-
-func (mer mockEntriesReader) Recent(start, limit int) ([]types.JournalEntry, error) {
-	return mer.entries, nil
-}
-
-func (mer mockEntriesReader) RecentFollowing(username types.Username, start, limit int) ([]types.JournalEntry, error) {
-	return mer.entries, nil
-}
-
 func TestRecentEntriesHandlerReturnsRecentEntries(t *testing.T) {
-	recentEntries := []types.JournalEntry{
-		{Author: "alan", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
-		{Author: "janie", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
-		{Author: "carla", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
-		{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
-		{Author: "ted", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
-		{Author: "joe", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
-		{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
-	}
-	mer := mockEntriesReader{
-		entries: recentEntries,
+	ds := mock.MockDatastore{
+		JournalEntries: []types.JournalEntry{
+			{
+				Author:   "alan",
+				Date:     "2019-05-24",
+				Markdown: "Read a pamphlet from The Cat Society",
+			},
+			{
+				Author:   "janie",
+				Date:     "2019-05-24",
+				Markdown: "Read the news today... Oh boy!",
+			},
+			{
+				Author:   "carla",
+				Date:     "2019-05-24",
+				Markdown: "Read a book about the history of cheese",
+			},
+			{
+				Author:   "bob",
+				Date:     "2019-05-24",
+				Markdown: "Rode the bus and saw a movie about ghosts",
+			},
+			{
+				Author:   "ted",
+				Date:     "2019-05-24",
+				Markdown: "Ate some crackers in a bathtub",
+			},
+			{
+				Author:   "joe",
+				Date:     "2019-05-17",
+				Markdown: "Saw a movie about French vanilla",
+			},
+			{
+				Author:   "bob",
+				Date:     "2019-05-17",
+				Markdown: "Took a nap and dreamed about chocolate",
+			},
+		},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore:      &mock.MockDatastore{},
-		entriesReader:  &mer,
+		datastore:      &ds,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
@@ -84,22 +99,20 @@ func TestRecentEntriesHandlerReturnsRecentEntries(t *testing.T) {
 }
 
 func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
-	recentEntries := []types.JournalEntry{
-		{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
-		{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
-		{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
-		{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
-		{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
-		{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
-		{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
-	}
-	mer := mockEntriesReader{
-		entries: recentEntries,
+	ds := mock.MockDatastore{
+		JournalEntries: []types.JournalEntry{
+			{Author: "bob", Date: "2019-05-24", Markdown: "Read a pamphlet from The Cat Society"},
+			{Author: "bob", Date: "2019-05-24", Markdown: "Read the news today... Oh boy!"},
+			{Author: "bob", Date: "2019-05-24", Markdown: "Read a book about the history of cheese"},
+			{Author: "bob", Date: "2019-05-24", Markdown: "Rode the bus and saw a movie about ghosts"},
+			{Author: "bob", Date: "2019-05-24", Markdown: "Ate some crackers in a bathtub"},
+			{Author: "bob", Date: "2019-05-17", Markdown: "Saw a movie about French vanilla"},
+			{Author: "bob", Date: "2019-05-17", Markdown: "Took a nap and dreamed about chocolate"},
+		},
 	}
 	router := mux.NewRouter()
 	s := defaultServer{
-		datastore:      &mock.MockDatastore{},
-		entriesReader:  &mer,
+		datastore:      &ds,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
@@ -152,14 +165,10 @@ func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
 	}
 }
 
-func TestRecentEntriesHandlerReturnsEmptyArrayWhenEntriesReaderIsEmpty(t *testing.T) {
-	mer := mockEntriesReader{
-		entries: []types.JournalEntry{},
-	}
+func TestRecentEntriesHandlerReturnsEmptyArrayWhenNoEntriesExist(t *testing.T) {
 	router := mux.NewRouter()
 	s := defaultServer{
 		datastore:      &mock.MockDatastore{},
-		entriesReader:  &mer,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
@@ -182,5 +191,34 @@ func TestRecentEntriesHandlerReturnsEmptyArrayWhenEntriesReaderIsEmpty(t *testin
 	want := "[]"
 	if response != want {
 		t.Fatalf("Unexpected response: got %v want %v", response, want)
+	}
+}
+
+func TestRecentFailsWhenDatastoreFailsToRetrieveEntries(t *testing.T) {
+	router := mux.NewRouter()
+	ms := mock.MockDatastore{
+		Usernames: []types.Username{
+			"bob",
+		},
+		ReadEntriesErr: errors.New("dummy error for MockDatastore.GetEntries()"),
+	}
+	s := defaultServer{
+		datastore:      &ms,
+		router:         router,
+		csrfMiddleware: dummyCsrfMiddleware(),
+	}
+	s.routes()
+
+	req, err := http.NewRequest("GET", "/api/recentEntries?start=0&limit=15", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	s.router.ServeHTTP(w, req)
+
+	if status := w.Code; status != http.StatusInternalServerError {
+		t.Fatalf("handler returned wrong status code: got %v want %v",
+			status, http.StatusInternalServerError)
 	}
 }
