@@ -30,7 +30,7 @@ jobs:
           command: npm --prefix ./frontend run lint
       - run:
           name: Unit test client
-          command: dev-scripts/run-frontend-unit-tests
+          command: ./dev-scripts/run-frontend-unit-tests
       - run:
           name: Build production frontend
           command: npm --prefix ./frontend run build
