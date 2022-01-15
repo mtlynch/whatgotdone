@@ -11,8 +11,6 @@ set -u
 # Echo commands
 set -x
 
-exit 1
-
 # Change directory to repository root.
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
