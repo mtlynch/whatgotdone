@@ -6,12 +6,12 @@ set -e
 # Echo commands to stdout.
 set -x
 
-if [ "$1" = "--quick" ]; then
-  quick_test=""
-  flags=""
-else
-  quick_test="1"
+if [ "$1" = "--full" ]; then
+  full_test="1"
   flags="-race --coverprofile=.coverage.out"
+else
+  full_test=""
+  flags=""
 fi
 
 # Exit on unset variable.
@@ -33,7 +33,7 @@ go test -v $flags ./...
 go vet ./...
 $STATICCHECK_PATH ./...
 
-if [ ! -z "$quick_test" ]; then
+if [ ! -z "$full_test" ]; then
   go tool cover -html .coverage.out -o .coverage.html
 fi
 popd

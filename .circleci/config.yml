@@ -47,7 +47,7 @@ jobs:
           at: ./
       - run:
           name: Test go packages
-          command: dev-scripts/run-go-tests
+          command: dev-scripts/run-go-tests --full
       - store_artifacts:
           path: backend/.coverage.html
       - run:
