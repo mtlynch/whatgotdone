@@ -74,12 +74,12 @@
 
     <div v-if="entriesLoaded" class="streaks">
       <p v-if="latestStreak >= 2">
-        {{ username }} is on a streak! They've posted updates every week for the
-        last <strong>{{ latestStreak }} weeks.</strong>
+        {{ username }} is on a streak! They've posted updates for the last
+        <strong>{{ latestStreak }} weeks.</strong>
       </p>
       <p v-if="longestStreak >= 2">
         {{ username }}'s longest streak was
-        <strong>{{ longestStreak }} weeks</strong> of weekly updates.
+        <strong>{{ longestStreak }} weeks</strong> of updates.
       </p>
     </div>
 
