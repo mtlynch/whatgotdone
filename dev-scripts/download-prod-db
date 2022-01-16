@@ -13,8 +13,10 @@ export DB_PATH="data/store.db"
 
 readonly DB_COPY_PATH="data/${TIMESTAMP}.db"
 
-# Delete .db, .db-shm, and .db-wal files.
-rm ${DB_PATH}* || true
+# Delete .db, .db-shm, and .db-wal files if they exist.
+if compgen -G "${DB_PATH}*" > /dev/null; then
+  rm ${DB_PATH}*
+fi
 
 # Load production credentials.
 . prod.env
