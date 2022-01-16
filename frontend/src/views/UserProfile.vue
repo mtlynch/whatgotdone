@@ -77,7 +77,10 @@
         {{ username }} is on a streak! They've posted updates for the last
         <strong>{{ latestStreak }} weeks.</strong>
       </p>
-      <p v-if="longestStreak >= 2">
+      <p v-if="latestStreak == latestStreak">
+        This is {{ username }}'s longest-ever streak.
+      </p>
+      <p v-else-if="longestStreak >= 2">
         {{ username }}'s longest streak was
         <strong>{{ longestStreak }} weeks</strong> of updates.
       </p>
