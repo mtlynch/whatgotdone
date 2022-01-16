@@ -13,7 +13,10 @@ set -x
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
-./dev-scripts/populate-dev-data
+readonly DB_PATH="data/store.db"
+if [[ ! -f "${DB_PATH}" ]]; then
+  ./dev-scripts/populate-dev-data
+fi
 
 SCREEN_SESSION_NAME="whatgotdone-frontend"
 
