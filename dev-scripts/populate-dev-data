@@ -15,6 +15,13 @@ set -x
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
+
+# Wipe the existing database (.db, .db-shm, and .db-wal files).
+readonly DB_FILES_PATTERN="data/store.db*"
+if compgen -G "${DB_FILES_PATTERN}" > /dev/null; then
+  rm ${DB_FILES_PATTERN}
+fi
+
 . dev.env
 
 pushd test-data-manager
