@@ -32,9 +32,7 @@ export function latestStreak(entries, currentTime = new Date()) {
 
   let streakLength = 1;
   for (let i = 1; i <= entries.length - 1; i++) {
-    const previousEntry = entries[i - 1];
-    const currentEntry = entries[i];
-    if (!areEntriesConsecutive(previousEntry, currentEntry)) {
+    if (!areEntriesConsecutive(entries[i - 1], entries[i])) {
       return streakLength;
     }
     streakLength++;
@@ -49,10 +47,7 @@ export function longestStreak(entries) {
   let longestStreak = 1;
   let currentStreak = 1;
   for (let i = 0; i <= entries.length - 2; i++) {
-    const entry = entries[i];
-    const nextEntry = entries[i + 1];
-
-    if (areEntriesConsecutive(entry, nextEntry)) {
+    if (areEntriesConsecutive(entries[i], entries[i + 1])) {
       currentStreak++;
     } else {
       currentStreak = 1;
