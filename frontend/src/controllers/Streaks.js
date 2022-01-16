@@ -31,14 +31,13 @@ export function latestStreak(entries, currentTime = new Date()) {
   }
 
   let streakLength = 1;
-  let previousEntry = mostRecentEntry;
   for (let i = 1; i <= entries.length - 1; i++) {
+    const previousEntry = entries[i - 1];
     const currentEntry = entries[i];
     if (!areEntriesConsecutive(previousEntry, currentEntry)) {
       return streakLength;
     }
     streakLength++;
-    previousEntry = currentEntry;
   }
   return streakLength;
 }
