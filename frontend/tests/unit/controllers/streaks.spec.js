@@ -42,6 +42,20 @@ describe('streaks controller', () => {
     ).toEqual(2);
   });
 
+  test('latestStreak includes the update for the current week', () => {
+    const entries = [
+      {
+        date: new Date(2022, 1, 14),
+      },
+      {
+        date: new Date(2022, 1, 7),
+      },
+    ];
+    expect(
+      latestStreak(entries, /* currentTime= */ new Date(2022, 1, 12))
+    ).toEqual(2);
+  });
+
   test('longestStreak handles empty entries', () => {
     const entries = [];
     expect(longestStreak(entries)).toEqual(0);
