@@ -42,6 +42,23 @@ describe('streaks controller', () => {
     ).toEqual(2);
   });
 
+  test('latestStreak recognizes a break in consecutive updates', () => {
+    const entries = [
+      {
+        date: new Date('2022-01-14'),
+      },
+      {
+        date: new Date('2022-01-07'),
+      },
+      {
+        date: new Date('2021-12-24'),
+      },
+    ];
+    expect(
+      latestStreak(entries, /* currentTime= */ new Date('2022-01-15'))
+    ).toEqual(2);
+  });
+
   test('latestStreak includes the update for the current week', () => {
     const entries = [
       {
