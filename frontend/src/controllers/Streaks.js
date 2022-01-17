@@ -21,7 +21,7 @@ function areEntriesConsecutive(a, b) {
 }
 
 export function latestStreak(entries, currentTime = new Date()) {
-  if (entries.length == 0) {
+  if (entries.length === 0) {
     return 0;
   }
 
@@ -41,7 +41,7 @@ export function latestStreak(entries, currentTime = new Date()) {
 }
 
 export function longestStreak(entries) {
-  if (entries.length == 0) {
+  if (entries.length === 0) {
     return 0;
   }
   let longestStreak = 1;
