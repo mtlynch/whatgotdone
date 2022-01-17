@@ -19,7 +19,9 @@ if compgen -G "${DB_PATH}*" > /dev/null; then
 fi
 
 # Load production credentials.
+set +x
 . prod.env
+set -x
 
 # Retrieve production DB.
 litestream restore -v -config litestream.yml -o "${DB_COPY_PATH}" "${DB_PATH}"
