@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"bytes"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -116,7 +116,7 @@ func TestUserPost(t *testing.T) {
 	s.routes()
 
 	for _, tt := range userPostTests {
-		req, err := http.NewRequest("POST", "/api/user", bytes.NewBuffer([]byte(tt.requestBody)))
+		req, err := http.NewRequest("POST", "/api/user", strings.NewReader(tt.requestBody))
 		if err != nil {
 			t.Fatal(err)
 		}

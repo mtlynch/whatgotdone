@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -145,8 +145,7 @@ func TestReactionsPostStoresValidReaction(t *testing.T) {
 	}
 	s.routes()
 
-	requestBody := []byte(`{ "reactionSymbol": "👍" }`)
-	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", strings.NewReader(`{ "reactionSymbol": "👍" }`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -192,8 +191,7 @@ func TestReactionsPostRejectsRequestWithMissingSymbolField(t *testing.T) {
 	}
 	s.routes()
 
-	requestBody := []byte(`{ "dummyNonExistentFieldName": "👍" }`)
-	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", strings.NewReader(`{ "dummyNonExistentFieldName": "👍" }`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -223,8 +221,7 @@ func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
 	}
 	s.routes()
 
-	requestBody := []byte(`{ "reactionSymbol": "!" }`)
-	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUserA/2019-04-19", strings.NewReader(`{ "reactionSymbol": "!" }`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -254,8 +251,7 @@ func TestReactionsPostRejectsRequestWhenUsernameIsUndefined(t *testing.T) {
 	}
 	s.routes()
 
-	requestBody := []byte(`{ "reactionSymbol": "👍" }`)
-	req, err := http.NewRequest("POST", "/api/reactions/entry/undefined/2019-04-19", bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest("POST", "/api/reactions/entry/undefined/2019-04-19", strings.NewReader(`{ "reactionSymbol": "👍" }`))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -281,8 +277,7 @@ func TestReactionsPostRejectsRequestWhenUserIsNotLoggedIn(t *testing.T) {
 	}
 	s.routes()
 
-	requestBody := []byte(`{ "symbol": "👍" }`)
-	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUser/2019-04-19", bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest("POST", "/api/reactions/entry/dummyUser/2019-04-19", strings.NewReader(`{ "symbol": "👍" }`))
 	if err != nil {
 		t.Fatal(err)
 	}
