@@ -52,7 +52,7 @@ func TestEntriesHandler(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -86,7 +86,7 @@ func TestEntriesHandlerWhenUserHasNoEntries(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -123,7 +123,7 @@ func TestEntriesHandlerReturnsBadRequestWhenUsernameIsBlank(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusBadRequest {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -150,7 +150,7 @@ func TestEntriesHandlerReturnsNotFoundWhenUsernameHasNoEntries(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusBadRequest {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -183,7 +183,7 @@ func TestPutEntryRejectsEmptyEntry(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	statusExpected := http.StatusBadRequest
 	if status := w.Code; status != statusExpected {
@@ -235,7 +235,7 @@ func TestDeleteEntryDeletesMatchingEntry(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	statusExpected := http.StatusOK
 	if status := w.Code; status != statusExpected {
@@ -293,7 +293,7 @@ func TestDeleteEntryReturnsOKForNonExistentEntry(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	statusExpected := http.StatusOK
 	if status := w.Code; status != statusExpected {
@@ -346,7 +346,7 @@ func TestDeleteEntryReturnsBadRequestForInvalidDate(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_A", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	statusExpected := http.StatusBadRequest
 	if status := w.Code; status != statusExpected {

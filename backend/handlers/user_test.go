@@ -123,7 +123,7 @@ func TestUserPost(t *testing.T) {
 		req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
 
 		w := httptest.NewRecorder()
-		s.router.ServeHTTP(w, req)
+		s.Router().ServeHTTP(w, req)
 
 		if status := w.Code; status != tt.httpStatusExpected {
 			t.Fatalf("for input [%s], handler returned wrong status code: got %v want %v",

@@ -69,7 +69,7 @@ func TestRecentEntriesHandlerReturnsRecentEntries(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -156,7 +156,7 @@ func TestRecentEntriesRejectsInvalidStartAndLimitParameters(t *testing.T) {
 		}
 
 		w := httptest.NewRecorder()
-		s.router.ServeHTTP(w, req)
+		s.Router().ServeHTTP(w, req)
 
 		if status := w.Code; status != http.StatusBadRequest {
 			t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -180,7 +180,7 @@ func TestRecentEntriesHandlerReturnsEmptyArrayWhenNoEntriesExist(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -215,7 +215,7 @@ func TestRecentFailsWhenDatastoreFailsToRetrieveEntries(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusInternalServerError {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
