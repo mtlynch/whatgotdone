@@ -88,7 +88,7 @@ func TestPageViewsGet(t *testing.T) {
 		}
 
 		w := httptest.NewRecorder()
-		s.router.ServeHTTP(w, req)
+		s.Router().ServeHTTP(w, req)
 
 		if status := w.Code; status != tt.httpStatusExpected {
 			t.Fatalf("for input [%s], handler returned wrong status code: got %v want %v",
@@ -187,7 +187,7 @@ func TestPageViewsGetUpdatesPageViewsWhenRecordsAreStale(t *testing.T) {
 		t.Fatal(err)
 	}
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v", status, http.StatusOK)

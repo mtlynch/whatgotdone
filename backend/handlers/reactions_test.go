@@ -39,7 +39,7 @@ func TestReactionsGetWhenEntryHasNoReactions(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -81,7 +81,7 @@ func TestReactionsGetWhenEntryHasTwoReactions(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -120,7 +120,7 @@ func TestReactionsGetWhenEntryAuthorIsUndefined(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusBadRequest {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -153,7 +153,7 @@ func TestReactionsPostStoresValidReaction(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusOK {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -200,7 +200,7 @@ func TestReactionsPostRejectsRequestWithMissingSymbolField(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusBadRequest {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -231,7 +231,7 @@ func TestReactionsRejectsInvalidReactionSymbol(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusBadRequest {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -262,7 +262,7 @@ func TestReactionsPostRejectsRequestWhenUsernameIsUndefined(t *testing.T) {
 	req.Header.Set("Cookie", fmt.Sprintf("%s=mock_token_C", userKitAuthCookieName))
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusBadRequest {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
@@ -288,7 +288,7 @@ func TestReactionsPostRejectsRequestWhenUserIsNotLoggedIn(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.Router().ServeHTTP(w, req)
 
 	if status := w.Code; status != http.StatusForbidden {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
