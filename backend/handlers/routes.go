@@ -58,6 +58,7 @@ func (s *defaultServer) routes() {
 	})
 
 	static := s.router.PathPrefix("/").Subrouter()
+	static.Use(upgradeToHttps)
 	static.Use(enableCsp)
 	static.Use(s.enableCsrf)
 	static.HandleFunc("/sitemap.xml", s.sitemapGet()).Methods(http.MethodGet)
