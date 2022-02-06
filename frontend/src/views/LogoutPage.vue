@@ -8,7 +8,7 @@
 import {logout} from '@/controllers/Logout.js';
 
 export default {
-  name: 'Logout',
+  name: 'LogoutPage',
   created() {
     logout().then(() => {
       window.location.href = '/';

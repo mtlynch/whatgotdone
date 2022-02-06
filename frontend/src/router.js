@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
-import Logout from '@/views/Logout.vue';
+import LogoutPage from '@/views/LogoutPage.vue';
 import PersonalizedFeed from '@/views/PersonalizedFeed.vue';
 import PrivacyPolicy from '@/views/PrivacyPolicy.vue';
 import Recent from '@/views/Recent.vue';
@@ -23,7 +23,7 @@ const routes = [
   {path: '/recent', component: Recent},
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
   {path: '/login', component: Login},
-  {path: '/logout', component: Logout},
+  {path: '/logout', component: LogoutPage},
   {path: '/preferences', component: UserPreferences, name: 'Preferences'},
   {path: '/privacy-policy', component: PrivacyPolicy},
   {
