@@ -18,7 +18,6 @@ export function uploadAvatar(image) {
     credentials: 'include',
     headers: {
       'X-CSRF-Token': getCsrfToken(),
-      'Content-Type': 'multipart/form-data',
     },
     body: formData,
   });
