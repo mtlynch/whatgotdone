@@ -26,7 +26,7 @@ import EntryFeed from '@/components/EntryFeed.vue';
 import {getRecentFollowing} from '@/controllers/Recent.js';
 
 export default {
-  name: 'PersonalizedFeed',
+  name: 'PersonalizedFeedPage',
   components: {
     EntryFeed,
   },
