@@ -10,7 +10,7 @@ import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
 import EditEntryPage from '@/views/EditEntryPage.vue';
 import ViewEntryPage from '@/views/ViewEntryPage.vue';
 import ViewProjectPage from '@/views/ViewProjectPage.vue';
-import EditUserProfile from '@/views/EditUserProfile.vue';
+import EditUserProfilePage from '@/views/EditUserProfilePage.vue';
 import UserPreferencesPage from '@/views/UserPreferencesPage.vue';
 import UserProfile from '@/views/UserProfile.vue';
 import MissingPage from '@/views/404.vue';
@@ -35,7 +35,7 @@ const routes = [
       },
     },
   },
-  {path: '/profile/edit', component: EditUserProfile, name: 'EditProfile'},
+  {path: '/profile/edit', component: EditUserProfilePage, name: 'EditProfile'},
   {
     path: '/:username/:date',
     component: ViewEntryPage,
