@@ -24,7 +24,7 @@ import Username from '@/components/Username.vue';
 import ProjectEntry from '@/components/ProjectEntry.vue';
 
 export default {
-  name: 'ViewProject',
+  name: 'ViewProjectPage',
   components: {
     ProjectEntry,
     Username,
