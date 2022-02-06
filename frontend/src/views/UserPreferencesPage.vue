@@ -51,7 +51,7 @@ import {getPreferences, savePreferences} from '@/controllers/Preferences.js';
 Vue.use(VueTextareaAutosize);
 
 export default {
-  name: 'UserPreferences',
+  name: 'UserPreferencesPage',
   data() {
     return {
       preferences: {
