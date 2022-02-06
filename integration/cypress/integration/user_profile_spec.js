@@ -53,6 +53,8 @@ it("logs in and sets profile photo", () => {
   cy.location("pathname").should("include", "/entry/edit");
 
   cy.visit("/staging_jimmy");
+  cy.get(".b-avatar-img").should("not.exist");
+
   cy.get('[data-test-id="edit-btn"]').click();
 
   // Wait for page to pull down existing profile.
@@ -62,6 +64,7 @@ it("logs in and sets profile photo", () => {
   cy.wait("@setProfilePhoto");
 
   cy.visit("/staging_jimmy");
+  cy.get(".b-avatar-img").should("exist");
 
   cy.get('[data-test-id="edit-btn"]').click();
   // Wait for page to pull down existing profile.
@@ -69,4 +72,7 @@ it("logs in and sets profile photo", () => {
 
   cy.get("#delete-profile-photo").click();
   cy.wait("@deleteProfilePhoto");
+
+  cy.visit("/staging_jimmy");
+  cy.get(".b-avatar-img").should("not.exist");
 });
