@@ -54,7 +54,9 @@ jobs:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
   integration:
-    resource_class: xlarge
+    # We're choosing medium even though xlarge is faster because CircleCI takes
+    # too long to provision xlarge instances.
+    resource_class: medium
     machine:
       # Choose an explicit machine image so that we get the latest version of
       # docker-compose.
