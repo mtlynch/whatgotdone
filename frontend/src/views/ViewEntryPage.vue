@@ -77,7 +77,7 @@ import Reactions from '@/components/Reactions.vue';
 import Username from '@/components/Username.vue';
 
 export default {
-  name: 'ViewEntry',
+  name: 'ViewEntryPage',
   components: {
     Journal,
     Reactions,

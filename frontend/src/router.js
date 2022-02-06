@@ -8,7 +8,7 @@ import PersonalizedFeedPage from '@/views/PersonalizedFeedPage.vue';
 import PrivacyPolicyPage from '@/views/PrivacyPolicyPage.vue';
 import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
 import EditEntry from '@/views/EditEntry.vue';
-import ViewEntry from '@/views/ViewEntry.vue';
+import ViewEntryPage from '@/views/ViewEntryPage.vue';
 import ViewProject from '@/views/ViewProject.vue';
 import EditUserProfile from '@/views/EditUserProfile.vue';
 import UserPreferences from '@/views/UserPreferences.vue';
@@ -38,7 +38,7 @@ const routes = [
   {path: '/profile/edit', component: EditUserProfile, name: 'EditProfile'},
   {
     path: '/:username/:date',
-    component: ViewEntry,
+    component: ViewEntryPage,
     meta: {
       title: (route) => {
         return `${route.params.username}'s What Got Done for the week of ${route.params.date}`;
