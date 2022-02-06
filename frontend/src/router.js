@@ -9,7 +9,7 @@ import PrivacyPolicyPage from '@/views/PrivacyPolicyPage.vue';
 import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
 import EditEntry from '@/views/EditEntry.vue';
 import ViewEntryPage from '@/views/ViewEntryPage.vue';
-import ViewProject from '@/views/ViewProject.vue';
+import ViewProjectPage from '@/views/ViewProjectPage.vue';
 import EditUserProfile from '@/views/EditUserProfile.vue';
 import UserPreferences from '@/views/UserPreferences.vue';
 import UserProfile from '@/views/UserProfile.vue';
@@ -47,7 +47,7 @@ const routes = [
   },
   {
     path: '/:username/project/:project',
-    component: ViewProject,
+    component: ViewProjectPage,
     meta: {
       title: (route) => {
         return `${route.params.username}'s What Got Done | ${route.params.project}`;
