@@ -25,7 +25,7 @@ const routes = [
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
   {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
-  {path: '/preferences', component: UserPreferencesPage},
+  {path: '/preferences', component: UserPreferencesPage, name: 'Preferences'},
   {path: '/privacy-policy', component: PrivacyPolicyPage},
   {
     path: '/:username',
