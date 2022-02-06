@@ -98,7 +98,7 @@ import {getUserMetadata, setUserMetadata} from '@/controllers/User.js';
 import Avatar from '@/components/Avatar.vue';
 
 export default {
-  name: 'EditUserProfile',
+  name: 'EditUserProfilePage',
   components: {
     Avatar,
   },
