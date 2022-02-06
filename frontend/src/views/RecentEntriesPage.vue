@@ -17,7 +17,7 @@ import EntryFeed from '@/components/EntryFeed.vue';
 import {getRecent} from '@/controllers/Recent.js';
 
 export default {
-  name: 'Recent',
+  name: 'RecentEntriesPage',
   components: {
     EntryFeed,
   },
