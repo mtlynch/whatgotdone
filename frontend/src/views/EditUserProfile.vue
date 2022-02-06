@@ -146,7 +146,13 @@ export default {
     },
     onUploadProfilePhoto: function (file) {
       uploadAvatar(file)
-        .then(() => {
+        .then((response) => {
+          if (!response.ok) {
+            response.text().then((error) => {
+              this.formError = error;
+              return;
+            });
+          }
           this.$refs.avatar.refresh();
         })
         .catch((error) => {
@@ -201,6 +207,7 @@ export default {
 }
 
 #delete-profile-photo {
-  max-width: 20ch;
+  max-width: 15ch;
+  text-align: center;
 }
 </style>
