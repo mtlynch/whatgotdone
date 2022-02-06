@@ -76,7 +76,7 @@ import RichTextEditor from '@/components/RichTextEditor.vue';
 Vue.use(VueTextareaAutosize);
 
 export default {
-  name: 'EditEntry',
+  name: 'EditEntryPage',
   components: {
     JournalPreview,
     MarkdownEditor,

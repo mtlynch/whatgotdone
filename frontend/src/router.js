@@ -7,7 +7,7 @@ import LogoutPage from '@/views/LogoutPage.vue';
 import PersonalizedFeedPage from '@/views/PersonalizedFeedPage.vue';
 import PrivacyPolicyPage from '@/views/PrivacyPolicyPage.vue';
 import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
-import EditEntry from '@/views/EditEntry.vue';
+import EditEntryPage from '@/views/EditEntryPage.vue';
 import ViewEntryPage from '@/views/ViewEntryPage.vue';
 import ViewProjectPage from '@/views/ViewProjectPage.vue';
 import EditUserProfile from '@/views/EditUserProfile.vue';
@@ -21,7 +21,7 @@ const routes = [
   {path: '/about', component: LandingPage},
   {path: '/recent', component: RecentEntriesPage},
   {path: '/feed', component: PersonalizedFeedPage},
-  {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
+  {path: '/entry/edit/:date', component: EditEntryPage, name: 'EditEntry'},
   {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
   {path: '/preferences', component: UserPreferencesPage, name: 'Preferences'},
