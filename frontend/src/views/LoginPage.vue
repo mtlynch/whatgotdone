@@ -9,7 +9,7 @@ import initializeUserState from '@/controllers/UserState.js';
 import {loadUserKit} from '@/controllers/UserKit.js';
 
 export default {
-  name: 'Login',
+  name: 'LoginPage',
   data() {
     return {
       previousRoute: null,

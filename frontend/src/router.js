@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from '@/views/Home.vue';
-import Login from '@/views/Login.vue';
+import LoginPage from '@/views/LoginPage.vue';
 import LogoutPage from '@/views/LogoutPage.vue';
 import PersonalizedFeed from '@/views/PersonalizedFeed.vue';
 import PrivacyPolicy from '@/views/PrivacyPolicy.vue';
@@ -22,7 +22,7 @@ const routes = [
   {path: '/feed', component: PersonalizedFeed},
   {path: '/recent', component: RecentEntriesPage},
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
-  {path: '/login', component: Login},
+  {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
   {path: '/preferences', component: UserPreferences, name: 'Preferences'},
   {path: '/privacy-policy', component: PrivacyPolicy},
