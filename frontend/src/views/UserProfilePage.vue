@@ -121,7 +121,7 @@ import PartialJournal from '@/components/PartialJournal.vue';
 Vue.use(VueMarkdown);
 
 export default {
-  name: 'UserProfile',
+  name: 'UserProfilePage',
   components: {
     Avatar,
     VueMarkdown,

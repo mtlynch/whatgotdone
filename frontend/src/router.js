@@ -12,7 +12,7 @@ import ViewEntryPage from '@/views/ViewEntryPage.vue';
 import ViewProjectPage from '@/views/ViewProjectPage.vue';
 import EditUserProfile from '@/views/EditUserProfile.vue';
 import UserPreferencesPage from '@/views/UserPreferencesPage.vue';
-import UserProfile from '@/views/UserProfile.vue';
+import UserProfilePage from '@/views/UserProfilePage.vue';
 import MissingPage from '@/views/404.vue';
 
 Vue.use(VueRouter);
@@ -28,7 +28,7 @@ const routes = [
   {path: '/privacy-policy', component: PrivacyPolicyPage},
   {
     path: '/:username',
-    component: UserProfile,
+    component: UserProfilePage,
     meta: {
       title: (route) => {
         return `${route.params.username} - What Got Done`;
