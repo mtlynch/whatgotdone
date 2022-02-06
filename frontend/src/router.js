@@ -21,7 +21,6 @@ const routes = [
   {path: '/about', component: LandingPage},
   {path: '/recent', component: RecentEntriesPage},
   {path: '/feed', component: PersonalizedFeedPage},
-  {path: '/feed', component: PersonalizedFeedPage},
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
   {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
