@@ -54,12 +54,9 @@ jobs:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
   integration:
-    resource_class: xlarge
-    machine:
-      # Choose an explicit machine image so that we get the latest version of
-      # docker-compose.
-      image: ubuntu-2004:202010-01
-      docker_layer_caching: true
+    resource_class: medium
+    docker:
+      - image: docker:20.10.12-dind
     steps:
       - checkout
       - run:
