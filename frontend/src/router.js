@@ -5,7 +5,7 @@ import LandingPage from '@/views/LandingPage.vue';
 import LoginPage from '@/views/LoginPage.vue';
 import LogoutPage from '@/views/LogoutPage.vue';
 import PersonalizedFeedPage from '@/views/PersonalizedFeedPage.vue';
-import PrivacyPolicy from '@/views/PrivacyPolicy.vue';
+import PrivacyPolicyPage from '@/views/PrivacyPolicyPage.vue';
 import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
 import EditEntry from '@/views/EditEntry.vue';
 import ViewEntry from '@/views/ViewEntry.vue';
@@ -25,7 +25,7 @@ const routes = [
   {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
   {path: '/preferences', component: UserPreferences, name: 'Preferences'},
-  {path: '/privacy-policy', component: PrivacyPolicy},
+  {path: '/privacy-policy', component: PrivacyPolicyPage},
   {
     path: '/:username',
     component: UserProfile,
