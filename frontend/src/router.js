@@ -2,9 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import LandingPage from '@/views/LandingPage.vue';
-import Login from '@/views/Login.vue';
+import LoginPage from '@/views/LoginPage.vue';
 import LogoutPage from '@/views/LogoutPage.vue';
-import PersonalizedFeed from '@/views/PersonalizedFeed.vue';
+import PersonalizedFeedPage from '@/views/PersonalizedFeedPage.vue';
 import PrivacyPolicy from '@/views/PrivacyPolicy.vue';
 import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
 import EditEntry from '@/views/EditEntry.vue';
@@ -19,10 +19,10 @@ Vue.use(VueRouter);
 
 const routes = [
   {path: '/about', component: LandingPage},
-  {path: '/feed', component: PersonalizedFeed},
   {path: '/recent', component: RecentEntriesPage},
+  {path: '/feed', component: PersonalizedFeedPage},
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
-  {path: '/login', component: Login},
+  {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
   {path: '/preferences', component: UserPreferences, name: 'Preferences'},
   {path: '/privacy-policy', component: PrivacyPolicy},
