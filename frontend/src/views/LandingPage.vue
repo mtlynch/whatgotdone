@@ -92,7 +92,7 @@
 import {thisFriday} from '@/controllers/EntryDates.js';
 
 export default {
-  name: 'Home',
+  name: 'LandingPage',
   data() {
     return {
       thisFriday: thisFriday(),
