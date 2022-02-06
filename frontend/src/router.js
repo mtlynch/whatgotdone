@@ -6,7 +6,7 @@ import Login from '@/views/Login.vue';
 import Logout from '@/views/Logout.vue';
 import PersonalizedFeed from '@/views/PersonalizedFeed.vue';
 import PrivacyPolicy from '@/views/PrivacyPolicy.vue';
-import Recent from '@/views/Recent.vue';
+import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
 import EditEntry from '@/views/EditEntry.vue';
 import ViewEntry from '@/views/ViewEntry.vue';
 import ViewProject from '@/views/ViewProject.vue';
@@ -20,7 +20,7 @@ Vue.use(VueRouter);
 const routes = [
   {path: '/about', component: Home},
   {path: '/feed', component: PersonalizedFeed},
-  {path: '/recent', component: Recent},
+  {path: '/recent', component: RecentEntriesPage},
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
   {path: '/login', component: Login},
   {path: '/logout', component: Logout},
