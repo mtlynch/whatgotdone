@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Upgrade all npm packages to the latest available versions.
+
+set -eux
+
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
+cd frontend
+
+npm i -g npm-check-updates
+ncu -u
+npm i
