@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Home from '@/views/Home.vue';
+import LandingPage from '@/views/LandingPage.vue';
 import Login from '@/views/Login.vue';
 import LogoutPage from '@/views/LogoutPage.vue';
 import PersonalizedFeed from '@/views/PersonalizedFeed.vue';
@@ -18,7 +18,7 @@ import MissingPage from '@/views/404.vue';
 Vue.use(VueRouter);
 
 const routes = [
-  {path: '/about', component: Home},
+  {path: '/about', component: LandingPage},
   {path: '/feed', component: PersonalizedFeed},
   {path: '/recent', component: RecentEntriesPage},
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
@@ -54,7 +54,7 @@ const routes = [
       },
     },
   },
-  {path: '/', component: Home},
+  {path: '/', component: LandingPage},
   {path: '*', component: MissingPage},
 ];
 
