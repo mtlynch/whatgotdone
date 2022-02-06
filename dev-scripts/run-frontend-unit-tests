@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Exit on first failing command.
+set -e
+
+# Echo commands
+set -x
+
+if [ "$1" = "-f" ]; then
+  extra_flags="-t $2"
+else
+  extra_flags=""
+fi
+
+# Exit on unset variable.
+set -u
+
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
+cd frontend
+npm run test:unit $extra_flags

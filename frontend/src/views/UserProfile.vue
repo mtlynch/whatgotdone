@@ -72,6 +72,20 @@
       >
     </div>
 
+    <div v-if="entriesLoaded" class="streaks">
+      <p v-if="latestStreak >= 2">
+        {{ username }} is on a streak! They've posted updates for the last
+        <strong>{{ latestStreak }} weeks.</strong>
+      </p>
+      <p v-if="latestStreak == latestStreak">
+        This is {{ username }}'s longest-ever streak.
+      </p>
+      <p v-else-if="longestStreak >= 2">
+        {{ username }}'s longest streak was
+        <strong>{{ longestStreak }} weeks</strong> of updates.
+      </p>
+    </div>
+
     <h2>Recent entries</h2>
 
     <PartialJournal
@@ -113,6 +127,7 @@ import VueMarkdown from 'vue-markdown';
 import {getEntriesFromUser} from '@/controllers/Entries.js';
 import {exportGet} from '@/controllers/Export.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
+import {latestStreak, longestStreak} from '@/controllers/Streaks.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
 import Avatar from '@/components/Avatar.vue';
@@ -180,6 +195,12 @@ export default {
     },
     canUnfollow: function () {
       return this.loggedInUsername && this.isFollowing && !this.isSelf;
+    },
+    latestStreak: function () {
+      return latestStreak(this.recentEntries);
+    },
+    longestStreak: function () {
+      return longestStreak(this.recentEntries);
     },
   },
   methods: {
