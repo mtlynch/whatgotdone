@@ -14,6 +14,9 @@ readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pw
 cd "${SCRIPT_DIR}/.."
 
 . dev.env
+if [[ -f dev.env.local ]]; then
+    . dev.env.local
+fi
 
 # Install modd if it's not present.
 MODD_PATH="$(go env GOPATH)/bin/modd"

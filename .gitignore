@@ -19,3 +19,5 @@ data/
 
 # Production environment variables
 prod.env
+
+*.local
