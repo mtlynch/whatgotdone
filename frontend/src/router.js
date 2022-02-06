@@ -11,7 +11,7 @@ import EditEntry from '@/views/EditEntry.vue';
 import ViewEntryPage from '@/views/ViewEntryPage.vue';
 import ViewProjectPage from '@/views/ViewProjectPage.vue';
 import EditUserProfile from '@/views/EditUserProfile.vue';
-import UserPreferences from '@/views/UserPreferences.vue';
+import UserPreferencesPage from '@/views/UserPreferencesPage.vue';
 import UserProfile from '@/views/UserProfile.vue';
 import MissingPage from '@/views/404.vue';
 
@@ -21,10 +21,11 @@ const routes = [
   {path: '/about', component: LandingPage},
   {path: '/recent', component: RecentEntriesPage},
   {path: '/feed', component: PersonalizedFeedPage},
+  {path: '/recent', component: RecentEntriesPage},
   {path: '/entry/edit/:date', component: EditEntry, name: 'EditEntry'},
   {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
-  {path: '/preferences', component: UserPreferences, name: 'Preferences'},
+  {path: '/preferences', component: UserPreferencesPage},
   {path: '/privacy-policy', component: PrivacyPolicyPage},
   {
     path: '/:username',
