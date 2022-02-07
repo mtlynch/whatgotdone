@@ -13,3 +13,12 @@ export function processJsonResponse(response) {
     return Promise.reject(error);
   });
 }
+
+export function processBlankResponse(response) {
+  if (!response.ok) {
+    return response.text().then((error) => {
+      return Promise.reject(error);
+    });
+  }
+  return Promise.resolve();
+}
