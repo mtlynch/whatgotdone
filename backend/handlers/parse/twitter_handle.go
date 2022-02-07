@@ -3,6 +3,7 @@ package parse
 import (
 	"errors"
 	"regexp"
+	"strings"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -20,8 +21,10 @@ func TwitterHandle(handle string) (types.TwitterHandle, error) {
 		return types.TwitterHandle(""), ErrInvalidTwitterHandle
 	}
 
-	if !twitterHandlePattern.MatchString(handle) {
+	h := strings.TrimPrefix(handle, "@")
+
+	if !twitterHandlePattern.MatchString(h) {
 		return types.TwitterHandle(""), ErrInvalidTwitterHandle
 	}
-	return types.TwitterHandle(handle), nil
+	return types.TwitterHandle(h), nil
 }
