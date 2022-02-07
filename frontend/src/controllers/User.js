@@ -1,4 +1,8 @@
-import {getCsrfToken, processJsonResponse} from '@/controllers/Common.js';
+import {
+  getCsrfToken,
+  processBlankResponse,
+  processJsonResponse,
+} from '@/controllers/Common.js';
 
 export function getUserSelfMetadata() {
   return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/user/me`, {
@@ -28,5 +32,5 @@ export function setUserMetadata(metadata) {
     headers: {'X-CSRF-Token': getCsrfToken()},
     credentials: 'include',
     body: JSON.stringify(metadata),
-  });
+  }).then(processBlankResponse);
 }
