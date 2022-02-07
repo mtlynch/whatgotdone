@@ -147,13 +147,7 @@ export default {
     },
     onUploadProfilePhoto: function (file) {
       uploadAvatar(file)
-        .then((response) => {
-          if (!response.ok) {
-            response.text().then((error) => {
-              this.formError = error;
-              return;
-            });
-          }
+        .then(() => {
           this.$refs.avatar.refresh();
         })
         .catch((error) => {
