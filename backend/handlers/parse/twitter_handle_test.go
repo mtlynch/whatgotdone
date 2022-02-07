@@ -26,6 +26,11 @@ func TestTwitterHandle(t *testing.T) {
 			nil,
 		},
 		{
+			"handle with leading @ is valid",
+			"@jack",
+			nil,
+		},
+		{
 			"single-character handle is invalid",
 			"j",
 			ErrInvalidTwitterHandle,
@@ -38,11 +43,6 @@ func TestTwitterHandle(t *testing.T) {
 		{
 			"undefined value is invalid",
 			"undefined",
-			ErrInvalidTwitterHandle,
-		},
-		{
-			"handle with leading @ is invalid",
-			"@jack",
 			ErrInvalidTwitterHandle,
 		},
 		{
