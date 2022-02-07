@@ -1,4 +1,4 @@
-import {getCsrfToken} from '@/controllers/Common.js';
+import {getCsrfToken, processBlankResponse} from '@/controllers/Common.js';
 
 export function deleteAvatar() {
   return fetch(`${process.env.VUE_APP_BACKEND_URL}/api/user/avatar`, {
@@ -7,7 +7,7 @@ export function deleteAvatar() {
     headers: {
       'X-CSRF-Token': getCsrfToken(),
     },
-  });
+  }).then(processBlankResponse);
 }
 
 export function uploadAvatar(image) {
@@ -20,5 +20,5 @@ export function uploadAvatar(image) {
       'X-CSRF-Token': getCsrfToken(),
     },
     body: formData,
-  });
+  }).then(processBlankResponse);
 }
