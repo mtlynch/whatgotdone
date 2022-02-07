@@ -129,12 +129,7 @@ export default {
     },
     handleSave: function () {
       setUserMetadata(this.profile)
-        .then((response) => {
-          if (!response.ok) {
-            return response.text().then((error) => {
-              return Promise.reject(error);
-            });
-          }
+        .then(() => {
           this.$router.push(`/${this.loggedInUsername}`);
         })
         .catch((error) => {
