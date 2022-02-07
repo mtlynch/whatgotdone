@@ -129,15 +129,16 @@ export default {
     },
     handleSave: function () {
       setUserMetadata(this.profile)
-        .then(() => {
+        .then((response) => {
+          if (!response.ok) {
+            return response.text().then((error) => {
+              return Promise.reject(error);
+            });
+          }
           this.$router.push(`/${this.loggedInUsername}`);
         })
         .catch((error) => {
-          if (error.response && error.response.data) {
-            this.formError = error.response.data;
-          } else {
-            this.formError = error;
-          }
+          this.formError = error;
         });
     },
     openFileUploadDialog: function () {
