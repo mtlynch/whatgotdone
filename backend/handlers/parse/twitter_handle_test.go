@@ -16,26 +16,6 @@ func TestTwitterHandle(t *testing.T) {
 			nil,
 		},
 		{
-			"handle with numbers is valid",
-			"jerry123",
-			nil,
-		},
-		{
-			"underscore characters are allowed",
-			"jack_and_jill",
-			nil,
-		},
-		{
-			"handle with leading @ is valid",
-			"@jack",
-			nil,
-		},
-		{
-			"single-character handle is invalid",
-			"j",
-			ErrInvalidTwitterHandle,
-		},
-		{
 			"empty string is invalid",
 			"",
 			ErrInvalidTwitterHandle,
@@ -43,16 +23,6 @@ func TestTwitterHandle(t *testing.T) {
 		{
 			"undefined value is invalid",
 			"undefined",
-			ErrInvalidTwitterHandle,
-		},
-		{
-			"handle with more than 15 characters is invalid",
-			"jackandjillwentup",
-			ErrInvalidTwitterHandle,
-		},
-		{
-			"handle with illegal characters is invalid",
-			"jack.and.jill",
 			ErrInvalidTwitterHandle,
 		},
 	}
