@@ -25,7 +25,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.0.5 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/jstemmer/go-junit-report v0.9.1 // indirect
-	github.com/mtlynch/social-go/v2 v2.0.0-20220213122750-ffd21d728566 // indirect
+	github.com/mtlynch/social-go/v2 v2.0.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
