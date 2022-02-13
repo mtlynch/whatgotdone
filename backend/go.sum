@@ -164,8 +164,6 @@ github.com/mattn/go-sqlite3 v1.14.9 h1:10HX2Td0ocZpYEjhilsuo6WWtUqttj2Kb0KtD86/K
 github.com/mattn/go-sqlite3 v1.14.9/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
 github.com/mtlynch/gorilla-handlers v1.5.2 h1:CnOI7baYzjgdumJMc7Dh192JFxqGsNgRewa7NTqq9Pc=
 github.com/mtlynch/gorilla-handlers v1.5.2/go.mod h1:qZmXSCK7pPjN71Pl9ARbQX2ec1t11FI/j8bDS+ZVbmQ=
-github.com/mtlynch/social-go/v2 v2.0.0-20220213122750-ffd21d728566 h1:DJqso5uDQQnfAs5isgfQYpIg0ne7Uwxf+kRmB7m/kh8=
-github.com/mtlynch/social-go/v2 v2.0.0-20220213122750-ffd21d728566/go.mod h1:fAu1tLzrZYGB77CMr7OamLFuzy1rD/BLaR9Z9Z7ihR0=
 github.com/mtlynch/social-go/v2 v2.0.0 h1:uEbfO/tpy+3zNqcZ2TNfocYzhp6p8pNocBhLdVOSQt4=
 github.com/mtlynch/social-go/v2 v2.0.0/go.mod h1:fAu1tLzrZYGB77CMr7OamLFuzy1rD/BLaR9Z9Z7ihR0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
