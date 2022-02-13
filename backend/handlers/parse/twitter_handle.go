@@ -3,7 +3,7 @@ package parse
 import (
 	"errors"
 
-	"github.com/mtlynch/social-go/v2/social"
+	"github.com/mtlynch/social-go/v2"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
