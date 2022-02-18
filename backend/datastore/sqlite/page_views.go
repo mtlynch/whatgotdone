@@ -13,7 +13,7 @@ import (
 // InsertPageViews stores the set of pageview data for What Got Done routes.
 func (d db) InsertPageViews(pvcs []ga.PageViewCount) error {
 	log.Printf("saving %d page view entries to datastore", len(pvcs))
-	valueClauses := strings.TrimSuffix(strings.Repeat("(?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc')), ", len(pvcs)), ", ")
+	valueClauses := strings.TrimSuffix(strings.Repeat("(?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now')), ", len(pvcs)), ", ")
 	values := make([]interface{}, len(pvcs)*2)
 	for i, pvc := range pvcs {
 		values[i*2] = pvc.Path

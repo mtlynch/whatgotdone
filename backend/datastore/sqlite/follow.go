@@ -14,7 +14,7 @@ func (d db) InsertFollow(leader, follower types.Username) error {
 		follower,
 		leader,
 		created)
-	values(?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, follower, leader)
+	values(?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now'))`, follower, leader)
 	return err
 }
 
