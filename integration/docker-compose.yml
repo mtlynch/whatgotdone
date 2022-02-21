@@ -16,7 +16,13 @@ services:
     volumes:
       - wgt_data:/app/test-data-manager/data
     command:
-      ["-source", "/app/test-data-manager/integration-data.yaml", "-keepAlive"]
+      [
+        "-source",
+        "/app/test-data-manager/integration-data.yaml",
+        "-db",
+        "/app/test-data-manager/data/store.db",
+        "-keepAlive",
+      ]
   whatgotdone_backend:
     build:
       context: ../

@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/gorilla/handlers"
+	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
 )
 
 func main() {
@@ -23,7 +24,9 @@ func main() {
 
 	data := loadFromFile(*source)
 
-	mgr := NewManager(data)
+	dbPath := flag.String("db", "data/store.db", "path to database")
+	flag.Parse()
+	mgr := NewManager(data, sqlite.New(*dbPath))
 
 	if *keepAlive {
 		s := NewServer(mgr)

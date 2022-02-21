@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
-	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -18,9 +17,9 @@ type manager struct {
 	baseData  initData
 }
 
-func NewManager(baseData initData) manager {
+func NewManager(baseData initData, datastore datastore.Datastore) manager {
 	return manager{
-		datastore: sqlite.New(),
+		datastore: datastore,
 		baseData:  baseData,
 	}
 }
