@@ -27,22 +27,22 @@ readonly IS_LITESTREAM_ENABLED="$(is_litestream_enabled)"
 # Echo commands to stdout.
 set -x
 
+export readonly DB_PATH="/app/data/store.db"
+
 if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
   # Print the litestream version so that logs pick up which version
   # we're running.
   /app/litestream version
-
-  export readonly DB_PATH="/app/data/store.db"
 
   # Restore database from S3.
   /app/litestream restore -if-replica-exists -v "${DB_PATH}"
 
   # Let Litestream start What Got Done as a child process
   exec /app/litestream replicate \
-    -exec /app/main
+    -exec "/app/main -db ${DB_PATH}"
     "${DB_PATH}" \
     "${LITESTREAM_ENDPOINT}"
 else
   # Start server directly.
-  /app/main
+  /app/main -db "${DB_PATH}"
 fi

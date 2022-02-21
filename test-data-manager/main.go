@@ -10,20 +10,20 @@ import (
 	"os"
 
 	"github.com/gorilla/handlers"
+	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
 )
 
 func main() {
 	log.Print("Starting test-data-manager script")
 
 	source := flag.String("source", "dev-data.yaml", "Path to JSON or YAML file with data to load")
+	dbPath := flag.String("db", "data/store.db", "path to database")
 	keepAlive := flag.Bool("keepAlive", false, "Stay alive after completing initialization")
 	flag.Parse()
 
 	log.Printf("source=%s", *source)
 
-	data := loadFromFile(*source)
-
-	mgr := NewManager(data)
+	mgr := NewManager(loadFromFile(*source), sqlite.New(*dbPath))
 
 	if *keepAlive {
 		s := NewServer(mgr)

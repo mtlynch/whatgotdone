@@ -19,7 +19,7 @@ type Server interface {
 
 // New creates a new What Got Done server with all the state it needs to
 // satisfy HTTP requests.
-func New() Server {
+func New(store datastore.Datastore) Server {
 	var fetcher ga.MetricFetcher
 	f, err := ga.New()
 	if err != nil {
@@ -34,10 +34,9 @@ func New() Server {
 		log.Printf("File upload functionality will be disabled")
 		gcsClient = nil
 	}
-	ds := newDatastore()
 	s := defaultServer{
 		authenticator:          auth.New(),
-		datastore:              ds,
+		datastore:              store,
 		gcsClient:              gcsClient,
 		router:                 mux.NewRouter(),
 		csrfMiddleware:         newCsrfMiddleware(),

@@ -9,3 +9,4 @@ ARG GO_BUILD_TAGS="dev"
 RUN go build --tags "$GO_BUILD_TAGS" -o /app/main .
 
 ENTRYPOINT ["/app/main"]
+CMD ["-db", "/data/store.db"]
