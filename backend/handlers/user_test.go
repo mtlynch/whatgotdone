@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/mtlynch/whatgotdone/backend/datastore/mock"
+	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -101,7 +101,7 @@ func TestUserPost(t *testing.T) {
 		},
 	}
 
-	ds := mock.MockDatastore{}
+	ds := sqlite.New(":memory:")
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
@@ -109,7 +109,7 @@ func TestUserPost(t *testing.T) {
 				"mock_token_C": "dummyUserC",
 			},
 		},
-		datastore:      &ds,
+		datastore:      ds,
 		router:         router,
 		csrfMiddleware: dummyCsrfMiddleware(),
 	}
@@ -129,9 +129,14 @@ func TestUserPost(t *testing.T) {
 			t.Fatalf("for input [%s], handler returned wrong status code: got %v want %v",
 				tt.requestBody, status, tt.httpStatusExpected)
 		}
-		if tt.httpStatusExpected == http.StatusOK && !reflect.DeepEqual(ds.UserProfile, tt.userProfileExpected) {
+		actual, err := ds.GetUserProfile(types.Username("dummyUserC"))
+		if err != nil {
+			t.Fatalf("unexpected error getting user profile: %v", err)
+		}
+
+		if tt.httpStatusExpected == http.StatusOK && !reflect.DeepEqual(actual, tt.userProfileExpected) {
 			t.Fatalf("for input [%s], unexpected user profile: got %+v want %+v",
-				tt.requestBody, ds.UserProfile, tt.userProfileExpected)
+				tt.requestBody, actual, tt.userProfileExpected)
 		}
 	}
 }
