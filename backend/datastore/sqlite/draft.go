@@ -44,6 +44,7 @@ func (d db) GetDraft(username types.Username, date types.EntryDate) (types.Journ
 	}
 
 	return types.JournalEntry{
+		Author:       username,
 		Date:         date,
 		LastModified: t,
 		Markdown:     types.EntryContent(markdown),
