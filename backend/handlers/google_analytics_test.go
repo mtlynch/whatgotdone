@@ -110,10 +110,14 @@ func TestPageViewsGet(t *testing.T) {
 }
 
 type mockGoogleAnalyticsFetcher struct {
-	PageViewCounts []ga.PageViewCount
+	PageViewCounts         []ga.PageViewCount
+	CallsToPageViewsByPath chan bool
 }
 
 func (f mockGoogleAnalyticsFetcher) PageViewsByPath(_, _ string) ([]ga.PageViewCount, error) {
+	defer func() {
+		f.CallsToPageViewsByPath <- true
+	}()
 	return f.PageViewCounts, nil
 }
 
@@ -149,6 +153,7 @@ func TestPageViewsGetUpdatesPageViewsWhenRecordsAreStale(t *testing.T) {
 				Views: 2,
 			},
 		},
+		CallsToPageViewsByPath: make(chan bool),
 	}
 
 	ds := mock.MockDatastore{
@@ -159,19 +164,14 @@ func TestPageViewsGetUpdatesPageViewsWhenRecordsAreStale(t *testing.T) {
 				Date:   types.EntryDate("2020-04-24"),
 			},
 		},
-		LastPageViewUpdate:     time.Now().Add(time.Minute * -10),
-		CallsToInsertPageViews: make(chan bool),
+		LastPageViewUpdate: time.Now().Add(time.Minute * -10),
 	}
-
-	go func() {
-		ds.InsertPageViews([]ga.PageViewCount{
-			{
-				Path:  "/joe/2020-04-24",
-				Views: 5,
-			},
-		})
-	}()
-	<-ds.CallsToInsertPageViews
+	ds.InsertPageViews([]ga.PageViewCount{
+		{
+			Path:  "/joe/2020-04-24",
+			Views: 5,
+		},
+	})
 
 	router := mux.NewRouter()
 	s := defaultServer{
@@ -203,11 +203,11 @@ func TestPageViewsGetUpdatesPageViewsWhenRecordsAreStale(t *testing.T) {
 		t.Fatalf("unexpected view count: got %v want %v", response.Views, viewsExpected)
 	}
 
-	// Wait for an async call to ds.InsertPageViews.
+	// Wait for an async call to mf.CallsToPageViewsByPath.
 	select {
-	case <-ds.CallsToInsertPageViews:
+	case <-mf.CallsToPageViewsByPath:
 	case <-time.After(3 * time.Second):
-		t.Fatal("timed out waiting for call to ds.InsertPageViews")
+		t.Fatal("timed out waiting for call to mf.CallsToPageViewsByPath")
 	}
 
 	var expected = []struct {
