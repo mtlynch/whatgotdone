@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'Username',
+  name: 'UsernameLink',
   props: {
     username: String,
   },
