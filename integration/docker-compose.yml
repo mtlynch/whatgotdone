@@ -53,7 +53,7 @@ services:
     depends_on:
       - whatgotdone_backend
   cypress:
-    image: "mtlynch/cypress:8.1.0-chrome91-2"
+    image: "mtlynch/cypress:9.5.0-chrome98"
     command: ["--browser", "chrome"]
     depends_on:
       - whatgotdone
