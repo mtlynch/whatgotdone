@@ -8,19 +8,15 @@
         }}</router-link></strong
       >
     </p>
-    <vue-markdown
-      class="body"
-      :linkify="false"
-      :html="false"
-      :anchorAttributes="{rel: 'ugc'}"
-      :source="entry.markdown"
-    ></vue-markdown>
+    <JournalBody :source="entry.markdown" />
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
+
+import JournalBody from '@/components/JournalBody';
 
 Vue.use(VueMarkdown);
 
@@ -30,26 +26,7 @@ export default {
     entry: Object,
   },
   components: {
-    VueMarkdown,
+    JournalBody,
   },
 };
 </script>
-
-<style scoped>
-* {
-  text-align: left;
-}
-
-.body {
-  border: 1px solid rgb(26, 0, 68);
-  padding: 10px 15px 5px 2px;
-  background-color: #4e5d6c;
-  overflow: auto;
-}
-
-@media screen and (min-width: 768px) {
-  .body {
-    overflow: visible;
-  }
-}
-</style>
