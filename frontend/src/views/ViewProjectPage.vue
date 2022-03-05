@@ -3,12 +3,13 @@
     <h1><UsernameLink :username="username" />'s updates for {{ project }}</h1>
 
     <template v-if="entriesLoaded && entries.length > 0">
-      <ProjectEntry
-        class="project-entry"
-        v-bind:entry="entry"
-        v-bind:key="entry.key"
+      <div
+        class="journal project-entry"
         v-for="entry in entries"
-      />
+        v-bind:key="entry.key"
+      >
+        <ProjectEntry v-bind:entry="entry" />
+      </div>
     </template>
 
     <p v-if="entriesLoaded && entries.length === 0" class="no-entries-message">
@@ -64,10 +65,10 @@ export default {
 
 <style scoped>
 h1 {
-  margin-bottom: 50px;
+  margin-bottom: 2rem;
 }
 
-.project-entry {
-  margin-bottom: 50px;
+.project-entry + .project-entry {
+  margin-top: 5rem;
 }
 </style>
