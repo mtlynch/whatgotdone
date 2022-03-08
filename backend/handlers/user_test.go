@@ -101,7 +101,7 @@ func TestUserPost(t *testing.T) {
 		},
 	}
 
-	ds := sqlite.New(":memory:")
+	ds := sqlite.New("file::memory:?cache=shared")
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
