@@ -19,3 +19,9 @@
   justify-content: center;
 }
 </style>
+
+<script>
+export default {
+  name: 'PageFooter',
+};
+</script>

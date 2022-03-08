@@ -4,7 +4,7 @@
     <b-container id="app">
       <router-view></router-view>
     </b-container>
-    <Footer />
+    <PageFooter />
   </div>
 </template>
 
@@ -13,13 +13,13 @@ import {getRecent} from '@/controllers/Recent.js';
 import initializeUserState from '@/controllers/UserState.js';
 import {loadUserKit} from '@/controllers/UserKit.js';
 
-import Footer from '@/components/Footer';
+import PageFooter from '@/components/PageFooter';
 import NavigationBar from '@/components/NavigationBar';
 
 export default {
   name: 'app',
   components: {
-    Footer,
+    PageFooter,
     NavigationBar,
   },
   created() {
