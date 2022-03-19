@@ -1,6 +1,8 @@
 # whatgotdone
 
 [![CircleCI](https://circleci.com/gh/mtlynch/whatgotdone.svg?style=svg&circle-token=180495ad17cc0343547e430e81d28b66ff87e9f4)](https://circleci.com/gh/mtlynch/whatgotdone)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/mtlynch/whatgotdone)](https://github.com/mtlynch/whatgotdone/commits/master)
+[![GitHub last commit](https://img.shields.io/github/last-commit/mtlynch/whatgotdone)](https://github.com/mtlynch/whatgotdone/commits/master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Architecture
