@@ -5,14 +5,14 @@ import (
 	"net/http"
 )
 
-func encodeBody(w http.ResponseWriter, v interface{}) error {
-	return json.NewEncoder(w).Encode(v)
-}
-
 func respond(w http.ResponseWriter, status int, data interface{}) {
+	if data != nil {
+		w.Header().Set("Content-Type", "application/json")
+	}
+
 	w.WriteHeader(status)
 	if data != nil {
-		encodeBody(w, data)
+		json.NewEncoder(w).Encode(data)
 	}
 }
 
