@@ -28,7 +28,7 @@ To help get your pull request merged in quickly, keep these guidelines in mind:
 
 ## Build checks
 
-On any pull request, [Circle CI](https://circleci.com/gh/mtlynch/whatgotdone) automatically runs What Got Done's unit tests. Ensure that your pull requests passes these checks.
+On any pull request, [Circle CI](https://circleci.com/gh/mtlynch/whatgotdone) automatically runs What Got Done's unit tests. Ensure that your pull request passes these checks.
 
 ## I want to add a feature
 
