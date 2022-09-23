@@ -6,12 +6,15 @@ set -e
 # Echo commands to stdout.
 set -x
 
-if [ "$1" = "--full" ]; then
+full_test=""
+go_test_flags=()
+readonly COVERAGE_FILE_RAW=".coverage.out"
+readonly COVERAGE_FILE_HTML=".coverage.html"
+if [[ "$1" = "--full" ]]; then
   full_test="1"
-  flags="-race --coverprofile=.coverage.out"
-else
-  full_test=""
-  flags=""
+  go_test_flags+=("-v")
+  go_test_flags+=("-race")
+  go_test_flags+=("--coverprofile=${COVERAGE_FILE_RAW}")
 fi
 
 # Exit on unset variable.
@@ -20,25 +23,20 @@ set -u
 # Change directory to repository root.
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
+cd backend
+
+go test "${go_test_flags[@]}" ./...
+if [[ -n "$full_test" ]]; then
+  go tool cover -html "${COVERAGE_FILE_RAW}" -o "${COVERAGE_FILE_HTML}"
+fi
+
+go vet ./...
 
 # Install staticcheck if it's not present.
 STATICCHECK_PATH="$(go env GOPATH)/bin/staticcheck"
-if [ ! -f "${STATICCHECK_PATH}" ]; then
-    STATICCHECK_VERSION="2021.1.2"
+readonly STATICCHECK_PATH
+readonly STATICCHECK_VERSION="v0.3.3"
+if [[ ! -f "${STATICCHECK_PATH}" ]]; then
     go install "honnef.co/go/tools/cmd/staticcheck@${STATICCHECK_VERSION}"
 fi
-
-pushd backend
-go test -v $flags ./...
-go vet ./...
 $STATICCHECK_PATH ./...
-
-if [ ! -z "$full_test" ]; then
-  go tool cover -html .coverage.out -o .coverage.html
-fi
-popd
-
-pushd test-data-manager
-go vet -tags dev ./...
-$STATICCHECK_PATH -tags dev ./...
-popd
