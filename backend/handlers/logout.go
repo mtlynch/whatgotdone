@@ -13,7 +13,5 @@ func (s defaultServer) logoutPost() http.HandlerFunc {
 			Path:    "/",
 			Expires: time.Unix(0, 0),
 		})
-
-		w.Write([]byte("You are now logged out"))
 	}
 }
