@@ -10,6 +10,7 @@ require (
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/mattn/go-sqlite3 v1.14.9
 	github.com/mtlynch/gorilla-handlers v1.5.2
+	github.com/mtlynch/social-go/v2 v2.1.0
 	github.com/workpail/userkit-go v0.0.0-20180527213510-29d105cd872b
 	google.golang.org/api v0.44.0
 )
@@ -25,7 +26,6 @@ require (
 	github.com/googleapis/gax-go/v2 v2.0.5 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/jstemmer/go-junit-report v0.9.1 // indirect
-	github.com/mtlynch/social-go/v2 v2.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
