@@ -1,15 +1,16 @@
 package parse
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func TestEmailAddress(t *testing.T) {
-	var tests = []struct {
+	for _, tt := range []struct {
 		explanation    string
-		email          string
+		input          string
 		validExpected  bool
 		parsedExpected types.EmailAddress
 	}{
@@ -43,14 +44,15 @@ func TestEmailAddress(t *testing.T) {
 			false,
 			"",
 		},
-	}
-
-	for _, tt := range tests {
-		parsedActual, errActual := EmailAddress(tt.email)
-		if (errActual == nil) != tt.validExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.email, errActual, tt.validExpected)
-		} else if parsedActual != tt.parsedExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.email, parsedActual, tt.parsedExpected)
-		}
+	} {
+		t.Run(fmt.Sprintf("%s: %s", tt.explanation, tt.input), func(t *testing.T) {
+			parsed, err := EmailAddress(tt.input)
+			if got, want := (err == nil), tt.validExpected; got != want {
+				t.Fatalf("valid=%v, want=%v", got, want)
+			}
+			if got, want := parsed, tt.parsedExpected; got != want {
+				t.Errorf("email=%v, want=%v", got, want)
+			}
+		})
 	}
 }
