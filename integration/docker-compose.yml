@@ -6,7 +6,7 @@ services:
     image: "alpine:3.17.0"
     volumes:
       - wgt_data:/data
-    command: ["touch", "/data/store.db"]
+    command: ["touch", "/data/store.db", ";", "sleep", "900"]
   test_data_manager:
     build:
       context: ../
