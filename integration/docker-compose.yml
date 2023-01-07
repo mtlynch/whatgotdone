@@ -16,8 +16,6 @@ services:
       - BEHIND_PROXY=yes
     volumes:
       - ../gcp-service-account-staging.json:/app/gcp-service-account-staging.json
-      - ./:/app/integration
-      - wgt_data:/app/data
   # Run What Got Done behind an nginx proxy to better simulate how it will run
   # in production.
   whatgotdone:
