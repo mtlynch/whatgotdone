@@ -7,10 +7,12 @@ kill_timeout = 5
 processes = []
 
 [env]
+  GOOGLE_ANALYTICS_VIEW_ID = "194877692"
   LITESTREAM_BUCKET = "whatgotdone-backup"
   LITESTREAM_ENDPOINT = "s3.us-west-002.backblazeb2.com"
   PORT = "8080"
   BEHIND_PROXY = "yes"
+
 
 [build.args]
   NPM_BUILD_MODE="production"
