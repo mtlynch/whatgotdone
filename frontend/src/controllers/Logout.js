@@ -21,6 +21,6 @@ export function logout() {
     .finally(() => {
       // Logout can fail if CSRF goes out of state. In this case, still
       // delete the CSRF cookie.
-      deleteCookie('csrf_base_v3');
+      deleteCookie('csrf_base_v4');
     });
 }
