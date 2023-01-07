@@ -12,32 +12,6 @@ jobs:
       - run:
           name: Check that all text files end in a trailing newline
           command: ./dev-scripts/check-trailing-newline
-  build-frontend:
-    docker:
-      - image: node:12.18.4-alpine
-    environment:
-      NODE_ENV: production
-    steps:
-      - checkout
-      - run:
-          name: Download npm packages (including dev dependencies)
-          command: npm --production=false --prefix ./frontend install
-      - run:
-          name: Check JavaScript formatting
-          command: npm --prefix ./frontend run check-format
-      - run:
-          name: Lint client
-          command: npm --prefix ./frontend run lint
-      - run:
-          name: Unit test client
-          command: npm --prefix ./frontend run test:unit
-      - run:
-          name: Build production frontend
-          command: npm --prefix ./frontend run build
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - ./frontend/dist
   test-backend:
     docker:
       - image: cimg/go:1.17.4
@@ -53,6 +27,20 @@ jobs:
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
+  build_staging_frontend:
+    docker:
+      - image: node:12.18.4-alpine
+    environment:
+      NODE_ENV: production
+    steps:
+      - checkout
+      - run:
+          name: Compile frontend
+          command: dev-scripts/build-frontend staging
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./frontend/dist
   build_staging_server:
     docker:
       - image: cimg/go:1.17.4
@@ -60,9 +48,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
-      - run:
-          name: Compile frontend
-          command: dev-scripts/build-frontend staging
       - restore_cache:
           keys:
             - go-mod-v1-{{ checksum "backend/go.sum" }}
@@ -77,7 +62,6 @@ jobs:
           root: ./
           paths:
             - ./bin/whatgotdone
-            - ./frontend/dist
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
@@ -136,16 +120,17 @@ workflows:
   test-deploy:
     jobs:
       - check_whitespace
-      - build-frontend
+      - build_staging_frontend
       - test-backend
       - build_staging_server
       - e2e:
           requires:
             - build_staging_server
+            - build_staging_frontend
       - deploy:
           requires:
             - check_whitespace
-            - build-frontend
+            - build_staging_frontend
             - test-backend
             - e2e
           filters:
