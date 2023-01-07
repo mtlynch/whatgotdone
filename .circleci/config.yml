@@ -53,15 +53,11 @@ jobs:
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
-  integration:
-    # We're choosing large even though xlarge is faster because CircleCI takes
-    # too long to provision xlarge instances.
-    resource_class: large
-    machine:
-      # Choose an explicit machine image so that we get the latest version of
-      # docker-compose.
-      image: ubuntu-2004:202104-01
-      docker_layer_caching: true
+  e2e:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.27.1-focal
+    environment:
+      NODE_ENV: development
     steps:
       - checkout
       - run:
@@ -69,13 +65,18 @@ jobs:
           command: |
             echo "${INTEGRATION_CLIENT_SECRET}" | \
               base64 --decode > gcp-service-account-staging.json
+      - attach_workspace:
+          at: ./
       - run:
-          name: Perform integration tests.
-          command: dev-scripts/run-integration-tests
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Run playwright tests
+          command: ./dev-scripts/run-e2e-tests
       - store_artifacts:
-          path: integration/cypress/videos
+          path: playwright-report
       - store_artifacts:
-          path: integration/cypress/screenshots
+          path: e2e-results
   deploy:
     machine:
       image: ubuntu-2004:202104-01
@@ -112,13 +113,13 @@ workflows:
       - check_whitespace
       - build-frontend
       - test-backend
-      - integration
+      - e2e
       - deploy:
           requires:
             - check_whitespace
             - build-frontend
             - test-backend
-            - integration
+            - e2e
           filters:
             branches:
               only: master
