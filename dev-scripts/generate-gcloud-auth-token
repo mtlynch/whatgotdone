@@ -21,7 +21,7 @@ gcloud config set project "${PROJECT_ID}"
 SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 gcloud iam service-accounts create "${SERVICE_ACCOUNT_NAME}"
 
-ROLES=('appengine.appAdmin' 'storage.admin' 'cloudbuild.builds.editor' 'iam.serviceAccountUser')
+ROLES=('storage.admin' 'iam.serviceAccountUser')
 
 for ROLE in "${ROLES[@]}"
 do
