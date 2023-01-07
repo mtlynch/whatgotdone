@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Generate GCP creds for production:
+# ./dev-scripts/generate-gcloud-auth-token whatgotdone
+#
+# Generate GCP creds for integration tests:
+#
+# ./dev-scripts/generate-gcloud-auth-token \
+#   whatgotdone-staging > gcp-service-account-staging.json
+
+set -eux
+
+PROJECT_ID="$1"
+
+RANDOM_SUFFIX="$(head /dev/urandom | tr -dc 'a-z0-9' | head -c 6 ; echo '')"
+readonly RANDOM_SUFFIX
+
+SERVICE_ACCOUNT_NAME="wgd-app-runtime-${RANDOM_SUFFIX}"
+
+gcloud config set project "${PROJECT_ID}"
+SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+gcloud iam service-accounts create "${SERVICE_ACCOUNT_NAME}"
+
+ROLES=('appengine.appAdmin' 'storage.admin' 'cloudbuild.builds.editor' 'iam.serviceAccountUser')
+
+for ROLE in "${ROLES[@]}"
+do
+  gcloud projects add-iam-policy-binding \
+      "${PROJECT_ID}" \
+      --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
+      --role="roles/${ROLE}"
+done
+
+CLIENT_SECRET=$(mktemp)
+
+gcloud iam service-accounts keys create "${CLIENT_SECRET}" \
+    --iam-account="${SERVICE_ACCOUNT_EMAIL}" \
+    --key-file-type=json
+
+set +x
+
+cat "${CLIENT_SECRET}" | base64 --wrap=0 && echo ""

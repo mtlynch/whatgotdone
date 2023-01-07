@@ -67,7 +67,7 @@ jobs:
       - run:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
-            echo "$INTEGRATION_CLIENT_SECRET" | \
+            echo "${INTEGRATION_CLIENT_SECRET}" | \
               base64 --decode > gcp-service-account-staging.json
       - run:
           name: Perform integration tests.
