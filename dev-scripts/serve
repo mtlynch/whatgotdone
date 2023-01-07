@@ -13,11 +13,6 @@ set -x
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
-readonly DB_PATH="data/store.db"
-if [[ ! -f "${DB_PATH}" ]]; then
-  ./dev-scripts/populate-dev-data
-fi
-
 SCREEN_SESSION_NAME="whatgotdone-frontend"
 
 # Kill any previous frontend hot reloading screen session.
