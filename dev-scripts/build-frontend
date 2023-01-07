@@ -20,6 +20,11 @@ set -u
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
+NPM_EXTRA_FLAGS=""
+if [[ "${MODE}" != "prod" ]]; then
+  NPM_EXTRA_FLAGS="--production=false"
+fi
+
 cd frontend
-npm install
+npm install "${NPM_EXTRA_FLAGS}"
 npm run build -- --mode "${MODE}"
