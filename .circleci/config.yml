@@ -134,7 +134,10 @@ workflows:
       - check_whitespace
       - build-frontend
       - test-backend
+      - build_staging_server
       - e2e
+          requires:
+            - build_staging_server
       - deploy:
           requires:
             - check_whitespace
