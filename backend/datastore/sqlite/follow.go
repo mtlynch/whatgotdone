@@ -7,7 +7,7 @@ import (
 )
 
 // InsertFollow adds a following relationship to the datastore.
-func (d db) InsertFollow(leader, follower types.Username) error {
+func (d DB) InsertFollow(leader, follower types.Username) error {
 	log.Printf("saving follow to datastore: %s follows %s", follower, leader)
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO follows(
@@ -19,7 +19,7 @@ func (d db) InsertFollow(leader, follower types.Username) error {
 }
 
 // DeleteFollow removes a following relationship from the datastore.
-func (d db) DeleteFollow(leader, follower types.Username) error {
+func (d DB) DeleteFollow(leader, follower types.Username) error {
 	log.Printf("deleting follow from datastore: %s stopped following %s", follower, leader)
 	_, err := d.ctx.Exec(`
 	DELETE FROM
@@ -32,7 +32,7 @@ func (d db) DeleteFollow(leader, follower types.Username) error {
 }
 
 // Followers returns all the users the specified user is following.
-func (d db) Following(follower types.Username) ([]types.Username, error) {
+func (d DB) Following(follower types.Username) ([]types.Username, error) {
 	stmt, err := d.ctx.Prepare(`
 	SELECT
 		leader

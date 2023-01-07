@@ -100,4 +100,6 @@ func (s *defaultServer) routes() {
 	static.HandleFunc("/{username}", s.serveUserProfileOr404()).Methods(http.MethodGet)
 	static.HandleFunc("/", serveIndexPage).Methods(http.MethodGet)
 	static.PathPrefix("/").HandlerFunc(serve404).Methods(http.MethodGet)
+
+	s.addDevRoutes()
 }

@@ -9,7 +9,7 @@ import (
 )
 
 // GetUserProfile returns profile information for the given user.
-func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
+func (d DB) GetUserProfile(username types.Username) (types.UserProfile, error) {
 	stmt, err := d.ctx.Prepare(`
 		SELECT
 			about_markdown,
@@ -49,7 +49,7 @@ func (d db) GetUserProfile(username types.Username) (types.UserProfile, error) {
 }
 
 // SetUserProfile updates the given user's profile.
-func (d db) SetUserProfile(username types.Username, profile types.UserProfile) error {
+func (d DB) SetUserProfile(username types.Username, profile types.UserProfile) error {
 	log.Printf("saving user profile to datastore: %s -> %+v", username, profile)
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO user_profiles(

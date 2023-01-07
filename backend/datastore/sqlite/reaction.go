@@ -7,7 +7,7 @@ import (
 )
 
 // GetReactions retrieves reader reactions associated with a published entry.
-func (d db) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
+func (d DB) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
 	stmt, err := d.ctx.Prepare(`
 	SELECT
 		reacting_user,
@@ -55,7 +55,7 @@ func (d db) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) 
 
 // AddReaction saves a reader reaction associated with a published entry,
 // overwriting any existing reaction.
-func (d db) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error {
+func (d DB) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error {
 	log.Printf("saving reaction to datastore: %s to %s/%s: [%s]", reaction.Username, entryAuthor, entryDate, reaction.Symbol)
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO entry_reactions(
@@ -69,7 +69,7 @@ func (d db) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, r
 }
 
 // DeleteReaction removes a user's reaction to a published entry.
-func (d db) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error {
+func (d DB) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error {
 	log.Printf("deleting reaction from datastore: %s to %s/%s", reactingUser, entryAuthor, entryDate)
 	_, err := d.ctx.Exec(`
 	DELETE FROM

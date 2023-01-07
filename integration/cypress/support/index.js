@@ -6,5 +6,9 @@ import "./commands";
 
 // Reset the datastore before each test.
 beforeEach(function () {
-  cy.request("POST", Cypress.env("testDataManagerUrl") + "/reset");
+  cy.request("GET", Cypress.env("baseUrl") + "/api/testing/db/wipe");
+  cy.request(
+    "GET",
+    Cypress.env("baseUrl") + "/api/testing/db/populate-dummy-data"
+  );
 });

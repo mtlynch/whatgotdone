@@ -15,7 +15,7 @@ import (
 
 type (
 	initData struct {
-		UserData map[string]export.UserData `json:"userData" yaml:"user_data"`
+		UserData map[string]export.UserData `json:"userData"`
 	}
 )
 
