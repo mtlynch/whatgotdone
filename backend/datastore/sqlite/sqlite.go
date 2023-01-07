@@ -10,7 +10,7 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 )
 
-type db struct {
+type DB struct {
 	ctx *sql.DB
 }
 
@@ -74,7 +74,7 @@ func New(path string) datastore.Datastore {
 		}
 	}
 
-	return &db{
+	return &DB{
 		ctx: ctx,
 	}
 }

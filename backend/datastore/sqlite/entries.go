@@ -11,7 +11,7 @@ import (
 )
 
 // GetEntry returns the published entry for the given date.
-func (d db) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
+func (d DB) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	stmt, err := d.ctx.Prepare(`
 		SELECT
 			markdown,
@@ -54,7 +54,7 @@ func (d db) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 }
 
 // ReadEntries returns all published entries matching the given filter.
-func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error) {
+func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, error) {
 	whereClauses := []string{
 		"is_draft=0",
 	}
@@ -142,7 +142,7 @@ func (d db) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 
 // InsertEntry saves an entry to the datastore, overwriting any existing entry
 // with the same name and username.
-func (d db) InsertEntry(username types.Username, j types.JournalEntry) error {
+func (d DB) InsertEntry(username types.Username, j types.JournalEntry) error {
 	log.Printf("saving entry to datastore: %s -> %+v (%d characters)", username, j.Date, len(j.Markdown))
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO journal_entries(
@@ -156,7 +156,7 @@ func (d db) InsertEntry(username types.Username, j types.JournalEntry) error {
 }
 
 // DeleteDraft deletes a draft from the datastore.
-func (d db) DeleteEntry(username types.Username, date types.EntryDate) error {
+func (d DB) DeleteEntry(username types.Username, date types.EntryDate) error {
 	log.Printf("deleting entry from datastore: %s -> %+v", username, date)
 	_, err := d.ctx.Exec(`
 	DELETE FROM

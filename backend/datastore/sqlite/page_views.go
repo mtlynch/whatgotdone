@@ -11,7 +11,7 @@ import (
 )
 
 // InsertPageViews stores the set of pageview data for What Got Done routes.
-func (d db) InsertPageViews(pvcs []ga.PageViewCount) error {
+func (d DB) InsertPageViews(pvcs []ga.PageViewCount) error {
 	log.Printf("saving %d page view entries to datastore", len(pvcs))
 	valueClauses := strings.TrimSuffix(strings.Repeat("(?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc')), ", len(pvcs)), ", ")
 	values := make([]interface{}, len(pvcs)*2)
@@ -31,7 +31,7 @@ func (d db) InsertPageViews(pvcs []ga.PageViewCount) error {
 }
 
 // GetPageViews retrieves the count of pageviews for a given What Got Done route.
-func (d db) GetPageViews(path string) (datastore.PageViewRecord, error) {
+func (d DB) GetPageViews(path string) (datastore.PageViewRecord, error) {
 	stmt, err := d.ctx.Prepare(`
 	SELECT
 		views,
