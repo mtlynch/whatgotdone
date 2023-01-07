@@ -54,9 +54,8 @@ jobs:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
   integration:
-    # We're choosing large even though xlarge is faster because CircleCI takes
-    # too long to provision xlarge instances.
-    resource_class: large
+    docker:
+      - image: cimg/base:stable
     machine:
       # Choose an explicit machine image so that we get the latest version of
       # docker-compose.
@@ -64,6 +63,8 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.11
       - run:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
