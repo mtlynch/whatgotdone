@@ -29,7 +29,7 @@ jobs:
           command: dev-scripts/check-go-formatting
   build_staging_frontend:
     docker:
-      - image: node:12.18.4-alpine
+      - image: cimg/node:12.18.4
     environment:
       NODE_ENV: production
     steps:
