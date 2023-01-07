@@ -22,10 +22,10 @@ readonly MODE
 # Exit on unset variable.
 set -u
 
-GO_BUILD_TAGS=("${MODE}")
+GO_BUILD_TAGS="${MODE}"
 LD_FLAGS=""
 if [[ "${MODE}" == "prod" ]] || [[ "${MODE}" == "staging" ]]; then
-  GO_BUILD_TAGS+="netgo"
+  GO_BUILD_TAGS+=" netgo"
   LD_FLAGS="-w -extldflags \"-static\""
 fi
 readonly GO_BUILD_TAGS
@@ -33,7 +33,7 @@ readonly LD_FLAGS
 
 GOOS=linux GOARCH=amd64 \
   go build \
-    -tags "${GO_BUILD_TAGS[@]}" \
+    -tags "${GO_BUILD_TAGS}" \
     -ldflags "$LD_FLAGS" \
     -o ../bin/whatgotdone \
     main.go
