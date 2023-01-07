@@ -135,7 +135,7 @@ workflows:
       - build-frontend
       - test-backend
       - build_staging_server
-      - e2e
+      - e2e:
           requires:
             - build_staging_server
       - deploy:
