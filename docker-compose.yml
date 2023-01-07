@@ -5,7 +5,7 @@ services:
       context: .
       args:
         NPM_BUILD_MODE: development
-        GO_BUILD_TAGS: "dev"
+        GO_BUILD_MODE: "dev"
     ports:
       - 3001:3001
     environment:

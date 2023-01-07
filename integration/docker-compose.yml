@@ -7,7 +7,7 @@ services:
       context: ../
       args:
         NPM_BUILD_MODE: staging
-        GO_BUILD_TAGS: staging
+        GO_BUILD_MODE: staging
     environment:
       - PORT=3123
       - CSRF_SECRET_SEED=dummy-staging-seed
