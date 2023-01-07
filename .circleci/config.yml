@@ -60,11 +60,14 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
+      - run:
+          name: Compile frontend
+          command: dev-scripts/build-frontend staging
       - restore_cache:
           keys:
             - go-mod-v1-{{ checksum "backend/go.sum" }}
       - run:
-          name: Compile backend (prod)
+          name: Compile backend (staging)
           command: dev-scripts/build-backend staging
       - save_cache:
           key: go-mod-v1-{{ checksum "backend/go.sum" }}
@@ -74,6 +77,7 @@ jobs:
           root: ./
           paths:
             - ./bin/whatgotdone
+            - ./frontend/dist
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
