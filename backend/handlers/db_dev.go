@@ -3,18 +3,20 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 // addDevRoutes adds debug routes that we only use during development or e2e
 // tests.
-func (s *defaultServer) addDevRoutes() {
-	s.router.HandleFunc("/api/testing/db/populate-dummy-data", s.wipeDB()).Methods(http.MethodGet)
-	s.router.HandleFunc("/api/testing/db/wipe", s.wipeDB()).Methods(http.MethodGet)
+func (s *defaultServer) addDevRoutes(router *mux.Router) {
+	router.HandleFunc("/testing/db/populate-dummy-data", s.populateDummyData()).Methods(http.MethodGet)
+	router.HandleFunc("/testing/db/wipe", s.wipeDB()).Methods(http.MethodGet)
 }
 
 type dummyUserData struct {
@@ -99,6 +101,8 @@ func (s defaultServer) populateDummyData() http.HandlerFunc {
 				}
 			}
 		}
+
+		fmt.Fprintln(w, "Successfully repopulated database")
 	}
 }
 
@@ -110,5 +114,7 @@ func (s defaultServer) wipeDB() http.HandlerFunc {
 			log.Fatalf("store is not SQLite, can't wipe database")
 		}
 		sqlStore.Clear()
+
+		fmt.Fprintln(w, "Wiped database successfully")
 	}
 }

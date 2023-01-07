@@ -52,6 +52,8 @@ func (s *defaultServer) routes() {
 	api.HandleFunc("/logout", allowOptions()).Methods(http.MethodOptions)
 	api.HandleFunc("/logout", s.logoutPost()).Methods(http.MethodPost)
 
+	s.addDevRoutes(api)
+
 	// Catchall for when no API route matches.
 	api.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
@@ -101,5 +103,4 @@ func (s *defaultServer) routes() {
 	static.HandleFunc("/", serveIndexPage).Methods(http.MethodGet)
 	static.PathPrefix("/").HandlerFunc(serve404).Methods(http.MethodGet)
 
-	s.addDevRoutes()
 }

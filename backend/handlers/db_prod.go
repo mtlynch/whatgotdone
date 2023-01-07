@@ -1,7 +1,11 @@
-//go:build !dev
+//go:build !dev && !staging
 
 package handlers
 
-func (s *defaultServer) addDevRoutes() {
+import (
+	"github.com/gorilla/mux"
+)
+
+func (s *defaultServer) addDevRoutes(router *mux.Router) {
 	// no-op
 }

@@ -19,5 +19,4 @@ func (db DB) Clear() {
 			log.Fatalf("failed to delete table %s: %v", tbl, err)
 		}
 	}
-
 }
