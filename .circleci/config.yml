@@ -59,7 +59,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.11
+          version: 20.10.14
       - run:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
