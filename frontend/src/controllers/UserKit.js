@@ -1,3 +1,5 @@
+import {deleteCookie} from '@/controllers/Cookies.js';
+
 const widgetJsUrl = 'https://widget.userkit.io/widget.js';
 
 class UserKitWrapper {
@@ -67,9 +69,7 @@ function isWidgetJsLoaded() {
 }
 
 export function logoutUserKit() {
-  document.cookie =
-    'userkit_auth_token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
-  document.cookie =
-    'userkit_recent_login_required_at=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
+  deleteCookie('userkit_auth_token');
+  deleteCookie('userkit_recent_login_required_at');
   sessionStorage.removeItem('UserKitApp');
 }
