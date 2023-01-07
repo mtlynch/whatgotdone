@@ -2,6 +2,11 @@ version: "3.2"
 volumes:
   wgt_data:
 services:
+  init_sqlite_db:
+    image: "nginx:latest"
+    volumes:
+      - wgt_data:/data
+    command: ["touch", "/data/store.db"]
   test_data_manager:
     build:
       context: ../
@@ -23,6 +28,8 @@ services:
         "/app/test-data-manager/data/store.db",
         "-keepAlive",
       ]
+    depends_on:
+      - init_sqlite_db
   whatgotdone_backend:
     build:
       context: ../
@@ -39,6 +46,8 @@ services:
       - ../gcp-service-account-staging.json:/app/gcp-service-account-staging.json
       - ./:/app/integration
       - wgt_data:/app/data
+    depends_on:
+      - init_sqlite_db
   # Run What Got Done behind an nginx proxy to better simulate how it will run
   # in production.
   whatgotdone:
