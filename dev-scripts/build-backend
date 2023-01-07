@@ -17,20 +17,19 @@ if [[ -z $1 ]]; then
 else
   MODE="$1"
 fi
+readonly MODE
 
 # Exit on unset variable.
 set -u
 
 GO_BUILD_TAGS=("${MODE}")
-EXTRA_FLAGS=""
 LD_FLAGS=""
 if [[ "${MODE}" == "prod" ]] || [[ "${MODE}" == "staging" ]]; then
   GO_BUILD_TAGS+="netgo"
   LD_FLAGS="-w -extldflags \"-static\""
 fi
 readonly GO_BUILD_TAGS
-
-echo $EXTRA_FLAGS
+readonly LD_FLAGS
 
 GOOS=linux GOARCH=amd64 \
   go build \
