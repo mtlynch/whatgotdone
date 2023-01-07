@@ -4,6 +4,7 @@ package sqlite
 
 import "log"
 
+// Clear drops all SQLite tables. Only for testing.
 func (db DB) Clear() {
 	log.Printf("clearing all SQLite tables")
 	tables := []string{
