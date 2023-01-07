@@ -36,5 +36,5 @@ GOOS=linux GOARCH=amd64 \
   go build \
     -tags "${GO_BUILD_TAGS[@]}" \
     -ldflags "$LD_FLAGS" \
-    -o ./bin/whatgotdone \
+    -o ../bin/whatgotdone \
     main.go

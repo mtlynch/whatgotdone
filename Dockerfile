@@ -12,8 +12,9 @@ RUN npm run build -- --mode "$NPM_BUILD_MODE"
 FROM golang:1.17.4 AS backend_builder
 
 COPY ./backend /app/backend
+COPY ./dev-scripts/build-backend /app/dev-scripts/build-backend
 
-WORKDIR /app/backend
+WORKDIR /app
 
 ARG GO_BUILD_MODE="dev"
 
@@ -40,7 +41,7 @@ FROM alpine:3.15
 RUN apk add --no-cache bash
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
-COPY --from=backend_builder /app/whatgotdone /app/whatgotdone
+COPY --from=backend_builder /app/bin/whatgotdone /app/bin/whatgotdone
 COPY --from=litestream_downloader /litestream/litestream /app/litestream
 COPY ./litestream.yml /etc/litestream.yml
 COPY ./docker_entrypoint /app/docker_entrypoint
