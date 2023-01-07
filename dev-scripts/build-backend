@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Exit build script on first failure.
+set -e
+
+# Echo commands to stdout.
+set -x
+
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
+cd backend
+
+if [[ -z $1 ]]; then
+  MODE="prod"
+else
+  MODE="$1"
+fi
+readonly MODE
+
+# Exit on unset variable.
+set -u
+
+GO_BUILD_TAGS="${MODE}"
+LD_FLAGS=""
+if [[ "${MODE}" == "prod" ]] || [[ "${MODE}" == "staging" ]]; then
+  GO_BUILD_TAGS+=" netgo"
+  LD_FLAGS="-w -extldflags \"-static\""
+fi
+readonly GO_BUILD_TAGS
+readonly LD_FLAGS
+
+GOOS=linux GOARCH=amd64 \
+  go build \
+    -tags "${GO_BUILD_TAGS}" \
+    -ldflags "$LD_FLAGS" \
+    -o ../bin/whatgotdone \
+    main.go

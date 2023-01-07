@@ -16,7 +16,7 @@ processes = []
 
 [build.args]
   NPM_BUILD_MODE="production"
-  GO_BUILD_TAGS=""
+  GO_BUILD_MODE="prod"
 
 [experimental]
   allowed_public_ports = []
