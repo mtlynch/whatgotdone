@@ -62,12 +62,12 @@ jobs:
           at: ./
       - restore_cache:
           keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
+            - go-mod-v1-{{ checksum "backend/go.sum" }}
       - run:
           name: Compile backend (prod)
           command: dev-scripts/build-backend staging
       - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
+          key: go-mod-v1-{{ checksum "backend/go.sum" }}
           paths:
             - ~/go/pkg/mod
       - persist_to_workspace:
