@@ -2,6 +2,22 @@ version: "3.2"
 volumes:
   wgt_data:
 services:
+  whatgotdone_backend:
+    build:
+      context: ../
+      args:
+        NPM_BUILD_MODE: staging
+        GO_BUILD_TAGS: staging
+    environment:
+      - PORT=3123
+      - CSRF_SECRET_SEED=dummy-staging-seed
+      - USERKIT_SECRET=dummy.dummy
+      - PUBLIC_GCS_BUCKET=whatgotdone-public-staging
+      - BEHIND_PROXY=yes
+    volumes:
+      - ../gcp-service-account-staging.json:/app/gcp-service-account-staging.json
+      - ./:/app/integration
+      - wgt_data:/app/data
   test_data_manager:
     build:
       context: ../
@@ -23,22 +39,8 @@ services:
         "/app/test-data-manager/data/store.db",
         "-keepAlive",
       ]
-  whatgotdone_backend:
-    build:
-      context: ../
-      args:
-        NPM_BUILD_MODE: staging
-        GO_BUILD_TAGS: staging
-    environment:
-      - PORT=3123
-      - CSRF_SECRET_SEED=dummy-staging-seed
-      - USERKIT_SECRET=dummy.dummy
-      - PUBLIC_GCS_BUCKET=whatgotdone-public-staging
-      - BEHIND_PROXY=yes
-    volumes:
-      - ../gcp-service-account-staging.json:/app/gcp-service-account-staging.json
-      - ./:/app/integration
-      - wgt_data:/app/data
+    depends_on:
+      - whatgotdone_backend
   # Run What Got Done behind an nginx proxy to better simulate how it will run
   # in production.
   whatgotdone:
