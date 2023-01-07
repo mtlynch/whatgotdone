@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	gorilla "github.com/mtlynch/gorilla-handlers"
 
@@ -18,7 +19,7 @@ func main() {
 
 	dbPath := flag.String("db", "data/store.db", "path to database")
 	flag.Parse()
-	ensureDirExists(*dbPath)
+	ensureDirExists(filepath.Dir(*dbPath))
 	datastore := sqlite.New(*dbPath)
 
 	h := gorilla.LoggingHandler(os.Stdout, handlers.New(datastore).Router())
