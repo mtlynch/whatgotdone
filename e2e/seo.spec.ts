@@ -1,9 +1,13 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("gets the sitemap", async ({ page }) => {
-  await page.goto("/sitemap.xml");
+  const response = await page.goto("/sitemap.xml");
+
+  expect(response.ok()).toBe(true);
 });
 
 test("gets the robots.txt file", async ({ page }) => {
-  await page.goto("/robots.txt");
+  const response = await page.goto("/robots.txt");
+
+  expect(response.ok()).toBe(true);
 });
