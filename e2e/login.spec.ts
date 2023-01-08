@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { loginAsUser } from "./helpers/login.js";
 
 test('clicking "Post Update" before authenticating prompts login', async ({
   page,
@@ -9,7 +10,7 @@ test('clicking "Post Update" before authenticating prompts login', async ({
 
   await page.locator("nav .post-update").click();
 
-  await expect(page).toHaveURL("/login");
+  await page.waitForURL("/login");
 });
 
 test("back button should work if the user decides not to login/sign up", async ({
@@ -19,39 +20,70 @@ test("back button should work if the user decides not to login/sign up", async (
 
   await page.locator("nav .post-update").click();
 
-  await expect(page).toHaveURL("/login");
+  await page.waitForURL("/login");
 
   await page.goBack();
 
-  await expect(page).toHaveURL("/");
+  await page.waitForURL("/");
+});
+
+test("logs in and signs out", async ({ page }) => {
+  await loginAsUser(page, "staging_jimmy");
+
+  await page.waitForURL(/\/entry\/edit\/.+/g);
+
+  await page.locator("nav .account-dropdown").click();
+  await page.locator("nav .sign-out-link a").click();
+
+  await page.waitForURL("/");
+
+  await expect(page.locator("nav .account-dropdown")).toHaveCount(0);
+
+  // Try signing in again.
+  await loginAsUser(page, "staging_jimmy");
+
+  await page.waitForTimeout(5 * 1000);
+
+  await page.waitForURL(/\/entry\/edit\/.+/g, { timeout: 0 * 1000 });
+
+  await page.locator("nav .account-dropdown").click();
+  await page.locator("nav .sign-out-link a").click();
+
+  await page.waitForURL("/");
+});
+
+test("bare route should redirect authenticated user to their edit entry page", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  // Clicking the navbar brand should point to homepage.
+  await page.locator(".navbar .navbar-brand").click();
+  await page.waitForURL("/");
+
+  await loginAsUser(page, "staging_jimmy");
+  await page.waitForURL(/\/entry\/edit\/.+/g);
+
+  // Navigating back to bare route should redirect to edit entry page.
+  await page.goto("/");
+  await page.reload();
+  await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
+
+  // Clicking navbar brand should point to edit entry page.
+  await page.locator(".navbar .navbar-brand").click();
+  await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
+
+  // Log out
+  await page.locator("nav .account-dropdown").click();
+  await page.locator("nav .sign-out-link a").click();
+  await page.waitForURL("/");
+
+  // Clicking the navbar brand should point to homepage.
+  await page.locator(".navbar .navbar-brand").click();
+  await page.waitForURL("/");
 });
 
 /*
-
-
-it("logs in and signs out", () => {
-  cy.visit("/");
-  cy.get("nav .post-update").click();
-  cy.completeLoginForm("staging_jimmy");
-
-  cy.location("pathname").should("include", "/entry/edit");
-
-  cy.get(".account-dropdown").click();
-  cy.get(".sign-out-link a").click();
-  cy.location("pathname").should("eq", "/");
-
-  cy.get("nav .account-dropdown").should("not.exist");
-
-  // Try signing in again.
-  cy.get("nav .post-update").click();
-  cy.completeLoginForm("staging_jimmy");
-
-  cy.location("pathname").should("include", "/entry/edit");
-
-  cy.get(".account-dropdown").click();
-  cy.get(".sign-out-link a").click();
-  cy.location("pathname").should("eq", "/");
-});
 
 it("bare route should redirect authenticated user to their edit entry page", () => {
   cy.intercept("/api/user/me").as("getUsername");
