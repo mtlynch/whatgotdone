@@ -10,7 +10,7 @@ test('clicking "Post Update" before authenticating prompts login', async ({
 
   await page.locator("nav .post-update").click();
 
-  await page.waitForURL("/login");
+  await expect(page).toHaveURL("/login");
 });
 
 test("back button should work if the user decides not to login/sign up", async ({
@@ -20,22 +20,22 @@ test("back button should work if the user decides not to login/sign up", async (
 
   await page.locator("nav .post-update").click();
 
-  await page.waitForURL("/login");
+  await expect(page).toHaveURL("/login");
 
   await page.goBack();
 
-  await page.waitForURL("/");
+  await expect(page).toHaveURL("/");
 });
 
 test("logs in and signs out", async ({ page }) => {
   await loginAsUser(page, "staging_jimmy");
 
-  await page.waitForURL(/\/entry\/edit\/.+/g);
+  await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   await page.locator("nav .account-dropdown").click();
   await page.locator("nav .sign-out-link a").click();
 
-  await page.waitForURL("/");
+  await expect(page).toHaveURL("/");
 
   await expect(page.locator("nav .account-dropdown")).toHaveCount(0);
 
@@ -44,12 +44,12 @@ test("logs in and signs out", async ({ page }) => {
 
   await page.waitForTimeout(5 * 1000);
 
-  await page.waitForURL(/\/entry\/edit\/.+/g, { timeout: 0 * 1000 });
+  await expect(page).toHaveURL(/\/entry\/edit\/.+/g, { timeout: 0 * 1000 });
 
   await page.locator("nav .account-dropdown").click();
   await page.locator("nav .sign-out-link a").click();
 
-  await page.waitForURL("/");
+  await expect(page).toHaveURL("/");
 });
 
 test("bare route should redirect authenticated user to their edit entry page", async ({
@@ -59,10 +59,10 @@ test("bare route should redirect authenticated user to their edit entry page", a
 
   // Clicking the navbar brand should point to homepage.
   await page.locator(".navbar .navbar-brand").click();
-  await page.waitForURL("/");
+  await expect(page).toHaveURL("/");
 
   await loginAsUser(page, "staging_jimmy");
-  await page.waitForURL(/\/entry\/edit\/.+/g);
+  await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   // Navigating back to bare route should redirect to edit entry page.
   await page.goto("/");
@@ -76,70 +76,39 @@ test("bare route should redirect authenticated user to their edit entry page", a
   // Log out
   await page.locator("nav .account-dropdown").click();
   await page.locator("nav .sign-out-link a").click();
-  await page.waitForURL("/");
+  await expect(page).toHaveURL("/");
 
   // Clicking the navbar brand should point to homepage.
   await page.locator(".navbar .navbar-brand").click();
-  await page.waitForURL("/");
+  await expect(page).toHaveURL("/");
 });
 
-/*
+test("visiting authenticated page after UserKit token expires should redirect to login", async ({
+  browser,
+}) => {
+  const browserContext = await browser.newContext();
+  const page = await browserContext.newPage();
+  await loginAsUser(page, "joe123");
+  await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
-it("bare route should redirect authenticated user to their edit entry page", () => {
-  cy.intercept("/api/user/me").as("getUsername");
-
-  cy.visit("/");
-  cy.location("pathname").should("eq", "/");
-
-  // Clicking the navbar brand should point to /about page.
-  cy.get(".navbar .navbar-brand").click();
-  cy.location("pathname").should("eq", "/");
-
-  cy.login("staging_jimmy");
-  cy.location("pathname").should("include", "/entry/edit");
-  cy.wait("@getUsername");
-
-  // Navigating back to bare route should redirect to edit entry page.
-  cy.visit("/");
-  cy.reload();
-  cy.location("pathname").should("contain", "/entry/edit/");
-
-  // Clicking navbar brand should point to edit entry page.
-  cy.visit("/");
-  cy.get(".navbar .navbar-brand").click();
-  cy.location("pathname").should("contain", "/entry/edit/");
-
-  // Log out
-  cy.get(".account-dropdown").click();
-  cy.get(".sign-out-link a").click();
-
-  // Post-logout, user should be on bare route.
-  cy.location("pathname").should("eq", "/");
-
-  // Clicking navbar brand should point to bare route.
-  cy.get(".navbar .navbar-brand").click();
-  cy.location("pathname").should("eq", "/");
-});
-
-it("visiting authenticated page after UserKit token expires should redirect to login", () => {
-  cy.visit("/");
-  cy.get(".post-update").click();
-  cy.completeLoginForm("joe123");
-
-  cy.location("pathname").should("contain", "/entry/edit");
-  cy.get(".account-dropdown").click();
-  cy.get(".preferences-link a").click();
-
-  cy.location("pathname").should("eq", "/preferences");
+  await page.locator(".navbar .account-dropdown").click();
+  await page.locator(".navbar .preferences-link a").click();
+  await expect(page).toHaveURL("/preferences");
 
   // Simulate a UserKit cookie going stale.
-  cy.setCookie("userkit_auth_token", "");
+  browserContext.addCookies([
+    {
+      name: "userkit_auth_token",
+      value: "some-invalid-value",
+      domain: "localhost",
+      path: "/",
+    },
+  ]);
 
-  cy.reload();
+  await page.reload();
+  await expect(page).toHaveURL("/login");
+  await loginAsUser(page, "joe123");
 
-  cy.location("pathname").should("eq", "/login");
-  cy.completeLoginForm("joe123");
-
-  // Redirect to where the user was before the redirect.
-  cy.location("pathname").should("eq", "/preferences");
-});*/
+  // App should redirect user to where they were before the login prompt.
+  await expect(page).toHaveURL("/preferences");
+});
