@@ -26,7 +26,6 @@ export default function initializeUserState() {
         resolve();
       })
       .catch((error) => {
-        console.log('failed to get metadata, clearing auth info'); // DEBUG
         clearCachedAuthInformation();
         reject(error);
       });
