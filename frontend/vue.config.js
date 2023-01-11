@@ -1,7 +1,7 @@
 module.exports = {
   runtimeCompiler: true,
   devServer: {
-    allowedHosts: 'all',
+    allowedHosts: 'auto',
   },
   // We have to disable removeAttributeQuotes otherwise webpack will
   // prematurely remove quotes from things that actually need them once go
