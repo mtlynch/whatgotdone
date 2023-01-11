@@ -16,7 +16,7 @@ import (
 
 func (s defaultServer) exportGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		d, err := s.exportUserData(username)
 		if err != nil {

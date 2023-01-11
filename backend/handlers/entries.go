@@ -55,7 +55,7 @@ func (s *defaultServer) entryPut() http.HandlerFunc {
 			Markdown: c,
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		// First update the latest draft entry.
 		err = s.datastore.InsertDraft(username, j)
@@ -89,7 +89,7 @@ func (s *defaultServer) entryDelete() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		err = s.datastore.DeleteEntry(username, date)
 		if err != nil {
 			log.Printf("Failed to delete journal entry: %s", err)

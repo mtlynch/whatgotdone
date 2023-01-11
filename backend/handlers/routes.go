@@ -4,34 +4,11 @@ import (
 	"net/http"
 )
 
-// A no-op function that tells the router to accept the OPTIONS method for a
-// particular route.
-func allowOptions() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
-}
-
 func (s *defaultServer) routes() {
-	api := s.router.PathPrefix("/api").Subrouter()
-	api.Use(s.enableCors)
-	api.Use(s.enableCsrf)
-	api.HandleFunc("/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
-	api.HandleFunc("/entries/{username}/project/{project}", allowOptions()).Methods(http.MethodOptions)
-	api.HandleFunc("/entries/{username}/project/{project}", s.projectGet()).Methods(http.MethodGet)
-	api.HandleFunc("/pageViews", allowOptions()).Methods(http.MethodOptions)
-	api.HandleFunc("/pageViews", s.pageViewsGet()).Methods(http.MethodGet)
-	api.HandleFunc("/reactions/entry/{username}/{date}", allowOptions()).Methods(http.MethodOptions)
-	api.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsGet()).Methods(http.MethodGet)
-	api.HandleFunc("/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
-	api.HandleFunc("/user/{username}", s.userGet()).Methods(http.MethodGet)
-	api.HandleFunc("/user/{username}/following", s.userFollowingGet()).Methods(http.MethodGet)
-	api.HandleFunc("/user", allowOptions()).Methods(http.MethodOptions)
-	api.HandleFunc("/logout", allowOptions()).Methods(http.MethodOptions)
-	api.HandleFunc("/logout", s.logoutPost()).Methods(http.MethodPost)
-
-	s.addDevRoutes(api)
+	s.router.Use(s.populateAuthenticationContext)
 
 	authenticatedApis := s.router.PathPrefix("/api").Subrouter()
-	authenticatedApis.Use(s.requireAuthentication)
+	authenticatedApis.Use(s.requireAuthenticationForApi)
 	authenticatedApis.Use(s.enableCors)
 	authenticatedApis.Use(s.enableCsrf)
 	authenticatedApis.HandleFunc("/entries/following", s.entriesFollowingGet()).Methods(http.MethodGet)
@@ -53,8 +30,22 @@ func (s *defaultServer) routes() {
 	authenticatedApis.HandleFunc("/user/avatar", s.userAvatarDelete()).Methods(http.MethodDelete)
 	authenticatedApis.HandleFunc("/user", s.userPost()).Methods(http.MethodPost)
 
+	apis := s.router.PathPrefix("/api").Subrouter()
+	apis.Use(s.enableCors)
+	apis.Use(s.enableCsrf)
+	apis.HandleFunc("/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
+	apis.HandleFunc("/entries/{username}/project/{project}", s.projectGet()).Methods(http.MethodGet)
+	apis.HandleFunc("/pageViews", s.pageViewsGet()).Methods(http.MethodGet)
+	apis.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsGet()).Methods(http.MethodGet)
+	apis.HandleFunc("/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
+	apis.HandleFunc("/user/{username}", s.userGet()).Methods(http.MethodGet)
+	apis.HandleFunc("/user/{username}/following", s.userFollowingGet()).Methods(http.MethodGet)
+	apis.HandleFunc("/logout", s.logoutPost()).Methods(http.MethodPost)
+
+	s.addDevRoutes(apis)
+
 	// Catchall for when no API route matches.
-	api.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	apis.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	})
 
@@ -62,7 +53,7 @@ func (s *defaultServer) routes() {
 	authenticatedView.Use(upgradeToHttps)
 	authenticatedView.Use(enableCsp)
 	authenticatedView.Use(s.enableCsrf)
-	authenticatedView.Use(s.requireAuthentication)
+	authenticatedView.Use(s.requireAuthenticationForView)
 	authenticatedView.HandleFunc("/entry/edit/{date}", serveIndexPage).Methods(http.MethodGet)
 	authenticatedView.HandleFunc("/preferences", serveIndexPage).Methods(http.MethodGet)
 	authenticatedView.HandleFunc("/feed", serveIndexPage).Methods(http.MethodGet)
