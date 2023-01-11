@@ -59,6 +59,16 @@ func (s *defaultServer) routes() {
 		http.Error(w, "Invalid API path", http.StatusBadRequest)
 	})
 
+	authenticatedView := s.router.PathPrefix("/").Subrouter()
+	authenticatedView.Use(upgradeToHttps)
+	authenticatedView.Use(enableCsp)
+	authenticatedView.Use(s.enableCsrf)
+	authenticatedView.Use(s.requireAuthentication)
+	authenticatedView.HandleFunc("/entry/edit/{date}", serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/preferences", serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/feed", serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/profile/edit", serveIndexPage).Methods(http.MethodGet)
+
 	static := s.router.PathPrefix("/").Subrouter()
 	static.Use(upgradeToHttps)
 	static.Use(enableCsp)
@@ -90,14 +100,10 @@ func (s *defaultServer) routes() {
 	static.HandleFunc("/{username}/project/{project}", serveIndexPage).Methods(http.MethodGet)
 
 	static.HandleFunc("/about", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/feed", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/recent", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/entry/edit/{date}", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/login", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/logout", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/preferences", serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/privacy-policy", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/profile/edit", serveIndexPage).Methods(http.MethodGet)
 
 	static.HandleFunc("/{username}", s.serveUserProfileOr404()).Methods(http.MethodGet)
 	static.HandleFunc("/", serveIndexPage).Methods(http.MethodGet)
