@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -27,6 +28,11 @@ func (s defaultServer) populateAuthenticationContext(next http.Handler) http.Han
 		username, err := s.authenticator.UserFromAuthToken(tokenCookie.Value)
 		if err != nil {
 			log.Printf("failed to get username from auth token: %v", err)
+			http.SetCookie(w, &http.Cookie{
+				Name:    "userkit_auth_token",
+				Value:   "",
+				Expires: time.Unix(0, 0),
+			})
 			next.ServeHTTP(w, r)
 			return
 		}
