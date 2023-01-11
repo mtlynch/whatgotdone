@@ -20,7 +20,6 @@ func (s defaultServer) populateAuthenticationContext(next http.Handler) http.Han
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenCookie, err := r.Cookie(userKitAuthCookieName)
 		if err != nil {
-			log.Printf("failed to retrieve cookie from request: %v", err)
 			next.ServeHTTP(w, r)
 			return
 		}
