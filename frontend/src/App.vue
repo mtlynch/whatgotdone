@@ -25,7 +25,12 @@ export default {
   created() {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       if (userKit.isLoggedIn() === true) {
-        initializeUserState();
+        initializeUserState().catch(() => {
+          this.$store.commit('clearUserState');
+          if (this.routeRequiresLogin) {
+            this.$router.push('/login');
+          }
+        });
       } else {
         this.$store.commit('clearUserState');
         if (this.routeRequiresLogin) {

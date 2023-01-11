@@ -62,7 +62,7 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		following, err := s.datastore.Following(username)
 		if err != nil {
 			log.Printf("failed to retrieve user's follow list %s: %v", username, err)

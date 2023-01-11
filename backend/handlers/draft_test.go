@@ -41,7 +41,7 @@ func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 	w := httptest.NewRecorder()
 	s.Router().ServeHTTP(w, req)
 
-	if status := w.Code; status != http.StatusForbidden {
+	if status := w.Code; status != http.StatusUnauthorized {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusForbidden)
 	}
@@ -76,7 +76,7 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 	w := httptest.NewRecorder()
 	s.Router().ServeHTTP(w, req)
 
-	if status := w.Code; status != http.StatusForbidden {
+	if status := w.Code; status != http.StatusUnauthorized {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusForbidden)
 	}

@@ -61,7 +61,7 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 		}
 
 		reaction := types.Reaction{
-			Username: usernameFromContext(r.Context()),
+			Username: mustGetUsernameFromContext(r.Context()),
 			Symbol:   reactionSymbol,
 		}
 		err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
@@ -89,7 +89,7 @@ func (s defaultServer) reactionsDelete() http.HandlerFunc {
 			return
 		}
 
-		err = s.datastore.DeleteReaction(entryAuthor, entryDate, usernameFromContext(r.Context()))
+		err = s.datastore.DeleteReaction(entryAuthor, entryDate, mustGetUsernameFromContext(r.Context()))
 		if err != nil {
 			log.Printf("Failed to delete reaction: %s", err)
 			http.Error(w, "Failed to delete reaction", http.StatusInternalServerError)

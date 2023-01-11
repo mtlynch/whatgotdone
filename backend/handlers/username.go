@@ -16,31 +16,57 @@ type contextKey struct {
 
 var contextKeyUsername = &contextKey{"username"}
 
-func (s defaultServer) requireAuthentication(fn http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (s defaultServer) populateAuthenticationContext(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenCookie, err := r.Cookie(userKitAuthCookieName)
 		if err != nil {
-			log.Printf("failed to retrieve cookie from request: %v", err)
-			http.Error(w, "No authentication cookie found", http.StatusForbidden)
+			next.ServeHTTP(w, r)
 			return
 		}
 
 		username, err := s.authenticator.UserFromAuthToken(tokenCookie.Value)
 		if err != nil {
 			log.Printf("failed to get username from auth token: %v", err)
-			http.Error(w, "Authentication required", http.StatusForbidden)
+			next.ServeHTTP(w, r)
 			return
 		}
 
 		ctx := context.WithValue(r.Context(), contextKeyUsername, username)
-		fn(w, r.WithContext(ctx))
-	}
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
-func usernameFromContext(ctx context.Context) types.Username {
+func (s defaultServer) requireAuthenticationForApi(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if _, ok := usernameFromContext(r.Context()); !ok {
+			http.Error(w, "Authentication required", http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (s defaultServer) requireAuthenticationForView(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if _, ok := usernameFromContext(r.Context()); !ok {
+			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func usernameFromContext(ctx context.Context) (types.Username, bool) {
+	u, ok := ctx.Value(contextKeyUsername).(types.Username)
+	return u, ok
+}
+
+func mustGetUsernameFromContext(ctx context.Context) types.Username {
 	u, ok := ctx.Value(contextKeyUsername).(types.Username)
 	if !ok {
-		panic("expected to find username in context, but found none")
+		panic("username not found in context")
 	}
 	return u
 }

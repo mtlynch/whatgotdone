@@ -43,7 +43,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		const avatarThumbnailWidth = 40
 		const avatarLargeWidth = 300
 		for _, resizedAvatar := range image.Resize(avatarRawImg, []int{avatarLargeWidth, avatarThumbnailWidth}) {
@@ -74,7 +74,7 @@ func (s *defaultServer) userAvatarDelete() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		path := fmt.Sprintf("avatars/%s/", username)
 		if err := s.gcsClient.DeletePath(path); err != nil {
