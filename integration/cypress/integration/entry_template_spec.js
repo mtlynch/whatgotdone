@@ -4,6 +4,8 @@ it("pre-populates new entries with the user's draft template", () => {
 
   cy.login("staging_jimmy");
 
+  cy.location("pathname").should("include", "/entry/edit");
+
   cy.visit("/preferences");
 
   cy.get("#entry-template-input").type("# Project Falcon\n\n* Item 1");
