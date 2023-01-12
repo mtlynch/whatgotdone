@@ -25,32 +25,16 @@ export default {
   created() {
     loadUserKit(process.env.VUE_APP_USERKIT_APP_ID).then((userKit) => {
       if (userKit.isLoggedIn() === true) {
-        initializeUserState();
+        initializeUserState().catch(() => {
+          this.$store.commit('clearUserState');
+        });
       } else {
         this.$store.commit('clearUserState');
-        if (this.routeRequiresLogin) {
-          this.$router.push('/login');
-        }
       }
     });
     getRecent(/*start=*/ 0).then((recentEntries) => {
       this.$store.commit('setRecent', recentEntries);
     });
-  },
-  computed: {
-    routeRequiresLogin: function () {
-      const routeName = this.$router.currentRoute.name;
-      if (!routeName) {
-        return false;
-      }
-      if (routeName === 'Preferences') {
-        return true;
-      }
-      if (routeName.indexOf('Edit') === 0) {
-        return true;
-      }
-      return false;
-    },
   },
 };
 </script>

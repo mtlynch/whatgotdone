@@ -17,7 +17,7 @@ func (s defaultServer) followPut() http.HandlerFunc {
 			return
 		}
 
-		follower := usernameFromContext(r.Context())
+		follower := mustGetUsernameFromContext(r.Context())
 		if leader == follower {
 			http.Error(w, "You can't follow yourself", http.StatusBadRequest)
 			return
@@ -51,7 +51,7 @@ func (s defaultServer) followDelete() http.HandlerFunc {
 			return
 		}
 
-		follower := usernameFromContext(r.Context())
+		follower := mustGetUsernameFromContext(r.Context())
 
 		err = s.datastore.DeleteFollow(leader, follower)
 		if err != nil {

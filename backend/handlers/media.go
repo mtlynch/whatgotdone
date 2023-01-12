@@ -28,7 +28,7 @@ func (s *defaultServer) mediaPut() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		path, err := mediaPath(contentType, username)
 		if err != nil {
 			log.Printf("failed to generate media path: %v", err)
