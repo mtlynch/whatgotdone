@@ -26,8 +26,11 @@ GO_BUILD_TAGS="${MODE}"
 LD_FLAGS=""
 if [[ "${MODE}" == "prod" ]] || [[ "${MODE}" == "staging" ]]; then
   GO_BUILD_TAGS+=" netgo"
+fi
+if [[ "${MODE}" == "prod" ]]; then
   LD_FLAGS="-w -extldflags \"-static\""
 fi
+
 readonly GO_BUILD_TAGS
 readonly LD_FLAGS
 
