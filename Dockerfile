@@ -11,6 +11,8 @@ RUN npm run build -- --mode "$NPM_BUILD_MODE"
 
 FROM golang:1.17.4-alpine AS backend_builder
 
+RUN apk add --no-cache bash
+
 COPY ./backend /app/backend
 COPY ./dev-scripts/build-backend /app/dev-scripts/build-backend
 
