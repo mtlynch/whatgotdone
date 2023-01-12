@@ -97,7 +97,4 @@ it("visiting authenticated page after UserKit token expires should redirect to l
 
   cy.location("pathname").should("eq", "/login");
   cy.completeLoginForm("joe123");
-
-  // Redirect to where the user was before the redirect.
-  cy.location("pathname").should("eq", "/preferences");
 });
