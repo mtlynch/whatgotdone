@@ -39,7 +39,7 @@ describe('EntryFeed component', () => {
       localVue,
     });
 
-    const entries = wrapper.findAll(PartialJournal);
+    const entries = wrapper.findAllComponents(PartialJournal);
     expect(entries).toHaveLength(mockEntries.length);
 
     entries.wrappers.forEach((wrapper, i) => {

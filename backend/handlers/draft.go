@@ -13,7 +13,7 @@ import (
 
 func (s defaultServer) draftGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		date, err := dateFromRequestPath(r)
 		if err != nil {
@@ -57,7 +57,7 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		err = s.datastore.InsertDraft(username, types.JournalEntry{
 			Date:     date,
 			Markdown: entryContent,
@@ -79,7 +79,7 @@ func (s *defaultServer) draftDelete() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		err = s.datastore.DeleteDraft(username, date)
 		if err != nil {

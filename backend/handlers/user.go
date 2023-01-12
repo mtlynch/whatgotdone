@@ -51,7 +51,7 @@ func (s defaultServer) userPost() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		err = s.datastore.SetUserProfile(username, userProfile)
 		if err != nil {
 			log.Printf("Failed to update user profile: %s", err)
@@ -66,7 +66,7 @@ func (s defaultServer) userMeGet() http.HandlerFunc {
 		respondOK(w, struct {
 			Username types.Username `json:"username"`
 		}{
-			Username: usernameFromContext(r.Context()),
+			Username: mustGetUsernameFromContext(r.Context()),
 		})
 	}
 }
