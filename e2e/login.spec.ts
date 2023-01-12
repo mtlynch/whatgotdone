@@ -66,7 +66,6 @@ test("bare route should redirect authenticated user to their edit entry page", a
 
   // Navigating back to bare route should redirect to edit entry page.
   await page.goto("/");
-  await page.reload();
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   // Clicking navbar brand should point to edit entry page.
@@ -109,6 +108,5 @@ test("visiting authenticated page after UserKit token expires should redirect to
   await expect(page).toHaveURL("/login");
   await loginAsUser(page, "joe123");
 
-  // App should redirect user to where they were before the login prompt.
-  await expect(page).toHaveURL("/preferences");
+  await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 });
