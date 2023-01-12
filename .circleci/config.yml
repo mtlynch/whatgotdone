@@ -40,7 +40,7 @@ jobs:
             - ./frontend/dist
   test-backend:
     docker:
-      - image: cimg/go:1.17.4
+      - image: cimg/go:1.19.5
     steps:
       - checkout
       - attach_workspace:
