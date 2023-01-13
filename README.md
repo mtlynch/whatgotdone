@@ -52,7 +52,7 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 ### Pre-requisites
 
 * [Node.js](https://nodejs.org/) (12.x or higher)
-* [Go](https://golang.org/dl/) (1.17 or higher)
+* [Go](https://golang.org/dl/) (1.19 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
 * [Google Cloud SDK](https://cloud.google.com/sdk)
 * [screen](https://wiki.debian.org/screen)

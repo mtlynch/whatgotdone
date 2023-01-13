@@ -9,7 +9,9 @@ RUN echo "npm build mode: ${NPM_BUILD_MODE}"
 RUN npm install
 RUN npm run build -- --mode "$NPM_BUILD_MODE"
 
-FROM golang:1.17.4 AS backend_builder
+FROM golang:1.19.4-alpine AS backend_builder
+
+RUN apk add --no-cache bash build-base
 
 COPY ./backend /app/backend
 COPY ./dev-scripts/build-backend /app/dev-scripts/build-backend

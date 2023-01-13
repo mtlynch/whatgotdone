@@ -43,7 +43,7 @@ jobs:
             - ./frontend/dist
   build_staging_server:
     docker:
-      - image: cimg/go:1.17.4
+      - image: cimg/go:1.19.4
     steps:
       - checkout
       - attach_workspace:
