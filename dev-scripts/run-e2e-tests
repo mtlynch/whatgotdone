@@ -9,6 +9,7 @@ set -x
 REBUILD="1"
 if [[ "$1" = "--skip-rebuild" ]]; then
   REBUILD=""
+  shift
 fi
 readonly REBUILD
 
@@ -31,4 +32,4 @@ set +x
 . dev.env
 set -x
 
-npx playwright test
+npx playwright test $@

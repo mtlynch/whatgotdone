@@ -19,7 +19,7 @@
         <b-nav-item v-if="isLoggedIn" to="/feed" data-test-id="nav-feed-btn"
           >Feed</b-nav-item
         >
-        <b-nav-item to="/recent">Recent</b-nav-item>
+        <b-nav-item to="/recent" data-test-id="recent-link">Recent</b-nav-item>
         <b-nav-item href="https://github.com/mtlynch/whatgotdone"
           >Contribute</b-nav-item
         >
