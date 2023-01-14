@@ -30,16 +30,16 @@
         <b-nav-item-dropdown
           v-if="isLoggedIn"
           text="Account"
-          class="account-dropdown"
+          data-test-id="account-dropdown"
           right
         >
-          <b-dropdown-item :to="'/' + username" class="profile-link"
+          <b-dropdown-item :to="'/' + username" data-test-id="profile-link"
             >Profile</b-dropdown-item
           >
-          <b-dropdown-item to="/preferences" class="preferences-link"
+          <b-dropdown-item to="/preferences" data-test-id="preferences-link"
             >Preferences</b-dropdown-item
           >
-          <b-dropdown-item to="/logout" class="sign-out-link"
+          <b-dropdown-item to="/logout" data-test-id="sign-out-link"
             >Sign Out</b-dropdown-item
           >
         </b-nav-item-dropdown>

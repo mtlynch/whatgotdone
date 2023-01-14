@@ -7,18 +7,17 @@ const config: PlaywrightTestConfig = {
   expect: {
     timeout: 5 * 1000,
   },
+  use: {
+    baseURL: "http://localhost:6001",
+    actionTimeout: 5 * 1000,
+    trace: "on",
+    video: "on",
+  },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: 1,
   reporter: "html",
-  use: {
-    baseURL: "http://localhost:6001",
-    actionTimeout: 0,
-    trace: "on",
-    video: "on",
-  },
-
   projects: [
     {
       name: "chromium",
