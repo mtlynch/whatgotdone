@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
+import { wipeDB } from "./helpers/db.js";
 import { loginAsUser } from "./helpers/login.js";
+
+test.beforeEach(async ({ page }) => {
+  await wipeDB(page);
+});
 
 test("logs in and saves a draft", async ({ page, baseURL }) => {
   const apiDraftGet = page.waitForRequest(
