@@ -1,4 +1,4 @@
-//go:build dev
+//go:build dev || staging
 
 // The dev environment needs extra CSP sources because when Vue generates
 // frontend code in dev mode, it requires directives that would be unsafe in
@@ -12,4 +12,8 @@ func extraScriptSrcSources() []string {
 
 func extraStyleSrcSources() []string {
 	return []string{}
+}
+
+func extraImgSrcSources() []string {
+	return []string{"https://storage.googleapis.com/whatgotdone-public-staging/"}
 }
