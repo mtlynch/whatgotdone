@@ -85,5 +85,23 @@ test("logs in and sets profile photo", async ({ page }) => {
   await page
     .locator("#upload-profile-photo")
     .setInputFiles(["testdata/kittyface.jpg"]);
-  // TODO
+
+  await expect(page.locator("b-avatar-img")).toHaveCount(1);
+
+  await page.locator("#save-profile").click();
+
+  await expect(page).toHaveURL("/staging_jimmy");
+
+  await expect(page.locator("b-avatar-img")).toHaveCount(1);
+
+  // Delete the avatar image.
+  await page.locator("data-test-id=edit-btn").click();
+  await expect(page).toHaveURL("/profile/edit");
+
+  await page.locator("#delete-profile-photo").click();
+  await expect(page.locator("b-avatar-img")).toHaveCount(0);
+  await page.locator("#save-profile").click();
+
+  await expect(page).toHaveURL("/staging_jimmy");
+  await expect(page.locator("b-avatar-img")).toHaveCount(0);
 });
