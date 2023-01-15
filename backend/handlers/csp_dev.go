@@ -15,5 +15,5 @@ func extraStyleSrcSources() []string {
 }
 
 func extraImgSrcSources() []string {
-	return []string{"https://storage.googleapis.com/whatgotdone-public-staging/"}
+	return []string{"https://storage.googleapis.com"}
 }
