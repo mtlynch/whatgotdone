@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { loginAsUser } from "./helpers/login.js";
+import { mockLoginAsUser } from "./helpers/test_apis";
 
 test("can export the logged-in user's data", async ({ page }) => {
-  await loginAsUser(page, "staging_jimmy");
+  await mockLoginAsUser(page, "staging_jimmy");
 
   await page.locator("data-test-id=account-dropdown").click();
   await page.locator("data-test-id=profile-link").click();
@@ -13,7 +13,7 @@ test("can export the logged-in user's data", async ({ page }) => {
 });
 
 test("can't see an export data button for other users", async ({ page }) => {
-  await loginAsUser(page, "staging_jimmy");
+  await mockLoginAsUser(page, "staging_jimmy");
 
   await page.goto("/leader_lenny");
 

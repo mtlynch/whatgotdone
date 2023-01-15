@@ -1,5 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { loginAsUser } from "./helpers/login.js";
+
+async function loginAsUser(page, username) {
+  await page.goto("/login");
+
+  await page.locator("id=userkit_username").fill(username);
+  await page.locator("id=userkit_password").fill("password");
+  await page.locator("form button[type='submit']").click();
+}
 
 test('clicking "Post Update" before authenticating prompts login', async ({
   page,

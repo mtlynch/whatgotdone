@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { wipeDB } from "./helpers/db.js";
-import { loginAsUser } from "./helpers/login.js";
+import { mockLoginAsUser, wipeDB } from "./helpers/test_apis.js";
 
 test.beforeEach(async ({ page }) => {
   await wipeDB(page);
@@ -12,7 +11,7 @@ test("logs in and saves a draft", async ({ page, baseURL }) => {
       request.url().startsWith(baseURL + "/api/draft") &&
       request.method() === "GET"
   );
-  await loginAsUser(page, "staging_jimmy");
+  await mockLoginAsUser(page, "staging_jimmy");
 
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
@@ -63,7 +62,7 @@ test("don't overwrite draft until we successfully sync the latest draft from the
     }
   });
 
-  await loginAsUser(page, "staging_jimmy");
+  await mockLoginAsUser(page, "staging_jimmy");
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   await expect(page.locator(".journal-markdown")).toHaveCount(0);

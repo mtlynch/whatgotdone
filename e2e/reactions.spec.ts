@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { wipeDB, populateDummyData } from "./helpers/db.js";
-import { loginAsUser } from "./helpers/login.js";
+import {
+  mockLoginAsUser,
+  wipeDB,
+  populateDummyData,
+} from "./helpers/test_apis.js";
 
 test.beforeEach(async ({ page }) => {
   await wipeDB(page);
@@ -15,7 +18,7 @@ test("logs in and reacts to an entry", async ({ page, baseURL }) => {
   await expect(page).toHaveURL("/login");
 
   // Log in
-  await loginAsUser(page, "reacting_tommy");
+  await mockLoginAsUser(page, "reacting_tommy");
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   // Go back to the entry and react.

@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { wipeDB, populateDummyData } from "./helpers/db.js";
-import { loginAsUser } from "./helpers/login.js";
+import {
+  mockLoginAsUser,
+  wipeDB,
+  populateDummyData,
+} from "./helpers/test_apis.js";
 
 test.beforeEach(async ({ page }) => {
   await wipeDB(page);
@@ -9,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 test("follows a user", async ({ page, baseURL }) => {
   // Log in as follower user.
-  await loginAsUser(page, "follower_frank");
+  await mockLoginAsUser(page, "follower_frank");
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   // Verify the personalized feed is empty.

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
@@ -15,8 +16,30 @@ import (
 // addDevRoutes adds debug routes that we only use during development or e2e
 // tests.
 func (s *defaultServer) addDevRoutes(router *mux.Router) {
+	router.HandleFunc("/testing/auth/login/{username}", mockLoginAsUser()).Methods(http.MethodGet)
 	router.HandleFunc("/testing/db/populate-dummy-data", s.populateDummyData()).Methods(http.MethodGet)
 	router.HandleFunc("/testing/db/wipe", s.wipeDB()).Methods(http.MethodGet)
+}
+
+// mockLoginAsUser is a fast alternative to a real login with UserKit because
+// we can handle it internally without calling out to an external service. If
+// UserKit ever changes their cookie implementation, this will fail. At worst,
+// we'll have to fall back to authenticating with UserKit's real UI.
+func mockLoginAsUser() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username, err := usernameFromRequestPath(r)
+		if err != nil {
+			panic(err)
+		}
+		http.SetCookie(w, &http.Cookie{
+			Name:    "userkit_auth_token",
+			Value:   fmt.Sprintf("dummy_usr_token__%s:dummy", username),
+			Path:    "/",
+			Expires: time.Now().Add(600 * time.Hour),
+		})
+		log.Printf("mock logged in as %s", username)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	}
 }
 
 type dummyUserData struct {
