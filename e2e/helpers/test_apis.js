@@ -14,11 +14,11 @@ export async function mockLoginAsUser(page, username) {
 
   await page.goto(`/api/testing/auth/login/${username}`);
 
-  // Reload the page now that it's authenticated.
+  // Wait for user metadata to fetch.
   await apiUserMetGet;
-  await page.reload();
 
   // Click the brand so that the frontend places us in the page where we'd be
-  // after a real login.
+  // after a real login. Do it twice to force the navbar to repopulate.
+  await page.locator(".navbar .navbar-brand").click();
   await page.locator(".navbar .navbar-brand").click();
 }
