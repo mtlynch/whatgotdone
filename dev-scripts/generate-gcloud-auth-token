@@ -5,23 +5,24 @@
 #
 # Generate GCP creds for integration tests:
 #
-# ./dev-scripts/generate-gcloud-auth-token \
-#   whatgotdone-staging > gcp-service-account-staging.json
+# ./dev-scripts/generate-gcloud-auth-token staging
 
 set -eux
 
-PROJECT_ID="$1"
+readonly PROJECT_ID="$1"
 
 RANDOM_SUFFIX="$(head /dev/urandom | tr -dc 'a-z0-9' | head -c 6 ; echo '')"
 readonly RANDOM_SUFFIX
 
 SERVICE_ACCOUNT_NAME="wgd-app-runtime-${RANDOM_SUFFIX}"
+readonly SERVICE_ACCOUNT_NAME
 
 gcloud config set project "${PROJECT_ID}"
-SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+readonly SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 gcloud iam service-accounts create "${SERVICE_ACCOUNT_NAME}"
 
 ROLES=('storage.admin' 'iam.serviceAccountUser')
+readonly ROLES
 
 for ROLE in "${ROLES[@]}"
 do
@@ -32,6 +33,7 @@ do
 done
 
 CLIENT_SECRET=$(mktemp)
+readonly CLIENT_SECRET
 
 gcloud iam service-accounts keys create "${CLIENT_SECRET}" \
     --iam-account="${SERVICE_ACCOUNT_EMAIL}" \
@@ -39,4 +41,7 @@ gcloud iam service-accounts keys create "${CLIENT_SECRET}" \
 
 set +x
 
-cat "${CLIENT_SECRET}" | base64 --wrap=0 && echo ""
+CLIENT_SECRET_BASE64="$(cat "${CLIENT_SECRET}" | base64 --wrap=0)"
+readonly CLIENT_SECRET_BASE64
+echo "Client secret (base64): ${CLIENT_SECRET_BASE64}"
+echo "Client secret in ${CLIENT_SECRET}"
