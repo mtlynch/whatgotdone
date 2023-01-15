@@ -84,7 +84,7 @@ test("logs in and sets profile photo", async ({ page }) => {
 
   await page
     .locator("#upload-profile-photo")
-    .setInputFiles(["testdata/kittyface.jpg"]);
+    .setInputFiles(["frontend/testdata/kittyface.jpg"]);
 
   await expect(page.locator("b-avatar-img")).toHaveCount(1);
 
