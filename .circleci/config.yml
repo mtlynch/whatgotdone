@@ -53,12 +53,12 @@ jobs:
           command: apk add --no-cache bash build-base
       - restore_cache:
           keys:
-            - go-mod-v2-{{ checksum "backend/go.sum" }}
+            - go-mod-v3-{{ checksum "backend/go.sum" }}
       - run:
           name: Compile backend (staging)
           command: dev-scripts/build-backend staging
       - save_cache:
-          key: go-mod-v2-{{ checksum "backend/go.sum" }}
+          key: go-mod-v3-{{ checksum "backend/go.sum" }}
           paths:
             - /go/pkg/mod
       - persist_to_workspace:
