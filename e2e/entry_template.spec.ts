@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 test("uses the entry template for new drafts", async ({ page }) => {
   let apiDraftGet = page.waitForRequest(
     (request) =>
-      request.url().endsWith("/api/draft") && request.method() === "GET"
+      request.url().includes("/api/draft") && request.method() === "GET"
   );
   await mockLoginAsUser(page, "staging_jimmy");
 
@@ -19,7 +19,7 @@ test("uses the entry template for new drafts", async ({ page }) => {
 
   apiDraftGet = page.waitForRequest(
     (request) =>
-      request.url().endsWith("/api/draft") && request.method() === "GET"
+      request.url().includes("/api/draft") && request.method() === "GET"
   );
 
   await page.goto("/entry/edit/2020-03-06");
@@ -45,7 +45,7 @@ test("uses the entry template for new drafts", async ({ page }) => {
 
   apiDraftGet = page.waitForRequest(
     (request) =>
-      request.url().endsWith("/api/draft") && request.method() === "GET"
+      request.url().includes("/api/draft") && request.method() === "GET"
   );
   await page.goto("/entry/edit/2020-03-06");
   await apiDraftGet;

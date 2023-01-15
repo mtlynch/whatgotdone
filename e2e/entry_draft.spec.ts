@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 test("logs in and saves a draft", async ({ page }) => {
   const apiDraftGet = page.waitForRequest(
     (request) =>
-      request.url().endsWith("/api/draft") && request.method() === "GET"
+      request.url().includes("/api/draft") && request.method() === "GET"
   );
   await mockLoginAsUser(page, "staging_jimmy");
 
@@ -19,7 +19,7 @@ test("logs in and saves a draft", async ({ page }) => {
 
   const apiDraftPut = page.waitForRequest(
     (request) =>
-      request.url().endsWith("/api/draft") && request.method() === "PUT"
+      request.url().includes("/api/draft") && request.method() === "PUT"
   );
 
   const entryText = "Saved a private draft at " + new Date().toISOString();
