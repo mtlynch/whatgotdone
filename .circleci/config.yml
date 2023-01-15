@@ -60,7 +60,7 @@ jobs:
       - save_cache:
           key: go-mod-v2-{{ checksum "backend/go.sum" }}
           paths:
-            - ~/go/pkg/mod
+            - /go/pkg/mod
       - persist_to_workspace:
           root: ./
           paths:
