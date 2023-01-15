@@ -51,6 +51,7 @@ func contentSecurityPolicy() string {
 		},
 	}
 	directives["script-src"] = append(directives["script-src"], extraScriptSrcSources()...)
+	directives["img-src"] = append(directives["img-src"], extraImgSrcSources()...)
 	directives["style-src"] = append(directives["style-src"], extraStyleSrcSources()...)
 	policyParts := []string{}
 	for directive, sources := range directives {
