@@ -48,6 +48,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: ./
+      - run:
+          name: Add build dependencies
+          command: apk add --no-cache bash build-base
       - restore_cache:
           keys:
             - go-mod-v1-{{ checksum "backend/go.sum" }}
