@@ -11,9 +11,9 @@ set -u
 
 ./dev-scripts/run-go-tests
 ./dev-scripts/check-go-formatting
+./dev-scripts/build-backend prod
 ./dev-scripts/build-backend dev
 ./dev-scripts/build-backend staging
-./dev-scripts/build-backend prod
 
 cd frontend
 NODE_ENV="production" npm run lint
