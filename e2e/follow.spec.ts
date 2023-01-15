@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
   await populateDummyData(page);
 });
 
-test("follows a user", async ({ page, baseURL }) => {
+test("follows a user", async ({ page }) => {
   // Log in as follower user.
   await mockLoginAsUser(page, "follower_frank");
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
@@ -25,9 +25,7 @@ test("follows a user", async ({ page, baseURL }) => {
   // Follow leader_lenny
   let apiFollowingGet = page.waitForRequest(
     (request) =>
-      request
-        .url()
-        .startsWith(baseURL + "/api/user/follower_frank/following") &&
+      request.url().endsWith("/api/user/follower_frank/following") &&
       request.method() === "GET"
   );
 

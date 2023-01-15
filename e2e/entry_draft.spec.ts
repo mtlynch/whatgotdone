@@ -5,11 +5,10 @@ test.beforeEach(async ({ page }) => {
   await wipeDB(page);
 });
 
-test("logs in and saves a draft", async ({ page, baseURL }) => {
+test("logs in and saves a draft", async ({ page }) => {
   const apiDraftGet = page.waitForRequest(
     (request) =>
-      request.url().startsWith(baseURL + "/api/draft") &&
-      request.method() === "GET"
+      request.url().endsWith("/api/draft") && request.method() === "GET"
   );
   await mockLoginAsUser(page, "staging_jimmy");
 
@@ -20,8 +19,7 @@ test("logs in and saves a draft", async ({ page, baseURL }) => {
 
   const apiDraftPut = page.waitForRequest(
     (request) =>
-      request.url().startsWith(baseURL + "/api/draft") &&
-      request.method() === "PUT"
+      request.url().endsWith("/api/draft") && request.method() === "PUT"
   );
 
   const entryText = "Saved a private draft at " + new Date().toISOString();
