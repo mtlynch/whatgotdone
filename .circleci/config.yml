@@ -41,7 +41,7 @@ jobs:
           root: ./
           paths:
             - ./frontend/dist
-  build_staging_server:
+  build_staging_backend:
     docker:
       - image: golang:1.19.4-alpine3.17
     steps:
@@ -125,10 +125,10 @@ workflows:
       - check_whitespace
       - build_staging_frontend
       - test-backend
-      - build_staging_server
+      - build_staging_backend
       - e2e:
           requires:
-            - build_staging_server
+            - build_staging_backend
             - build_staging_frontend
       - deploy:
           requires:
