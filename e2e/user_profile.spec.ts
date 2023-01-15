@@ -61,5 +61,29 @@ test("logs in and updates profile", async ({ page }) => {
 });
 
 test("logs in and sets profile photo", async ({ page }) => {
+  await mockLoginAsUser(page, "staging_jimmy");
+
+  await page.locator("data-test-id=account-dropdown").click();
+  await page.locator("data-test-id=profile-link").click();
+
+  await expect(page).toHaveURL("/staging_jimmy");
+
+  await expect(page.locator("b-avatar-img")).toHaveCount(0);
+
+  let apiUserGet = page.waitForRequest(
+    (request) =>
+      request.url().endsWith("/api/user/staging_jimmy") &&
+      request.method() === "GET"
+  );
+
+  await page.locator("data-test-id=edit-btn").click();
+  await expect(page).toHaveURL("/profile/edit");
+
+  // Wait for page to pull down existing profile.
+  await apiUserGet;
+
+  await page
+    .locator("#upload-profile-photo")
+    .setInputFiles(["testdata/kittyface.jpg"]);
   // TODO
 });
