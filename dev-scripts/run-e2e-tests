@@ -16,6 +16,12 @@ readonly REBUILD
 # Exit on unset variable.
 set -u
 
+# Load staging environment vars.
+set +x
+# shellcheck disable=SC1091
+. staging.env
+set -x
+
 # Change directory to repository root.
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 readonly SCRIPT_DIR
@@ -25,11 +31,5 @@ if [[ -n "${REBUILD}" ]]; then
   ./dev-scripts/build-frontend staging
   ./dev-scripts/build-backend staging
 fi
-
-# Load dev environment vars.
-set +x
-# shellcheck disable=SC1091
-. dev.env
-set -x
 
 npx playwright test $@

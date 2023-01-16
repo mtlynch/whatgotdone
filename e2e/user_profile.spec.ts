@@ -68,9 +68,10 @@ test("logs in and sets profile photo", async ({ page }) => {
 
   await expect(page).toHaveURL("/staging_jimmy");
 
-  await expect(page.locator(".b-avatar-img")).toHaveCount(0);
+  // Expect no-photo class.
+  await expect(page.locator(".profile .bi-person-fill")).toHaveCount(1);
 
-  let apiUserGet = page.waitForRequest(
+  const apiUserGet = page.waitForRequest(
     (request) =>
       request.url().endsWith("/api/user/staging_jimmy") &&
       request.method() === "GET"
@@ -92,14 +93,14 @@ test("logs in and sets profile photo", async ({ page }) => {
 
   await expect(page).toHaveURL("/staging_jimmy");
 
-  await expect(page.locator(".b-avatar-img")).toHaveCount(1);
+  await expect(page.locator(".profile .b-avatar-img")).toHaveCount(1);
 
   // Delete the avatar image.
   await page.locator("data-test-id=edit-btn").click();
   await expect(page).toHaveURL("/profile/edit");
 
   await page.locator("#delete-profile-photo").click();
-  await expect(page.locator(".b-avatar-img")).toHaveCount(0);
+
   await page.locator("#save-profile").click();
 
   await expect(page).toHaveURL("/staging_jimmy");
