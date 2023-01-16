@@ -83,9 +83,11 @@ test("logs in and sets profile photo", async ({ page }) => {
   // Wait for page to pull down existing profile.
   await apiUserGet;
 
+  let apiUserAvatarResponse = page.waitForResponse("**/api/user/avatar");
   await page
     .locator("#upload-profile-photo")
     .setInputFiles(["e2e/testdata/kittyface.jpg"]);
+  await apiUserAvatarResponse;
 
   await expect(page.locator(".b-avatar-img")).toHaveCount(1);
 
@@ -99,10 +101,14 @@ test("logs in and sets profile photo", async ({ page }) => {
   await page.locator("data-test-id=edit-btn").click();
   await expect(page).toHaveURL("/profile/edit");
 
+  apiUserAvatarResponse = page.waitForResponse("**/api/user/avatar");
   await page.locator("#delete-profile-photo").click();
+  await apiUserAvatarResponse;
 
   await page.locator("#save-profile").click();
 
   await expect(page).toHaveURL("/staging_jimmy");
+  // Workaround for timing.
+  await page.reload();
   await expect(page.locator(".b-avatar-img")).toHaveCount(0);
 });
