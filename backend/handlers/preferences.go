@@ -18,7 +18,7 @@ func (s defaultServer) preferencesGet() http.HandlerFunc {
 			http.Error(w, "No user preferences found", http.StatusNotFound)
 			return
 		} else if err != nil {
-			log.Printf("Failed to retrieve user preferences for %s: %v", username, err)
+			log.Printf("failed to retrieve user preferences for %s: %v", username, err)
 			http.Error(w, "Failed to retrieve preferences", http.StatusInternalServerError)
 			return
 		}

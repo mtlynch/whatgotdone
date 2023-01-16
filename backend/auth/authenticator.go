@@ -37,7 +37,7 @@ func New() Authenticator {
 func (a defaultAuthenticator) UserFromAuthToken(authToken string) (types.Username, error) {
 	user, err := a.userKitClient.Users.GetUserBySession(authToken)
 	if err != nil {
-		log.Printf("Failed to authenticate user's session token with UserKit: %v", err)
+		log.Printf("failed to authenticate user's session token with UserKit: %v", err)
 		return "", err
 	}
 	return parse.Username(user.Username)
