@@ -3,7 +3,7 @@ FROM node:12.18.4-alpine AS frontend_builder
 COPY ./frontend /app/frontend
 WORKDIR /app/frontend
 
-ARG NPM_BUILD_MODE="development"
+ARG NPM_BUILD_MODE="dev"
 RUN echo "npm build mode: ${NPM_BUILD_MODE}"
 
 RUN npm install
