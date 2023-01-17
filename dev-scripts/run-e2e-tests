@@ -32,4 +32,4 @@ if [[ -n "${REBUILD}" ]]; then
   ./dev-scripts/build-backend staging
 fi
 
-npx playwright test $@
+npx playwright test "$@"
