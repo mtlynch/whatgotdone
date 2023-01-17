@@ -11,7 +11,7 @@ import (
 )
 
 func (c Client) DeletePath(path string) error {
-	log.Printf("Deleting gs://%s/%s", c.bucketName, path)
+	log.Printf("deleting gs://%s/%s", c.bucketName, path)
 	ctx := context.Background()
 	bh := c.gcsClient.Bucket(c.bucketName)
 

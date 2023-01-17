@@ -14,14 +14,14 @@ func (s *defaultServer) projectGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)
 		if err != nil {
-			log.Printf("Failed to retrieve username from request path: %s", err)
+			log.Printf("failed to retrieve username from request path: %s", err)
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
 
 		project, err := projectFromRequestPath(r)
 		if err != nil {
-			log.Printf("Failed to retrieve project from request path: %s", err)
+			log.Printf("failed to retrieve project from request path: %s", err)
 			http.Error(w, "Invalid project", http.StatusBadRequest)
 			return
 		}
@@ -30,7 +30,7 @@ func (s *defaultServer) projectGet() http.HandlerFunc {
 			ByUsers: []types.Username{username},
 		})
 		if err != nil {
-			log.Printf("Failed to retrieve entries: %s", err)
+			log.Printf("failed to retrieve entries: %s", err)
 			http.Error(w, fmt.Sprintf("Failed to retrieve entries for %s", username), http.StatusInternalServerError)
 			return
 		}
@@ -46,7 +46,7 @@ func (s *defaultServer) projectGet() http.HandlerFunc {
 			if _, ok := err.(entry.ProjectNotFoundError); ok {
 				continue
 			} else if err != nil {
-				log.Printf("Failed to retrieve project from entry: %s", err)
+				log.Printf("failed to retrieve project from entry: %s", err)
 				continue
 			} else if body == "" {
 				continue
