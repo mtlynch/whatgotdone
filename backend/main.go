@@ -32,7 +32,7 @@ func main() {
 	if port == "" {
 		port = "3001"
 	}
-	log.Printf("Listening on %s", port)
+	log.Printf("listening on %s", port)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }

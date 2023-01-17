@@ -50,7 +50,7 @@ func (s defaultServer) pageViewsGet() http.HandlerFunc {
 				pv.PageViews = 1
 				err = nil
 			} else {
-				log.Printf("No pageviews found for %s", path)
+				log.Printf("no pageviews found for %s", path)
 				http.Error(w, "Path has no pageview data", http.StatusNotFound)
 				return
 			}

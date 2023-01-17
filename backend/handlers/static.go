@@ -29,7 +29,7 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusNotFound)
 			return
 		} else if err != nil {
-			log.Printf("Failed to retrieve the file %s from the file system: %s", r.URL.Path, err)
+			log.Printf("failed to retrieve the file %s from the file system: %s", r.URL.Path, err)
 			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusNotFound)
 			return
 		}
@@ -37,7 +37,7 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 
 		stat, err := file.Stat()
 		if err != nil {
-			log.Printf("Failed to retrieve the information of %s from the file system: %s", r.URL.Path, err)
+			log.Printf("failed to retrieve the information of %s from the file system: %s", r.URL.Path, err)
 			http.Error(w, "Failed to serve: "+r.URL.Path, http.StatusInternalServerError)
 			return
 		}

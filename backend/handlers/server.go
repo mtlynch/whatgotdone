@@ -23,15 +23,15 @@ func New(store datastore.Datastore) Server {
 	var fetcher ga.MetricFetcher
 	f, err := ga.New()
 	if err != nil {
-		log.Printf("Failed to load Google Analytics metrics fetcher: %s", err)
+		log.Printf("failed to load Google Analytics metrics fetcher: %s", err)
 	} else {
 		fetcher = f
 	}
 
 	gcsClient, err := gcs.New()
 	if err != nil {
-		log.Printf("Failed to load Google Cloud Storage client: %s", err)
-		log.Printf("File upload functionality will be disabled")
+		log.Printf("failed to load Google Cloud Storage client: %s", err)
+		log.Printf("file upload functionality will be disabled")
 		gcsClient = nil
 	}
 	s := defaultServer{
