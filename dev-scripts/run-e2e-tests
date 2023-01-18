@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Exit build script on first failure
+set -e
+
+# Echo commands to stdout.
+set -x
+
+REBUILD="1"
+if [[ "$1" = "--skip-rebuild" ]]; then
+  REBUILD=""
+  shift
+fi
+readonly REBUILD
+
+# Exit on unset variable.
+set -u
+
+# Load staging environment vars.
+set +x
+# shellcheck disable=SC1091
+. staging.env
+set -x
+
+# Change directory to repository root.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
+cd "${SCRIPT_DIR}/.."
+
+if [[ -n "${REBUILD}" ]]; then
+  ./dev-scripts/build-frontend staging
+  ./dev-scripts/build-backend staging
+fi
+
+npx playwright test "$@"

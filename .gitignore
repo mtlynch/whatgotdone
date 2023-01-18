@@ -1,4 +1,5 @@
 bin/
+node_modules/
 
 *.exe
 
@@ -21,3 +22,8 @@ data/
 prod.env
 
 *.local
+
+# Playwright output
+/playwright-report/
+/playwright/.cache/
+/e2e-results/

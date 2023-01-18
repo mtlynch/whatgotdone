@@ -16,31 +16,35 @@
           :html="false"
           :anchorAttributes="{rel: 'ugc'}"
           :source="aboutMarkdown"
-          class="user-bio"
+          data-test-id="user-bio"
         ></vue-markdown>
 
-        <p v-if="profileLoaded && !aboutMarkdown" class="no-bio-message">
+        <p v-if="profileLoaded && !aboutMarkdown" class="font-italic">
           This user has not yet created a public bio.
         </p>
 
         <template v-if="twitterHandle || emailAddress">
           <ul>
             <li v-if="emailAddress">
-              <a :href="'mailto:' + emailAddress" class="email-address">{{
-                emailAddress
-              }}</a>
+              <a
+                :href="'mailto:' + emailAddress"
+                data-test-id="email-address"
+                >{{ emailAddress }}</a
+              >
               (Email)
             </li>
             <li v-if="twitterHandle">
               <a
                 :href="'https://twitter.com/' + twitterHandle"
-                class="twitter-handle"
+                data-test-id="twitter-handle"
                 >@{{ twitterHandle }}</a
               >
               (Twitter)
             </li>
             <li v-if="mastodonAddress">
-              <a :href="mastodonUrl">{{ mastodonAddress }}</a>
+              <a data-test-id="mastodon-address" :href="mastodonUrl">{{
+                mastodonAddress
+              }}</a>
               (Mastodon)
             </li>
           </ul>
@@ -80,10 +84,7 @@
       v-for="entry in recentEntries"
     />
 
-    <p
-      v-if="entriesLoaded && recentEntries.length === 0"
-      class="no-entries-message"
-    >
+    <p v-if="entriesLoaded && recentEntries.length === 0" class="font-italic">
       This user has not submitted any recent updates.
     </p>
     <template v-if="canEdit">
@@ -282,13 +283,5 @@ h2 {
   clear: both;
   margin-top: 40px;
   margin-bottom: 30px;
-}
-
-.no-bio-message {
-  font-style: italic;
-}
-
-.no-entries-message {
-  font-style: italic;
 }
 </style>

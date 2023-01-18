@@ -19,7 +19,7 @@
         <b-nav-item v-if="isLoggedIn" to="/feed" data-test-id="nav-feed-btn"
           >Feed</b-nav-item
         >
-        <b-nav-item to="/recent">Recent</b-nav-item>
+        <b-nav-item to="/recent" data-test-id="recent-link">Recent</b-nav-item>
         <b-nav-item href="https://github.com/mtlynch/whatgotdone"
           >Contribute</b-nav-item
         >
@@ -30,16 +30,16 @@
         <b-nav-item-dropdown
           v-if="isLoggedIn"
           text="Account"
-          class="account-dropdown"
+          data-test-id="account-dropdown"
           right
         >
-          <b-dropdown-item :to="'/' + username" class="profile-link"
+          <b-dropdown-item :to="'/' + username" data-test-id="profile-link"
             >Profile</b-dropdown-item
           >
-          <b-dropdown-item to="/preferences" class="preferences-link"
+          <b-dropdown-item to="/preferences" data-test-id="preferences-link"
             >Preferences</b-dropdown-item
           >
-          <b-dropdown-item to="/logout" class="sign-out-link"
+          <b-dropdown-item to="/logout" data-test-id="sign-out-link"
             >Sign Out</b-dropdown-item
           >
         </b-nav-item-dropdown>

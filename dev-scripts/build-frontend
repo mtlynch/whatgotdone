@@ -3,16 +3,28 @@
 # Exit on first failing command.
 set -e
 
-# Exit on unset variable.
-set -u
-
 # Echo commands
 set -x
+
+if [[ -z $1 ]]; then
+  MODE="prod"
+else
+  MODE="$1"
+fi
+readonly MODE
+
+# Exit on unset variable.
+set -u
 
 # Change directory to repository root.
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
+NPM_EXTRA_FLAGS=""
+if [[ "${MODE}" != "prod" ]]; then
+  NPM_EXTRA_FLAGS="--production=false"
+fi
+
 cd frontend
-npm install
-npm run build -- --mode development
+npm install "${NPM_EXTRA_FLAGS}"
+npm run build -- --mode "${MODE}"

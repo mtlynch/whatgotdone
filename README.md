@@ -31,18 +31,6 @@ The Go backend handles all of What Got Done's `/api/*` routes. These routes are 
 
 What Got Done uses [UserKit](https://docs.userkit.io/) for user authentication. For user signup, user login, and password reset, What Got Done loads the UserKit UI widgets in JavaScript. On the backend, the `auth` package is responsible for translating UserKit auth tokens into What Got Done usernames.
 
-### Integration tests
-
-What Got Done's integration tests use Cypress and follow the testing pattern defined in the article [End-to-End Testing Web Apps: The Painless Way](https://mtlynch.io/painless-web-app-testing/). The testing architecture consists of four Docker containers (see [docker-compose.yml](https://github.com/mtlynch/whatgotdone/blob/master/integration/docker-compose.yml)):
-
-* What Got Done container
-* Cypress container
-* Test data manager
-
-The integration test is entirely self-contained, so nothing that happens during testing affects anything outside of the docker-compose environment.
-
-To run the integration tests yourself, see the [section below](#optional-run-integration-tests).
-
 ## Contributing to What Got Done
 
 Interested in contributing code or bug reports to What Got Done? That's great! Check our [Contibutor Guidelines](https://github.com/mtlynch/whatgotdone/blob/master/CONTRIBUTING.md) for more details.
@@ -101,12 +89,12 @@ Unit tests run in normal Golang fashion:
 go test ./...
 ```
 
-### Optional: Run integration tests
+### Optional: Run e2e tests
 
-Integration tests run all components together using [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
+End-to-end tests run all components together using [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
 
 ```bash
-dev-scripts/run-integration-tests
+dev-scripts/run-e2e-tests
 ```
 
 ### Optional: Enable public analytics from Google Analytics
