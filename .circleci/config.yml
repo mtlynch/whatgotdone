@@ -77,7 +77,7 @@ jobs:
             sqlfluff lint \
               --disable_progress_bar \
               --dialect sqlite \
-              store/sqlite/migrations
+              backend/datastore/sqlite/migrations
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
