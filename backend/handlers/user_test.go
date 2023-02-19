@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
+	"github.com/mtlynch/whatgotdone/backend/datastore/test_sqlite"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -101,7 +101,7 @@ func TestUserPost(t *testing.T) {
 		},
 	}
 
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{

@@ -12,12 +12,12 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
-	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
+	"github.com/mtlynch/whatgotdone/backend/datastore/test_sqlite"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	ds.InsertDraft("dummyuser", types.JournalEntry{
 		Date:         "2019-04-19",
 		LastModified: mustParseTime("2019-04-19T00:00:00Z"),
@@ -48,7 +48,7 @@ func TestDraftHandlerWhenUserIsNotLoggedIn(t *testing.T) {
 }
 
 func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	ds.InsertDraft("dummyuser", types.JournalEntry{
 		Date:         "2019-04-19",
 		LastModified: mustParseTime("2019-04-19T00:00:00Z"),
@@ -83,7 +83,7 @@ func TestDraftHandlerWhenUserTokenIsInvalid(t *testing.T) {
 }
 
 func TestDraftHandlerWhenDateMatches(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	ds.InsertDraft("dummyUser", types.JournalEntry{
 		Date:         "2019-04-19",
 		LastModified: mustParseTime("2019-04-19T00:00:00Z"),
@@ -131,7 +131,7 @@ func TestDraftHandlerWhenDateMatches(t *testing.T) {
 }
 
 func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
@@ -161,7 +161,7 @@ func TestDraftHandlerReturns404WhenDatastoreReturnsEntryNotFoundError(t *testing
 }
 
 func TestDraftHandlerReturnsBadRequestWhenDateIsInvalid(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
@@ -199,7 +199,7 @@ func mustParseTime(ts string) time.Time {
 }
 
 func TestPutDraftRejectsEmptyDraft(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	router := mux.NewRouter()
 	s := defaultServer{
 		authenticator: mockAuthenticator{
@@ -233,7 +233,7 @@ func TestPutDraftRejectsEmptyDraft(t *testing.T) {
 }
 
 func TestDeleteDraftDeletesMatchingDraft(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	ds.InsertDraft("dummyUser", types.JournalEntry{
 		Author:       "dummyUser",
 		Date:         "2019-03-22",
@@ -299,7 +299,7 @@ func TestDeleteDraftDeletesMatchingDraft(t *testing.T) {
 }
 
 func TestDeleteDraftReturnsOKForNonExistentEntry(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	ds.InsertDraft("dummyUser", types.JournalEntry{
 		Author:       "dummyUser",
 		Date:         "2019-03-22",
@@ -342,7 +342,7 @@ func TestDeleteDraftReturnsOKForNonExistentEntry(t *testing.T) {
 }
 
 func TestDeleteDraftReturnsBadRequestForInvalidDate(t *testing.T) {
-	ds := sqlite.New(":memory:")
+	ds := test_sqlite.New()
 	ds.InsertDraft("dummyUser", types.JournalEntry{
 		Author:       "dummyUser",
 		Date:         "2019-03-22",
