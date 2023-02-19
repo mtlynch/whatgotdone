@@ -65,6 +65,19 @@ jobs:
           root: ./
           paths:
             - ./bin/whatgotdone
+  lint_sql:
+    docker:
+      - image: sqlfluff/sqlfluff:1.2.1
+        user: root
+    steps:
+      - checkout
+      - run:
+          name: Lint SQL files
+          command: |
+            sqlfluff lint \
+              --disable_progress_bar \
+              --dialect sqlite \
+              store/sqlite/migrations
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
@@ -124,6 +137,7 @@ workflows:
       - build_staging_frontend
       - test-backend
       - build_staging_backend
+      - lint_sql
       - e2e:
           requires:
             - build_staging_backend
