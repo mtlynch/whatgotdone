@@ -21,7 +21,6 @@ func New(path string) datastore.Datastore {
 		log.Fatalln(err)
 	}
 
-
 	// The Litestream documentation recommends these pragmas.
 	// https://litestream.io/tips/
 	if _, err := ctx.Exec(`
