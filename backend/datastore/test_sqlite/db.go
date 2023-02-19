@@ -3,9 +3,9 @@ package test_sqlite
 import (
 	"fmt"
 
-	"github.com/mtlynch/whatgotdone/backend/random"
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/datastore/sqlite"
+	"github.com/mtlynch/whatgotdone/backend/random"
 )
 
 func New() datastore.Datastore {
