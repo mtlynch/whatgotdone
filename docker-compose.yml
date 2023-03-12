@@ -12,3 +12,5 @@ services:
       - PORT=3001
       - CSRF_SECRET_SEED=dummy-dev-secret-seed
       - USERKIT_SECRET=dummy.dummy
+    volumes:
+      - ./creds:/app/creds
