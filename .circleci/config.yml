@@ -83,6 +83,8 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
     steps:
       - checkout
+      - run: Create folder for GCP credentials
+        command: mkdir creds/
       - run:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
@@ -111,6 +113,8 @@ jobs:
       FLYCTL_VERSION: "latest"
     steps:
       - checkout
+      - run: Create folder for GCP credentials
+        command: mkdir creds/
       - run:
           name: Retrieve GCP service account client secret from CircleCI
           command: |

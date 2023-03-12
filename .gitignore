@@ -7,7 +7,7 @@ node_modules/
 *.sw?
 
 # GCP service account credentials
-*service-account*.json
+creds
 
 # Holds secret environment variables in prod
 env_variables.yaml
