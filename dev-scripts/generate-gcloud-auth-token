@@ -1,11 +1,19 @@
 #!/bin/bash
 #
-# Generate GCP creds for production:
-# ./dev-scripts/generate-gcloud-auth-token whatgotdone
+# Generate GCP creds for What Got Done to use.
 #
-# Generate GCP creds for integration tests:
+# Usage:
+# ./dev-scripts/generate-gcloud-auth-token [GCP project name]
 #
-# ./dev-scripts/generate-gcloud-auth-token staging
+# Examples
+#
+# Generate GCP creds for production (requires access to whatgotdone GCP
+# project):
+#   ./dev-scripts/generate-gcloud-auth-token whatgotdone
+#
+# Generate GCP creds for integration tests (requires access to
+# whatgotdone-staging project):
+#   ./dev-scripts/generate-gcloud-auth-token whatgotdone-staging
 
 set -eux
 
