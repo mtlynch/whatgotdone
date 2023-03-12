@@ -2,4 +2,4 @@
 
 package gcp
 
-const ServiceAccountKeyFile = "gcp-service-account-dev.json"
+const ServiceAccountKeyFile = "creds/gcp-service-account-dev.json"

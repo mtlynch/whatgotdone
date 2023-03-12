@@ -87,7 +87,7 @@ jobs:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
             echo "${INTEGRATION_CLIENT_SECRET}" | \
-              base64 --decode > gcp-service-account-staging.json
+              base64 --decode > creds/gcp-service-account-staging.json
       - attach_workspace:
           at: ./
       - run:
@@ -115,7 +115,7 @@ jobs:
           name: Retrieve GCP service account client secret from CircleCI
           command: |
             echo "$GCP_SERVICE_ACCOUNT" | \
-              base64 --decode > gcp-service-account-prod.json
+              base64 --decode > creds/gcp-service-account-prod.json
       - run:
           name: Install flyctl
           command: curl -L https://fly.io/install.sh | sh -s "${FLYCTL_VERSION}"
