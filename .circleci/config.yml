@@ -84,9 +84,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Create folder for GCP credentials
-          command: mkdir creds/
-      - run:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
             echo "${INTEGRATION_CLIENT_SECRET}" | \
@@ -114,9 +111,6 @@ jobs:
       FLYCTL_VERSION: "latest"
     steps:
       - checkout
-      - run:
-          name: Create folder for GCP credentials
-          command: mkdir creds/
       - run:
           name: Retrieve GCP service account client secret from CircleCI
           command: |
