@@ -2,3 +2,4 @@ bin
 frontend/dist
 frontend/node_modules
 data/
+creds/README.md

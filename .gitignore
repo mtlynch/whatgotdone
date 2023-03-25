@@ -7,7 +7,8 @@ node_modules/
 *.sw?
 
 # GCP service account credentials
-creds
+creds/*
+!creds/README.md
 
 # Holds secret environment variables in prod
 env_variables.yaml
