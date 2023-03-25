@@ -45,6 +45,7 @@ RUN apk add --no-cache bash
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY --from=backend_builder /app/bin/whatgotdone /app/bin/whatgotdone
 COPY --from=litestream_downloader /litestream/litestream /app/litestream
+COPY ./creds /app/creds
 COPY ./litestream.yml /etc/litestream.yml
 COPY ./docker_entrypoint /app/docker_entrypoint
 
