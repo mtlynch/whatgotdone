@@ -62,7 +62,7 @@ func (d DB) InsertDraft(username types.Username, j types.JournalEntry) error {
 		markdown,
 		is_draft,
 		last_modified)
-	values(?,?,?,1,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, username, j.Date, j.Markdown)
+	values(?,?,?,1,strftime('%Y-%m-%d %H:%M:%SZ', 'now'))`, username, j.Date, j.Markdown)
 	return err
 }
 
