@@ -43,7 +43,6 @@ test("logs in and posts an update", async ({ page }) => {
   );
 
   await expect(page.locator(".journal-body")).toHaveText(entryText);
-  await expect(page.locator(".view-count")).toHaveText("Viewed 1 times");
   await expect(page.locator(".missing-entry")).toHaveCount(0);
 });
 
@@ -95,7 +94,6 @@ test("logs in and backdates an update from a previous week", async ({
   );
 
   await expect(page.locator(".journal-body")).toHaveText(entryText);
-  await expect(page.locator(".view-count")).toHaveText("Viewed 1 times");
   await expect(page.locator(".missing-entry")).toHaveCount(0);
 });
 

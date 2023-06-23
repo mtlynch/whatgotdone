@@ -42,8 +42,4 @@ export default {
     margin-top: 1rem;
   }
 }
-
-.view-count {
-  display: block;
-}
 </style>
