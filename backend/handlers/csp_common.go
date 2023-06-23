@@ -12,8 +12,7 @@ func contentSecurityPolicy() string {
 	directives := map[string][]string{
 		"script-src": {
 			"'self'",
-			"https://www.google-analytics.com",
-			"https://www.googletagmanager.com",
+			"https://plausible.io",
 			// URLs for /login route (UserKit)
 			"https://widget.userkit.io",
 			"https://api.userkit.io",
@@ -42,8 +41,6 @@ func contentSecurityPolicy() string {
 			"data:",
 			// For user-generated uploads
 			"https://media.whatgotdone.com",
-			// For Google Analytics
-			"https://www.google-analytics.com",
 			// For Google Sign In
 			"https://*.googleusercontent.com",
 			// For UserKit

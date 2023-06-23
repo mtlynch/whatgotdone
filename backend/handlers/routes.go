@@ -35,7 +35,6 @@ func (s *defaultServer) routes() {
 	apis.Use(s.enableCsrf)
 	apis.HandleFunc("/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/entries/{username}/project/{project}", s.projectGet()).Methods(http.MethodGet)
-	apis.HandleFunc("/pageViews", s.pageViewsGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/user/{username}", s.userGet()).Methods(http.MethodGet)
@@ -54,10 +53,10 @@ func (s *defaultServer) routes() {
 	authenticatedView.Use(enableCsp)
 	authenticatedView.Use(s.enableCsrf)
 	authenticatedView.Use(s.requireAuthenticationForView)
-	authenticatedView.HandleFunc("/entry/edit/{date}", serveIndexPage).Methods(http.MethodGet)
-	authenticatedView.HandleFunc("/preferences", serveIndexPage).Methods(http.MethodGet)
-	authenticatedView.HandleFunc("/feed", serveIndexPage).Methods(http.MethodGet)
-	authenticatedView.HandleFunc("/profile/edit", serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/entry/edit/{date}", s.serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/preferences", s.serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/feed", s.serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/profile/edit", s.serveIndexPage).Methods(http.MethodGet)
 
 	static := s.router.PathPrefix("/").Subrouter()
 	static.Use(upgradeToHttps)
@@ -87,16 +86,16 @@ func (s *defaultServer) routes() {
 	// Serve index.html, the base page HTML before Vue rendering happens, and
 	// render certain page elements server-side.
 	static.HandleFunc("/{username}/{date}", s.serveEntryOr404()).Methods(http.MethodGet)
-	static.HandleFunc("/{username}/project/{project}", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/{username}/project/{project}", s.serveIndexPage).Methods(http.MethodGet)
 
-	static.HandleFunc("/about", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/recent", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/login", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/logout", serveIndexPage).Methods(http.MethodGet)
-	static.HandleFunc("/privacy-policy", serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/about", s.serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/recent", s.serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/login", s.serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/logout", s.serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/privacy-policy", s.serveIndexPage).Methods(http.MethodGet)
 
 	static.HandleFunc("/{username}", s.serveUserProfileOr404()).Methods(http.MethodGet)
-	static.HandleFunc("/", serveIndexPage).Methods(http.MethodGet)
-	static.PathPrefix("/").HandlerFunc(serve404).Methods(http.MethodGet)
+	static.HandleFunc("/", s.serveIndexPage).Methods(http.MethodGet)
+	static.PathPrefix("/").HandlerFunc(s.serve404).Methods(http.MethodGet)
 
 }

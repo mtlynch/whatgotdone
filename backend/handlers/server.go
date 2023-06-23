@@ -9,7 +9,6 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/auth"
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/gcs"
-	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 )
 
 // Server handles HTTP requests for the What Got Done backend.
@@ -19,15 +18,7 @@ type Server interface {
 
 // New creates a new What Got Done server with all the state it needs to
 // satisfy HTTP requests.
-func New(store datastore.Datastore) Server {
-	var fetcher ga.MetricFetcher
-	f, err := ga.New()
-	if err != nil {
-		log.Printf("failed to load Google Analytics metrics fetcher: %s", err)
-	} else {
-		fetcher = f
-	}
-
+func New(store datastore.Datastore, plausibleDomain string) Server {
 	gcsClient, err := gcs.New()
 	if err != nil {
 		log.Printf("failed to load Google Cloud Storage client: %s", err)
@@ -35,12 +26,12 @@ func New(store datastore.Datastore) Server {
 		gcsClient = nil
 	}
 	s := defaultServer{
-		authenticator:          auth.New(),
-		datastore:              store,
-		gcsClient:              gcsClient,
-		router:                 mux.NewRouter(),
-		csrfMiddleware:         newCsrfMiddleware(),
-		googleAnalyticsFetcher: fetcher,
+		authenticator:   auth.New(),
+		datastore:       store,
+		gcsClient:       gcsClient,
+		router:          mux.NewRouter(),
+		csrfMiddleware:  newCsrfMiddleware(),
+		plausibleDomain: plausibleDomain,
 	}
 	s.routes()
 	return s
@@ -49,12 +40,12 @@ func New(store datastore.Datastore) Server {
 type httpMiddlewareHandler func(http.Handler) http.Handler
 
 type defaultServer struct {
-	authenticator          auth.Authenticator
-	datastore              datastore.Datastore
-	gcsClient              *gcs.Client
-	router                 *mux.Router
-	csrfMiddleware         httpMiddlewareHandler
-	googleAnalyticsFetcher ga.MetricFetcher
+	authenticator   auth.Authenticator
+	datastore       datastore.Datastore
+	gcsClient       *gcs.Client
+	router          *mux.Router
+	csrfMiddleware  httpMiddlewareHandler
+	plausibleDomain string
 }
 
 // Router returns the underlying router interface for the server.

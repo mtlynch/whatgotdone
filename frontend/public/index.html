@@ -31,6 +31,13 @@
     <meta property="og:type" content="[[.OpenGraphType]]" />
     <meta property="og:title" content="[[.Title]]" />
     <meta property="og:description" content="[[.Description]]" />
+    [[if .PlausibleDomain]]
+    <script
+      defer
+      data-domain="[[.PlausibleDomain]]"
+      src="https://plausible.io/js/script.js"
+    ></script>
+    [[end]]
   </head>
 
   <body>

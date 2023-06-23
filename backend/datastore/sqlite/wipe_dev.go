@@ -13,7 +13,6 @@ func (db DB) Clear() {
 		"journal_entries",
 		"follows",
 		"entry_reactions",
-		"pageviews",
 	}
 	for _, tbl := range tables {
 		if _, err := db.ctx.Exec("DELETE FROM " + tbl); err != nil {
