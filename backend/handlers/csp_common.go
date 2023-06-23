@@ -12,6 +12,7 @@ func contentSecurityPolicy() string {
 	directives := map[string][]string{
 		"script-src": {
 			"'self'",
+			"https://plausible.io",
 			// URLs for /login route (UserKit)
 			"https://widget.userkit.io",
 			"https://api.userkit.io",
