@@ -3,7 +3,6 @@
     <JournalHeader :entryAuthor="entry.author" :entryDate="entry.date" />
     <JournalBody :source="entry.markdown" />
     <div class="metadata">
-      <ViewCount class="view-count" />
       <div class="last-modified-date">
         Last modified {{ entry.lastModified | moment('lll') }}
       </div>
@@ -16,7 +15,6 @@ import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
 import JournalBody from '@/components/JournalBody.vue';
 import JournalHeader from '@/components/JournalHeader.vue';
-import ViewCount from '@/components/ViewCount.vue';
 
 Vue.use(VueMarkdown);
 
@@ -28,7 +26,6 @@ export default {
   components: {
     JournalBody,
     JournalHeader,
-    ViewCount,
   },
 };
 </script>

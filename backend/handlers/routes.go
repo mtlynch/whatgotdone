@@ -35,7 +35,6 @@ func (s *defaultServer) routes() {
 	apis.Use(s.enableCsrf)
 	apis.HandleFunc("/entries/{username}", s.entriesGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/entries/{username}/project/{project}", s.projectGet()).Methods(http.MethodGet)
-	apis.HandleFunc("/pageViews", s.pageViewsGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/reactions/entry/{username}/{date}", s.reactionsGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/recentEntries", s.recentEntriesGet()).Methods(http.MethodGet)
 	apis.HandleFunc("/user/{username}", s.userGet()).Methods(http.MethodGet)

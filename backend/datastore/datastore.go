@@ -6,25 +6,16 @@ package datastore
 
 import (
 	"fmt"
-	"time"
 
-	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-type (
-	EntryFilter struct {
-		ByUsers   []types.Username
-		MinLength int32
-		Offset    int32
-		Limit     int32
-	}
-
-	PageViewRecord struct {
-		PageViews   int
-		LastUpdated time.Time
-	}
-)
+type EntryFilter struct {
+	ByUsers   []types.Username
+	MinLength int32
+	Offset    int32
+	Limit     int32
+}
 
 // Datastore represents the What Got Done datastore. It's responsible for
 // storing and retrieving all persistent data (journal entries, journal drafts,
@@ -57,10 +48,6 @@ type Datastore interface {
 	AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error
 	// DeleteReaction removes a user's reaction to a published entry.
 	DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error
-	// InsertPageViews stores the set of pageview data for What Got Done routes.
-	InsertPageViews(pvc []ga.PageViewCount) error
-	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
-	GetPageViews(path string) (PageViewRecord, error)
 	// InsertFollow adds a following relationship to the datastore.
 	InsertFollow(leader, follower types.Username) error
 	// DeleteFollow removes a following relationship from the datastore.
@@ -101,16 +88,6 @@ type UserProfileNotFoundError struct {
 
 func (f UserProfileNotFoundError) Error() string {
 	return fmt.Sprintf("No user profile found for username %s", f.Username)
-}
-
-// PageViewsNotFoundError occurs when no page view data is present in the
-// datastore for the given URL path.
-type PageViewsNotFoundError struct {
-	Path string
-}
-
-func (f PageViewsNotFoundError) Error() string {
-	return fmt.Sprintf("No page view count found for path %s", f.Path)
 }
 
 // PreferencesNotFoundError occurs when no profile exists for the given
