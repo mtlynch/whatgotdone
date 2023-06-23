@@ -12,6 +12,7 @@ processes = []
   PUBLIC_GCS_BUCKET = "media.whatgotdone.com"
   PORT = "8080"
   BEHIND_PROXY = "yes"
+  PLAUSIBLE_DOMAIN = "whatgotdone.com"
 
 [build.args]
   NPM_BUILD_MODE="production"

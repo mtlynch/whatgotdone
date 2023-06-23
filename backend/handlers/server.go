@@ -18,7 +18,7 @@ type Server interface {
 
 // New creates a new What Got Done server with all the state it needs to
 // satisfy HTTP requests.
-func New(store datastore.Datastore) Server {
+func New(store datastore.Datastore, plausibleDomain string) Server {
 	gcsClient, err := gcs.New()
 	if err != nil {
 		log.Printf("failed to load Google Cloud Storage client: %s", err)
@@ -26,11 +26,12 @@ func New(store datastore.Datastore) Server {
 		gcsClient = nil
 	}
 	s := defaultServer{
-		authenticator:  auth.New(),
-		datastore:      store,
-		gcsClient:      gcsClient,
-		router:         mux.NewRouter(),
-		csrfMiddleware: newCsrfMiddleware(),
+		authenticator:   auth.New(),
+		datastore:       store,
+		gcsClient:       gcsClient,
+		router:          mux.NewRouter(),
+		csrfMiddleware:  newCsrfMiddleware(),
+		plausibleDomain: plausibleDomain,
 	}
 	s.routes()
 	return s
@@ -39,11 +40,12 @@ func New(store datastore.Datastore) Server {
 type httpMiddlewareHandler func(http.Handler) http.Handler
 
 type defaultServer struct {
-	authenticator  auth.Authenticator
-	datastore      datastore.Datastore
-	gcsClient      *gcs.Client
-	router         *mux.Router
-	csrfMiddleware httpMiddlewareHandler
+	authenticator   auth.Authenticator
+	datastore       datastore.Datastore
+	gcsClient       *gcs.Client
+	router          *mux.Router
+	csrfMiddleware  httpMiddlewareHandler
+	plausibleDomain string
 }
 
 // Router returns the underlying router interface for the server.

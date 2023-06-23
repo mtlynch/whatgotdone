@@ -22,7 +22,9 @@ func main() {
 	ensureDirExists(filepath.Dir(*dbPath))
 	datastore := sqlite.New(*dbPath)
 
-	h := gorilla.LoggingHandler(os.Stdout, handlers.New(datastore).Router())
+	plausibleDomain := os.Getenv("PLAUSIBLE_DOMAIN")
+
+	h := gorilla.LoggingHandler(os.Stdout, handlers.New(datastore, plausibleDomain).Router())
 	if os.Getenv("BEHIND_PROXY") != "" {
 		h = gorilla.ProxyIPHeadersHandler(h)
 	}
