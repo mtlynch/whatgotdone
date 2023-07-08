@@ -43,7 +43,7 @@ test("logs in and posts an update", async ({ page }) => {
   );
 
   await expect(page.locator(".journal-body")).toHaveText(entryText);
-  await expect(page.locator(".missing-entry")).toHaveCount(0);
+  await expect(page.locator(".missing-entry")).not.toBeVisible();
 });
 
 test("logs in and backdates an update from a previous week", async ({
@@ -94,7 +94,7 @@ test("logs in and backdates an update from a previous week", async ({
   );
 
   await expect(page.locator(".journal-body")).toHaveText(entryText);
-  await expect(page.locator(".missing-entry")).toHaveCount(0);
+  await expect(page.locator(".missing-entry")).not.toBeVisible();
 });
 
 test("posts an update and then unpublishes it", async ({ page }) => {
@@ -122,7 +122,7 @@ test("posts an update and then unpublishes it", async ({ page }) => {
 
   await expect(page).toHaveURL("/staging_jimmy/2019-06-28");
 
-  await expect(page.locator(".missing-entry")).toHaveCount(0);
+  await expect(page.locator(".missing-entry")).not.toBeVisible();
 
   await page.getByTestId("unpublish-btn").click();
 

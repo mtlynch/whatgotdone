@@ -63,9 +63,9 @@ test("don't overwrite draft until we successfully sync the latest draft from the
   await mockLoginAsUser(page, "staging_jimmy");
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
-  await expect(page.locator(".journal-markdown")).toHaveCount(0);
-  await expect(page.locator(".save-draft")).toHaveCount(0);
-  await expect(page.locator(".entry-form")).toHaveCount(0);
+  await expect(page.locator(".journal-markdown")).not.toBeVisible();
+  await expect(page.locator(".save-draft")).not.toBeVisible();
+  await expect(page.locator(".entry-form")).not.toBeVisible();
 
   expect(apiDraftGetCalls).toBeGreaterThan(0);
   expect(apiDraftPostCalls).toEqual(0);

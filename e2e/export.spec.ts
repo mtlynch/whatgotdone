@@ -17,5 +17,5 @@ test("can't see an export data button for other users", async ({ page }) => {
 
   await page.goto("/leader_lenny");
 
-  await expect(page.getByTestId("export-data-btn")).toHaveCount(0);
+  await expect(page.getByTestId("export-data-btn")).not.toBeVisible();
 });

@@ -20,7 +20,7 @@ test("follows a user", async ({ page }) => {
   await expect(page.locator(".alert")).toContainText(
     "You're not following anyone yet."
   );
-  await expect(page.locator(".journal")).toHaveCount(0);
+  await expect(page.locator(".journal")).not.toBeVisible();
 
   // Follow leader_lenny
   let apiFollowingGet = page.waitForRequest(
@@ -32,8 +32,8 @@ test("follows a user", async ({ page }) => {
   await page.goto("/leader_lenny");
   await apiFollowingGet;
   await page.getByTestId("follow-btn").click();
-  await expect(page.getByTestId("unfollow-btn")).toHaveCount(1);
-  await expect(page.getByTestId("follow-btn")).toHaveCount(0);
+  await expect(page.getByTestId("unfollow-btn")).toBeVisible();
+  await expect(page.getByTestId("follow-btn")).not.toBeVisible();
 
   // Verify personalized feed is non-empty
   await page.getByTestId("nav-feed-btn").click();
@@ -51,5 +51,5 @@ test("follows a user", async ({ page }) => {
   await expect(page.locator(".alert")).toContainText(
     "You're not following anyone yet."
   );
-  await expect(page.locator(".journal")).toHaveCount(0);
+  await expect(page.locator(".journal")).not.toBeVisible();
 });
