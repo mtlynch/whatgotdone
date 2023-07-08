@@ -16,7 +16,7 @@
           :html="false"
           :anchorAttributes="{rel: 'ugc'}"
           :source="aboutMarkdown"
-          data-test-id="user-bio"
+          data-testid="user-bio"
         ></vue-markdown>
 
         <p v-if="profileLoaded && !aboutMarkdown" class="font-italic">
@@ -26,23 +26,21 @@
         <template v-if="twitterHandle || emailAddress">
           <ul>
             <li v-if="emailAddress">
-              <a
-                :href="'mailto:' + emailAddress"
-                data-test-id="email-address"
-                >{{ emailAddress }}</a
-              >
+              <a :href="'mailto:' + emailAddress" data-testid="email-address">{{
+                emailAddress
+              }}</a>
               (Email)
             </li>
             <li v-if="twitterHandle">
               <a
                 :href="'https://twitter.com/' + twitterHandle"
-                data-test-id="twitter-handle"
+                data-testid="twitter-handle"
                 >@{{ twitterHandle }}</a
               >
               (Twitter)
             </li>
             <li v-if="mastodonAddress">
-              <a data-test-id="mastodon-address" :href="mastodonUrl">{{
+              <a data-testid="mastodon-address" :href="mastodonUrl">{{
                 mastodonAddress
               }}</a>
               (Mastodon)
@@ -54,21 +52,21 @@
 
     <div class="d-flex justify-content-end">
       <b-button
-        data-test-id="edit-btn"
+        data-testid="edit-btn"
         v-if="canEdit"
         to="/profile/edit"
         variant="primary"
         >Edit</b-button
       >
       <b-button
-        data-test-id="follow-btn"
+        data-testid="follow-btn"
         v-if="canFollow"
         variant="primary"
         v-on:click="onFollow"
         >Follow</b-button
       >
       <b-button
-        data-test-id="unfollow-btn"
+        data-testid="unfollow-btn"
         v-if="canUnfollow"
         variant="primary"
         v-on:click="onUnfollow"
@@ -97,7 +95,7 @@
       <b-button
         variant="primary"
         v-on:click="onExport"
-        data-test-id="export-data-btn"
+        data-testid="export-data-btn"
         >Download</b-button
       >
       <a class="d-none" ref="file-download-helper"
