@@ -9,7 +9,7 @@ test("can export the logged-in user's data", async ({ page }) => {
 
   await expect(page).toHaveURL("/staging_jimmy");
 
-  await page.getByTestId("export-data-btn").click();
+  await page.getByRole("button", { name: "Download" }).click();
 });
 
 test("can't see an export data button for other users", async ({ page }) => {
@@ -17,5 +17,7 @@ test("can't see an export data button for other users", async ({ page }) => {
 
   await page.goto("/leader_lenny");
 
-  await expect(page.getByTestId("export-data-btn")).not.toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Download" })
+  ).not.toBeVisible();
 });
