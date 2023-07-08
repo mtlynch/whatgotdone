@@ -51,11 +51,7 @@
     </div>
 
     <div class="d-flex justify-content-end">
-      <b-button
-        data-testid="edit-btn"
-        v-if="canEdit"
-        to="/profile/edit"
-        variant="primary"
+      <b-button v-if="canEdit" to="/profile/edit" variant="primary"
         >Edit</b-button
       >
       <b-button

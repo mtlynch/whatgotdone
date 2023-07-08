@@ -33,7 +33,7 @@ test("logs in and updates profile", async ({ page }) => {
       request.method() === "GET"
   );
 
-  await page.getByTestId("edit-btn").click();
+  await page.getByRole("button", { name: "Edit" }).click();
   await expect(page).toHaveURL("/profile/edit");
 
   // Wait for page to pull down existing profile.
@@ -75,7 +75,7 @@ test("logs in and sets profile photo", async ({ page }) => {
       request.method() === "GET"
   );
 
-  await page.getByTestId("edit-btn").click();
+  await page.getByRole("button", { name: "Edit" }).click();
   await expect(page).toHaveURL("/profile/edit");
 
   // Wait for page to pull down existing profile.
@@ -96,7 +96,7 @@ test("logs in and sets profile photo", async ({ page }) => {
   await expect(page.locator(".profile .b-avatar-img")).toBeVisible();
 
   // Delete the avatar image.
-  await page.getByTestId("edit-btn").click();
+  await page.getByRole("button", { name: "Edit" }).click();
   await expect(page).toHaveURL("/profile/edit");
 
   apiUserAvatarResponse = page.waitForResponse("**/api/user/avatar");
