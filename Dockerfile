@@ -1,4 +1,4 @@
-FROM node:12.18.4-alpine AS frontend_builder
+FROM node:18.14.1-alpine AS frontend_builder
 
 COPY ./frontend /app/frontend
 WORKDIR /app/frontend
