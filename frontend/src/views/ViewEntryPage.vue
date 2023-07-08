@@ -36,9 +36,7 @@
     </p>
     <div class="author-controls mb-4" v-if="canEdit">
       <div class="ml-auto">
-        <b-button variant="danger" @click="onDelete" data-testid="unpublish-btn"
-          >Unpublish</b-button
-        >
+        <b-button variant="danger" @click="onDelete">Unpublish</b-button>
         <b-button
           :to="'/entry/edit/' + this.entryDate"
           variant="primary"
