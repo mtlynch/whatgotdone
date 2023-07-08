@@ -92,12 +92,7 @@
         drafts, entries, and preferences.
       </p>
 
-      <b-button
-        variant="primary"
-        v-on:click="onExport"
-        data-testid="export-data-btn"
-        >Download</b-button
-      >
+      <b-button variant="primary" v-on:click="onExport">Download</b-button>
       <a class="d-none" ref="file-download-helper"
         ><!-- Dummy element to allow file downloads --></a
       >
