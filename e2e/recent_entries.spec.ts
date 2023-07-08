@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 
 test("shows recent posts", async ({ page }) => {
   await page.goto("/");
-  await page.locator("data-test-id=recent-link").click();
+  await page.getByTestId("recent-link").click();
   await expect(page).toHaveURL("/recent");
 
   await expect(page.locator(".journal .journal-header").first()).toContainText(

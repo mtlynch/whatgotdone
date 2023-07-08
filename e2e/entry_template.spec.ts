@@ -30,8 +30,8 @@ test("uses the entry template for new drafts", async ({ page }) => {
   expect(await page.locator(".editor-content .ProseMirror")).toContainText("");
 
   // Set an entry template on the preferences page.
-  await page.locator("data-test-id=account-dropdown").click();
-  await page.locator("data-test-id=preferences-link").click();
+  await page.getByTestId("account-dropdown").click();
+  await page.getByTestId("preferences-link").click();
   await expect(page).toHaveURL("/preferences");
 
   await page

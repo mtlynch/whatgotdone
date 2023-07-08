@@ -124,7 +124,7 @@ test("posts an update and then unpublishes it", async ({ page }) => {
 
   await expect(page.locator(".missing-entry")).toHaveCount(0);
 
-  await page.locator("data-test-id=unpublish-btn").click();
+  await page.getByTestId("unpublish-btn").click();
 
   // Unpublishing takes the user back to the edit entry page.
   await expect(page).toHaveURL("/entry/edit/2019-06-28");

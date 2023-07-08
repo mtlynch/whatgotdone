@@ -13,7 +13,7 @@ test('clicking "Post Update" before authenticating prompts login', async ({
 }) => {
   await page.goto("/");
 
-  await expect(page.locator("data-test-id=account-dropdown")).toHaveCount(0);
+  await expect(page.getByTestId("account-dropdown")).toHaveCount(0);
 
   await page.locator("nav .post-update").click();
 
@@ -39,12 +39,12 @@ test("logs in and signs out", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
-  await page.locator("data-test-id=account-dropdown").click();
-  await page.locator("data-test-id=sign-out-link").click();
+  await page.getByTestId("account-dropdown").click();
+  await page.getByTestId("sign-out-link").click();
 
   await expect(page).toHaveURL("/");
 
-  await expect(page.locator("data-test-id=account-dropdown")).toHaveCount(0);
+  await expect(page.getByTestId("account-dropdown")).toHaveCount(0);
 
   // Try signing in again.
   await loginAsUser(page, "staging_jimmy");
@@ -53,8 +53,8 @@ test("logs in and signs out", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g, { timeout: 0 * 1000 });
 
-  await page.locator("data-test-id=account-dropdown").click();
-  await page.locator("data-test-id=sign-out-link").click();
+  await page.getByTestId("account-dropdown").click();
+  await page.getByTestId("sign-out-link").click();
 
   await expect(page).toHaveURL("/");
 });
@@ -80,8 +80,8 @@ test("bare route should redirect authenticated user to their edit entry page", a
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   // Log out
-  await page.locator("data-test-id=account-dropdown").click();
-  await page.locator("data-test-id=sign-out-link").click();
+  await page.getByTestId("account-dropdown").click();
+  await page.getByTestId("sign-out-link").click();
   await expect(page).toHaveURL("/");
 
   // Clicking the navbar brand should point to homepage.
@@ -97,8 +97,8 @@ test("visiting authenticated page after UserKit token expires should redirect to
   await loginAsUser(page, "joe123");
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
-  await page.locator("data-test-id=account-dropdown").click();
-  await page.locator("data-test-id=preferences-link").click();
+  await page.getByTestId("account-dropdown").click();
+  await page.getByTestId("preferences-link").click();
   await expect(page).toHaveURL("/preferences");
 
   // Simulate a UserKit cookie going stale.
