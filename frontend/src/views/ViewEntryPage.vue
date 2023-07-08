@@ -35,14 +35,6 @@
       Failed to connect to backend: {{ backendError }}
     </p>
     <div class="author-controls mb-4" v-if="canEdit">
-      <b-button
-        :href="twitterShareUrl"
-        title="Share on Twitter"
-        class="twitter"
-        variant="info"
-        ><font-awesome-icon :icon="['fab', 'twitter']" class="mr-3" /> Share on
-        Twitter</b-button
-      >
       <div class="ml-auto">
         <b-button
           variant="danger"
@@ -151,13 +143,6 @@ export default {
         this.loggedInUsername &&
         this.loggedInUsername === this.entryAuthor
       );
-    },
-    twitterShareUrl: function () {
-      const permalink =
-        location.protocol + '//' + location.host + this.$route.fullPath;
-      const text =
-        encodeURIComponent("Here's what I got done this week ") + permalink;
-      return `https://twitter.com/intent/tweet?text=${text}`;
     },
     entryAuthor: function () {
       return this.$route.params.username;
