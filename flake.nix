@@ -23,7 +23,7 @@
     in
     {
       devShells.default = pkgs.mkShell {
-        packages = with pkgs; [ node2nix nodejs-18_x go_1_19 ];
+        packages = with pkgs; [ node2nix nodejs go_1_19 ];
 
         shellHook = ''
           echo "node `${pkgs.nodejs}/bin/node --version`"
