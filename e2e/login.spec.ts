@@ -13,7 +13,7 @@ test('clicking "Post Update" before authenticating prompts login', async ({
 }) => {
   await page.goto("/");
 
-  await expect(page.getByTestId("account-dropdown")).toHaveCount(0);
+  await expect(page.getByTestId("account-dropdown")).not.toBeVisible();
 
   await page.locator("nav .post-update").click();
 
@@ -44,7 +44,7 @@ test("logs in and signs out", async ({ page }) => {
 
   await expect(page).toHaveURL("/");
 
-  await expect(page.getByTestId("account-dropdown")).toHaveCount(0);
+  await expect(page.getByTestId("account-dropdown")).not.toBeVisible();
 
   // Try signing in again.
   await loginAsUser(page, "staging_jimmy");

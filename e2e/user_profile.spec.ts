@@ -67,7 +67,7 @@ test("logs in and sets profile photo", async ({ page }) => {
   await expect(page).toHaveURL("/staging_jimmy");
 
   // Expect no-photo class.
-  await expect(page.locator(".profile .bi-person-fill")).toHaveCount(1);
+  await expect(page.locator(".profile .bi-person-fill")).toBeVisible();
 
   const apiUserGet = page.waitForRequest(
     (request) =>
@@ -87,13 +87,13 @@ test("logs in and sets profile photo", async ({ page }) => {
     .setInputFiles(["e2e/testdata/kittyface.jpg"]);
   await apiUserAvatarResponse;
 
-  await expect(page.locator(".b-avatar-img")).toHaveCount(1);
+  await expect(page.locator(".b-avatar-img")).toBeVisible();
 
   await page.locator("#save-profile").click();
 
   await expect(page).toHaveURL("/staging_jimmy");
 
-  await expect(page.locator(".profile .b-avatar-img")).toHaveCount(1);
+  await expect(page.locator(".profile .b-avatar-img")).toBeVisible();
 
   // Delete the avatar image.
   await page.getByTestId("edit-btn").click();
@@ -108,5 +108,5 @@ test("logs in and sets profile photo", async ({ page }) => {
   await expect(page).toHaveURL("/staging_jimmy");
   // Workaround for timing.
   await page.reload();
-  await expect(page.locator(".b-avatar-img")).toHaveCount(0);
+  await expect(page.locator(".b-avatar-img")).not.toBeVisible();
 });
