@@ -6,20 +6,17 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , flake-utils
-    }:
+  outputs = { self, nixpkgs, flake-utils}:
 
     flake-utils.lib.eachDefaultSystem (system:
     let
+      stdenv = pkgs.pkgsMusl.stdenv;
       overlays = [
         (self: super: rec {
           nodejs = super.nodejs-18_x;
         })
       ];
-      pkgs = import nixpkgs { inherit overlays system; };
+      pkgs = (import nixpkgs { inherit overlays system; }).pkgsMusl;
     in
     {
       devShells.default = pkgs.mkShell {
