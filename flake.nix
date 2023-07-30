@@ -14,19 +14,21 @@
 
     flake-utils.lib.eachDefaultSystem (system:
     let
-      overlays = [
-        (self: super: rec {
-          nodejs = super.nodejs-18_x;
-        })
-      ];
-      pkgs = import nixpkgs { inherit overlays system; };
+      pkgs = import nixpkgs { inherit system; };
     in
     {
       devShells.default = pkgs.mkShell {
-        packages = with pkgs; [ node2nix nodejs go_1_19 ];
+        packages = with pkgs; [
+          node2nix
+          nodejs-18_x
+          gopls
+          gotools
+          go_1_19
+        ];
 
         shellHook = ''
-          echo "node `${pkgs.nodejs}/bin/node --version`"
+          echo "node " "$(node --version)"
+          go version
         '';
       };
     });
