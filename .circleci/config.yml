@@ -14,14 +14,16 @@ jobs:
           command: ./dev-scripts/check-trailing-newline
   test-backend:
     docker:
-      - image: cimg/go:1.19.4
+      - image: nixos/nix:2.15.0
     steps:
       - checkout
       - attach_workspace:
           at: ./
       - run:
           name: Test go packages
-          command: dev-scripts/run-go-tests --full
+          command: |
+            nix develop
+            dev-scripts/run-go-tests --full
       - store_artifacts:
           path: backend/.coverage.html
       - run:
@@ -29,34 +31,35 @@ jobs:
           command: dev-scripts/check-go-formatting
   build_staging_frontend:
     docker:
-      - image: cimg/node:18.14.1
+      - image: nixos/nix:2.15.0
     environment:
       NODE_ENV: production
     steps:
       - checkout
       - run:
           name: Compile frontend
-          command: ./dev-scripts/build-frontend staging
+          command: |
+            nix develop
+            ./dev-scripts/build-frontend staging
       - persist_to_workspace:
           root: ./
           paths:
             - ./frontend/dist
   build_staging_backend:
     docker:
-      - image: golang:1.19.4-alpine3.17
+      - image: nixos/nix:2.15.0
     steps:
       - checkout
       - attach_workspace:
           at: ./
-      - run:
-          name: Add build dependencies
-          command: apk add --no-cache bash build-base
       - restore_cache:
           keys:
             - go-mod-v3-{{ checksum "backend/go.sum" }}
       - run:
           name: Compile backend (staging)
-          command: dev-scripts/build-backend staging
+          command: |
+            nix develop
+            dev-scripts/build-backend staging
       - save_cache:
           key: go-mod-v3-{{ checksum "backend/go.sum" }}
           paths:
