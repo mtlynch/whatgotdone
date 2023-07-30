@@ -23,10 +23,17 @@
     in
     {
       devShells.default = pkgs.mkShell.override { stdenv = pkgs.pkgsStatic.stdenv; } {
-        packages = with pkgs; [ node2nix nodejs go_1_19 ];
+        packages = with pkgs; [
+          go_1_19
+          gopls
+          gotools
+          node2nix
+          nodejs-18_x
+        ];
 
         shellHook = ''
-          echo "node `${pkgs.nodejs}/bin/node --version`"
+          echo "node" "$(node --version)"
+          go version
         '';
       };
     });
