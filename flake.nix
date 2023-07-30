@@ -22,7 +22,7 @@
       pkgs = import nixpkgs { inherit overlays system; };
     in
     {
-      devShells.default = pkgs.mkShell {
+      devShells.default = pkgs.mkShell.override { stdenv = pkgs.pkgsStatic.stdenv; } {
         packages = with pkgs; [ node2nix nodejs go_1_19 ];
 
         shellHook = ''
