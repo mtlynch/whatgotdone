@@ -16,6 +16,9 @@ jobs:
     docker:
       - image: nixos/nix:2.15.0
     steps:
+      - run:
+          name: Enable Nix flakes
+          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
       - checkout
       - attach_workspace:
           at: ./
@@ -35,6 +38,9 @@ jobs:
     environment:
       NODE_ENV: production
     steps:
+      - run:
+          name: Enable Nix flakes
+          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
       - checkout
       - run:
           name: Compile frontend
@@ -49,6 +55,9 @@ jobs:
     docker:
       - image: nixos/nix:2.15.0
     steps:
+      - run:
+          name: Enable Nix flakes
+          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
       - checkout
       - attach_workspace:
           at: ./
