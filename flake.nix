@@ -14,7 +14,7 @@
       pkgs_for_sqlfluff = import (builtins.fetchTarball {
         # 1.2.1 release
         url = "https://github.com/NixOS/nixpkgs/archive/7cf5ccf1cdb2ba5f08f0ac29fc3d04b0b59a07e4.tar.gz";
-        sha256 = "0p7m72ipxyya5nn2p8q6h8njk0qk0jhmf6sbfdiv4sh05mbndj4q";
+        sha256 = "0wfaqjpi7bip86r2piqigqna1fx3m1d9riak4l3rm54lyjxprlpi";
       }) {inherit system; };
 
       pkgs_for_go = import (builtins.fetchTarball {
