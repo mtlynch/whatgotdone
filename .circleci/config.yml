@@ -59,14 +59,14 @@ jobs:
           at: ./
       - restore_cache:
           keys:
-            - go-mod-v3-{{ checksum "backend/go.sum" }}
+            - go-mod-v1-{{ checksum "flake.lock" }}
       - run:
           name: Compile backend (staging)
           command: nix develop --command dev-scripts/build-backend staging
       - save_cache:
-          key: go-mod-v3-{{ checksum "backend/go.sum" }}
+          key: go-mod-v1-{{ checksum "flake.lock" }}
           paths:
-            - /go/pkg/mod
+            - /nix/store
       - persist_to_workspace:
           root: ./
           paths:
