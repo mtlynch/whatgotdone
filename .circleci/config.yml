@@ -24,9 +24,7 @@ jobs:
           at: ./
       - run:
           name: Test go packages
-          command: |
-            nix develop
-            dev-scripts/run-go-tests --full
+          command: nix develop --command dev-scripts/run-go-tests --full
       - store_artifacts:
           path: backend/.coverage.html
       - run:
@@ -44,9 +42,7 @@ jobs:
       - checkout
       - run:
           name: Compile frontend
-          command: |
-            nix develop
-            ./dev-scripts/build-frontend staging
+          command: nix develop --command ./dev-scripts/build-frontend staging
       - persist_to_workspace:
           root: ./
           paths:
@@ -66,9 +62,7 @@ jobs:
             - go-mod-v3-{{ checksum "backend/go.sum" }}
       - run:
           name: Compile backend (staging)
-          command: |
-            nix develop
-            dev-scripts/build-backend staging
+          command: nix develop --command dev-scripts/build-backend staging
       - save_cache:
           key: go-mod-v3-{{ checksum "backend/go.sum" }}
           paths:
@@ -87,12 +81,7 @@ jobs:
       - checkout
       - run:
           name: Lint SQL files
-          command: |
-            nix develop
-            sqlfluff lint \
-              --disable_progress_bar \
-              --dialect sqlite \
-              backend/datastore/sqlite/migrations
+          command: nix develop --command ./dev-scripts/lint-sql
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
