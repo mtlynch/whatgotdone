@@ -32,8 +32,10 @@
     {
       devShells.default = pkgs_for_go.mkShell.override { stdenv = pkgs_for_go.pkgsStatic.stdenv; } {
         packages = with pkgs; [
+          glibc.static
           gopls
           gotools
+          musl
           pkgs_for_go.go_1_19
           pkgs_for_nodejs.nodejs-18_x
           pkgs_for_sqlfluff.sqlfluff
