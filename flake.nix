@@ -41,6 +41,7 @@
 
         shellHook = ''
           echo "node" "$(node --version)"
+          echo "npm" "$(npm --version)"
           go version
           sqlfluff --version
         '';

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Exit on first failing command.
 set -e
@@ -27,4 +27,4 @@ fi
 
 cd frontend
 npm install "${NPM_EXTRA_FLAGS}"
-npm run build -- --mode "${MODE}"
+./node_modules/.bin/vue-cli-service build --mode "${MODE}"

@@ -79,8 +79,7 @@ jobs:
             - ./bin/whatgotdone
   lint_sql:
     docker:
-      - image: sqlfluff/sqlfluff:1.2.1
-        user: root
+      - image: nixos/nix:2.15.0
     steps:
       - checkout
       - run:
