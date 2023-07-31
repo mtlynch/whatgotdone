@@ -6,20 +6,15 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , flake-utils
-    }:
-
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
     let
-      overlays = [
-        (self: super: rec {
-          nodejs = super.nodejs-18_x;
-        })
-      ];
-      pkgs = import nixpkgs { inherit overlays system; };
+      pkgs = import nixpkgs { inherit system; };
+
+      pkgs_for_sqlfluff = import (builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/6adf48f53d819a7b6e15672817fa1e78e5f4e84f.tar.gz";
+        sha256 = "0p7m72ipxyya5nn2p8q6h8njk0qk0jhmf6sbfdiv4sh05mbndj4q";
+      }) {};
     in
     {
       devShells.default = pkgs.mkShell.override { stdenv = pkgs.pkgsStatic.stdenv; } {
@@ -28,7 +23,8 @@
           gopls
           gotools
           node2nix
-          nodejs-18_x
+          nodejs
+          pkgs_for_sqlfluff.sqlfluff
         ];
 
         shellHook = ''
