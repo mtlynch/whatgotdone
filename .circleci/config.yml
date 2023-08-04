@@ -19,7 +19,12 @@ jobs:
       - run:
           name: Enable Nix flakes
           command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
+      - checkout
+      - run:
+          name: Initialize Nix
+          command: nix develop --command echo 'Initialized Nix environment'
       - persist_to_workspace:
+          root: /
           paths:
             - /etc/nix/nix.conf
             - /nix/store
