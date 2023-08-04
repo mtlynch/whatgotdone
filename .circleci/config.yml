@@ -28,9 +28,6 @@ jobs:
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
-      - run:
-          name: Enable Nix flakes
-          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
       - checkout
       - run:
           name: Compile frontend
@@ -41,16 +38,9 @@ jobs:
           root: ./
           paths:
             - ./frontend/dist
-      - restore_cache:
-          keys:
-            - go-mod-v1-{{ checksum "flake.lock" }}
       - run:
           name: Compile backend (staging)
           command: nix develop --command dev-scripts/build-backend staging
-      - save_cache:
-          key: go-mod-v1-{{ checksum "flake.lock" }}
-          paths:
-            - /nix/store
       - persist_to_workspace:
           root: ./
           paths:
