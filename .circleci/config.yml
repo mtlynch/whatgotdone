@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Check that all text files end in a trailing newline
           command: ./dev-scripts/check-trailing-newline
-  init_nix_environment:
+  do_everything:
     docker:
       - image: nixos/nix:2.15.0
     steps:
@@ -20,21 +20,6 @@ jobs:
           name: Enable Nix flakes
           command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
       - checkout
-      - run:
-          name: Initialize Nix
-          command: nix develop --command echo 'Initialized Nix environment'
-      - persist_to_workspace:
-          root: /
-          paths:
-            - etc/nix/nix.conf
-            - nix/store
-  test-backend:
-    docker:
-      - image: nixos/nix:2.15.0
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /
       - run:
           name: Test go packages
           command: nix develop --command dev-scripts/run-go-tests --full
@@ -43,12 +28,6 @@ jobs:
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
-  build_staging_frontend:
-    docker:
-      - image: nixos/nix:2.15.0
-    environment:
-      NODE_ENV: production
-    steps:
       - run:
           name: Enable Nix flakes
           command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
@@ -56,20 +35,12 @@ jobs:
       - run:
           name: Compile frontend
           command: nix develop --command ./dev-scripts/build-frontend staging
+          environment:
+            NODE_ENV: production
       - persist_to_workspace:
           root: ./
           paths:
             - ./frontend/dist
-  build_staging_backend:
-    docker:
-      - image: nixos/nix:2.15.0
-    steps:
-      - run:
-          name: Enable Nix flakes
-          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
-      - checkout
-      - attach_workspace:
-          at: ./
       - restore_cache:
           keys:
             - go-mod-v1-{{ checksum "flake.lock" }}
@@ -84,14 +55,6 @@ jobs:
           root: ./
           paths:
             - ./bin/whatgotdone
-  lint_sql:
-    docker:
-      - image: nixos/nix:2.15.0
-    steps:
-      - run:
-          name: Enable Nix flakes
-          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
-      - checkout
       - run:
           name: Lint SQL files
           command: nix develop --command ./dev-scripts/lint-sql
@@ -148,23 +111,15 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      - init_nix_environment
       - check_whitespace
-      - build_staging_frontend
-      - test-backend:
-          requires:
-            - init_nix_environment
-      - build_staging_backend
-      - lint_sql
+      - do_everything
       - e2e:
           requires:
-            - build_staging_backend
-            - build_staging_frontend
+            - do_everything
       - deploy:
           requires:
             - check_whitespace
-            - build_staging_frontend
-            - test-backend
+            - do_everything
             - e2e
           filters:
             branches:
