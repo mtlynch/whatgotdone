@@ -12,16 +12,24 @@ jobs:
       - run:
           name: Check that all text files end in a trailing newline
           command: ./dev-scripts/check-trailing-newline
-  test-backend:
+  init_nix_environment:
     docker:
       - image: nixos/nix:2.15.0
     steps:
       - run:
           name: Enable Nix flakes
           command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
+      - persist_to_workspace:
+          paths:
+            - /etc/nix/nix.conf
+            - /nix/store
+  test-backend:
+    docker:
+      - image: nixos/nix:2.15.0
+    steps:
       - checkout
       - attach_workspace:
-          at: ./
+          at: /
       - run:
           name: Test go packages
           command: nix develop --command dev-scripts/run-go-tests --full
@@ -135,9 +143,12 @@ workflows:
   version: 2
   test-deploy:
     jobs:
+      - init_nix_environment
       - check_whitespace
       - build_staging_frontend
-      - test-backend
+      - test-backend:
+          requires:
+            - init_nix_environment
       - build_staging_backend
       - lint_sql
       - e2e:
