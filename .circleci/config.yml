@@ -26,8 +26,8 @@ jobs:
       - persist_to_workspace:
           root: /
           paths:
-            - /etc/nix/nix.conf
-            - /nix/store
+            - etc/nix/nix.conf
+            - nix/store
   test-backend:
     docker:
       - image: nixos/nix:2.15.0
