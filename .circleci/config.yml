@@ -28,7 +28,6 @@ jobs:
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
-      - checkout
       - run:
           name: Compile frontend
           command: nix develop --command ./dev-scripts/build-frontend staging
