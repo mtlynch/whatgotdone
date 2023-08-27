@@ -73,11 +73,7 @@ jobs:
       - checkout
       - run:
           name: Lint SQL files
-          command: |
-            sqlfluff lint \
-              --disable_progress_bar \
-              --dialect sqlite \
-              backend/datastore/sqlite/migrations
+          command: ./dev-scripts/lint-sql
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
