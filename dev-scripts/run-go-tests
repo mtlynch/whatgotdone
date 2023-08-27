@@ -10,12 +10,14 @@ full_test=""
 go_test_flags=()
 readonly COVERAGE_FILE_RAW=".coverage.out"
 readonly COVERAGE_FILE_HTML=".coverage.html"
+go_test_flags+=('-ldflags=-linkmode=external')
 if [[ "$1" = "--full" ]]; then
   full_test="1"
   go_test_flags+=("-v")
   go_test_flags+=("-race")
   go_test_flags+=("--coverprofile=${COVERAGE_FILE_RAW}")
 fi
+readonly go_test_flags
 
 # Exit on unset variable.
 set -u
@@ -37,6 +39,8 @@ STATICCHECK_PATH="$(go env GOPATH)/bin/staticcheck"
 readonly STATICCHECK_PATH
 readonly STATICCHECK_VERSION="v0.3.3"
 if [[ ! -f "${STATICCHECK_PATH}" ]]; then
-    go install -ldflags=-linkmode=external "honnef.co/go/tools/cmd/staticcheck@${STATICCHECK_VERSION}"
+    go install \
+      -ldflags=-linkmode=external \
+      "honnef.co/go/tools/cmd/staticcheck@${STATICCHECK_VERSION}"
 fi
 $STATICCHECK_PATH ./...
