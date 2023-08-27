@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Exit script on first failure.
+set -e
+
+# Echo commands before executing them, by default to stderr.
+set -x
+
+# Exit on unset variable.
+set -u
+
+# Change directory to repository root.
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
+
+sqlfluff lint \
+  --disable_progress_bar \
+  --dialect sqlite \
+  backend/datastore/sqlite/migrations
