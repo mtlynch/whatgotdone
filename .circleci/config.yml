@@ -12,41 +12,103 @@ jobs:
       - run:
           name: Check that all text files end in a trailing newline
           command: ./dev-scripts/check-trailing-newline
-  do_everything:
+  test-backend:
     docker:
       - image: nixos/nix:2.15.0
+    environment:
+      CACHIX_NAME: mtlynch-whatgotdone
     steps:
+      - run:
+          name: Set up Cachix
+          command: |
+            nix-env -iA nixpkgs.cachix nixpkgs.bash
+            cachix use "${CACHIX_NAME}"
       - run:
           name: Enable Nix flakes
           command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
       - checkout
+      - attach_workspace:
+          at: ./
       - run:
           name: Test go packages
-          command: nix develop --command dev-scripts/run-go-tests --full
+          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command dev-scripts/run-go-tests --full
       - store_artifacts:
           path: backend/.coverage.html
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
+  build_staging_frontend:
+    docker:
+      - image: nixos/nix:2.15.0
+    environment:
+      NODE_ENV: production
+      CACHIX_NAME: mtlynch-whatgotdone
+    steps:
+      - run:
+          name: Set up Cachix
+          command: |
+            nix-env -iA nixpkgs.cachix nixpkgs.bash
+            cachix use "${CACHIX_NAME}"
+      - run:
+          name: Enable Nix flakes
+          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
+      - checkout
       - run:
           name: Compile frontend
-          command: nix develop --command ./dev-scripts/build-frontend staging
-          environment:
-            NODE_ENV: production
+          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command ./dev-scripts/build-frontend staging
       - persist_to_workspace:
           root: ./
           paths:
             - ./frontend/dist
+  build_staging_backend:
+    docker:
+      - image: nixos/nix:2.15.0
+    environment:
+      CACHIX_NAME: mtlynch-whatgotdone
+    steps:
+      - run:
+          name: Set up Cachix
+          command: |
+            nix-env -iA nixpkgs.cachix nixpkgs.bash
+            cachix use "${CACHIX_NAME}"
+      - run:
+          name: Enable Nix flakes
+          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
+      - checkout
+      - attach_workspace:
+          at: ./
+      - restore_cache:
+          keys:
+            - go-mod-v3-{{ checksum "backend/go.sum" }}
       - run:
           name: Compile backend (staging)
-          command: nix develop --command dev-scripts/build-backend staging
+          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command dev-scripts/build-backend staging
+      - save_cache:
+          key: go-mod-v3-{{ checksum "backend/go.sum" }}
+          paths:
+            - /go/pkg/mod
       - persist_to_workspace:
           root: ./
           paths:
             - ./bin/whatgotdone
+  lint_sql:
+    docker:
+      - image: nixos/nix:2.15.0
+    environment:
+      CACHIX_NAME: mtlynch-whatgotdone
+    steps:
+      - run:
+          name: Set up Cachix
+          command: |
+            nix-env -iA nixpkgs.cachix nixpkgs.bash
+            cachix use "${CACHIX_NAME}"
+      - run:
+          name: Enable Nix flakes
+          command: echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
+      - checkout
       - run:
           name: Lint SQL files
-          command: nix develop --command ./dev-scripts/lint-sql
+          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command ./dev-scripts/lint-sql
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
@@ -101,14 +163,19 @@ workflows:
   test-deploy:
     jobs:
       - check_whitespace
-      - do_everything
+      - build_staging_frontend
+      - test-backend
+      - build_staging_backend
+      - lint_sql
       - e2e:
           requires:
-            - do_everything
+            - build_staging_backend
+            - build_staging_frontend
       - deploy:
           requires:
             - check_whitespace
-            - do_everything
+            - build_staging_frontend
+            - test-backend
             - e2e
           filters:
             branches:
