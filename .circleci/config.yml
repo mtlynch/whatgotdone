@@ -31,7 +31,7 @@ jobs:
           at: ./
       - run:
           name: Test go packages
-          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command dev-scripts/run-go-tests --full
+          command: cachix watch-exec "${CACHIX_NAME}" -- nix develop --command dev-scripts/run-go-tests --full
       - store_artifacts:
           path: backend/.coverage.html
       - run:
@@ -55,7 +55,7 @@ jobs:
       - checkout
       - run:
           name: Compile frontend
-          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command ./dev-scripts/build-frontend staging
+          command: cachix watch-exec "${CACHIX_NAME}" -- nix develop --command ./dev-scripts/build-frontend staging
       - persist_to_workspace:
           root: ./
           paths:
@@ -82,7 +82,7 @@ jobs:
             - go-mod-v3-{{ checksum "backend/go.sum" }}
       - run:
           name: Compile backend (staging)
-          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command dev-scripts/build-backend staging
+          command: cachix watch-exec "${CACHIX_NAME}" -- nix develop --command dev-scripts/build-backend staging
       - save_cache:
           key: go-mod-v3-{{ checksum "backend/go.sum" }}
           paths:
@@ -108,7 +108,7 @@ jobs:
       - checkout
       - run:
           name: Lint SQL files
-          command: cachix watch-exec "${CACHIX_NAME}" nix develop --command ./dev-scripts/lint-sql
+          command: cachix watch-exec "${CACHIX_NAME}" -- nix develop --command ./dev-scripts/lint-sql
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
