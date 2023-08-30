@@ -14,7 +14,7 @@ jobs:
           command: ./dev-scripts/check-trailing-newline
   test-backend:
     docker:
-      - image: nixos/nix:2.3.12
+      - image: nixos/nix:2.15.0
     environment:
       CACHIX_NAME: mtlynch-whatgotdone
     steps:
@@ -39,7 +39,7 @@ jobs:
           command: dev-scripts/check-go-formatting
   build_staging_frontend:
     docker:
-      - image: nixos/nix:2.3.12
+      - image: nixos/nix:2.15.0
     environment:
       NODE_ENV: production
       CACHIX_NAME: mtlynch-whatgotdone
@@ -62,7 +62,7 @@ jobs:
             - ./frontend/dist
   build_staging_backend:
     docker:
-      - image: nixos/nix:2.3.12
+      - image: nixos/nix:2.15.0
     environment:
       CACHIX_NAME: mtlynch-whatgotdone
     steps:
@@ -93,7 +93,7 @@ jobs:
             - ./bin/whatgotdone
   lint_sql:
     docker:
-      - image: nixos/nix:2.3.12
+      - image: nixos/nix:2.15.0
     environment:
       CACHIX_NAME: mtlynch-whatgotdone
     steps:
