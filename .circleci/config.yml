@@ -101,7 +101,7 @@ jobs:
           name: Set up Cachix
           command: |
             nix-env -iA cachix -f https://cachix.org/api/v1/install
-            nix profile install -accept-flake-config nixpkgs#cachix
+            nix profile install --accept-flake-config nixpkgs#cachix
             cachix use "${CACHIX_NAME}"
       - run:
           name: Enable Nix flakes
