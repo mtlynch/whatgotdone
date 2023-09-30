@@ -34,22 +34,6 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
-      "locked": {
-        "lastModified": 1688392541,
-        "narHash": "sha256-lHrKvEkCPTUO+7tPfjIcb7Trk6k31rz18vkyqmkeJfY=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "ea4c80b39be4c09702b0cb3b42eab59e2ba4f24b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "release-22.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nodejs_dep": {
       "locked": {
         "lastModified": 1678347440,
@@ -70,7 +54,6 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "go_dep": "go_dep",
-        "nixpkgs": "nixpkgs",
         "nodejs_dep": "nodejs_dep",
         "sqlfluff_dep": "sqlfluff_dep"
       }
