@@ -104,7 +104,7 @@ jobs:
           name: Set up Cachix
           command: |
             set -eux
-            nix-env -iA nixpkgs.cachix nixpkgs.bash
+            nix-env -iA cachix -f https://cachix.org/api/v1/install
             cachix use "${CACHIX_NAME}"
       - checkout
       - run:
