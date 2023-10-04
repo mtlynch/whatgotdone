@@ -109,8 +109,7 @@ jobs:
       - checkout
       - run:
           name: Lint SQL files
-          #command: cachix watch-exec "${CACHIX_NAME}" -- nix develop --command ./dev-scripts/lint-sql
-          command: nix develop --command ./dev-scripts/lint-sql
+          command: cachix watch-exec "${CACHIX_NAME}" -- nix develop --command ./dev-scripts/lint-sql
   e2e:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.2-focal
