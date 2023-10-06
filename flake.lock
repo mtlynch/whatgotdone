@@ -5,11 +5,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1687709756,
-        "narHash": "sha256-Y5wKlQSkgEK2weWdOu4J3riRd+kV/VCgHsqLNTTWQ/0=",
+        "lastModified": 1694529238,
+        "narHash": "sha256-zsNZZGTGnMOf9YpHKJqMSsa0dXbfmxeoJ7xHlrt+xmY=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "dbabf0ca0c0c4bce6ea5eaf65af5cb694d2082c7",
+        "rev": "ff7b65b44d01cf9ba6a71320833626af21126384",
         "type": "github"
       },
       "original": {
@@ -34,44 +34,10 @@
         "type": "github"
       }
     },
-    "nodejs_dep": {
-      "locked": {
-        "lastModified": 1678347440,
-        "narHash": "sha256-mMhmVy0AarJjc0sbV6EEE4MpLYIGoyusLcr7fqM49Vw=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "6adf48f53d819a7b6e15672817fa1e78e5f4e84f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "6adf48f53d819a7b6e15672817fa1e78e5f4e84f",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "go_dep": "go_dep",
-        "nodejs_dep": "nodejs_dep",
-        "sqlfluff_dep": "sqlfluff_dep"
-      }
-    },
-    "sqlfluff_dep": {
-      "locked": {
-        "lastModified": 1660687964,
-        "narHash": "sha256-8dJ8u/SUlJoHJVPFnFqoo7ugLH4RxyuyQTeuE6/EynE=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "7cf5ccf1cdb2ba5f08f0ac29fc3d04b0b59a07e4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "7cf5ccf1cdb2ba5f08f0ac29fc3d04b0b59a07e4",
-        "type": "github"
+        "go_dep": "go_dep"
       }
     },
     "systems": {
