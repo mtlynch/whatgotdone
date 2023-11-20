@@ -55,7 +55,9 @@ const maxMediaSize = 20971520 // 20 MB
 
 func mediaFileFromRequest(w http.ResponseWriter, r *http.Request) (io.Reader, string, error) {
 	r.Body = http.MaxBytesReader(w, r.Body, maxMediaSize)
-	r.ParseMultipartForm(32 << 20)
+	if err := r.ParseMultipartForm(maxMediaSize); err != nil {
+		return nil, "", err
+	}
 	file, metadata, err := r.FormFile("file")
 	if err != nil {
 		return nil, "", err

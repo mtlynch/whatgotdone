@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
@@ -17,7 +18,9 @@ func (s defaultServer) sitemapGet() http.HandlerFunc {
 		if sm == nil {
 			sm = buildSitemap(s.datastore)
 		}
-		w.Write(sm.XMLContent())
+		if _, err := w.Write(sm.XMLContent()); err != nil {
+			log.Fatalf("failed to write sitemap: %v", err)
+		}
 	}
 }
 
