@@ -1,30 +1,41 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Exit build script on first failure.
+# Runs all unit tests and performs static code analysis.
+#
+# Options:
+#
+#  --full   Include slower, more exhaustive tests and capture test coverage
+#           results (outputs to .coverage.html).
+
+# Exit on first failure.
 set -e
 
-# Echo commands to stdout.
+# Echo commands before executing them, by default to stderr.
 set -x
 
+# Fail when piped commands fail.
+set -o pipefail
+
 full_test=""
-go_test_flags=()
+# Without netgo and osusergo, compilation fails under Nix.
+go_test_flags=("-tags=netgo,osusergo")
 readonly COVERAGE_FILE_RAW=".coverage.out"
 readonly COVERAGE_FILE_HTML=".coverage.html"
-go_test_flags+=('-ldflags=-linkmode=external')
 if [[ "$1" = "--full" ]]; then
   full_test="1"
   go_test_flags+=("-v")
   go_test_flags+=("-race")
   go_test_flags+=("--coverprofile=${COVERAGE_FILE_RAW}")
 fi
-readonly go_test_flags
 
 # Exit on unset variable.
 set -u
 
 # Change directory to repository root.
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
 cd "${SCRIPT_DIR}/.."
+
 cd backend
 
 go test "${go_test_flags[@]}" ./...
@@ -37,10 +48,10 @@ go vet ./...
 # Install staticcheck if it's not present.
 STATICCHECK_PATH="$(go env GOPATH)/bin/staticcheck"
 readonly STATICCHECK_PATH
-readonly STATICCHECK_VERSION="v0.3.3"
+readonly STATICCHECK_VERSION="v0.4.6"
 if [[ ! -f "${STATICCHECK_PATH}" ]]; then
     go install \
       -ldflags=-linkmode=external \
       "honnef.co/go/tools/cmd/staticcheck@${STATICCHECK_VERSION}"
 fi
-$STATICCHECK_PATH ./...
+"${STATICCHECK_PATH}" ./...
