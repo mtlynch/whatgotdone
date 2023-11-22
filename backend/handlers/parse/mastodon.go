@@ -21,7 +21,10 @@ func MastodonAddress(address string) (types.MastodonAddress, error) {
 		return types.MastodonAddress(""), errors.New("mastodon address contains illegal characters")
 	}
 
-	a, err := mail.ParseAddress(address)
+	// Ignore the leading @ symbol.
+	trimmed := strings.TrimPrefix(address, "@")
+
+	a, err := mail.ParseAddress(trimmed)
 	if err != nil {
 		return types.MastodonAddress(""), errors.New("invalid Mastodon address, must be in the form of handle@hostname")
 	}

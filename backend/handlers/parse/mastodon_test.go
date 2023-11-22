@@ -15,7 +15,13 @@ func TestMastodonAddress(t *testing.T) {
 		parsedExpected types.MastodonAddress
 	}{
 		{
-			"well-formed Mastodon Address is valid",
+			"Mastodon address with leading @ is valid",
+			"@hello@example.com",
+			true,
+			"hello@example.com",
+		},
+		{
+			"well-formed Mastodon address is valid",
 			"hello@example.com",
 			true,
 			"hello@example.com",
@@ -35,6 +41,18 @@ func TestMastodonAddress(t *testing.T) {
 		{
 			"empty string is invalid",
 			"",
+			false,
+			"",
+		},
+		{
+			"bare @ is invalid",
+			"@",
+			false,
+			"",
+		},
+		{
+			"double @ is invalid",
+			"@@",
 			false,
 			"",
 		},
