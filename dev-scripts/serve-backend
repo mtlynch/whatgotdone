@@ -23,7 +23,9 @@ MODD_PATH="$(go env GOPATH)/bin/modd"
 readonly MODD_PATH
 readonly MODD_VERSION="v0.0.0-20211215124449-6083f9d1c171"
 if [[ ! -f "${MODD_PATH}" ]]; then
-    go install "github.com/cortesi/modd/cmd/modd@${MODD_VERSION}"
+    go install \
+      -ldflags=-linkmode=external \
+      "github.com/cortesi/modd/cmd/modd@${MODD_VERSION}"
 fi
 
 # Run modd for hot reloading.
