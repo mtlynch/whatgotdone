@@ -6,15 +6,14 @@
       :to="'/' + entryAuthor"
       size="md"
     />
-    <UsernameLink class="username" :username="entryAuthor" />'s update for the
-    week ending on
+    <username-link :data-username="entryAuthor" />'s update for the week ending
+    on
     <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
   </p>
 </template>
 
 <script>
 import Avatar from '@/components/Avatar.vue';
-import UsernameLink from '@/components/UsernameLink.vue';
 
 export default {
   name: 'JournalHeader',
@@ -24,7 +23,6 @@ export default {
   },
   components: {
     Avatar,
-    UsernameLink,
   },
 };
 </script>

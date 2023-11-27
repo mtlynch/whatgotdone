@@ -7,7 +7,8 @@
 package handlers
 
 func extraScriptSrcSources() []string {
-	return []string{"'unsafe-eval'"}
+	// TODO: Remove unsafe-inline.
+	return []string{"'unsafe-eval'", "'unsafe-inline'"}
 }
 
 func extraStyleSrcSources() []string {
