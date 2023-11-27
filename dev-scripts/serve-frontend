@@ -15,4 +15,5 @@ cd "${SCRIPT_DIR}/.."
 
 . dev.env
 cd frontend
-npm run serve
+
+./node_modules/.bin/vue-cli-service serve --port 8085
