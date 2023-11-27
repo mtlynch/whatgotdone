@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --port 8085",
     "build": "vue-cli-service build",
     "check-format": "prettier --check ../**/*.js  ../**/*.json",
     "format": "prettier --write  ../**/*.js  ../**/*.json",
