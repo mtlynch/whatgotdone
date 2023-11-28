@@ -20,7 +20,7 @@ fi
 
 # Load production credentials.
 set +x
-. prod.env
+. .env.prod
 set -x
 
 # Retrieve production DB.

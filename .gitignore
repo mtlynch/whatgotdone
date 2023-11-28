@@ -20,7 +20,7 @@ data/
 .coverage*
 
 # Production environment variables
-prod.env
+.env.prod
 
 *.local
 
