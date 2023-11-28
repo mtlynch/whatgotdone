@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h1>
-      <username-link :data-username="username" />'s updates for {{ project }}
-    </h1>
+    <h1><username-link :username="username" />'s updates for {{ project }}</h1>
 
     <template v-if="entriesLoaded && entries.length > 0">
       <div

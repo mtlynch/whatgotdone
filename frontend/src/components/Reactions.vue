@@ -16,7 +16,7 @@
     >
       <p>
         <Avatar :username="reaction.username" class="avatar" />
-        <username-link :data-username="reaction.username" />&nbsp;reacted with a
+        <username-link :username="reaction.username" />&nbsp;reacted with a
         <span class="reaction-symbol">{{ reaction.reaction }}</span>
       </p>
     </div>

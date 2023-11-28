@@ -16,21 +16,19 @@
 
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p class="missing-entry" v-else>
-        <username-link :data-username="entryAuthor" />&nbsp;has not posted a
-        journal entry for
+        <username-link :username="entryAuthor" />&nbsp;has not posted a journal
+        entry for
         <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
       </p>
     </template>
     <template v-else-if="isLoading">
       <b-spinner type="grow" label="Spinning"></b-spinner>
-      <p>
-        Loading &nbsp;<username-link :data-username="entryAuthor" />'s update...
-      </p>
+      <p>Loading &nbsp;<username-link :username="entryAuthor" />'s update...</p>
     </template>
     <template v-else>
       <p>
-        <username-link :data-username="entryAuthor" /> has not posted any What
-        Got Done updates.
+        <username-link :username="entryAuthor" /> has not posted any What Got
+        Done updates.
       </p>
     </template>
     <p v-if="backendError" class="error">

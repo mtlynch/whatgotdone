@@ -6,8 +6,7 @@
       :to="'/' + entryAuthor"
       size="md"
     />
-    <username-link :data-username="entryAuthor" />'s update for the week ending
-    on
+    <username-link :username="entryAuthor" />'s update for the week ending on
     <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
   </p>
 </template>
