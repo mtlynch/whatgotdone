@@ -1,10 +1,14 @@
 package handlers
 
 import (
+	"context"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"strings"
 )
+
+var contextKeyCSPNonce = &contextKey{"csp-nonce"}
 
 // Many of these rules come from UserKit:
 // https://docs.userkit.io/docs/content-security-policy
@@ -60,6 +64,16 @@ func contentSecurityPolicy() string {
 func enableCsp(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Security-Policy", contentSecurityPolicy())
-		next.ServeHTTP(w, r)
+		nonce := base64.StdEncoding.EncodeToString(random.Bytes(16))
+		ctx := context.WithValue(r.Context(), contextKeyCSPNonce, nonce)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func cspNonce(ctx context.Context) string {
+	key, ok := ctx.Value(contextKeyCSPNonce).(string)
+	if !ok {
+		panic("CSP nonce is missing from request context")
+	}
+	return key
 }

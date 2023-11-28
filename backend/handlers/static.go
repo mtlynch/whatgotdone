@@ -99,17 +99,17 @@ func (s defaultServer) serveUserProfileOr404() http.HandlerFunc {
 // serveIndexPage returns the file `./frontend/dist/index.html` rendered by the
 // golang templating engine.
 func (s defaultServer) serveIndexPage(w http.ResponseWriter, r *http.Request) {
-	type page struct {
-		Title           string
-		Description     string
-		CsrfToken       string
-		OpenGraphType   string
-		PlausibleDomain string
-	}
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
 	indexTemplate := template.Must(template.New(frontendIndexFilename).Delims("[[", "]]").
 		ParseFiles(path.Join(frontendRootDir, frontendIndexFilename)))
-	if err := indexTemplate.ExecuteTemplate(w, frontendIndexFilename, page{
+	if err := indexTemplate.ExecuteTemplate(w, frontendIndexFilename, struct {
+		Title           string
+		Description     string
+		CsrfToken       string
+		CspNonce        string
+		OpenGraphType   string
+		PlausibleDomain string
+	}{
 		CsrfToken:       csrf.Token(r),
 		Title:           getPageTitle(r),
 		Description:     getDescription(r),
