@@ -13,7 +13,7 @@ set -x
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
-. dev.env
+. .env.dev
 cd frontend
 
 ./node_modules/.bin/vue-cli-service serve --port 8085

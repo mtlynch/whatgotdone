@@ -13,9 +13,9 @@ set -x
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
-. dev.env
-if [[ -f dev.env.local ]]; then
-    . dev.env.local
+. env.dev
+if [[ -f .env.dev.local ]]; then
+    . .env.dev.local
 fi
 
 # Install modd if it's not present.
