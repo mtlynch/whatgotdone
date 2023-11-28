@@ -16,7 +16,7 @@
     >
       <p>
         <Avatar :username="reaction.username" class="avatar" />
-        <UsernameLink :username="reaction.username" />&nbsp;reacted with a
+        <username-link :data-username="reaction.username" />&nbsp;reacted with a
         <span class="reaction-symbol">{{ reaction.reaction }}</span>
       </p>
     </div>
@@ -25,7 +25,6 @@
 
 <script>
 import Avatar from '@/components/Avatar.vue';
-import UsernameLink from '@/components/UsernameLink.vue';
 
 import {
   getReactions,
@@ -41,7 +40,6 @@ export default {
   },
   components: {
     Avatar,
-    UsernameLink,
   },
   data() {
     return {

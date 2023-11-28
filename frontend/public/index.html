@@ -40,18 +40,18 @@
     [[end]]
     <template id="username-link-template">
       <style>
-        .username a {
+        a {
           font-weight: bold;
           color: rgb(255, 208, 56) !important;
           text-decoration: none;
         }
       </style>
-      <span class="username">
-        <a></a>
-      </span>
-    </template>
 
-    <script type="module">
+      <a></a
+      ><!-- We can't use a linebreak because it adds space after the element. --></template
+    >
+
+    <script type="module" nonce="[[ .CspNonce ]]">
       (function () {
         const template = document.querySelector('#username-link-template');
 
@@ -66,7 +66,7 @@
               if (!username) {
                 return;
               }
-              const el = this.shadowRoot.querySelector('.username a');
+              const el = this.shadowRoot.querySelector('a');
               el.innerText = username;
               el.setAttribute('href', `/${username}`);
             }

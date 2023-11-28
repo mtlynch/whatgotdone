@@ -110,9 +110,10 @@ func (s defaultServer) serveIndexPage(w http.ResponseWriter, r *http.Request) {
 		OpenGraphType   string
 		PlausibleDomain string
 	}{
-		CsrfToken:       csrf.Token(r),
 		Title:           getPageTitle(r),
 		Description:     getDescription(r),
+		CsrfToken:       csrf.Token(r),
+		CspNonce:        cspNonce(r.Context()),
 		OpenGraphType:   getOpenGraphType(r),
 		PlausibleDomain: s.plausibleDomain,
 	}); err != nil {
