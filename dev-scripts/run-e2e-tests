@@ -19,7 +19,7 @@ set -u
 # Load staging environment vars.
 set +x
 # shellcheck disable=SC1091
-. staging.env
+. .env.staging
 set -x
 
 # Change directory to repository root.
