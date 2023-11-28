@@ -16,18 +16,18 @@
 
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p class="missing-entry" v-else>
-        <UsernameLink :username="entryAuthor" />&nbsp;has not posted a journal
+        <username-link :username="entryAuthor" />&nbsp;has not posted a journal
         entry for
         <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
       </p>
     </template>
     <template v-else-if="isLoading">
       <b-spinner type="grow" label="Spinning"></b-spinner>
-      <p>Loading &nbsp;<UsernameLink :username="entryAuthor" />'s update...</p>
+      <p>Loading &nbsp;<username-link :username="entryAuthor" />'s update...</p>
     </template>
     <template v-else>
       <p>
-        <UsernameLink :username="entryAuthor" /> has not posted any What Got
+        <username-link :username="entryAuthor" /> has not posted any What Got
         Done updates.
       </p>
     </template>
@@ -61,14 +61,12 @@ import {thisFriday} from '@/controllers/EntryDates.js';
 
 import Journal from '@/components/Journal.vue';
 import Reactions from '@/components/Reactions.vue';
-import UsernameLink from '@/components/UsernameLink.vue';
 
 export default {
   name: 'ViewEntryPage',
   components: {
     Journal,
     Reactions,
-    UsernameLink,
   },
   data() {
     return {
