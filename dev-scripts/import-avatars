@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -eux
+
+pushd "$(mktemp --directory)"
+
+gsutil -m cp gs://media.whatgotdone.com/avatars/*/*-avatar-300px.jpg ./
+
+ls -l
