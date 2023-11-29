@@ -34,6 +34,22 @@
         "type": "github"
       }
     },
+    "litestream_dep": {
+      "locked": {
+        "lastModified": 1700230496,
+        "narHash": "sha256-pl8PLUQLigZgFZrafIXs2djne5kboimK6MYsZN8Ywtg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "a71323f68d4377d12c04a5410e214495ec598d4c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "a71323f68d4377d12c04a5410e214495ec598d4c",
+        "type": "github"
+      }
+    },
     "nodejs_dep": {
       "locked": {
         "lastModified": 1694343207,
@@ -54,6 +70,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "go_dep": "go_dep",
+        "litestream_dep": "litestream_dep",
         "nodejs_dep": "nodejs_dep",
         "shellcheck_dep": "shellcheck_dep",
         "sqlfluff_dep": "sqlfluff_dep"
