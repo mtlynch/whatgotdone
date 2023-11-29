@@ -15,15 +15,19 @@
 
     # 1.2.1 release
     sqlfluff_dep.url = "github:NixOS/nixpkgs/7cf5ccf1cdb2ba5f08f0ac29fc3d04b0b59a07e4";
+
+    # 0.3.13 release
+    litestream_dep.url = "github:NixOS/nixpkgs/a71323f68d4377d12c04a5410e214495ec598d4c";
   };
 
-  outputs = { self, flake-utils, go_dep, nodejs_dep, shellcheck_dep, sqlfluff_dep }@inputs :
+  outputs = { self, flake-utils, go_dep, nodejs_dep, shellcheck_dep, sqlfluff_dep, litestream_dep }@inputs :
     flake-utils.lib.eachDefaultSystem (system:
     let
       go_dep = inputs.go_dep.legacyPackages.${system};
       nodejs_dep = inputs.nodejs_dep.legacyPackages.${system};
       shellcheck_dep = inputs.shellcheck_dep.legacyPackages.${system};
       sqlfluff_dep = inputs.sqlfluff_dep.legacyPackages.${system};
+      litestream_dep = inputs.litestream_dep.legacyPackages.${system};
     in
     {
       devShells.default = go_dep.mkShell.override { stdenv = go_dep.pkgsStatic.stdenv; } {
@@ -34,11 +38,13 @@
           nodejs_dep.nodejs_20
           shellcheck_dep.shellcheck
           sqlfluff_dep.sqlfluff
+          litestream_dep.litestream
         ];
 
         shellHook = ''
           echo "shellcheck" "$(shellcheck --version | grep '^version:')"
           sqlfluff --version
+          echo "litestream" "$(litestream version)"
           echo "node" "$(node --version)"
           echo "npm" "$(npm --version)"
           go version
