@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+# Migrate avatars from GCS to SQLite.
+
 set -eux
 
-#pushd "$(mktemp --directory)"
+pushd "$(mktemp --directory)"
 
-#gsutil -m cp gs://media.whatgotdone.com/avatars/*/*-avatar-300px.jpg ./
-
-cd /tmp/tmp.3JQ7MXmIUp
+gsutil -m cp gs://media.whatgotdone.com/avatars/*/*-avatar-300px.jpg ./
 
 for filename in *.jpg; do
   echo "$filename"
