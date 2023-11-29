@@ -16,8 +16,8 @@
     # 1.2.1 release
     sqlfluff_dep.url = "github:NixOS/nixpkgs/7cf5ccf1cdb2ba5f08f0ac29fc3d04b0b59a07e4";
 
-    # 0.3.13 release
-    litestream_dep.url = "github:NixOS/nixpkgs/a71323f68d4377d12c04a5410e214495ec598d4c";
+    # 0.3.7 release
+    litestream_dep.url = "github:NixOS/nixpkgs/02177737c5d977444df41e0f5d6124c48c64bba3";
   };
 
   outputs = { self, flake-utils, go_dep, nodejs_dep, shellcheck_dep, sqlfluff_dep, litestream_dep }@inputs :
