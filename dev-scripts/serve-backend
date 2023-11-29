@@ -13,7 +13,7 @@ set -x
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
-. env.dev
+. .env.dev
 if [[ -f .env.dev.local ]]; then
     . .env.dev.local
 fi
