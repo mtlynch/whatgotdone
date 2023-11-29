@@ -43,7 +43,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
-		username := mustGetUsernameFromContext(r.Context())
+		//username := mustGetUsernameFromContext(r.Context())
 		const avatarThumbnailWidth = 40
 		const avatarLargeWidth = 300
 		for _, resizedAvatar := range image.Resize(avatarRawImg, []int{avatarLargeWidth, avatarThumbnailWidth}) {
@@ -54,13 +54,7 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 				http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusInternalServerError)
 				return
 			}
-			path := fmt.Sprintf("avatars/%s/%s-avatar-%dpx.jpg", username, username, resizedAvatar.Width)
-			_, err = s.gcsClient.UploadFile(&buf, path, "image/jpeg", "no-cache")
-			if err != nil {
-				log.Printf("failed to upload avatar to static storage: %v", err)
-				http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusInternalServerError)
-				return
-			}
+			// TODO: Put avatar in SQLite.
 		}
 
 	}
@@ -68,20 +62,9 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 
 func (s *defaultServer) userAvatarDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if s.gcsClient == nil {
-			log.Printf("can't accept avatar delete because GCS is disabled")
-			http.Error(w, "User profile photo deleting is disabled", http.StatusBadRequest)
-			return
-		}
+		//username := mustGetUsernameFromContext(r.Context())
 
-		username := mustGetUsernameFromContext(r.Context())
-
-		path := fmt.Sprintf("avatars/%s/", username)
-		if err := s.gcsClient.DeletePath(path); err != nil {
-			log.Printf("failed to delete avatars from static storage: %v", err)
-			http.Error(w, fmt.Sprintf("Profile photo deletion failed: %v", err), http.StatusInternalServerError)
-			return
-		}
+		// TODO: Delete avatar from SQLite.
 	}
 }
 
