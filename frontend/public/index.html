@@ -73,6 +73,49 @@
         );
       })();
     </script>
+    <template id="user-avatar-template">
+      <style>
+        img {
+          /* TODO */
+        }
+      </style>
+
+      <a><img /></a>
+    </template>
+    <script type="module" nonce="[[ .CspNonce ]]">
+      (function () {
+        const template = document.querySelector('#user-avatar-template');
+
+        customElements.define(
+          'user-avatar',
+          class extends HTMLElement {
+            connectedCallback() {
+              this.attachShadow({mode: 'open'}).appendChild(
+                template.content.cloneNode(true)
+              );
+              const username = this.getAttribute('username');
+              if (!username) {
+                return;
+              }
+              this.elements = {
+                anchor: this.shadowRoot.querySelector('a'),
+                image: this.shadowRoot.querySelector('img'),
+              };
+              this.elements.anchor.setAttribute('href', `/${username}`);
+              this.elements.image.setAttribute('src', `/${username}/avatar`);
+            }
+
+            refresh() {
+              const unixTime = Math.floor(Date.now() / 1000);
+              this.elements.image.setAttribute(
+                'src',
+                `/${username}/avatar?cache=${unixTime}`
+              );
+            }
+          }
+        );
+      })();
+    </script>
     <style>
       .footer {
         margin: 2rem auto;

@@ -6,7 +6,7 @@
       <label for="upload-profile-photo">Profile Photo</label>
 
       <a class="avatar-wrapper" href="#" @click="openFileUploadDialog">
-        <Avatar :username="loggedInUsername" size="80px" ref="avatar" />
+        <user-avatar :username="loggedInUsername" ref="avatar" />
       </a>
 
       <div class="profile-photo-btns">
@@ -95,13 +95,8 @@
 import {deleteAvatar, uploadAvatar} from '@/controllers/Avatar.js';
 import {getUserMetadata, setUserMetadata} from '@/controllers/User.js';
 
-import Avatar from '@/components/Avatar.vue';
-
 export default {
   name: 'EditUserProfilePage',
-  components: {
-    Avatar,
-  },
   data() {
     return {
       profilePhoto: null,

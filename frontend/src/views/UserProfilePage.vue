@@ -1,12 +1,7 @@
 <template>
   <div>
     <div class="profile">
-      <Avatar
-        class="avatar"
-        :username="username"
-        :to="avatarLink"
-        size="150px"
-      />
+      <user-avatar :username="username" />
 
       <div class="profile-body">
         <h1>{{ username }}</h1>
@@ -105,7 +100,6 @@ import {exportGet} from '@/controllers/Export.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
-import Avatar from '@/components/Avatar.vue';
 import PartialJournal from '@/components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
@@ -113,7 +107,6 @@ Vue.use(VueMarkdown);
 export default {
   name: 'UserProfilePage',
   components: {
-    Avatar,
     VueMarkdown,
     PartialJournal,
   },
@@ -255,16 +248,6 @@ export default {
 @media screen and (min-width: 768px) {
   .profile {
     flex-direction: row;
-  }
-}
-
-.profile .avatar {
-  margin-bottom: 1rem;
-}
-
-@media screen and (min-width: 768px) {
-  .profile .avatar {
-    margin-right: 2.5rem;
   }
 }
 
