@@ -6,6 +6,7 @@ package datastore
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -21,6 +22,8 @@ type EntryFilter struct {
 // storing and retrieving all persistent data (journal entries, journal drafts,
 // reactions).
 type Datastore interface {
+	// GetAvatar returns avatar of the given user.
+	GetAvatar(username types.Username) (io.Reader, error)
 	// GetUserProfile returns profile information for the given user.
 	GetUserProfile(username types.Username) (types.UserProfile, error)
 	// SetUserProfile updates the given user's profile.

@@ -11,6 +11,31 @@ import (
 	"github.com/mtlynch/whatgotdone/backend/image"
 )
 
+func (s *defaultServer) userAvatarGet() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		username, err := usernameFromRequestPath(r)
+		if err != nil {
+			log.Printf("couldn't find username in avatar request path: %v", err)
+			http.Error(w, "Couldn't find username in avatar request path", http.StatusBadRequest)
+			return
+		}
+		avatarReader, err := s.datastore.GetAvatar(username)
+		if err != nil {
+			// TODO: Handle users with no avatar set
+			log.Printf("failed to read avatar: %v", err)
+			http.Error(w, "Failed to read avatar", http.StatusInternalServerError)
+			return
+		}
+
+		if _, err := io.Copy(w, avatarReader); err != nil {
+			log.Printf("failed to write avatar in response: %v", err)
+			http.Error(w, "Failed to copy avatar into response", http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
 func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if s.gcsClient == nil {
