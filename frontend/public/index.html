@@ -75,13 +75,19 @@
     </script>
     <template id="user-avatar-template">
       <style>
+        .wrapper {
+          max-width: 100%;
+        }
+
         img {
           max-width: 100%;
+          max-height: 100%;
           clip-path: circle();
         }
       </style>
-
-      <a><img /></a>
+      <div class="wrapper">
+        <a><img /></a>
+      </div>
     </template>
     <script type="module" nonce="[[ .CspNonce ]]">
       (function () {

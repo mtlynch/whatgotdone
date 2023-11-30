@@ -14,11 +14,14 @@
       v-for="reaction in reactions"
       v-bind:key="reaction.key"
     >
-      <p>
-        <user-avatar :username="reaction.username" class="mr-1" />
+      <div class="d-flex align-items-center mb-2">
+        <user-avatar
+          :username="reaction.username"
+          class="mr-2 d-block avatar"
+        />
         <username-link :username="reaction.username" />&nbsp;reacted with a
-        <span class="reaction-symbol">{{ reaction.reaction }}</span>
-      </p>
+        <span class="reaction-symbol ml-1">{{ reaction.reaction }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -186,11 +189,8 @@ export default {
   }
 }
 
-.reaction .username {
-  background: #2b3e50;
-  border-radius: 6px;
-  padding: 2px 8px 5px;
-  color: white;
+.reaction .avatar {
+  max-width: 40px;
 }
 
 .reaction-symbol {

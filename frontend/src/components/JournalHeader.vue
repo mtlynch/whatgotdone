@@ -1,9 +1,9 @@
 <template>
-  <p class="journal-header text-left">
-    <user-avatar :username="entryAuthor" class="mr-1 avatar" />
+  <div class="text-left d-flex align-items-center mb-4">
+    <user-avatar :username="entryAuthor" class="mr-2 d-block avatar" />
     <username-link :username="entryAuthor" />'s update for the week ending on
     <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
-  </p>
+  </div>
 </template>
 
 <script>
@@ -19,5 +19,6 @@ export default {
 <style scoped>
 .avatar {
   max-width: 45px;
+  max-height: 45px;
 }
 </style>
