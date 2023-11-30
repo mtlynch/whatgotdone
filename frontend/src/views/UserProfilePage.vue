@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="profile">
-      <user-avatar :username="username" />
+      <user-avatar :username="username" class="avatar" />
 
-      <div class="profile-body">
+      <div class="ml-md-5">
         <h1>{{ username }}</h1>
 
         <vue-markdown
@@ -249,6 +249,10 @@ export default {
   .profile {
     flex-direction: row;
   }
+}
+
+.profile .avatar {
+  max-width: 150px;
 }
 
 h2 {
