@@ -14,7 +14,7 @@
       v-for="reaction in reactions"
       v-bind:key="reaction.key"
     >
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center mb-3">
         <user-avatar
           :username="reaction.username"
           class="mr-2 d-block avatar"
@@ -191,6 +191,7 @@ export default {
 
 .reaction .avatar {
   max-width: 40px;
+  max-height: 40px;
 }
 
 .reaction-symbol {
