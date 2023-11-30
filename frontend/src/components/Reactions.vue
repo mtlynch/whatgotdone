@@ -14,7 +14,7 @@
       v-for="reaction in reactions"
       v-bind:key="reaction.key"
     >
-      <div class="d-flex align-items-center mb-2">
+      <div class="d-flex align-items-center">
         <user-avatar
           :username="reaction.username"
           class="mr-2 d-block avatar"
