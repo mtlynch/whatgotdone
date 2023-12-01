@@ -76,7 +76,7 @@ jobs:
           command: ./dev-scripts/lint-sql
   e2e:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.29.2-focal
+      - image: mcr.microsoft.com/playwright:v1.40.1-focal
     steps:
       - checkout
       - run:
