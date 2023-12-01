@@ -4,6 +4,6 @@
   "description": "WhatGotDone dev scripts",
   "author": "Michael Lynch",
   "devDependencies": {
-    "@playwright/test": "^1.27.1"
+    "@playwright/test": "1.40.1"
   }
 }
