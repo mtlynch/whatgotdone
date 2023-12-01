@@ -24,6 +24,8 @@ type EntryFilter struct {
 type Datastore interface {
 	// GetAvatar returns avatar of the given user.
 	GetAvatar(username types.Username) (io.Reader, error)
+	InsertAvatar(username types.Username, avatar io.Reader, avatarWidth int) error
+	DeleteAvatar(username types.Username) error
 	// GetUserProfile returns profile information for the given user.
 	GetUserProfile(username types.Username) (types.UserProfile, error)
 	// SetUserProfile updates the given user's profile.

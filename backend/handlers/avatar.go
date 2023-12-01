@@ -72,28 +72,32 @@ func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 			return
 		}
 
-		//username := mustGetUsernameFromContext(r.Context())
-		const avatarThumbnailWidth = 40
-		const avatarLargeWidth = 300
-		for _, resizedAvatar := range image.Resize(avatarRawImg, []int{avatarLargeWidth, avatarThumbnailWidth}) {
-			var buf bytes.Buffer
-			err = image.Encode(resizedAvatar.Img, &buf)
-			if err != nil {
-				log.Printf("failed to encode image to bytes: %v", err)
-				http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusInternalServerError)
-				return
-			}
-			// TODO: Put avatar in SQLite.
+		username := mustGetUsernameFromContext(r.Context())
+		const avatarWidth = 300
+		resizedAvatar := image.Resize(avatarRawImg, avatarWidth)
+		var buf bytes.Buffer
+		if err = image.Encode(resizedAvatar.Img, &buf); err != nil {
+			log.Printf("failed to encode image to bytes: %v", err)
+			http.Error(w, fmt.Sprintf("Profile photo upload failed: %v", err), http.StatusInternalServerError)
+			return
 		}
-
+		if err := s.datastore.InsertAvatar(username, &buf, resizedAvatar.Width); err != nil {
+			log.Printf("failed to insert avatar into database for user %s: %v", username, err)
+			http.Error(w, fmt.Sprintf("Failed to save avatar for user %s", username), http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
 func (s *defaultServer) userAvatarDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		//username := mustGetUsernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
-		// TODO: Delete avatar from SQLite.
+		if err := s.datastore.DeleteAvatar(username); err != nil {
+			log.Printf("failed to delete avatar for user %s: %v", username, err)
+			http.Error(w, fmt.Sprintf("failed to delete avatar for user %s", username), http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
