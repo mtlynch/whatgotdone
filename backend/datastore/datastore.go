@@ -63,6 +63,15 @@ type Datastore interface {
 	SetPreferences(username types.Username, prefs types.Preferences) error
 }
 
+// ErrAvatarNotFound occurs when no avatar exists for a user.
+type ErrAvatarNotFound struct {
+	Username types.Username
+}
+
+func (f ErrAvatarNotFound) Error() string {
+	return fmt.Sprintf("no avatar found for username %s", f.Username)
+}
+
 // EntryNotFoundError occurs when no published exists for a user with a given date.
 type EntryNotFoundError struct {
 	Username types.Username

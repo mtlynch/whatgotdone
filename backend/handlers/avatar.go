@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/image"
 )
 
@@ -22,7 +23,10 @@ func (s *defaultServer) userAvatarGet() http.HandlerFunc {
 		}
 		avatarReader, err := s.datastore.GetAvatar(username)
 		if err != nil {
-			// TODO: Handle users with no avatar set
+			if _, ok := err.(datastore.ErrAvatarNotFound); ok {
+				http.Redirect(w, r, "/images/no-avatar.jpg", http.StatusTemporaryRedirect)
+				return
+			}
 			log.Printf("failed to read avatar: %v", err)
 			http.Error(w, "Failed to read avatar", http.StatusInternalServerError)
 			return
