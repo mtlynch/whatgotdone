@@ -42,12 +42,6 @@ func (s *defaultServer) userAvatarGet() http.HandlerFunc {
 
 func (s *defaultServer) userAvatarPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if s.gcsClient == nil {
-			log.Printf("can't accept avatar upload because GCS is disabled")
-			http.Error(w, "User profile photo uploading is disabled", http.StatusBadRequest)
-			return
-		}
-
 		avatarFile, contentType, err := avatarFileFromRequest(w, r)
 		if err != nil {
 			log.Printf("failed to read profile photo from request: %v", err)
