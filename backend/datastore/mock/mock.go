@@ -2,6 +2,7 @@ package mock
 
 import (
 	"errors"
+	"io"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -18,6 +19,18 @@ type MockDatastore struct {
 	UserPreferences map[types.Username]types.Preferences
 	UserProfile     types.UserProfile
 	ReadEntriesErr  error
+}
+
+func (ds MockDatastore) GetAvatar(username types.Username) (io.Reader, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (ds MockDatastore) InsertAvatar(username types.Username, avatarReader io.Reader, avatarWidth int) error {
+	return errors.New("not implemented")
+}
+
+func (ds MockDatastore) DeleteAvatar(username types.Username) error {
+	return errors.New("not implemented")
 }
 
 func (ds *MockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
