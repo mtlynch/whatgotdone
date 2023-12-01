@@ -102,19 +102,14 @@
                 image: this.shadowRoot.querySelector('img'),
               };
               this.elements.anchor.setAttribute('href', `/${username}`);
-              this.elements.image.setAttribute(
-                'src',
-                // DEBUG
-                `http://wgt:3001/${username}/avatar`
-              );
+              this.elements.image.setAttribute('src', `/${username}/avatar`);
             }
 
             refresh() {
               const unixTime = Math.floor(Date.now() / 1000);
               this.elements.image.setAttribute(
                 'src',
-                // DEBUG
-                `http://wgt:3001/${username}/avatar?cache=${unixTime}`
+                `/${username}/avatar?cache=${unixTime}`
               );
             }
           }
