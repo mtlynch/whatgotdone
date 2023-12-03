@@ -1,14 +1,9 @@
 <template>
   <div>
     <div class="profile">
-      <Avatar
-        class="avatar"
-        :username="username"
-        :to="avatarLink"
-        size="150px"
-      />
+      <user-avatar :username="username" class="avatar" />
 
-      <div class="profile-body">
+      <div class="ml-md-5">
         <h1>{{ username }}</h1>
 
         <vue-markdown
@@ -105,7 +100,6 @@ import {exportGet} from '@/controllers/Export.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
-import Avatar from '@/components/Avatar.vue';
 import PartialJournal from '@/components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
@@ -113,7 +107,6 @@ Vue.use(VueMarkdown);
 export default {
   name: 'UserProfilePage',
   components: {
-    Avatar,
     VueMarkdown,
     PartialJournal,
   },
@@ -259,13 +252,7 @@ export default {
 }
 
 .profile .avatar {
-  margin-bottom: 1rem;
-}
-
-@media screen and (min-width: 768px) {
-  .profile .avatar {
-    margin-right: 2.5rem;
-  }
+  max-width: 150px;
 }
 
 h2 {
