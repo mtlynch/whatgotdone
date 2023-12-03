@@ -3,7 +3,8 @@
 set -ex
 
 # Change directory to repository root.
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
 cd "${SCRIPT_DIR}/.."
 
 export DB_PATH="$1"
@@ -11,6 +12,7 @@ export DB_PATH="$1"
 set -u
 
 set +x
+# shellcheck disable=SC1091
 . .env.prod
 set -x
 
@@ -18,7 +20,7 @@ if [[ -z "${DB_PATH}" ]]; then
       echo "usage: upload-prod-db [db_path]" && exit 1
 fi
 
-read -p "Really overwrite prod database? (y/N): " choice
+read -pr "Really overwrite prod database? (y/N): " choice
 
 echo "Choice is ${choice}"
 

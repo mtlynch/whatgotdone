@@ -11,9 +11,9 @@ is_litestream_enabled() {
 
   local IS_ENABLED='false'
 
-  if [[ ! -z "${LITESTREAM_ACCESS_KEY_ID}" ]] && \
-      [[ ! -z "${LITESTREAM_SECRET_ACCESS_KEY}" ]] && \
-      [[ ! -z "${LITESTREAM_ENDPOINT}" ]]; then
+  if [[ -n "${LITESTREAM_ACCESS_KEY_ID}" ]] && \
+      [[ -n "${LITESTREAM_SECRET_ACCESS_KEY}" ]] && \
+      [[ -n "${LITESTREAM_ENDPOINT}" ]]; then
     IS_ENABLED='true';
   fi
 
@@ -22,12 +22,15 @@ is_litestream_enabled() {
   echo "${IS_ENABLED}"
 }
 
-readonly IS_LITESTREAM_ENABLED="$(is_litestream_enabled)"
+IS_LITESTREAM_ENABLED="$(is_litestream_enabled)"
+readonly IS_LITESTREAM_ENABLED
 
 # Echo commands to stdout.
 set -x
 
-export readonly DB_PATH="/app/data/store.db"
+# We need to export DB_PATH because litestream.yml references it.
+export DB_PATH='/app/data/store.db'
+readonly DB_PATH
 
 if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
   # Print the litestream version so that logs pick up which version
@@ -38,7 +41,7 @@ if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
   /app/litestream restore -if-replica-exists -v "${DB_PATH}"
 
   # Let Litestream start What Got Done as a child process
-  exec /app/litestream replicate \
+  /app/litestream replicate \
     -exec "/app/bin/whatgotdone -db ${DB_PATH}"
     "${DB_PATH}" \
     "${LITESTREAM_ENDPOINT}"

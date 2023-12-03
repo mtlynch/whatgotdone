@@ -49,6 +49,7 @@ gcloud iam service-accounts keys create "${CLIENT_SECRET}" \
 
 set +x
 
+# shellcheck disable=SC2002
 CLIENT_SECRET_BASE64="$(cat "${CLIENT_SECRET}" | base64 --wrap=0)"
 readonly CLIENT_SECRET_BASE64
 echo "Client secret (base64): ${CLIENT_SECRET_BASE64}"
