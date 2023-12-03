@@ -13,5 +13,5 @@ for filename in *.jpg; do
   parts=(${filename//-/ })
   USERNAME="${parts[0]}"
   HEX="$(xxd -p $filename | tr -d '\n')"
-  sqlite3 /home/mike/whatgotdone/data/store.db "UPDATE user_profiles SET avatar = X'$HEX', avatar_width=300 WHERE username='${USERNAME}'"
+  sqlite3 /home/mike/whatgotdone/data/store.db "INSERT INTO avatars (username, avatar, width, last_modified) VALUES ('${USERNAME}', X'$HEX', 300, strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))"
 done
