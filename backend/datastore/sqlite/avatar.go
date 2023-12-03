@@ -17,7 +17,7 @@ func (d DB) GetAvatar(username types.Username) (io.Reader, error) {
 	SELECT
 		avatar
 	FROM
-		user_profiles
+		avatars
 	WHERE
 		avatar IS NOT NULL AND
 		username=?`, username).Scan(&avatar); err != nil {
@@ -43,13 +43,19 @@ func (d DB) InsertAvatar(username types.Username, avatarReader io.Reader, avatar
 		return err
 	}
 	if _, err := d.ctx.Exec(`
-	UPDATE user_profiles
-	SET
-		avatar=?,
-		avatar_width=?,
-		avatar_last_modified=strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc')
-	WHERE
-		username=?`, avatar, avatarWidth, username); err != nil {
+	INSERT OR REPLACE INTO avatars
+	(
+		username,
+		avatar,
+		width,
+		last_modified
+	)
+	VALUES(
+		?,
+		?,
+		?,
+		strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc')
+	)`, username, avatar, avatarWidth); err != nil {
 		return err
 	}
 	return nil
@@ -58,13 +64,8 @@ func (d DB) InsertAvatar(username types.Username, avatarReader io.Reader, avatar
 func (d DB) DeleteAvatar(username types.Username) error {
 	log.Printf("deleting avatar from datastore for user %s", username)
 	if _, err := d.ctx.Exec(`
-	UPDATE user_profiles
-	SET
-		avatar=NULL,
-		avatar_width=NULL,
-		avatar_last_modified=NULL
-	WHERE
-		username=?`); err != nil {
+	DELETE FROM avatars
+	WHERE username=?`, username); err != nil {
 		return err
 	}
 	return nil

@@ -1,3 +1,6 @@
-ALTER TABLE user_profiles ADD COLUMN avatar BLOB;
-ALTER TABLE user_profiles ADD COLUMN avatar_width INTEGER;
-ALTER TABLE user_profiles ADD COLUMN avatar_last_modified TEXT;
+CREATE TABLE avatars (
+    username TEXT PRIMARY KEY,
+    avatar BLOB,
+    width INTEGER,
+    last_modified TEXT
+);

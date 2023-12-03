@@ -171,6 +171,7 @@ export default {
 }
 
 .avatar-wrapper {
+  max-width: 80px;
   margin: 1rem 0;
   display: inline-block;
   align-self: flex-start;
