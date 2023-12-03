@@ -13,7 +13,7 @@ export function getEntriesFromUser(username, project = null) {
         entries.push({
           permalink: `/${username}/${entry.date}`,
           author: username,
-          date: new Date(entry.date),
+          date: entry.date,
           lastModified: new Date(entry.lastModified),
           markdown: entry.markdown,
         });

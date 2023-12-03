@@ -4,9 +4,9 @@
     <template v-if="entryContent !== null">
       <form class="entry-form" @submit.prevent="handleSubmit">
         <p>
-          Enter your update for the week ending
-          <span class="end-date">{{ date | moment('dddd, ll') }}</span
-          >.
+          Enter your update for the week ending&nbsp;<entry-date
+            :date="date"
+          />.
         </p>
         <template v-if="inRichEditMode">
           <RichTextEditor
@@ -189,11 +189,6 @@ export default {
 .submit {
   text-align: left;
   font-size: 11pt;
-}
-
-span.end-date {
-  color: #2b3e50 !important;
-  font-weight: bold;
 }
 
 .save-draft {

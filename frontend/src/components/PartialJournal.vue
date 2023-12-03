@@ -1,9 +1,6 @@
 <template>
   <div class="journal">
-    <JournalHeader
-      :entryAuthor="entry.author"
-      :entryDate="new Date(entry.date)"
-    />
+    <JournalHeader :entryAuthor="entry.author" :entryDate="entry.date" />
     <div class="journal-entry">
       <div class="journal-body">
         <vue-markdown
