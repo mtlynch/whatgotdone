@@ -89,15 +89,17 @@ test("logs in and sets profile photo", async ({ page }) => {
   await apiUserAvatarResponse;
 
   await expect(page.locator(".avatar-wrapper img")).toHaveScreenshot(
-    "kittyface.png"
+    "kittyface-80px-circle.png"
   );
 
   await page.locator("#save-profile").click();
 
   await expect(page).toHaveURL("/staging_jimmy");
 
+  // Workaround for timing.
+  await page.reload();
   await expect(page.locator(".profile img")).toHaveScreenshot(
-    "unknown-person.png"
+    "kittyface-150px-circle.png"
   );
 
   // Delete the avatar image.
@@ -113,5 +115,7 @@ test("logs in and sets profile photo", async ({ page }) => {
   await expect(page).toHaveURL("/staging_jimmy");
   // Workaround for timing.
   await page.reload();
-  await expect(page.locator(".profile img")).toHaveScreenshot();
+  await expect(page.locator(".profile img")).toHaveScreenshot(
+    "unknown-person.png"
+  );
 });

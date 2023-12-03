@@ -8,6 +8,7 @@ import "log"
 func (db DB) Clear() {
 	log.Printf("clearing all SQLite tables")
 	tables := []string{
+		"avatars",
 		"user_preferences",
 		"user_profiles",
 		"journal_entries",
