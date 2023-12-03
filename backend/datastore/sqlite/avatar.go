@@ -3,7 +3,6 @@ package sqlite
 import (
 	"bytes"
 	"database/sql"
-	"errors"
 	"io"
 	"log"
 
@@ -19,7 +18,6 @@ func (d DB) GetAvatar(username types.Username) (io.Reader, error) {
 	FROM
 		avatars
 	WHERE
-		avatar IS NOT NULL AND
 		username=?`, username).Scan(&avatar); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, datastore.ErrAvatarNotFound{
@@ -29,19 +27,17 @@ func (d DB) GetAvatar(username types.Username) (io.Reader, error) {
 		return nil, err
 	}
 
-	if len(avatar) == 0 {
-		return nil, errors.New("no avatar for user")
-	}
-
 	return bytes.NewBuffer(avatar), nil
 }
 
 func (d DB) InsertAvatar(username types.Username, avatarReader io.Reader, avatarWidth int) error {
 	log.Printf("saving avatar to datastore for user %s", username)
+
 	avatar, err := io.ReadAll(avatarReader)
 	if err != nil {
 		return err
 	}
+
 	if _, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO avatars
 	(
@@ -58,6 +54,7 @@ func (d DB) InsertAvatar(username types.Username, avatarReader io.Reader, avatar
 	)`, username, avatar, avatarWidth); err != nil {
 		return err
 	}
+
 	return nil
 }
 
