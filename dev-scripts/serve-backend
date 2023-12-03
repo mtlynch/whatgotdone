@@ -10,11 +10,15 @@ set -u
 set -x
 
 # Change directory to repository root.
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
 cd "${SCRIPT_DIR}/.."
 
+
+# shellcheck disable=SC1091
 . .env.dev
 if [[ -f .env.dev.local ]]; then
+    # shellcheck disable=SC1091
     . .env.dev.local
 fi
 
