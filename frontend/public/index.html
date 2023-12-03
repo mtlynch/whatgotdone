@@ -116,6 +116,39 @@
         );
       })();
     </script>
+    <template id="entry-date-template">
+      <strong><span id="date"></span></strong>
+    </template>
+    <script type="module" nonce="[[ .CspNonce ]]">
+      (function () {
+        const template = document.querySelector('#entry-date-template');
+
+        customElements.define(
+          'entry-date',
+          class extends HTMLElement {
+            connectedCallback() {
+              this.attachShadow({mode: 'open'}).appendChild(
+                template.content.cloneNode(true)
+              );
+              const dateRaw = this.getAttribute('date');
+
+              // Construct the date manually so it's interpreted as a local time
+              // rather than UTC.
+              const dateParts = dateRaw.split('-').map(Number);
+              const d = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+              this.shadowRoot.getElementById('date').innerText =
+                new Intl.DateTimeFormat('en-US', {
+                  weekday: 'long',
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                }).format(d);
+            }
+          }
+        );
+      })();
+    </script>
     <style>
       .footer {
         margin: 2rem auto;

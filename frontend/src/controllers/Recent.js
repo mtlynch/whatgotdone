@@ -58,7 +58,7 @@ function processEntry(entry) {
   return {
     permalink: `/${entry.author}/${formattedDate}`,
     author: entry.author,
-    date: new Date(entry.date),
+    date: entry.date,
     markdown: entry.markdown,
   };
 }
