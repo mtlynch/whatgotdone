@@ -17,8 +17,8 @@
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p class="missing-entry" v-else>
         <username-link :username="entryAuthor" />&nbsp;has not posted a journal
-        entry for&nbsp;
-        <entry-date :date="entryDate" />
+        entry for
+        <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
       </p>
     </template>
     <template v-else-if="isLoading">
@@ -122,7 +122,7 @@ export default {
         }
       } else {
         for (const entry of this.journalEntries) {
-          dates.push(new Date(entry.date).toISOString());
+          dates.push(entry.date.toISOString());
         }
       }
       return dates;

@@ -1,10 +1,12 @@
 <template>
   <div class="project-entry">
     <p class="date">
-      For the week ending&nbsp;
-      <router-link :to="entry.permalink"
-        ><entry-date :date="entry.date"
-      /></router-link>
+      For the week ending
+      <strong>
+        <router-link :to="entry.permalink">{{
+          entry.date | moment('utc', 'dddd, ll')
+        }}</router-link></strong
+      >
     </p>
     <JournalBody :source="entry.markdown" />
   </div>
