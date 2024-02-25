@@ -107,7 +107,7 @@ jobs:
           path: playwright-report
   deploy:
     machine:
-      image: ubuntu-2004:202104-01
+      image: ubuntu-2204:current
       docker_layer_caching: true
     environment:
       # The flyctl changes too much to use a specific version, so use the latest for the
