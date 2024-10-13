@@ -4,8 +4,8 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
 
-    # 1.19.4 release
-    go-nixpkgs.url = "github:NixOS/nixpkgs/2d38b664b4400335086a713a0036aafaa002c003";
+    # 1.23.1 release
+    go-nixpkgs.url = "github:NixOS/nixpkgs/5ed627539ac84809c78b2dd6d26a5cebeb5ae269";
 
     # 20.6.1 release
     nodejs-nixpkgs.url = "github:NixOS/nixpkgs/78058d810644f5ed276804ce7ea9e82d92bee293";
@@ -30,7 +30,7 @@
     litestream-nixpkgs,
   } @ inputs:
     flake-utils.lib.eachDefaultSystem (system: let
-      go = go-nixpkgs.legacyPackages.${system}.go_1_19;
+      go = go-nixpkgs.legacyPackages.${system}.go_1_23;
       nodejs = nodejs-nixpkgs.legacyPackages.${system}.nodejs_20;
       shellcheck = shellcheck-nixpkgs.legacyPackages.${system}.shellcheck;
       sqlfluff = sqlfluff-nixpkgs.legacyPackages.${system}.sqlfluff;
