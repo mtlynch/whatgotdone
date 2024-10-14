@@ -10,7 +10,9 @@ import (
 
 // GetDraft returns an entry draft for the given user for the given date.
 func (d DB) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
-	stmt, err := d.ctx.Prepare(`
+	var markdown string
+	var lastModified string
+	err := d.ctx.QueryRow(`
 			SELECT
 				markdown,
 				last_modified
@@ -20,15 +22,8 @@ func (d DB) GetDraft(username types.Username, date types.EntryDate) (types.Journ
 				username=? AND
 				date=? AND
 				is_draft=1
-			`)
-	if err != nil {
-		return types.JournalEntry{}, err
-	}
-	defer stmt.Close()
+			`, username, date).Scan(&markdown, &lastModified)
 
-	var markdown string
-	var lastModified string
-	err = stmt.QueryRow(username, date).Scan(&markdown, &lastModified)
 	if err == sql.ErrNoRows {
 		return types.JournalEntry{}, datastore.DraftNotFoundError{
 			Username: username,
