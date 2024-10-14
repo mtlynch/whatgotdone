@@ -15,16 +15,16 @@ func (d DB) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 	var markdown string
 	var lastModified string
 	err := d.ctx.QueryRow(`
-		SELECT
-			markdown,
-			last_modified
-		FROM
-			journal_entries
-		WHERE
-			username=? AND
-			date=? AND
-			is_draft=0
-		`, username, date).Scan(&markdown, &lastModified)
+				SELECT
+						markdown,
+						last_modified
+				FROM
+						journal_entries
+				WHERE
+						username=:username AND
+						date=:date AND
+						is_draft=0
+				`, sql.Named("username", username), sql.Named("date", date)).Scan(&markdown, &lastModified)
 
 	if err == sql.ErrNoRows {
 		return types.JournalEntry{}, datastore.EntryNotFoundError{
@@ -53,48 +53,55 @@ func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 	whereClauses := []string{
 		"is_draft=0",
 	}
-	var values []interface{}
+	var namedArgs []sql.NamedArg
 	if len(filter.ByUsers) != 0 {
-		placeholders := strings.TrimSuffix(strings.Repeat("?,", len(filter.ByUsers)), ",")
-		whereClauses = append(whereClauses, fmt.Sprintf("username IN (%s)", placeholders))
-		for _, u := range filter.ByUsers {
-			values = append(values, string(u))
+		// Construct the placeholders dynamically based on the number of users.
+		placeholders := []string{}
+		for i := range filter.ByUsers {
+			placeholders = append(placeholders, fmt.Sprintf(":user%d", i))
+			namedArgs = append(namedArgs, sql.Named(fmt.Sprintf("user%d", i), filter.ByUsers[i]))
 		}
+
+		whereClauses = append(whereClauses, fmt.Sprintf("username IN (%s)", strings.Join(placeholders, ",")))
+
 	}
 
 	if filter.MinLength != 0 {
-		whereClauses = append(whereClauses, "LENGTH(markdown) > ?")
-		values = append(values, filter.MinLength)
+		whereClauses = append(whereClauses, "LENGTH(markdown) > :minLength")
+		namedArgs = append(namedArgs, sql.Named("minLength", filter.MinLength))
 	}
 
 	limitClause := ""
 	if filter.Limit != 0 {
-		limitClause = fmt.Sprintf("LIMIT %d", filter.Limit)
+		limitClause = fmt.Sprintf("LIMIT :limit")
+		namedArgs = append(namedArgs, sql.Named("limit", filter.Limit))
+
 	}
 
 	offsetClause := ""
 	if filter.Offset != 0 {
-		offsetClause = fmt.Sprintf("OFFSET %d", filter.Offset)
+		offsetClause = fmt.Sprintf("OFFSET :offset")
+		namedArgs = append(namedArgs, sql.Named("offset", filter.Offset))
 	}
 
 	query := fmt.Sprintf(`
-		SELECT
-			username,
-			date,
-			markdown,
-			last_modified
-		FROM
-			journal_entries
-		WHERE
-			%s
-		ORDER BY
-			date DESC,
-			last_modified DESC
-			%s
-			%s
-		`, strings.Join(whereClauses, " AND "), limitClause, offsetClause)
+				SELECT
+						username,
+						date,
+						markdown,
+						last_modified
+				FROM
+						journal_entries
+				WHERE
+						%s
+				ORDER BY
+						date DESC,
+						last_modified DESC
+						%s
+						%s
+				`, strings.Join(whereClauses, " AND "), limitClause, offsetClause)
 
-	rows, err := d.ctx.Query(query, values...)
+	rows, err := d.ctx.Query(query, namedArgs...)
 	if err != nil {
 		return []types.JournalEntry{}, err
 	}
@@ -141,13 +148,16 @@ func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 func (d DB) InsertEntry(username types.Username, j types.JournalEntry) error {
 	log.Printf("saving entry to datastore: %s -> %+v (%d characters)", username, j.Date, len(j.Markdown))
 	_, err := d.ctx.Exec(`
-	INSERT OR REPLACE INTO journal_entries(
-		username,
-		date,
-		markdown,
-		is_draft,
-		last_modified)
-	values(?,?,?,0,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, username, j.Date, j.Markdown)
+		INSERT OR REPLACE INTO journal_entries(
+				username,
+				date,
+				markdown,
+				is_draft,
+				last_modified)
+		values(:username,:date,:markdown,0,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`,
+		sql.Named("username", username),
+		sql.Named("date", j.Date),
+		sql.Named("markdown", j.Markdown))
 	return err
 }
 
@@ -155,12 +165,12 @@ func (d DB) InsertEntry(username types.Username, j types.JournalEntry) error {
 func (d DB) DeleteEntry(username types.Username, date types.EntryDate) error {
 	log.Printf("deleting entry from datastore: %s -> %+v", username, date)
 	_, err := d.ctx.Exec(`
-	DELETE FROM
-		journal_entries
-	WHERE
-		username=? AND
-		date=? AND
-		is_draft=0
-	`, username, date)
+		DELETE FROM
+				journal_entries
+		WHERE
+				username=:username AND
+				date=:date AND
+				is_draft=0
+		`, sql.Named("username", username), sql.Named("date", date))
 	return err
 }

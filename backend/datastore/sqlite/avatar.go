@@ -18,7 +18,7 @@ func (d DB) GetAvatar(username types.Username) (io.Reader, error) {
 	FROM
 		avatars
 	WHERE
-		username=?`, username).Scan(&avatar); err != nil {
+		username=:username`, sql.Named("username", username)).Scan(&avatar); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, datastore.ErrAvatarNotFound{
 				Username: username,
@@ -47,11 +47,14 @@ func (d DB) InsertAvatar(username types.Username, avatarReader io.Reader, avatar
 		last_modified
 	)
 	VALUES(
-		?,
-		?,
-		?,
+		:username,
+		:avatar,
+		:width,
 		strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc')
-	)`, username, avatar, avatarWidth); err != nil {
+	)`,
+		sql.Named("username", username),
+		sql.Named("avatar", avatar),
+		sql.Named("width", avatarWidth)); err != nil {
 		return err
 	}
 
@@ -62,7 +65,8 @@ func (d DB) DeleteAvatar(username types.Username) error {
 	log.Printf("deleting avatar from datastore for user %s", username)
 	if _, err := d.ctx.Exec(`
 	DELETE FROM avatars
-	WHERE username=?`, username); err != nil {
+	WHERE username=:username`,
+		sql.Named("username", username)); err != nil {
 		return err
 	}
 	return nil
