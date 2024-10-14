@@ -54,7 +54,7 @@ jobs:
             - ./frontend/dist
   build_staging_backend:
     docker:
-      - image: golang:1.23.1-alpine3.17
+      - image: golang:1.23.1-alpine3.20
     steps:
       - checkout
       - attach_workspace:
