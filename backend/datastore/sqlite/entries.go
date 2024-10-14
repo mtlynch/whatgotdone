@@ -73,14 +73,14 @@ func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 
 	limitClause := ""
 	if filter.Limit != 0 {
-		limitClause = fmt.Sprintf("LIMIT :limit")
+		limitClause = "LIMIT :limit"
 		namedArgs = append(namedArgs, sql.Named("limit", filter.Limit))
 
 	}
 
 	offsetClause := ""
 	if filter.Offset != 0 {
-		offsetClause = fmt.Sprintf("OFFSET :offset")
+		offsetClause = "OFFSET :offset"
 		namedArgs = append(namedArgs, sql.Named("offset", filter.Offset))
 	}
 
@@ -101,7 +101,12 @@ func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 			%s
 		`, strings.Join(whereClauses, " AND "), limitClause, offsetClause)
 
-	rows, err := d.ctx.Query(query, namedArgs...)
+	args := make([]any, len(namedArgs))
+	for i, arg := range namedArgs {
+		args[i] = arg
+	}
+
+	rows, err := d.ctx.Query(query, args...)
 	if err != nil {
 		return []types.JournalEntry{}, err
 	}
