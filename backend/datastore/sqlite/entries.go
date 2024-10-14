@@ -12,7 +12,9 @@ import (
 
 // GetEntry returns the published entry for the given date.
 func (d DB) GetEntry(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
-	stmt, err := d.ctx.Prepare(`
+	var markdown string
+	var lastModified string
+	err := d.ctx.QueryRow(`
 		SELECT
 			markdown,
 			last_modified
@@ -22,15 +24,8 @@ func (d DB) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 			username=? AND
 			date=? AND
 			is_draft=0
-		`)
-	if err != nil {
-		return types.JournalEntry{}, err
-	}
-	defer stmt.Close()
+		`, username, date).Scan(&markdown, &lastModified)
 
-	var markdown string
-	var lastModified string
-	err = stmt.QueryRow(username, date).Scan(&markdown, &lastModified)
 	if err == sql.ErrNoRows {
 		return types.JournalEntry{}, datastore.EntryNotFoundError{
 			Username: username,
@@ -82,7 +77,7 @@ func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 		offsetClause = fmt.Sprintf("OFFSET %d", filter.Offset)
 	}
 
-	stmt, err := d.ctx.Prepare(fmt.Sprintf(`
+	query := fmt.Sprintf(`
 		SELECT
 			username,
 			date,
@@ -91,22 +86,23 @@ func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 		FROM
 			journal_entries
 		WHERE
-		  %s
+			%s
 		ORDER BY
 			date DESC,
 			last_modified DESC
-		%s
-		%s
-		`, strings.Join(whereClauses, " AND "), limitClause, offsetClause))
-	if err != nil {
-		return []types.JournalEntry{}, err
-	}
-	defer stmt.Close()
+			%s
+			%s
+		`, strings.Join(whereClauses, " AND "), limitClause, offsetClause)
 
-	rows, err := stmt.Query(values...)
+	rows, err := d.ctx.Query(query, values...)
 	if err != nil {
 		return []types.JournalEntry{}, err
 	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Printf("failed to close SQLite rows: %v", err)
+		}
+	}()
 
 	entries := []types.JournalEntry{}
 	for rows.Next() {
@@ -155,7 +151,7 @@ func (d DB) InsertEntry(username types.Username, j types.JournalEntry) error {
 	return err
 }
 
-// DeleteDraft deletes a draft from the datastore.
+// DeleteEntry deletes an entry from the datastore.
 func (d DB) DeleteEntry(username types.Username, date types.EntryDate) error {
 	log.Printf("deleting entry from datastore: %s -> %+v", username, date)
 	_, err := d.ctx.Exec(`

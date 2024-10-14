@@ -10,20 +10,15 @@ import (
 
 // GetPreferences retrieves the user's preferences for using the site.
 func (d DB) GetPreferences(username types.Username) (types.Preferences, error) {
-	stmt, err := d.ctx.Prepare(`
+	var entryTemplate string
+	err := d.ctx.QueryRow(`
 	SELECT
 		entry_template
 	FROM
 		user_preferences
 	WHERE
-		username=?`)
-	if err != nil {
-		return types.Preferences{}, err
-	}
-	defer stmt.Close()
+		username=?`, username).Scan(&entryTemplate)
 
-	var entryTemplate string
-	err = stmt.QueryRow(username).Scan(&entryTemplate)
 	if err == sql.ErrNoRows {
 		return types.Preferences{}, datastore.PreferencesNotFoundError{
 			Username: username,
