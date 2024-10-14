@@ -17,15 +17,15 @@ func (d DB) GetUserProfile(username types.Username) (types.UserProfile, error) {
 		mastodon      string
 	)
 	err := d.ctx.QueryRow(`
-				SELECT
-						about_markdown,
-						email,
-						twitter,
-						mastodon
-				FROM
-						user_profiles
-				WHERE
-						username = :username`,
+		SELECT
+				about_markdown,
+				email,
+				twitter,
+				mastodon
+		FROM
+				user_profiles
+		WHERE
+				username = :username`,
 		sql.Named("username", username)).Scan(&aboutMarkdown, &email, &twitter, &mastodon)
 
 	if err == sql.ErrNoRows {
