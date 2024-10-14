@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1><UsernameLink :username="username" />'s updates for {{ project }}</h1>
+    <h1><username-link :username="username" />'s updates for {{ project }}</h1>
 
     <template v-if="entriesLoaded && entries.length > 0">
       <div
@@ -21,14 +21,12 @@
 <script>
 import {getEntriesFromUser} from '@/controllers/Entries.js';
 
-import UsernameLink from '@/components/UsernameLink.vue';
 import ProjectEntry from '@/components/ProjectEntry.vue';
 
 export default {
   name: 'ViewProjectPage',
   components: {
     ProjectEntry,
-    UsernameLink,
   },
   data() {
     return {

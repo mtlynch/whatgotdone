@@ -7,7 +7,8 @@ set -e
 set -x
 
 # Change directory to repository root.
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
 cd "${SCRIPT_DIR}/.."
 
 cd backend
@@ -23,13 +24,17 @@ readonly MODE
 set -u
 
 GO_BUILD_TAGS="${MODE}"
-LD_FLAGS=""
+GO_BUILD_TAGS+=' netgo'
+GO_BUILD_TAGS+=' osusergo'
+# Disable dynamically-loaded extensions, which cause a compile time warning.
+# https://www.arp242.net/static-go.html
+GO_BUILD_TAGS+=' sqlite_omit_load_extension'
+readonly GO_BUILD_TAGS
+
+LD_FLAGS=''
 if [[ "${MODE}" == "prod" ]] || [[ "${MODE}" == "staging" ]]; then
-  GO_BUILD_TAGS+=" netgo"
   LD_FLAGS="-w -extldflags \"-static\""
 fi
-
-readonly GO_BUILD_TAGS
 readonly LD_FLAGS
 
 GOOS=linux GOARCH=amd64 \

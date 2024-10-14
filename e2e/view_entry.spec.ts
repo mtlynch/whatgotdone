@@ -12,7 +12,7 @@ test("renders the date correctly", async ({ page }) => {
     "staging_jimmy's What Got Done for the week of 2019-06-28"
   );
 
-  await expect(page.locator(".journal .journal-header").first()).toContainText(
+  await expect(page.locator(".journal").first()).toContainText(
     "staging_jimmy's update for the week ending on Friday, Jun 28, 2019"
   );
 });

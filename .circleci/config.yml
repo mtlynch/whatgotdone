@@ -1,8 +1,14 @@
 version: 2.1
+executors:
+  stable:
+    docker:
+      - image: cimg/base:stable
+  go:
+    docker:
+      - image: golang:1.23.1
 jobs:
   check_whitespace:
-    docker:
-      - image: cimg/base:2021.04
+    executor: stable
     resource_class: small
     steps:
       - checkout
@@ -12,9 +18,19 @@ jobs:
       - run:
           name: Check that all text files end in a trailing newline
           command: ./dev-scripts/check-trailing-newline
-  test-backend:
+  check_bash:
     docker:
-      - image: cimg/go:1.19.4
+      - image: koalaman/shellcheck-alpine:v0.9.0
+    steps:
+      - run:
+          name: Install dependencies needed to check out repo
+          command: apk add bash git openssh-client grep
+      - checkout
+      - run:
+          name: Run static analysis on bash scripts
+          command: ./dev-scripts/check-bash
+  test-backend:
+    executor: go
     steps:
       - checkout
       - attach_workspace:
@@ -42,15 +58,11 @@ jobs:
           paths:
             - ./frontend/dist
   build_staging_backend:
-    docker:
-      - image: golang:1.19.4-alpine3.17
+    executor: go
     steps:
       - checkout
       - attach_workspace:
           at: ./
-      - run:
-          name: Add build dependencies
-          command: apk add --no-cache bash build-base
       - restore_cache:
           keys:
             - go-mod-v3-{{ checksum "backend/go.sum" }}
@@ -76,7 +88,7 @@ jobs:
           command: ./dev-scripts/lint-sql
   e2e:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.29.2-focal
+      - image: mcr.microsoft.com/playwright:v1.40.1-focal
     steps:
       - checkout
       - run:
@@ -95,9 +107,8 @@ jobs:
       - store_artifacts:
           path: playwright-report
   deploy:
-    machine:
-      image: ubuntu-2004:202104-01
-      docker_layer_caching: true
+    executor: stable
+    resource_class: small
     environment:
       # The flyctl changes too much to use a specific version, so use the latest for the
       # time being.
@@ -121,13 +132,13 @@ jobs:
           name: Deploy to fly.io
           command: |
             "${HOME}/.fly/bin/flyctl" deploy \
-              --access-token "${FLY_ACCESS_TOKEN}" \
-              --local-only
+              --access-token "${FLY_ACCESS_TOKEN}"
 workflows:
   version: 2
   test-deploy:
     jobs:
       - check_whitespace
+      - check_bash
       - build_staging_frontend
       - test-backend
       - build_staging_backend

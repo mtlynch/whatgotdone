@@ -14,19 +14,19 @@
       v-for="reaction in reactions"
       v-bind:key="reaction.key"
     >
-      <p>
-        <Avatar :username="reaction.username" class="avatar" />
-        <UsernameLink :username="reaction.username" />&nbsp;reacted with a
-        <span class="reaction-symbol">{{ reaction.reaction }}</span>
-      </p>
+      <div class="d-flex align-items-center mb-3">
+        <user-avatar
+          :username="reaction.username"
+          class="mr-2 d-block avatar"
+        />
+        <username-link :username="reaction.username" />&nbsp;reacted with a
+        <span class="reaction-symbol ml-1">{{ reaction.reaction }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Avatar from '@/components/Avatar.vue';
-import UsernameLink from '@/components/UsernameLink.vue';
-
 import {
   getReactions,
   deleteReaction,
@@ -38,10 +38,6 @@ export default {
   props: {
     entryAuthor: String,
     entryDate: String,
-  },
-  components: {
-    Avatar,
-    UsernameLink,
   },
   data() {
     return {
@@ -194,14 +190,8 @@ export default {
 }
 
 .reaction .avatar {
-  margin-right: 0.5rem;
-}
-
-.reaction .username {
-  background: #2b3e50;
-  border-radius: 6px;
-  padding: 2px 8px 5px;
-  color: white;
+  max-width: 40px;
+  max-height: 40px;
 }
 
 .reaction-symbol {

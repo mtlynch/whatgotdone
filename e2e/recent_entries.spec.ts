@@ -11,10 +11,10 @@ test("shows recent posts", async ({ page }) => {
   await page.getByTestId("recent-link").click();
   await expect(page).toHaveURL("/recent");
 
-  await expect(page.locator(".journal .journal-header").first()).toContainText(
+  await expect(page.locator(".journal").first()).toContainText(
     "staging_jimmy's update for the week ending on Friday, Jun 28, 2019"
   );
-  await expect(page.locator(".journal .journal-body").first()).toContainText(
+  await expect(page.locator(".journal").first()).toContainText(
     "Today was a productive day. I created a test data manager for What Got Done!"
   );
 });

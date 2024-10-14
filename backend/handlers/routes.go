@@ -82,6 +82,7 @@ func (s *defaultServer) routes() {
 	} {
 		static.PathPrefix("/" + f).HandlerFunc(s.serveStaticResource()).Methods(http.MethodGet)
 	}
+	static.HandleFunc("/{username}/avatar", s.userAvatarGet()).Methods(http.MethodGet)
 
 	// Serve index.html, the base page HTML before Vue rendering happens, and
 	// render certain page elements server-side.

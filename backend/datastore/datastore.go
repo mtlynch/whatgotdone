@@ -6,6 +6,7 @@ package datastore
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
@@ -21,6 +22,10 @@ type EntryFilter struct {
 // storing and retrieving all persistent data (journal entries, journal drafts,
 // reactions).
 type Datastore interface {
+	// GetAvatar returns avatar of the given user.
+	GetAvatar(username types.Username) (io.Reader, error)
+	InsertAvatar(username types.Username, avatar io.Reader, avatarWidth int) error
+	DeleteAvatar(username types.Username) error
 	// GetUserProfile returns profile information for the given user.
 	GetUserProfile(username types.Username) (types.UserProfile, error)
 	// SetUserProfile updates the given user's profile.
@@ -58,6 +63,15 @@ type Datastore interface {
 	GetPreferences(username types.Username) (types.Preferences, error)
 	// SetPreferences saves the user's preferences for using the site.
 	SetPreferences(username types.Username, prefs types.Preferences) error
+}
+
+// ErrAvatarNotFound occurs when no avatar exists for a user.
+type ErrAvatarNotFound struct {
+	Username types.Username
+}
+
+func (f ErrAvatarNotFound) Error() string {
+	return fmt.Sprintf("no avatar found for username %s", f.Username)
 }
 
 // EntryNotFoundError occurs when no published exists for a user with a given date.
