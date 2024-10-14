@@ -54,14 +54,11 @@ jobs:
             - ./frontend/dist
   build_staging_backend:
     docker:
-      - image: golang:1.23.1-alpine3.20
+      - image: golang:1.23.1
     steps:
       - checkout
       - attach_workspace:
           at: ./
-      - run:
-          name: Add build dependencies
-          command: apk add --no-cache bash build-base
       - restore_cache:
           keys:
             - go-mod-v3-{{ checksum "backend/go.sum" }}
