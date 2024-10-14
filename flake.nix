@@ -43,8 +43,13 @@
         }
         {
           packages = [
-            go-nixpkgs.legacyPackages.${system}.gopls
             go-nixpkgs.legacyPackages.${system}.gotools
+            go-nixpkgs.legacyPackages.${system}.gopls
+            go-nixpkgs.legacyPackages.${system}.go-outline
+            go-nixpkgs.legacyPackages.${system}.gopkgs
+            go-nixpkgs.legacyPackages.${system}.gocode-gomod
+            go-nixpkgs.legacyPackages.${system}.godef
+            go-nixpkgs.legacyPackages.${system}.golint
             go
             nodejs
             shellcheck
@@ -53,6 +58,8 @@
           ];
 
           shellHook = ''
+            export GOROOT="${go}/share/go"
+
             echo "shellcheck" "$(shellcheck --version | grep '^version:')"
             sqlfluff --version
             echo "litestream" "$(litestream version)"
