@@ -55,3 +55,12 @@ if [[ ! -f "${STATICCHECK_PATH}" ]]; then
       "honnef.co/go/tools/cmd/staticcheck@${STATICCHECK_VERSION}"
 fi
 "${STATICCHECK_PATH}" ./...
+
+# Install errcheck if it's not present.
+ERRCHECK_PATH="$(go env GOPATH)/bin/errcheck"
+readonly ERRCHECK_PATH
+readonly ERRCHECK_VERSION="v1.7.0"
+if [ ! -f "${ERRCHECK_PATH}" ]; then
+    go install "github.com/kisielk/errcheck@${ERRCHECK_VERSION}"
+fi
+"${ERRCHECK_PATH}" -ignoretests ./...
