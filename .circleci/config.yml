@@ -1,8 +1,14 @@
 version: 2.1
+executors:
+  stable:
+    docker:
+      - image: cimg/base:stable
+  go:
+    docker:
+      - image: golang:1.23.1
 jobs:
   check_whitespace:
-    docker:
-      - image: cimg/base:2021.04
+    executor: stable
     resource_class: small
     steps:
       - checkout
@@ -24,8 +30,7 @@ jobs:
           name: Run static analysis on bash scripts
           command: ./dev-scripts/check-bash
   test-backend:
-    docker:
-      - image: cimg/go:1.23.1
+    executor: go
     steps:
       - checkout
       - attach_workspace:
@@ -53,8 +58,7 @@ jobs:
           paths:
             - ./frontend/dist
   build_staging_backend:
-    docker:
-      - image: golang:1.23.1
+    executor: go
     steps:
       - checkout
       - attach_workspace:
@@ -103,8 +107,7 @@ jobs:
       - store_artifacts:
           path: playwright-report
   deploy:
-    docker:
-      - image: cimg/base:stable
+    executor: stable
     resource_class: small
     environment:
       # The flyctl changes too much to use a specific version, so use the latest for the
