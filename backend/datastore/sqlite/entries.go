@@ -15,16 +15,16 @@ func (d DB) GetEntry(username types.Username, date types.EntryDate) (types.Journ
 	var markdown string
 	var lastModified string
 	err := d.ctx.QueryRow(`
-				SELECT
-						markdown,
-						last_modified
-				FROM
-						journal_entries
-				WHERE
-						username=:username AND
-						date=:date AND
-						is_draft=0
-				`, sql.Named("username", username), sql.Named("date", date)).Scan(&markdown, &lastModified)
+		SELECT
+			markdown,
+			last_modified
+		FROM
+			journal_entries
+		WHERE
+			username=:username AND
+			date=:date AND
+			is_draft=0
+		`, sql.Named("username", username), sql.Named("date", date)).Scan(&markdown, &lastModified)
 
 	if err == sql.ErrNoRows {
 		return types.JournalEntry{}, datastore.EntryNotFoundError{
@@ -85,21 +85,21 @@ func (d DB) ReadEntries(filter datastore.EntryFilter) ([]types.JournalEntry, err
 	}
 
 	query := fmt.Sprintf(`
-				SELECT
-						username,
-						date,
-						markdown,
-						last_modified
-				FROM
-						journal_entries
-				WHERE
-						%s
-				ORDER BY
-						date DESC,
-						last_modified DESC
-						%s
-						%s
-				`, strings.Join(whereClauses, " AND "), limitClause, offsetClause)
+		SELECT
+			username,
+			date,
+			markdown,
+			last_modified
+		FROM
+			journal_entries
+		WHERE
+			%s
+		ORDER BY
+			date DESC,
+			last_modified DESC
+			%s
+			%s
+		`, strings.Join(whereClauses, " AND "), limitClause, offsetClause)
 
 	rows, err := d.ctx.Query(query, namedArgs...)
 	if err != nil {
@@ -149,11 +149,11 @@ func (d DB) InsertEntry(username types.Username, j types.JournalEntry) error {
 	log.Printf("saving entry to datastore: %s -> %+v (%d characters)", username, j.Date, len(j.Markdown))
 	_, err := d.ctx.Exec(`
 		INSERT OR REPLACE INTO journal_entries(
-				username,
-				date,
-				markdown,
-				is_draft,
-				last_modified)
+			username,
+			date,
+			markdown,
+			is_draft,
+			last_modified)
 		values(:username,:date,:markdown,0,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`,
 		sql.Named("username", username),
 		sql.Named("date", j.Date),
@@ -166,11 +166,11 @@ func (d DB) DeleteEntry(username types.Username, date types.EntryDate) error {
 	log.Printf("deleting entry from datastore: %s -> %+v", username, date)
 	_, err := d.ctx.Exec(`
 		DELETE FROM
-				journal_entries
+			journal_entries
 		WHERE
-				username=:username AND
-				date=:date AND
-				is_draft=0
+			username=:username AND
+			date=:date AND
+			is_draft=0
 		`, sql.Named("username", username), sql.Named("date", date))
 	return err
 }
