@@ -6,7 +6,7 @@ import (
 )
 
 func TestUserBio(t *testing.T) {
-	var tests = []struct {
+	for _, tt := range []struct {
 		explanation   string
 		bio           string
 		validExpected bool
@@ -76,12 +76,12 @@ func TestUserBio(t *testing.T) {
 			"Here's me: ![image alt text][me]\n\n[me]: http://example.com/photo \"My avatar\"",
 			false,
 		},
-	}
-
-	for _, tt := range tests {
-		_, err := UserBio(tt.bio)
-		if (err == nil) != tt.validExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.bio, err, tt.validExpected)
-		}
+	} {
+		t.Run(tt.explanation, func(t *testing.T) {
+			_, err := UserBio(tt.bio)
+			if got, want := err == nil, tt.validExpected; got != want {
+				t.Fatalf("valid=%v, want %v", got, want)
+			}
+		})
 	}
 }

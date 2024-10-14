@@ -16,18 +16,18 @@
 
       <Journal v-bind:entry="currentEntry" v-if="currentEntry" />
       <p class="missing-entry" v-else>
-        <UsernameLink :username="entryAuthor" />&nbsp;has not posted a journal
+        <username-link :username="entryAuthor" />&nbsp;has not posted a journal
         entry for
         <b>{{ entryDate | moment('utc', 'dddd, ll') }}</b>
       </p>
     </template>
     <template v-else-if="isLoading">
       <b-spinner type="grow" label="Spinning"></b-spinner>
-      <p>Loading &nbsp;<UsernameLink :username="entryAuthor" />'s update...</p>
+      <p>Loading &nbsp;<username-link :username="entryAuthor" />'s update...</p>
     </template>
     <template v-else>
       <p>
-        <UsernameLink :username="entryAuthor" /> has not posted any What Got
+        <username-link :username="entryAuthor" /> has not posted any What Got
         Done updates.
       </p>
     </template>
@@ -35,21 +35,8 @@
       Failed to connect to backend: {{ backendError }}
     </p>
     <div class="author-controls mb-4" v-if="canEdit">
-      <b-button
-        :href="twitterShareUrl"
-        title="Share on Twitter"
-        class="twitter"
-        variant="info"
-        ><font-awesome-icon :icon="['fab', 'twitter']" class="mr-3" /> Share on
-        Twitter</b-button
-      >
       <div class="ml-auto">
-        <b-button
-          variant="danger"
-          @click="onDelete"
-          data-test-id="unpublish-btn"
-          >Unpublish</b-button
-        >
+        <b-button variant="danger" @click="onDelete">Unpublish</b-button>
         <b-button
           :to="'/entry/edit/' + this.entryDate"
           variant="primary"
@@ -74,14 +61,12 @@ import {thisFriday} from '@/controllers/EntryDates.js';
 
 import Journal from '@/components/Journal.vue';
 import Reactions from '@/components/Reactions.vue';
-import UsernameLink from '@/components/UsernameLink.vue';
 
 export default {
   name: 'ViewEntryPage',
   components: {
     Journal,
     Reactions,
-    UsernameLink,
   },
   data() {
     return {
@@ -151,13 +136,6 @@ export default {
         this.loggedInUsername &&
         this.loggedInUsername === this.entryAuthor
       );
-    },
-    twitterShareUrl: function () {
-      const permalink =
-        location.protocol + '//' + location.host + this.$route.fullPath;
-      const text =
-        encodeURIComponent("Here's what I got done this week ") + permalink;
-      return `https://twitter.com/intent/tweet?text=${text}`;
     },
     entryAuthor: function () {
       return this.$route.params.username;

@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Generate GCP creds for What Got Done to use.
+#
+# Usage:
+# ./dev-scripts/generate-gcloud-auth-token [GCP project name]
+#
+# Examples
+#
+# Generate GCP creds for production (requires access to whatgotdone GCP
+# project):
+#   ./dev-scripts/generate-gcloud-auth-token whatgotdone
+#
+# Generate GCP creds for integration tests (requires access to
+# whatgotdone-staging project):
+#   ./dev-scripts/generate-gcloud-auth-token whatgotdone-staging
+
+set -eux
+
+readonly PROJECT_ID="$1"
+
+RANDOM_SUFFIX="$(head /dev/urandom | tr -dc 'a-z0-9' | head -c 6 ; echo '')"
+readonly RANDOM_SUFFIX
+
+SERVICE_ACCOUNT_NAME="wgd-app-runtime-${RANDOM_SUFFIX}"
+readonly SERVICE_ACCOUNT_NAME
+
+gcloud config set project "${PROJECT_ID}"
+readonly SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+gcloud iam service-accounts create "${SERVICE_ACCOUNT_NAME}"
+
+ROLES=('storage.admin' 'iam.serviceAccountUser')
+readonly ROLES
+
+for ROLE in "${ROLES[@]}"
+do
+  gcloud projects add-iam-policy-binding \
+      "${PROJECT_ID}" \
+      --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
+      --role="roles/${ROLE}"
+done
+
+CLIENT_SECRET=$(mktemp)
+readonly CLIENT_SECRET
+
+gcloud iam service-accounts keys create "${CLIENT_SECRET}" \
+    --iam-account="${SERVICE_ACCOUNT_EMAIL}" \
+    --key-file-type=json
+
+set +x
+
+# shellcheck disable=SC2002
+CLIENT_SECRET_BASE64="$(cat "${CLIENT_SECRET}" | base64 --wrap=0)"
+readonly CLIENT_SECRET_BASE64
+echo "Client secret (base64): ${CLIENT_SECRET_BASE64}"
+echo "Client secret in ${CLIENT_SECRET}"

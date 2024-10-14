@@ -1,6 +1,6 @@
 # whatgotdone
 
-[![CircleCI](https://circleci.com/gh/mtlynch/whatgotdone.svg?style=svg&circle-token=180495ad17cc0343547e430e81d28b66ff87e9f4)](https://circleci.com/gh/mtlynch/whatgotdone)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mtlynch/whatgotdone/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mtlynch/whatgotdone/tree/master)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/mtlynch/whatgotdone)](https://github.com/mtlynch/whatgotdone/commits/master)
 [![GitHub last commit](https://img.shields.io/github/last-commit/mtlynch/whatgotdone)](https://github.com/mtlynch/whatgotdone/commits/master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -31,18 +31,6 @@ The Go backend handles all of What Got Done's `/api/*` routes. These routes are 
 
 What Got Done uses [UserKit](https://docs.userkit.io/) for user authentication. For user signup, user login, and password reset, What Got Done loads the UserKit UI widgets in JavaScript. On the backend, the `auth` package is responsible for translating UserKit auth tokens into What Got Done usernames.
 
-### Integration tests
-
-What Got Done's integration tests use Cypress and follow the testing pattern defined in the article [End-to-End Testing Web Apps: The Painless Way](https://mtlynch.io/painless-web-app-testing/). The testing architecture consists of four Docker containers (see [docker-compose.yml](https://github.com/mtlynch/whatgotdone/blob/master/integration/docker-compose.yml)):
-
-* What Got Done container
-* Cypress container
-* Test data manager
-
-The integration test is entirely self-contained, so nothing that happens during testing affects anything outside of the docker-compose environment.
-
-To run the integration tests yourself, see the [section below](#optional-run-integration-tests).
-
 ## Contributing to What Got Done
 
 Interested in contributing code or bug reports to What Got Done? That's great! Check our [Contibutor Guidelines](https://github.com/mtlynch/whatgotdone/blob/master/CONTRIBUTING.md) for more details.
@@ -63,8 +51,8 @@ Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/d
 
 ### Pre-requisites
 
-* [Node.js](https://nodejs.org/) (12.x or higher)
-* [Go](https://golang.org/dl/) (1.17 or higher)
+* [Node.js](https://nodejs.org/) (18.x or higher)
+* [Go](https://golang.org/dl/) (1.19 or higher)
 * [Docker](https://www.docker.com/) (for E2E tests)
 * [Google Cloud SDK](https://cloud.google.com/sdk)
 * [screen](https://wiki.debian.org/screen)
@@ -101,26 +89,13 @@ Unit tests run in normal Golang fashion:
 go test ./...
 ```
 
-### Optional: Run integration tests
+### Optional: Run e2e tests
 
-Integration tests run all components together using [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
+End-to-end tests run all components together using [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode) as authentication:
 
 ```bash
-dev-scripts/run-integration-tests
+dev-scripts/run-e2e-tests
 ```
-
-### Optional: Enable public analytics from Google Analytics
-
-What Got Done supports pulling metrics from Google Analytics into the page content. To enable this:
-
-1. Enable the [Google Analytics Reporting API](https://console.cloud.google.com/apis/library/analyticsreporting.googleapis.com) in your Google Cloud Platform project.
-1. Create a [service account](https://console.cloud.google.com/iam-admin/serviceaccounts) in Google Cloud Platform console for your What Got Done project.
-   1. Assign the service account no permissions/roles, but save its private key as JSON.
-   1. Click "Create Key" to create a private key and save it in JSON format as `gcp-service-account-prod.json` in the What Got Done root directory.
-1. In Google Analytics, open Admin > View > View User Management and add the email address of the service account you just created (it will have an email like `[name]@[project ID].iam.gserviceaccount.com`.
-   1. Grant the user only "Read & Analyze" permissions.
-1. In Google Analytics, open Admin > View > View Settings
-   1. Save the View ID as an environment variable like `export GOOGLE_ANALYTICS_VIEW_ID=12345789`
 
 ### Optional: Enable image uploads
 

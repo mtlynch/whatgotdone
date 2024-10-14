@@ -10,13 +10,9 @@ set -u
 set -x
 
 # Change directory to repository root.
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
 cd "${SCRIPT_DIR}/.."
-
-readonly DB_PATH="data/store.db"
-if [[ ! -f "${DB_PATH}" ]]; then
-  ./dev-scripts/populate-dev-data
-fi
 
 SCREEN_SESSION_NAME="whatgotdone-frontend"
 

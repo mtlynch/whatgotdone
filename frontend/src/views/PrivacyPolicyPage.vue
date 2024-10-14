@@ -348,7 +348,7 @@
     <ul>
       <li>
         <strong>Web and Mobile Analytics</strong>
-        <br />Google Analytics
+        <br />Plausible Analytics
       </li>
     </ul>
     <br />

@@ -14,21 +14,21 @@ func (s defaultServer) reactionsGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		date, err := dateFromRequestPath(r)
 		if err != nil {
-			log.Printf("Invalid date: %s - %s", date, err)
+			log.Printf("invalid date: %s - %s", date, err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		entryAuthor, err := usernameFromRequestPath(r)
 		if err != nil {
-			log.Printf("Failed to retrieve username from request path: %s", err)
+			log.Printf("failed to retrieve username from request path: %s", err)
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
 
 		reactions, err := s.datastore.GetReactions(entryAuthor, date)
 		if err != nil {
-			log.Printf("Failed to retrieve reactions: %s", err)
+			log.Printf("failed to retrieve reactions: %s", err)
 			http.Error(w, "Failed to retrieve reactions", http.StatusInternalServerError)
 			return
 		}
@@ -41,32 +41,32 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		reactionSymbol, err := reactionSymbolFromRequest(r)
 		if err != nil {
-			log.Printf("Invalid reactions request: %v", err)
+			log.Printf("invalid reactions request: %v", err)
 			http.Error(w, "Invalid reactions request", http.StatusBadRequest)
 			return
 		}
 
 		entryAuthor, err := usernameFromRequestPath(r)
 		if err != nil {
-			log.Printf("Failed to retrieve username from request path: %s", err)
+			log.Printf("failed to retrieve username from request path: %s", err)
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
 
 		entryDate, err := dateFromRequestPath(r)
 		if err != nil {
-			log.Printf("Invalid date: %s", entryDate)
+			log.Printf("invalid date: %s", entryDate)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		reaction := types.Reaction{
-			Username: usernameFromContext(r.Context()),
+			Username: mustGetUsernameFromContext(r.Context()),
 			Symbol:   reactionSymbol,
 		}
 		err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
 		if err != nil {
-			log.Printf("Failed to add reaction: %s", err)
+			log.Printf("failed to add reaction: %s", err)
 			http.Error(w, "Failed to add reaction", http.StatusInternalServerError)
 			return
 		}
@@ -77,21 +77,21 @@ func (s defaultServer) reactionsDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		entryAuthor, err := usernameFromRequestPath(r)
 		if err != nil {
-			log.Printf("Failed to retrieve username from request path: %s", err)
+			log.Printf("failed to retrieve username from request path: %s", err)
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
 
 		entryDate, err := dateFromRequestPath(r)
 		if err != nil {
-			log.Printf("Invalid date: %s", entryDate)
+			log.Printf("invalid date: %s", entryDate)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		err = s.datastore.DeleteReaction(entryAuthor, entryDate, usernameFromContext(r.Context()))
+		err = s.datastore.DeleteReaction(entryAuthor, entryDate, mustGetUsernameFromContext(r.Context()))
 		if err != nil {
-			log.Printf("Failed to delete reaction: %s", err)
+			log.Printf("failed to delete reaction: %s", err)
 			http.Error(w, "Failed to delete reaction", http.StatusInternalServerError)
 			return
 		}

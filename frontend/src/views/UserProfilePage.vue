@@ -1,14 +1,9 @@
 <template>
   <div>
     <div class="profile">
-      <Avatar
-        class="avatar"
-        :username="username"
-        :to="avatarLink"
-        size="150px"
-      />
+      <user-avatar :username="username" class="avatar" />
 
-      <div class="profile-body">
+      <div class="ml-md-5">
         <h1>{{ username }}</h1>
 
         <vue-markdown
@@ -16,17 +11,17 @@
           :html="false"
           :anchorAttributes="{rel: 'ugc'}"
           :source="aboutMarkdown"
-          class="user-bio"
+          data-testid="user-bio"
         ></vue-markdown>
 
-        <p v-if="profileLoaded && !aboutMarkdown" class="no-bio-message">
+        <p v-if="profileLoaded && !aboutMarkdown" class="font-italic">
           This user has not yet created a public bio.
         </p>
 
         <template v-if="twitterHandle || emailAddress">
           <ul>
             <li v-if="emailAddress">
-              <a :href="'mailto:' + emailAddress" class="email-address">{{
+              <a :href="'mailto:' + emailAddress" data-testid="email-address">{{
                 emailAddress
               }}</a>
               (Email)
@@ -34,13 +29,15 @@
             <li v-if="twitterHandle">
               <a
                 :href="'https://twitter.com/' + twitterHandle"
-                class="twitter-handle"
+                data-testid="twitter-handle"
                 >@{{ twitterHandle }}</a
               >
               (Twitter)
             </li>
             <li v-if="mastodonAddress">
-              <a :href="mastodonUrl">{{ mastodonAddress }}</a>
+              <a data-testid="mastodon-address" :href="mastodonUrl">{{
+                mastodonAddress
+              }}</a>
               (Mastodon)
             </li>
           </ul>
@@ -49,22 +46,18 @@
     </div>
 
     <div class="d-flex justify-content-end">
-      <b-button
-        data-test-id="edit-btn"
-        v-if="canEdit"
-        to="/profile/edit"
-        variant="primary"
+      <b-button v-if="canEdit" to="/profile/edit" variant="primary"
         >Edit</b-button
       >
       <b-button
-        data-test-id="follow-btn"
+        data-testid="follow-btn"
         v-if="canFollow"
         variant="primary"
         v-on:click="onFollow"
         >Follow</b-button
       >
       <b-button
-        data-test-id="unfollow-btn"
+        data-testid="unfollow-btn"
         v-if="canUnfollow"
         variant="primary"
         v-on:click="onUnfollow"
@@ -80,10 +73,7 @@
       v-for="entry in recentEntries"
     />
 
-    <p
-      v-if="entriesLoaded && recentEntries.length === 0"
-      class="no-entries-message"
-    >
+    <p v-if="entriesLoaded && recentEntries.length === 0" class="font-italic">
       This user has not submitted any recent updates.
     </p>
     <template v-if="canEdit">
@@ -93,12 +83,7 @@
         drafts, entries, and preferences.
       </p>
 
-      <b-button
-        variant="primary"
-        v-on:click="onExport"
-        data-test-id="export-data-btn"
-        >Download</b-button
-      >
+      <b-button variant="primary" v-on:click="onExport">Download</b-button>
       <a class="d-none" ref="file-download-helper"
         ><!-- Dummy element to allow file downloads --></a
       >
@@ -115,7 +100,6 @@ import {exportGet} from '@/controllers/Export.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
-import Avatar from '@/components/Avatar.vue';
 import PartialJournal from '@/components/PartialJournal.vue';
 
 Vue.use(VueMarkdown);
@@ -123,7 +107,6 @@ Vue.use(VueMarkdown);
 export default {
   name: 'UserProfilePage',
   components: {
-    Avatar,
     VueMarkdown,
     PartialJournal,
   },
@@ -269,26 +252,12 @@ export default {
 }
 
 .profile .avatar {
-  margin-bottom: 1rem;
-}
-
-@media screen and (min-width: 768px) {
-  .profile .avatar {
-    margin-right: 2.5rem;
-  }
+  max-width: 150px;
 }
 
 h2 {
   clear: both;
   margin-top: 40px;
   margin-bottom: 30px;
-}
-
-.no-bio-message {
-  font-style: italic;
-}
-
-.no-entries-message {
-  font-style: italic;
 }
 </style>

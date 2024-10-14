@@ -2,30 +2,35 @@ package mock
 
 import (
 	"errors"
-	"fmt"
-	"sync"
-	"time"
+	"io"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
-	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 // MockDatastore is a mock implementation of the datstore.Datastore interface
 // for testing.
 type MockDatastore struct {
-	JournalEntries         []types.JournalEntry
-	JournalDrafts          []types.JournalEntry
-	Usernames              []types.Username
-	Reactions              map[types.Username]map[types.EntryDate][]types.Reaction
-	UserFollows            map[types.Username][]types.Username
-	UserPreferences        map[types.Username]types.Preferences
-	pageViewCounts         []ga.PageViewCount
-	LastPageViewUpdate     time.Time
-	UserProfile            types.UserProfile
-	ReadEntriesErr         error
-	mu                     sync.Mutex
-	CallsToInsertPageViews chan bool
+	JournalEntries  []types.JournalEntry
+	JournalDrafts   []types.JournalEntry
+	Usernames       []types.Username
+	Reactions       map[types.Username]map[types.EntryDate][]types.Reaction
+	UserFollows     map[types.Username][]types.Username
+	UserPreferences map[types.Username]types.Preferences
+	UserProfile     types.UserProfile
+	ReadEntriesErr  error
+}
+
+func (ds MockDatastore) GetAvatar(username types.Username) (io.Reader, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (ds MockDatastore) InsertAvatar(username types.Username, avatarReader io.Reader, avatarWidth int) error {
+	return errors.New("not implemented")
+}
+
+func (ds MockDatastore) DeleteAvatar(username types.Username) error {
+	return errors.New("not implemented")
 }
 
 func (ds *MockDatastore) GetUserProfile(username types.Username) (types.UserProfile, error) {
@@ -150,35 +155,6 @@ func (ds *MockDatastore) DeleteReaction(entryAuthor types.Username, entryDate ty
 		}
 	}
 	return nil
-}
-
-func (ds *MockDatastore) InsertPageViews(pvc []ga.PageViewCount) error {
-	ds.mu.Lock()
-	defer ds.mu.Unlock()
-	defer func() {
-		if ds.CallsToInsertPageViews == nil {
-			return
-		}
-		ds.CallsToInsertPageViews <- true
-	}()
-
-	ds.pageViewCounts = pvc
-	return nil
-}
-
-func (ds *MockDatastore) GetPageViews(path string) (datastore.PageViewRecord, error) {
-	ds.mu.Lock()
-	defer ds.mu.Unlock()
-
-	for _, pvc := range ds.pageViewCounts {
-		if pvc.Path == path {
-			return datastore.PageViewRecord{
-				PageViews:   pvc.Views,
-				LastUpdated: ds.LastPageViewUpdate,
-			}, nil
-		}
-	}
-	return datastore.PageViewRecord{}, fmt.Errorf("no mock pageview results found for %s", path)
 }
 
 func (ds *MockDatastore) InsertFollow(leader, follower types.Username) error {

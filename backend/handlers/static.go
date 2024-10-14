@@ -29,7 +29,7 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusNotFound)
 			return
 		} else if err != nil {
-			log.Printf("Failed to retrieve the file %s from the file system: %s", r.URL.Path, err)
+			log.Printf("failed to retrieve the file %s from the file system: %s", r.URL.Path, err)
 			http.Error(w, "Failed to find file: "+r.URL.Path, http.StatusNotFound)
 			return
 		}
@@ -37,7 +37,7 @@ func (s defaultServer) serveStaticResource() http.HandlerFunc {
 
 		stat, err := file.Stat()
 		if err != nil {
-			log.Printf("Failed to retrieve the information of %s from the file system: %s", r.URL.Path, err)
+			log.Printf("failed to retrieve the information of %s from the file system: %s", r.URL.Path, err)
 			http.Error(w, "Failed to serve: "+r.URL.Path, http.StatusInternalServerError)
 			return
 		}
@@ -57,25 +57,25 @@ func (s defaultServer) serveEntryOr404() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)
 		if err != nil {
-			serve404(w, r)
+			s.serve404(w, r)
 			return
 		}
 		if exists, err := s.userExists(username); err != nil || !exists {
-			serve404(w, r)
+			s.serve404(w, r)
 			return
 		}
 
 		date, err := dateFromRequestPath(r)
 		if err != nil {
-			serve404(w, r)
+			s.serve404(w, r)
 			return
 		}
 		_, err = s.datastore.GetEntry(username, date)
 		if _, ok := err.(datastore.EntryNotFoundError); ok {
-			serve404(w, r)
+			s.serve404(w, r)
 			return
 		}
-		serveIndexPage(w, r)
+		s.serveIndexPage(w, r)
 	}
 }
 
@@ -85,42 +85,45 @@ func (s defaultServer) serveUserProfileOr404() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)
 		if err != nil {
-			serve404(w, r)
+			s.serve404(w, r)
 			return
 		}
 		if exists, err := s.userExists(username); err != nil || !exists {
-			serve404(w, r)
+			s.serve404(w, r)
 			return
 		}
-		serveIndexPage(w, r)
+		s.serveIndexPage(w, r)
 	}
 }
 
 // serveIndexPage returns the file `./frontend/dist/index.html` rendered by the
 // golang templating engine.
-func serveIndexPage(w http.ResponseWriter, r *http.Request) {
-	type page struct {
-		Title         string
-		Description   string
-		CsrfToken     string
-		OpenGraphType string
-	}
+func (s defaultServer) serveIndexPage(w http.ResponseWriter, r *http.Request) {
 	// Use custom delimiters so Go's delimiters don't clash with Vue's.
 	indexTemplate := template.Must(template.New(frontendIndexFilename).Delims("[[", "]]").
 		ParseFiles(path.Join(frontendRootDir, frontendIndexFilename)))
-	if err := indexTemplate.ExecuteTemplate(w, frontendIndexFilename, page{
-		CsrfToken:     csrf.Token(r),
-		Title:         getPageTitle(r),
-		Description:   getDescription(r),
-		OpenGraphType: getOpenGraphType(r),
+	if err := indexTemplate.ExecuteTemplate(w, frontendIndexFilename, struct {
+		Title           string
+		Description     string
+		CsrfToken       string
+		CspNonce        string
+		OpenGraphType   string
+		PlausibleDomain string
+	}{
+		Title:           getPageTitle(r),
+		Description:     getDescription(r),
+		CsrfToken:       csrf.Token(r),
+		CspNonce:        cspNonce(r.Context()),
+		OpenGraphType:   getOpenGraphType(r),
+		PlausibleDomain: s.plausibleDomain,
 	}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-func serve404(w http.ResponseWriter, r *http.Request) {
+func (s defaultServer) serve404(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
-	serveIndexPage(w, r)
+	s.serveIndexPage(w, r)
 }
 
 // getPageTitle returns the <title> value of the page. By default it's

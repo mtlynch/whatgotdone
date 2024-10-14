@@ -1,4 +1,5 @@
 bin/
+node_modules/
 
 *.exe
 
@@ -6,7 +7,8 @@ bin/
 *.sw?
 
 # GCP service account credentials
-*service-account*.json
+creds/*
+!creds/README.md
 
 # Holds secret environment variables in prod
 env_variables.yaml
@@ -18,6 +20,13 @@ data/
 .coverage*
 
 # Production environment variables
-prod.env
+.env.prod
 
 *.local
+
+# Playwright output
+/playwright-report/
+/playwright/.cache/
+/e2e-results/
+
+.direnv

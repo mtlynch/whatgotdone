@@ -16,11 +16,11 @@ import (
 
 func (s defaultServer) exportGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		d, err := s.exportUserData(username)
 		if err != nil {
-			log.Printf("Failed to export user data: %v", err)
+			log.Printf("failed to export user data: %v", err)
 			http.Error(w, fmt.Sprintf("Failed to export user data: %s", err), http.StatusInternalServerError)
 			return
 		}

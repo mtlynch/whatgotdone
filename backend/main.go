@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	gorilla "github.com/mtlynch/gorilla-handlers"
 
@@ -18,10 +19,12 @@ func main() {
 
 	dbPath := flag.String("db", "data/store.db", "path to database")
 	flag.Parse()
-	ensureDirExists(*dbPath)
+	ensureDirExists(filepath.Dir(*dbPath))
 	datastore := sqlite.New(*dbPath)
 
-	h := gorilla.LoggingHandler(os.Stdout, handlers.New(datastore).Router())
+	plausibleDomain := os.Getenv("PLAUSIBLE_DOMAIN")
+
+	h := gorilla.LoggingHandler(os.Stdout, handlers.New(datastore, plausibleDomain).Router())
 	if os.Getenv("BEHIND_PROXY") != "" {
 		h = gorilla.ProxyIPHeadersHandler(h)
 	}
@@ -31,7 +34,7 @@ func main() {
 	if port == "" {
 		port = "3001"
 	}
-	log.Printf("Listening on %s", port)
+	log.Printf("listening on %s", port)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }

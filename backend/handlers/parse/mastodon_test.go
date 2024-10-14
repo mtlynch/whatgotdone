@@ -1,20 +1,27 @@
 package parse
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
 func TestMastodonAddress(t *testing.T) {
-	var tests = []struct {
+	for _, tt := range []struct {
 		explanation    string
 		mastodon       string
 		validExpected  bool
 		parsedExpected types.MastodonAddress
 	}{
 		{
-			"well-formed Mastodon Address is valid",
+			"Mastodon address with leading @ is valid",
+			"@hello@example.com",
+			true,
+			"hello@example.com",
+		},
+		{
+			"well-formed Mastodon address is valid",
 			"hello@example.com",
 			true,
 			"hello@example.com",
@@ -38,6 +45,18 @@ func TestMastodonAddress(t *testing.T) {
 			"",
 		},
 		{
+			"bare @ is invalid",
+			"@",
+			false,
+			"",
+		},
+		{
+			"double @ is invalid",
+			"@@",
+			false,
+			"",
+		},
+		{
 			"whitespace is invalid",
 			"\t",
 			false,
@@ -49,14 +68,15 @@ func TestMastodonAddress(t *testing.T) {
 			false,
 			"",
 		},
-	}
-
-	for _, tt := range tests {
-		parsedActual, errActual := MastodonAddress(tt.mastodon)
-		if (errActual == nil) != tt.validExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.mastodon, errActual, tt.validExpected)
-		} else if parsedActual != tt.parsedExpected {
-			t.Errorf("%s: input [%s], got %v, want %v", tt.explanation, tt.mastodon, parsedActual, tt.parsedExpected)
-		}
+	} {
+		t.Run(fmt.Sprintf("%s: %s", tt.explanation, tt.mastodon), func(t *testing.T) {
+			parsed, err := MastodonAddress(tt.mastodon)
+			if got, want := (err == nil), tt.validExpected; got != want {
+				t.Fatalf("valid=%v, want=%v", got, want)
+			}
+			if got, want := parsed, tt.parsedExpected; got != want {
+				t.Errorf("mastodon=%v, want=%v", got, want)
+			}
+		})
 	}
 }

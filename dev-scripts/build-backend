@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Exit build script on first failure.
+set -e
+
+# Echo commands to stdout.
+set -x
+
+# Change directory to repository root.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
+cd "${SCRIPT_DIR}/.."
+
+cd backend
+
+if [[ -z $1 ]]; then
+  MODE="prod"
+else
+  MODE="$1"
+fi
+readonly MODE
+
+# Exit on unset variable.
+set -u
+
+GO_BUILD_TAGS="${MODE}"
+GO_BUILD_TAGS+=' netgo'
+GO_BUILD_TAGS+=' osusergo'
+# Disable dynamically-loaded extensions, which cause a compile time warning.
+# https://www.arp242.net/static-go.html
+GO_BUILD_TAGS+=' sqlite_omit_load_extension'
+readonly GO_BUILD_TAGS
+
+LD_FLAGS=''
+if [[ "${MODE}" == "prod" ]] || [[ "${MODE}" == "staging" ]]; then
+  LD_FLAGS="-w -extldflags \"-static\""
+fi
+readonly LD_FLAGS
+
+GOOS=linux GOARCH=amd64 \
+  go build \
+    -tags "${GO_BUILD_TAGS}" \
+    -ldflags "$LD_FLAGS" \
+    -o ../bin/whatgotdone \
+    main.go

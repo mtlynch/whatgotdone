@@ -1,0 +1,9 @@
+{
+  "name": "whatgotdone-dev",
+  "version": "1.0.0",
+  "description": "WhatGotDone dev scripts",
+  "author": "Michael Lynch",
+  "devDependencies": {
+    "@playwright/test": "1.40.1"
+  }
+}

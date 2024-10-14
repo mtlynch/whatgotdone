@@ -12,8 +12,8 @@ type (
 	// public or a private draft that has not yet been published.
 	JournalEntry struct {
 		Author       Username
-		Date         EntryDate    `json:"date" yaml:"date"`
-		LastModified time.Time    `json:"lastModified" yaml:"lastModified"`
-		Markdown     EntryContent `json:"markdown" yaml:"markdown"`
+		Date         EntryDate    `json:"date"`
+		LastModified time.Time    `json:"lastModified"`
+		Markdown     EntryContent `json:"markdown"`
 	}
 )

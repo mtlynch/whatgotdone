@@ -26,11 +26,7 @@ export default function initializeUserState() {
         resolve();
       })
       .catch((error) => {
-        // If checking user information fails, the cached authentication information
-        // is no longer correct, so we need to clear it.
-        if (error.response && error.response.status === 403) {
-          clearCachedAuthInformation();
-        }
+        clearCachedAuthInformation();
         reject(error);
       });
   });

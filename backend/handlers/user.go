@@ -23,7 +23,7 @@ func (s defaultServer) userGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username, err := usernameFromRequestPath(r)
 		if err != nil {
-			log.Printf("Failed to retrieve username from request path: %s", err)
+			log.Printf("failed to retrieve username from request path: %s", err)
 			http.Error(w, "Invalid username", http.StatusBadRequest)
 			return
 		}
@@ -33,7 +33,7 @@ func (s defaultServer) userGet() http.HandlerFunc {
 			http.Error(w, "No profile found", http.StatusNotFound)
 			return
 		} else if err != nil {
-			log.Printf("Failed to retrieve user profile data for %s: %s", username, err)
+			log.Printf("failed to retrieve user profile data for %s: %s", username, err)
 			http.Error(w, "Invalid username", http.StatusNotFound)
 			return
 		}
@@ -46,15 +46,15 @@ func (s defaultServer) userPost() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userProfile, err := profileFromRequest(r)
 		if err != nil {
-			log.Printf("Invalid profile update request: %v", err)
+			log.Printf("invalid profile update request: %v", err)
 			http.Error(w, fmt.Sprintf("Invalid profile update request: %v", err), http.StatusBadRequest)
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		err = s.datastore.SetUserProfile(username, userProfile)
 		if err != nil {
-			log.Printf("Failed to update user profile: %s", err)
+			log.Printf("failed to update user profile: %s", err)
 			http.Error(w, "Failed to update user profile", http.StatusInternalServerError)
 			return
 		}
@@ -66,7 +66,7 @@ func (s defaultServer) userMeGet() http.HandlerFunc {
 		respondOK(w, struct {
 			Username types.Username `json:"username"`
 		}{
-			Username: usernameFromContext(r.Context()),
+			Username: mustGetUsernameFromContext(r.Context()),
 		})
 	}
 }

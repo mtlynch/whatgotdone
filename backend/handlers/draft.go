@@ -13,18 +13,18 @@ import (
 
 func (s defaultServer) draftGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		date, err := dateFromRequestPath(r)
 		if err != nil {
-			log.Printf("Invalid date: %s", date)
+			log.Printf("invalid date: %s", date)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		draftMarkdown, err := s.savedDraftOrEntryTemplate(username, date)
 		if err != nil {
-			log.Printf("Failed to retrieve draft entry: %s", err)
+			log.Printf("failed to retrieve draft entry: %s", err)
 			http.Error(w, "Failed to retrieve draft entry", http.StatusInternalServerError)
 			return
 		}
@@ -45,25 +45,25 @@ func (s defaultServer) draftPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		date, err := dateFromRequestPath(r)
 		if err != nil {
-			log.Printf("Invalid date: %s", date)
+			log.Printf("invalid date: %s", date)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		entryContent, err := entryContentFromRequest(r)
 		if err != nil {
-			log.Printf("Invalid draft request: %v", err)
+			log.Printf("invalid draft request: %v", err)
 			http.Error(w, fmt.Sprintf("Invalid draft request: %v", err), http.StatusBadRequest)
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		err = s.datastore.InsertDraft(username, types.JournalEntry{
 			Date:     date,
 			Markdown: entryContent,
 		})
 		if err != nil {
-			log.Printf("Failed to update draft entry: %s", err)
+			log.Printf("failed to update draft entry: %s", err)
 			http.Error(w, "Failed to update draft entry", http.StatusInternalServerError)
 			return
 		}
@@ -74,16 +74,16 @@ func (s *defaultServer) draftDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		date, err := dateFromRequestPath(r)
 		if err != nil {
-			log.Printf("Invalid date: %s", date)
+			log.Printf("invalid date: %s", date)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 
 		err = s.datastore.DeleteDraft(username, date)
 		if err != nil {
-			log.Printf("Failed to delete draft entry: %s", err)
+			log.Printf("failed to delete draft entry: %s", err)
 			http.Error(w, "Failed to delete entry", http.StatusInternalServerError)
 			return
 		}

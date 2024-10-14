@@ -10,9 +10,12 @@ set -u
 set -x
 
 # Change directory to repository root.
-readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
 cd "${SCRIPT_DIR}/.."
 
-. dev.env
+# shellcheck disable=SC1091
+. .env.dev
 cd frontend
-npm run serve
+
+./node_modules/.bin/vue-cli-service serve --port 8085

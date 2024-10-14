@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Check for SQL script anti-patterns.
+
+# Exit on first failure.
+set -e
+
+# Echo commands before executing them, by default to stderr.
+set -x
+
+# Change directory to repository root.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
+cd "${SCRIPT_DIR}/.."
+
+sqlfluff_flags=("--dialect=sqlite")
+if [[ -n "${CI}" ]]; then
+  sqlfluff_flags+=("--disable_progress_bar")
+fi
+
+sqlfluff lint \
+  "${sqlfluff_flags[@]}" \
+  .

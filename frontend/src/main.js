@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import VueGtag from 'vue-gtag';
 import VueMoment from 'vue-moment';
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue';
 import {config, library} from '@fortawesome/fontawesome-svg-core';
@@ -27,16 +26,6 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(VueMoment);
 Vue.prototype.moment = VueMoment;
-
-if (process.env.VUE_APP_GOOGLE_ANALYTICS_ID.length > 1) {
-  Vue.use(
-    VueGtag,
-    {
-      config: {id: process.env.VUE_APP_GOOGLE_ANALYTICS_ID},
-    },
-    router
-  );
-}
 
 // This callback runs before every route change, including on page load.
 router.beforeEach((to, from, next) => {

@@ -1,29 +1,27 @@
-FROM node:12.18.4-alpine AS frontend_builder
+FROM node:20.6.1-alpine AS frontend_builder
 
 COPY ./frontend /app/frontend
 WORKDIR /app/frontend
 
-ARG NPM_BUILD_MODE="development"
+ARG NPM_BUILD_MODE="dev"
 RUN echo "npm build mode: ${NPM_BUILD_MODE}"
 
 RUN npm install
 RUN npm run build -- --mode "$NPM_BUILD_MODE"
 
-FROM golang:1.17.4 AS backend_builder
+FROM golang:1.23.1-alpine AS backend_builder
+
+RUN apk add --no-cache bash build-base
 
 COPY ./backend /app/backend
+COPY ./dev-scripts/build-backend /app/dev-scripts/build-backend
 
-WORKDIR /app/backend
+WORKDIR /app
 
-ARG GO_BUILD_TAGS="dev"
+ARG GO_BUILD_MODE="dev"
 
-RUN echo "Go build tags: ${GO_BUILD_TAGS}"
-RUN GOOS=linux GOARCH=amd64 \
-    go build \
-      -tags "netgo $GO_BUILD_TAGS" \
-      -ldflags '-w -extldflags "-static"' \
-      -o /app/main \
-      main.go
+RUN echo "Go build mode: ${GO_BUILD_MODE}"
+RUN ./dev-scripts/build-backend "${GO_BUILD_MODE}"
 
 FROM debian:stable-20211011-slim AS litestream_downloader
 
@@ -45,11 +43,11 @@ FROM alpine:3.15
 RUN apk add --no-cache bash
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
-COPY --from=backend_builder /app/main /app/main
+COPY --from=backend_builder /app/bin/whatgotdone /app/bin/whatgotdone
 COPY --from=litestream_downloader /litestream/litestream /app/litestream
+COPY ./creds /app/creds
 COPY ./litestream.yml /etc/litestream.yml
 COPY ./docker_entrypoint /app/docker_entrypoint
-COPY ./gcp-service-account-*.json /app/
 
 WORKDIR /app
 

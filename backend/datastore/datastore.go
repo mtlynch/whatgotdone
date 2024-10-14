@@ -6,30 +6,26 @@ package datastore
 
 import (
 	"fmt"
-	"time"
+	"io"
 
-	ga "github.com/mtlynch/whatgotdone/backend/google_analytics"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
-type (
-	EntryFilter struct {
-		ByUsers   []types.Username
-		MinLength int32
-		Offset    int32
-		Limit     int32
-	}
-
-	PageViewRecord struct {
-		PageViews   int
-		LastUpdated time.Time
-	}
-)
+type EntryFilter struct {
+	ByUsers   []types.Username
+	MinLength int32
+	Offset    int32
+	Limit     int32
+}
 
 // Datastore represents the What Got Done datastore. It's responsible for
 // storing and retrieving all persistent data (journal entries, journal drafts,
 // reactions).
 type Datastore interface {
+	// GetAvatar returns avatar of the given user.
+	GetAvatar(username types.Username) (io.Reader, error)
+	InsertAvatar(username types.Username, avatar io.Reader, avatarWidth int) error
+	DeleteAvatar(username types.Username) error
 	// GetUserProfile returns profile information for the given user.
 	GetUserProfile(username types.Username) (types.UserProfile, error)
 	// SetUserProfile updates the given user's profile.
@@ -57,10 +53,6 @@ type Datastore interface {
 	AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error
 	// DeleteReaction removes a user's reaction to a published entry.
 	DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error
-	// InsertPageViews stores the set of pageview data for What Got Done routes.
-	InsertPageViews(pvc []ga.PageViewCount) error
-	// GetPageViews retrieves the count of pageviews for a given What Got Done route.
-	GetPageViews(path string) (PageViewRecord, error)
 	// InsertFollow adds a following relationship to the datastore.
 	InsertFollow(leader, follower types.Username) error
 	// DeleteFollow removes a following relationship from the datastore.
@@ -71,6 +63,15 @@ type Datastore interface {
 	GetPreferences(username types.Username) (types.Preferences, error)
 	// SetPreferences saves the user's preferences for using the site.
 	SetPreferences(username types.Username, prefs types.Preferences) error
+}
+
+// ErrAvatarNotFound occurs when no avatar exists for a user.
+type ErrAvatarNotFound struct {
+	Username types.Username
+}
+
+func (f ErrAvatarNotFound) Error() string {
+	return fmt.Sprintf("no avatar found for username %s", f.Username)
 }
 
 // EntryNotFoundError occurs when no published exists for a user with a given date.
@@ -101,16 +102,6 @@ type UserProfileNotFoundError struct {
 
 func (f UserProfileNotFoundError) Error() string {
 	return fmt.Sprintf("No user profile found for username %s", f.Username)
-}
-
-// PageViewsNotFoundError occurs when no page view data is present in the
-// datastore for the given URL path.
-type PageViewsNotFoundError struct {
-	Path string
-}
-
-func (f PageViewsNotFoundError) Error() string {
-	return fmt.Sprintf("No page view count found for path %s", f.Path)
 }
 
 // PreferencesNotFoundError occurs when no profile exists for the given

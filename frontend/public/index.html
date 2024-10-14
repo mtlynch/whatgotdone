@@ -31,6 +31,103 @@
     <meta property="og:type" content="[[.OpenGraphType]]" />
     <meta property="og:title" content="[[.Title]]" />
     <meta property="og:description" content="[[.Description]]" />
+    [[if .PlausibleDomain]]
+    <script
+      defer
+      data-domain="[[.PlausibleDomain]]"
+      src="https://plausible.io/js/script.js"
+    ></script>
+    [[end]]
+    <template id="username-link-template">
+      <style>
+        a {
+          font-weight: bold;
+          color: rgb(255, 208, 56);
+          text-decoration: none;
+        }
+      </style>
+
+      <a></a
+      ><!-- We can't use a linebreak because it adds space after the element. --></template
+    >
+    <script type="module" nonce="[[ .CspNonce ]]">
+      (function () {
+        const template = document.querySelector('#username-link-template');
+
+        customElements.define(
+          'username-link',
+          class extends HTMLElement {
+            connectedCallback() {
+              this.attachShadow({mode: 'open'}).appendChild(
+                template.content.cloneNode(true)
+              );
+              const username = this.getAttribute('username');
+              if (!username) {
+                return;
+              }
+              const el = this.shadowRoot.querySelector('a');
+              el.innerText = username;
+              el.setAttribute('href', `/${username}`);
+            }
+          }
+        );
+      })();
+    </script>
+    <template id="user-avatar-template">
+      <style>
+        img {
+          max-width: 100%;
+          clip-path: circle();
+        }
+      </style>
+      <a><img /></a>
+    </template>
+    <script type="module" nonce="[[ .CspNonce ]]">
+      (function () {
+        const template = document.querySelector('#user-avatar-template');
+
+        customElements.define(
+          'user-avatar',
+          class extends HTMLElement {
+            connectedCallback() {
+              this.attachShadow({mode: 'open'}).appendChild(
+                template.content.cloneNode(true)
+              );
+              this.username = this.getAttribute('username');
+              this.elements = {
+                anchor: this.shadowRoot.querySelector('a'),
+                image: this.shadowRoot.querySelector('img'),
+              };
+              this.elements.anchor.setAttribute('href', `/${this.username}`);
+              this.elements.image.setAttribute(
+                'src',
+                `/${this.username}/avatar`
+              );
+            }
+
+            refresh() {
+              const unixTime = Math.floor(Date.now() / 1000);
+              this.elements.image.setAttribute(
+                'src',
+                `/${this.username}/avatar?cache=${unixTime}`
+              );
+            }
+          }
+        );
+      })();
+    </script>
+    <style>
+      .footer {
+        margin: 2rem auto;
+        max-width: 95%;
+      }
+
+      .footer .links {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+      }
+    </style>
   </head>
 
   <body>
@@ -41,5 +138,11 @@
       >
     </noscript>
     <div id="app"></div>
+    <div class="footer">
+      <hr />
+      <div class="links">
+        <a href="/privacy-policy">Privacy Policy</a>
+      </div>
+    </div>
   </body>
 </html>

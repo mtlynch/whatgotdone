@@ -1,8 +1,14 @@
 version: 2.1
+executors:
+  stable:
+    docker:
+      - image: cimg/base:stable
+  go:
+    docker:
+      - image: golang:1.23.1
 jobs:
   check_whitespace:
-    docker:
-      - image: cimg/base:2021.04
+    executor: stable
     resource_class: small
     steps:
       - checkout
@@ -12,35 +18,19 @@ jobs:
       - run:
           name: Check that all text files end in a trailing newline
           command: ./dev-scripts/check-trailing-newline
-  build-frontend:
+  check_bash:
     docker:
-      - image: node:12.18.4-alpine
-    environment:
-      NODE_ENV: production
+      - image: koalaman/shellcheck-alpine:v0.9.0
     steps:
+      - run:
+          name: Install dependencies needed to check out repo
+          command: apk add bash git openssh-client grep
       - checkout
       - run:
-          name: Download npm packages (including dev dependencies)
-          command: npm --production=false --prefix ./frontend install
-      - run:
-          name: Check JavaScript formatting
-          command: npm --prefix ./frontend run check-format
-      - run:
-          name: Lint client
-          command: npm --prefix ./frontend run lint
-      - run:
-          name: Unit test client
-          command: npm --prefix ./frontend run test:unit
-      - run:
-          name: Build production frontend
-          command: npm --prefix ./frontend run build
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - ./frontend/dist
+          name: Run static analysis on bash scripts
+          command: ./dev-scripts/check-bash
   test-backend:
-    docker:
-      - image: cimg/go:1.17.4
+    executor: go
     steps:
       - checkout
       - attach_workspace:
@@ -53,33 +43,72 @@ jobs:
       - run:
           name: Verify golang formatting
           command: dev-scripts/check-go-formatting
-  integration:
-    # We're choosing large even though xlarge is faster because CircleCI takes
-    # too long to provision xlarge instances.
-    resource_class: large
-    machine:
-      # Choose an explicit machine image so that we get the latest version of
-      # docker-compose.
-      image: ubuntu-2004:202010-01
-      docker_layer_caching: true
+  build_staging_frontend:
+    docker:
+      - image: cimg/node:20.6.1
+    environment:
+      NODE_ENV: production
+    steps:
+      - checkout
+      - run:
+          name: Compile frontend
+          command: ./dev-scripts/build-frontend staging
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./frontend/dist
+  build_staging_backend:
+    executor: go
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - restore_cache:
+          keys:
+            - go-mod-v3-{{ checksum "backend/go.sum" }}
+      - run:
+          name: Compile backend (staging)
+          command: dev-scripts/build-backend staging
+      - save_cache:
+          key: go-mod-v3-{{ checksum "backend/go.sum" }}
+          paths:
+            - /go/pkg/mod
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./bin/whatgotdone
+  lint_sql:
+    docker:
+      - image: sqlfluff/sqlfluff:1.2.1
+        user: root
+    steps:
+      - checkout
+      - run:
+          name: Lint SQL files
+          command: ./dev-scripts/lint-sql
+  e2e:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.40.1-focal
     steps:
       - checkout
       - run:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
-            echo "$INTEGRATION_CLIENT_SECRET" | \
-              base64 --decode > gcp-service-account-staging.json
+            echo "${INTEGRATION_CLIENT_SECRET}" | \
+              base64 --decode > creds/gcp-service-account-staging.json
+      - attach_workspace:
+          at: ./
       - run:
-          name: Perform integration tests.
-          command: dev-scripts/run-integration-tests
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Run playwright tests
+          command: ./dev-scripts/run-e2e-tests --skip-rebuild
       - store_artifacts:
-          path: integration/cypress/videos
-      - store_artifacts:
-          path: integration/cypress/screenshots
+          path: playwright-report
   deploy:
-    machine:
-      image: ubuntu-2004:202010-01
-      docker_layer_caching: true
+    executor: stable
+    resource_class: small
     environment:
       # The flyctl changes too much to use a specific version, so use the latest for the
       # time being.
@@ -91,7 +120,7 @@ jobs:
           name: Retrieve GCP service account client secret from CircleCI
           command: |
             echo "$GCP_SERVICE_ACCOUNT" | \
-              base64 --decode > gcp-service-account-prod.json
+              base64 --decode > creds/gcp-service-account-prod.json
       - run:
           name: Install flyctl
           command: curl -L https://fly.io/install.sh | sh -s "${FLYCTL_VERSION}"
@@ -103,22 +132,27 @@ jobs:
           name: Deploy to fly.io
           command: |
             "${HOME}/.fly/bin/flyctl" deploy \
-              --access-token "${FLY_ACCESS_TOKEN}" \
-              --local-only
+              --access-token "${FLY_ACCESS_TOKEN}"
 workflows:
   version: 2
   test-deploy:
     jobs:
       - check_whitespace
-      - build-frontend
+      - check_bash
+      - build_staging_frontend
       - test-backend
-      - integration
+      - build_staging_backend
+      - lint_sql
+      - e2e:
+          requires:
+            - build_staging_backend
+            - build_staging_frontend
       - deploy:
           requires:
             - check_whitespace
-            - build-frontend
+            - build_staging_frontend
             - test-backend
-            - integration
+            - e2e
           filters:
             branches:
               only: master

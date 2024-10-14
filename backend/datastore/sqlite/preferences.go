@@ -9,7 +9,7 @@ import (
 )
 
 // GetPreferences retrieves the user's preferences for using the site.
-func (d db) GetPreferences(username types.Username) (types.Preferences, error) {
+func (d DB) GetPreferences(username types.Username) (types.Preferences, error) {
 	stmt, err := d.ctx.Prepare(`
 	SELECT
 		entry_template
@@ -38,7 +38,7 @@ func (d db) GetPreferences(username types.Username) (types.Preferences, error) {
 }
 
 // SetPreferences saves the user's preferences for using the site.
-func (d db) SetPreferences(username types.Username, prefs types.Preferences) error {
+func (d DB) SetPreferences(username types.Username, prefs types.Preferences) error {
 	log.Printf("saving preferences to datastore: %s -> %+v", username, prefs)
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO user_preferences(

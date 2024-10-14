@@ -40,7 +40,7 @@ func (s *defaultServer) recentEntriesGet() http.HandlerFunc {
 			Limit:     int32(limit),
 		})
 		if err != nil {
-			log.Printf("Failed to retrieve entries: %v", err)
+			log.Printf("failed to retrieve entries: %v", err)
 			http.Error(w, fmt.Sprintf("Failed to read journal entries: %v", err), http.StatusInternalServerError)
 			return
 		}
@@ -62,7 +62,7 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 			return
 		}
 
-		username := usernameFromContext(r.Context())
+		username := mustGetUsernameFromContext(r.Context())
 		following, err := s.datastore.Following(username)
 		if err != nil {
 			log.Printf("failed to retrieve user's follow list %s: %v", username, err)
@@ -77,7 +77,7 @@ func (s *defaultServer) entriesFollowingGet() http.HandlerFunc {
 			Limit:   int32(limit),
 		})
 		if err != nil {
-			log.Printf("Failed to retrieve entries: %s", err)
+			log.Printf("failed to retrieve entries: %s", err)
 			http.Error(w, "Failed to retrieve followed entries", http.StatusInternalServerError)
 		}
 

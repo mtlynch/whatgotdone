@@ -9,7 +9,7 @@ import (
 )
 
 // GetDraft returns an entry draft for the given user for the given date.
-func (d db) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
+func (d DB) GetDraft(username types.Username, date types.EntryDate) (types.JournalEntry, error) {
 	stmt, err := d.ctx.Prepare(`
 			SELECT
 				markdown,
@@ -53,7 +53,7 @@ func (d db) GetDraft(username types.Username, date types.EntryDate) (types.Journ
 
 // InsertDraft saves an entry draft to the datastore, overwriting any existing
 // entry with the same name and username.
-func (d db) InsertDraft(username types.Username, j types.JournalEntry) error {
+func (d DB) InsertDraft(username types.Username, j types.JournalEntry) error {
 	log.Printf("saving draft to datastore: %s -> %+v (%d characters)", username, j.Date, len(j.Markdown))
 	_, err := d.ctx.Exec(`
 	INSERT OR REPLACE INTO journal_entries(
@@ -67,7 +67,7 @@ func (d db) InsertDraft(username types.Username, j types.JournalEntry) error {
 }
 
 // DeleteDraft deletes a draft from the datastore.
-func (d db) DeleteDraft(username types.Username, date types.EntryDate) error {
+func (d DB) DeleteDraft(username types.Username, date types.EntryDate) error {
 	log.Printf("deleting draft from datastore: %s -> %+v", username, date)
 	_, err := d.ctx.Exec(`
 	DELETE FROM
