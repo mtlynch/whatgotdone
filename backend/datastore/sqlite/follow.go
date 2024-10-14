@@ -31,24 +31,23 @@ func (d DB) DeleteFollow(leader, follower types.Username) error {
 	return err
 }
 
-// Followers returns all the users the specified user is following.
+// Following returns all the users the specified user is following.
 func (d DB) Following(follower types.Username) ([]types.Username, error) {
-	stmt, err := d.ctx.Prepare(`
+	rows, err := d.ctx.Query(`
 	SELECT
 		leader
 	FROM
 		follows
 	WHERE
-		follower=?`)
+		follower=?`, follower)
 	if err != nil {
 		return []types.Username{}, err
 	}
-	defer stmt.Close()
-
-	rows, err := stmt.Query(follower)
-	if err != nil {
-		return []types.Username{}, err
-	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Printf("failed to close SQLite rows: %v", err)
+		}
+	}()
 
 	leaders := []types.Username{}
 	for rows.Next() {

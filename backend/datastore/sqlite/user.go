@@ -10,7 +10,13 @@ import (
 
 // GetUserProfile returns profile information for the given user.
 func (d DB) GetUserProfile(username types.Username) (types.UserProfile, error) {
-	stmt, err := d.ctx.Prepare(`
+	var (
+		aboutMarkdown string
+		email         string
+		twitter       string
+		mastodon      string
+	)
+	err := d.ctx.QueryRow(`
 		SELECT
 			about_markdown,
 			email,
@@ -19,19 +25,8 @@ func (d DB) GetUserProfile(username types.Username) (types.UserProfile, error) {
 		FROM
 			user_profiles
 		WHERE
-			username=?`)
-	if err != nil {
-		return types.UserProfile{}, err
-	}
-	defer stmt.Close()
+			username=?`, username).Scan(&aboutMarkdown, &email, &twitter, &mastodon)
 
-	var (
-		aboutMarkdown string
-		email         string
-		twitter       string
-		mastodon      string
-	)
-	err = stmt.QueryRow(username).Scan(&aboutMarkdown, &email, &twitter, &mastodon)
 	if err == sql.ErrNoRows {
 		return types.UserProfile{}, datastore.UserProfileNotFoundError{
 			Username: username,
