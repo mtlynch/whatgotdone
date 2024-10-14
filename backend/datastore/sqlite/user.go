@@ -18,14 +18,14 @@ func (d DB) GetUserProfile(username types.Username) (types.UserProfile, error) {
 	)
 	err := d.ctx.QueryRow(`
 		SELECT
-			about_markdown,
-			email,
-			twitter,
-			mastodon
+				about_markdown,
+				email,
+				twitter,
+				mastodon
 		FROM
-			user_profiles
+				user_profiles
 		WHERE
-			username=?`, username).Scan(&aboutMarkdown, &email, &twitter, &mastodon)
+				username = $1`, username).Scan(&aboutMarkdown, &email, &twitter, &mastodon)
 
 	if err == sql.ErrNoRows {
 		return types.UserProfile{}, datastore.UserProfileNotFoundError{
@@ -47,12 +47,17 @@ func (d DB) GetUserProfile(username types.Username) (types.UserProfile, error) {
 func (d DB) SetUserProfile(username types.Username, profile types.UserProfile) error {
 	log.Printf("saving user profile to datastore: %s -> %+v", username, profile)
 	_, err := d.ctx.Exec(`
-	INSERT OR REPLACE INTO user_profiles(
+		INSERT OR REPLACE INTO user_profiles(
+				username,
+				about_markdown,
+				email,
+				twitter,
+				mastodon)
+		values($1, $2, $3, $4, $5)`,
 		username,
-		about_markdown,
-		email,
-		twitter,
-		mastodon)
-	values(?,?,?,?,?)`, username, profile.AboutMarkdown, profile.EmailAddress, profile.TwitterHandle, profile.MastodonAddress)
+		profile.AboutMarkdown,
+		profile.EmailAddress,
+		profile.TwitterHandle,
+		profile.MastodonAddress)
 	return err
 }
