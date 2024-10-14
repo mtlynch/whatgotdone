@@ -54,7 +54,7 @@ if [[ ! -f "${STATICCHECK_PATH}" ]]; then
       -ldflags=-linkmode=external \
       "honnef.co/go/tools/cmd/staticcheck@${STATICCHECK_VERSION}"
 fi
-$STATICCHECK_PATH ./...
+"${STATICCHECK_PATH}" ./...
 
 # Install errcheck if it's not present.
 ERRCHECK_PATH="$(go env GOPATH)/bin/errcheck"
