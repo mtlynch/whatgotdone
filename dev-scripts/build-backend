@@ -25,6 +25,7 @@ set -u
 
 GO_BUILD_TAGS="${MODE}"
 GO_BUILD_TAGS+=' netgo'
+GO_BUILD_TAGS+=' osusergo'
 # Disable dynamically-loaded extensions, which cause a compile time warning.
 # https://www.arp242.net/static-go.html
 GO_BUILD_TAGS+=' sqlite_omit_load_extension'
