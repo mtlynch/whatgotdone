@@ -7,6 +7,9 @@
     # 1.23.1 release
     go-nixpkgs.url = "github:NixOS/nixpkgs/5ed627539ac84809c78b2dd6d26a5cebeb5ae269";
 
+    # 3.44.2 release
+    sqlite-nixpkgs.url = "github:NixOS/nixpkgs/5ad9903c16126a7d949101687af0aa589b1d7d3d";
+
     # 20.6.1 release
     nodejs-nixpkgs.url = "github:NixOS/nixpkgs/78058d810644f5ed276804ce7ea9e82d92bee293";
 
@@ -24,6 +27,7 @@
     self,
     flake-utils,
     go-nixpkgs,
+    sqlite-nixpkgs,
     nodejs-nixpkgs,
     shellcheck-nixpkgs,
     sqlfluff-nixpkgs,
@@ -31,6 +35,7 @@
   } @ inputs:
     flake-utils.lib.eachDefaultSystem (system: let
       go = go-nixpkgs.legacyPackages.${system}.go_1_23;
+      sqlite = sqlite-nixpkgs.legacyPackages.${system}.sqlite;
       nodejs = nodejs-nixpkgs.legacyPackages.${system}.nodejs_20;
       shellcheck = shellcheck-nixpkgs.legacyPackages.${system}.shellcheck;
       sqlfluff = sqlfluff-nixpkgs.legacyPackages.${system}.sqlfluff;
@@ -51,6 +56,7 @@
             go-nixpkgs.legacyPackages.${system}.godef
             go-nixpkgs.legacyPackages.${system}.golint
             go
+            sqlite
             nodejs
             shellcheck
             sqlfluff
@@ -65,6 +71,7 @@
             echo "litestream" "$(litestream version)"
             echo "node" "$(node --version)"
             echo "npm" "$(npm --version)"
+            echo "sqlite" "$(sqlite3 --version | cut -d ' ' -f 1-2)"
             go version
           '';
         };
