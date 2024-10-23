@@ -406,16 +406,18 @@
       information, we will either delete or anonymize it, or, if this is not
       possible (for example, because your personal information has been stored
       in backup archives), then we will securely store your personal information
-      and isolate it from any further processing
-      uize:15px;text-align:justify;"&gt; We do not knowingly solicit data from
-      or market to children under 18 years of age. By using the Sites , you
-      represent that you are at least 18 or that you are the parent or guardian
-      of such a minor and consent to such minor dependent’s use of the Sites .
-      If we learn that personal information from users less than 18 years of age
-      has been collected, we will deactivate the account and take reasonable
-      measures to promptly delete such data from our records. If you become
-      aware of any data we have collected from children under age 18, please
-      contact us at michael@whatgotdone.com .
+      and isolate it from any further processing.
+    </p>
+    <p>
+      We do not knowingly solicit data from or market to children under 18 years
+      of age. By using the Sites , you represent that you are at least 18 or
+      that you are the parent or guardian of such a minor and consent to such
+      minor dependent’s use of the Sites . If we learn that personal information
+      from users less than 18 years of age has been collected, we will
+      deactivate the account and take reasonable measures to promptly delete
+      such data from our records. If you become aware of any data we have
+      collected from children under age 18, please contact us at
+      michael@whatgotdone.com .
     </p>
     <p>
       <br />
