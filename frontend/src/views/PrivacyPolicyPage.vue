@@ -2,7 +2,7 @@
   <div class="privacy-policy">
     <h1>Privacy Policy</h1>
     <p>
-      <strong> Last updated May 23, 2019 </strong>
+      <strong> Last updated October 23, 2024</strong>
     </p>
     <p>
       <br />
