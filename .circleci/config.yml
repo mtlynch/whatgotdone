@@ -92,6 +92,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Create .env.staging file
+          command: |
+            cp --no-clobber .env.example .env.staging && \
+            echo "PUBLIC_GCS_BUCKET='whatgotdone-public-staging'" \
+              >> .env.staging
+      - run:
           name: Retrieve staging service account credentials (JSON) from CircleCI
           command: |
             echo "${INTEGRATION_CLIENT_SECRET}" | \
