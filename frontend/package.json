@@ -25,7 +25,7 @@
     "showdown": "^1.9.1",
     "turndown": "^7.1.1",
     "turndown-plugin-gfm": "^1.0.2",
-    "vue": "^2.6.14",
+    "vue": "^3.0.0",
     "vue-markdown": "^2.2.4",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.5.3",
