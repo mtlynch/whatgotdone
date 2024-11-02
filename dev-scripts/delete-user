@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Delete records of user from datastore.
+
+# Exit on first failure.
+set -e
+
+# Exit on unset variable.
+set -u
+
+# Change directory to repository root.
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+readonly SCRIPT_DIR
+cd "${SCRIPT_DIR}/.."
+
+if [ $# -eq 0 ]; then
+    echo "Error: No username provided."
+    echo "Usage: $0 <username>"
+    exit 1
+fi
+
+# Echo commands before executing them, by default to stderr.
+set -x
+
+TARGET_USERNAME="$1"
+
+readonly DB_FILE='data/store.db'
+
+# Check if the database file exists
+if [ ! -f "$DB_FILE" ]; then
+    echo "Error: Database file $DB_FILE not found."
+    exit 1
+fi
+
+sqlite3 "$DB_FILE" <<EOF
+BEGIN TRANSACTION;
+
+DELETE FROM avatars WHERE username = '${TARGET_USERNAME}';
+DELETE FROM user_preferences WHERE username = '${TARGET_USERNAME}';
+DELETE FROM user_profiles WHERE username = '${TARGET_USERNAME}';
+DELETE FROM journal_entries WHERE username = '${TARGET_USERNAME}';
+DELETE FROM follows WHERE follower = '${TARGET_USERNAME}' OR leader = '${TARGET_USERNAME}';
+DELETE FROM entry_reactions WHERE entry_author = '${TARGET_USERNAME}' OR reacting_user = '${TARGET_USERNAME}';
+
+COMMIT;
+EOF
+
+echo "Rows related to '${TARGET_USERNAME}' have been deleted from all tables in a single transaction."
