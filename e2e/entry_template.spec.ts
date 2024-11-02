@@ -52,7 +52,6 @@ test("uses the entry template for new drafts", async ({ page }) => {
   await page.goto("/entry/edit/2020-03-06");
   await apiDraftGet;
 
-  await page.locator(".switch-mode .btn").click();
   await expect(page.locator(".markdown-editor .editor-textarea")).toHaveValue(
     "# Example project\n\n* Item A\n* Item B"
   );
