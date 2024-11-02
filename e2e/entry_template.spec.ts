@@ -35,9 +35,7 @@ test("uses the entry template for new drafts", async ({ page }) => {
   await expect(page).toHaveURL("/preferences");
 
   await page
-    .getByLabel(
-      "Create a template for your weekly What Got Done entries. Every new update you create will start with this text."
-    )
+    .getByRole("textbox")
     .fill("# Example project\n\n* Item A\n* Item B");
   await page.getByRole("button", { name: /save/i }).click();
 
