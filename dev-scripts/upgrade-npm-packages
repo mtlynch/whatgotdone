@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Upgrade all npm packages to the latest available versions.
 
