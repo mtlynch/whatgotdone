@@ -35,9 +35,11 @@ test("uses the entry template for new drafts", async ({ page }) => {
   await expect(page).toHaveURL("/preferences");
 
   await page
-    .locator("id=entry-template-input")
+    .getByLabel(
+      "Create a template for your weekly What Got Done entries. Every new update you create will start with this text."
+    )
     .fill("# Example project\n\n* Item A\n* Item B");
-  await page.locator(".btn-primary").click();
+  await page.getByRole("button", { name: /save/i }).click();
 
   await expect(page.locator(".alert-success")).toBeVisible();
 
