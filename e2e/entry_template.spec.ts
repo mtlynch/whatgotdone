@@ -34,6 +34,8 @@ test("uses the entry template for new drafts", async ({ page }) => {
   await page.getByTestId("preferences-link").click();
   await expect(page).toHaveURL("/preferences");
 
+  await expect(page.getByRole("textbox")).toContainText("");
+
   await page
     .getByRole("textbox")
     .fill("# Example project\n\n* Item A\n* Item B");
