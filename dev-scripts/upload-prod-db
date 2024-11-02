@@ -25,6 +25,8 @@ if [[ -z "${DB_PATH}" ]]; then
       echo "usage: upload-prod-db [db_path]" && exit 1
 fi
 
+# We don't care about backslashes, and the -r flag messes things up in Nix.
+# shellcheck disable=2162
 read -p "Really overwrite prod database? (y/N): " choice
 
 echo "Choice is ${choice}"
