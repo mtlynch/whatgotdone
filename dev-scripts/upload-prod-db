@@ -16,11 +16,16 @@ set +x
 . .env.prod
 set -x
 
+export LITESTREAM_ENDPOINT
+export LITESTREAM_ACCESS_KEY_ID
+export LITESTREAM_SECRET_ACCESS_KEY
+export LITESTREAM_BUCKET
+
 if [[ -z "${DB_PATH}" ]]; then
       echo "usage: upload-prod-db [db_path]" && exit 1
 fi
 
-read -pr "Really overwrite prod database? (y/N): " choice
+read -p "Really overwrite prod database? (y/N): " choice
 
 echo "Choice is ${choice}"
 
