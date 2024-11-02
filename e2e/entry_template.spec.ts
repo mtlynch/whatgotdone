@@ -27,7 +27,7 @@ test("uses the entry template for new drafts", async ({ page }) => {
   // Wait for page to pull down any previous entry.
   await apiDraftGet;
 
-  expect(await page.locator(".editor-content .ProseMirror")).toContainText("");
+  await expect(page.getByRole("textbox")).toContainText("");
 
   // Set an entry template on the preferences page.
   await page.getByTestId("account-dropdown").click();
