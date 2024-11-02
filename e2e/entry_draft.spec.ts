@@ -24,8 +24,8 @@ test("logs in and saves a draft", async ({ page }) => {
 
   const entryText = "Saved a private draft at " + new Date().toISOString();
 
-  await page.locator(".editor-content .ProseMirror").clear();
-  await page.locator(".editor-content .ProseMirror").fill(entryText);
+  await page.getByRole("textbox").clear();
+  await page.getByRole("textbox").fill(entryText);
 
   // Wait for auto-save to complete.
   await expect(page.locator(".save-draft")).toContainText("Changes Saved");

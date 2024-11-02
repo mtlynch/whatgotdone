@@ -27,17 +27,17 @@ test("uses the entry template for new drafts", async ({ page }) => {
   // Wait for page to pull down any previous entry.
   await apiDraftGet;
 
-  expect(await page.locator(".editor-content .ProseMirror")).toContainText("");
+  await expect(page.getByRole("textbox")).toContainText("");
 
   // Set an entry template on the preferences page.
   await page.getByTestId("account-dropdown").click();
   await page.getByTestId("preferences-link").click();
   await expect(page).toHaveURL("/preferences");
 
+  await expect(page.getByRole("textbox")).toContainText("");
+
   await page
-    .getByLabel(
-      "Create a template for your weekly What Got Done entries. Every new update you create will start with this text."
-    )
+    .getByRole("textbox")
     .fill("# Example project\n\n* Item A\n* Item B");
   await page.getByRole("button", { name: /save/i }).click();
 
@@ -52,7 +52,6 @@ test("uses the entry template for new drafts", async ({ page }) => {
   await page.goto("/entry/edit/2020-03-06");
   await apiDraftGet;
 
-  await page.locator(".switch-mode .btn").click();
   await expect(page.locator(".markdown-editor .editor-textarea")).toHaveValue(
     "# Example project\n\n* Item A\n* Item B"
   );
