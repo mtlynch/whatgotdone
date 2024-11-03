@@ -16,7 +16,7 @@ test("follows a user", async ({ page }) => {
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   // Verify the personalized feed is empty.
-  await page.getByTestId("nav-feed-btn").click();
+  await page.getByRole("link", { name: "Feed" }).click();
   await expect(page.locator(".alert")).toContainText(
     "You're not following anyone yet."
   );
@@ -38,7 +38,7 @@ test("follows a user", async ({ page }) => {
   ).not.toBeVisible();
 
   // Verify personalized feed is non-empty
-  await page.getByTestId("nav-feed-btn").click();
+  await page.getByRole("link", { name: "Feed" }).click();
   await expect(page).toHaveURL("/feed");
   await expect(page.locator(".journal")).toHaveCount(2);
 
@@ -48,7 +48,7 @@ test("follows a user", async ({ page }) => {
   await page.getByRole("button", { name: "Unfollow" }).click();
 
   // Verify the personalized feed is empty again.
-  await page.getByTestId("nav-feed-btn").click();
+  await page.getByRole("link", { name: "Feed" }).click();
   await expect(page).toHaveURL("/feed");
   await expect(page.locator(".alert")).toContainText(
     "You're not following anyone yet."

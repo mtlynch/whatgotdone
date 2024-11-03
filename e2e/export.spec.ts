@@ -4,8 +4,8 @@ import { mockLoginAsUser } from "./helpers/test_apis";
 test("can export the logged-in user's data", async ({ page }) => {
   await mockLoginAsUser(page, "staging_jimmy");
 
-  await page.getByTestId("account-dropdown").click();
-  await page.getByTestId("profile-link").click();
+  await page.getByRole("button", { name: "Account" }).click();
+  await page.getByRole("menuitem", { name: "Profile" }).click();
 
   await expect(page).toHaveURL("/staging_jimmy");
 

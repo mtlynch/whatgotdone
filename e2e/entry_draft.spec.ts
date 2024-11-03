@@ -34,7 +34,7 @@ test("logs in and saves a draft", async ({ page }) => {
   // User should stay on the same page after saving a draft.
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
-  await page.getByTestId("recent-link").click();
+  await page.getByRole("link", { name: "Recent" }).click();
   await expect(page).toHaveURL("/recent");
 
   // Private drafts should not appear on the recent page

@@ -22,8 +22,8 @@ test("gets 404 for non-existent user's profile page", async ({ page }) => {
 test("logs in and updates profile", async ({ page }) => {
   await mockLoginAsUser(page, "staging_jimmy");
 
-  await page.getByTestId("account-dropdown").click();
-  await page.getByTestId("profile-link").click();
+  await page.getByRole("button", { name: "Account" }).click();
+  await page.getByRole("menuitem", { name: "Profile" }).click();
 
   await expect(page).toHaveURL("/staging_jimmy");
 
@@ -61,8 +61,8 @@ test("logs in and updates profile", async ({ page }) => {
 test("logs in and sets profile photo", async ({ page }) => {
   await mockLoginAsUser(page, "staging_jimmy");
 
-  await page.getByTestId("account-dropdown").click();
-  await page.getByTestId("profile-link").click();
+  await page.getByRole("button", { name: "Account" }).click();
+  await page.getByRole("menuitem", { name: "Profile" }).click();
 
   await expect(page).toHaveURL("/staging_jimmy");
 
