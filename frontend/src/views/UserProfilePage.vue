@@ -49,18 +49,10 @@
       <b-button v-if="canEdit" to="/profile/edit" variant="primary"
         >Edit</b-button
       >
-      <b-button
-        data-testid="follow-btn"
-        v-if="canFollow"
-        variant="primary"
-        v-on:click="onFollow"
+      <b-button v-if="canFollow" variant="primary" v-on:click="onFollow"
         >Follow</b-button
       >
-      <b-button
-        data-testid="unfollow-btn"
-        v-if="canUnfollow"
-        variant="primary"
-        v-on:click="onUnfollow"
+      <b-button v-if="canUnfollow" variant="primary" v-on:click="onUnfollow"
         >Unfollow</b-button
       >
     </div>
