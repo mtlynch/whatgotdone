@@ -16,10 +16,8 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
         <b-nav-item to="/about">About</b-nav-item>
-        <b-nav-item v-if="isLoggedIn" to="/feed" data-testid="nav-feed-btn"
-          >Feed</b-nav-item
-        >
-        <b-nav-item to="/recent" data-testid="recent-link">Recent</b-nav-item>
+        <b-nav-item v-if="isLoggedIn" to="/feed">Feed</b-nav-item>
+        <b-nav-item to="/recent">Recent</b-nav-item>
         <b-nav-item href="https://github.com/mtlynch/whatgotdone"
           >Contribute</b-nav-item
         >
@@ -27,19 +25,10 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-item-dropdown
-          v-if="isLoggedIn"
-          text="Account"
-          data-testid="account-dropdown"
-          right
-        >
-          <b-dropdown-item :to="'/' + username" data-testid="profile-link"
-            >Profile</b-dropdown-item
-          >
+        <b-nav-item-dropdown v-if="isLoggedIn" text="Account" right>
+          <b-dropdown-item :to="'/' + username">Profile</b-dropdown-item>
           <b-dropdown-item to="/preferences">Preferences</b-dropdown-item>
-          <b-dropdown-item to="/logout" data-testid="sign-out-link"
-            >Sign Out</b-dropdown-item
-          >
+          <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-button
           class="post-update"
