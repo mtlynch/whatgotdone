@@ -80,10 +80,13 @@ export default {
         });
     },
     onEntryTemplateChanged() {
-      if (
-        this.entryTemplateFromServer &&
-        this.entryTemplateFromServer !== this.entryTemplate
-      ) {
+      // If the server version is empty or undefined, just see whether the local
+      // version is non-empty.
+      if (!this.entryTemplateFromServer) {
+        if (this.entryTemplate) {
+          this.templateChanged = true;
+        }
+      } else if (this.entryTemplateFromServer !== this.entryTemplate) {
         this.templateChanged = true;
       }
     },
