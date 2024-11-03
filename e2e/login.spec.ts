@@ -98,8 +98,8 @@ test("visiting authenticated page after UserKit token expires should redirect to
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
   // Navigate to preferences page using the navigation menu.
-  await page.getByRole("button", { name: /account/i }).click();
-  await page.getByRole("link", { name: /preferences/i }).click();
+  await page.getByRole("button", { name: "Account" }).click();
+  await page.getByRole("menuitem", { name: "Preferences" }).click();
   await expect(page).toHaveURL("/preferences");
 
   // Simulate a UserKit cookie going stale.

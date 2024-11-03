@@ -30,8 +30,8 @@ test("uses the entry template for new drafts", async ({ page }) => {
   await expect(page.getByRole("textbox")).toContainText("");
 
   // Navigate to preferences page using the navigation menu.
-  await page.getByRole("button", { name: /account/i }).click();
-  await page.getByRole("link", { name: /preferences/i }).click();
+  await page.getByRole("button", { name: "Account" }).click();
+  await page.getByRole("menuitem", { name: "Preferences" }).click();
   await expect(page).toHaveURL("/preferences");
 
   await expect(page.getByRole("textbox")).toContainText("");
