@@ -80,15 +80,15 @@ export default {
         });
     },
     onEntryTemplateChanged() {
-      // If the server version is empty or undefined, just see whether the local
-      // version is non-empty.
-      if (!this.entryTemplateFromServer) {
-        if (this.entryTemplate) {
-          this.templateChanged = true;
-        }
-      } else if (this.entryTemplateFromServer !== this.entryTemplate) {
-        this.templateChanged = true;
-      }
+      // Template is considered changed if either:
+      //  - The server version is empty or undefined, and the local version is
+      //      non-empty.
+      //  - The server version is non-empty and it doesn't match the local
+      //      version.
+      this.templateChanged =
+        (!this.entryTemplateFromServer && this.entryTemplate) ||
+        (this.entryTemplateFromServer &&
+          this.entryTemplateFromServer !== this.entryTemplate);
     },
     handleSubmit() {
       this.savingPreferences = true;
