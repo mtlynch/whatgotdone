@@ -23,9 +23,7 @@ body .alert a:hover,
 body .journal-body a,
 body .journal-body a:hover,
 body .journal-preview a,
-body .journal-preview a:hover,
-body .rich-text-editor a,
-body .rich-text-editor a:hover {
+body .journal-preview a:hover {
   color: rgb(101, 168, 255);
   text-decoration: none;
 }
@@ -46,8 +44,7 @@ body .rich-text-editor a:hover {
 }
 
 textarea.form-control,
-input.form-control,
-.rich-text-editor.form-control {
+input.form-control {
   border: 1px solid rgba(43, 62, 80, 0.5) !important;
   padding: 12px;
   border-radius: 10px;

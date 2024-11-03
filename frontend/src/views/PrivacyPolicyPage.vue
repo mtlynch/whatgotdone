@@ -2,7 +2,7 @@
   <div class="privacy-policy">
     <h1>Privacy Policy</h1>
     <p>
-      <strong> Last updated May 23, 2019 </strong>
+      <strong> Last updated October 23, 2024</strong>
     </p>
     <p>
       <br />
@@ -39,11 +39,7 @@
     </p>
     <p>
       This privacy policy applies to all information collected through our
-      website (such as https://whatgotdone.com ), and/or any related services,
-      sales, marketing or events (we refer to them collectively in this privacy
-      policy as the "
-      <strong>Sites</strong>
-      ").
+      website (https://whatgotdone.com).
     </p>
     <p>
       <strong
@@ -94,15 +90,10 @@
       <a href="#DNT">11. CONTROLS FOR DO-NOT-TRACK FEATURES</a>
     </p>
     <p>
-      <a href="#caresidents"
-        >12. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</a
-      >
+      <a href="#policyupdates">12. DO WE MAKE UPDATES TO THIS POLICY?</a>
     </p>
     <p>
-      <a href="#policyupdates">13. DO WE MAKE UPDATES TO THIS POLICY?</a>
-    </p>
-    <p>
-      <a href="#contact">14. HOW CAN YOU CONTACT US ABOUT THIS POLICY?</a>
+      <a href="#contact">13. HOW CAN YOU CONTACT US ABOUT THIS POLICY?</a>
     </p>
     <p>
       <br />
@@ -139,29 +130,6 @@
       similar technologies.
       <br />
     </p>
-    <p>
-      <strong>Information collected from other sources</strong>
-    </p>
-    <p>
-      <strong>
-        <em>In Short:</em>
-      </strong>
-      <em>
-        We may collect limited data from public databases, marketing partners,
-        social media platforms, and other outside sources.
-      </em>
-    </p>
-    <p>
-      We may obtain information about you from other sources, such as public
-      databases, joint marketing partners, social media platforms (such as
-      Facebook), as well as from other third parties. Examples of the
-      information we receive from other sources include: social media profile
-      information (your name, gender, birthday, email, current city, state and
-      country, user identification numbers for your contacts, profile picture
-      URL and any other information that you choose to make public) ; marketing
-      leads and search results and links, including paid listings (such as
-      sponsored links).
-    </p>
     <br />
     <p id="infouse">
       <strong>2. HOW DO WE USE YOUR INFORMATION?</strong>
@@ -194,17 +162,6 @@
         creation and logon process. See the section below headed "
         <a href="#sociallogins">HOW DO WE HANDLE YOUR SOCIAL LOGINS</a>
         " for further information.
-        <br />
-        <br />
-      </li>
-      <li>
-        <strong>To send you marketing and promotional communications.</strong>
-        We and/or our third party marketing partners may use the personal
-        information you send to us for our marketing purposes, if this is in
-        accordance with your marketing preferences. You can opt-out of our
-        marketing emails at any time (see the "
-        <a href="#privacyrights">WHAT ARE YOUR PRIVACY RIGHTS</a>
-        " below).
         <br />
         <br />
       </li>
@@ -252,9 +209,7 @@
       <li>
         <strong>For other Business Purposes.</strong>
         We may use your information for other Business Purposes, such as data
-        analysis, identifying usage trends, determining the effectiveness of our
-        promotional campaigns and to evaluate and improve our Sites , products,
-        services, marketing and your experience.
+        analysis, or identifying usage trends.
       </li>
     </ul>
     <br />
@@ -406,16 +361,18 @@
       information, we will either delete or anonymize it, or, if this is not
       possible (for example, because your personal information has been stored
       in backup archives), then we will securely store your personal information
-      and isolate it from any further processing
-      uize:15px;text-align:justify;"&gt; We do not knowingly solicit data from
-      or market to children under 18 years of age. By using the Sites , you
-      represent that you are at least 18 or that you are the parent or guardian
-      of such a minor and consent to such minor dependent’s use of the Sites .
-      If we learn that personal information from users less than 18 years of age
-      has been collected, we will deactivate the account and take reasonable
-      measures to promptly delete such data from our records. If you become
-      aware of any data we have collected from children under age 18, please
-      contact us at michael@whatgotdone.com .
+      and isolate it from any further processing.
+    </p>
+    <p>
+      We do not knowingly solicit data from or market to children under 18 years
+      of age. By using the Sites , you represent that you are at least 18 or
+      that you are the parent or guardian of such a minor and consent to such
+      minor dependent’s use of the Sites . If we learn that personal information
+      from users less than 18 years of age has been collected, we will
+      deactivate the account and take reasonable measures to promptly delete
+      such data from our records. If you become aware of any data we have
+      collected from children under age 18, please contact us at
+      michael@whatgotdone.com .
     </p>
     <p>
       <br />
@@ -469,19 +426,6 @@
       >
       .
     </p>
-    <p>
-      <strong>
-        <u>Opting out of email marketing:</u>
-      </strong>
-      You can unsubscribe from our marketing email list at any time by clicking
-      on the unsubscribe link in the emails that we send or by contacting us
-      using the details provided below. You will then be removed from the
-      marketing email list – however, we will still need to send you
-      service-related emails that are necessary for the administration and use
-      of your account. To otherwise opt-out, you may:
-    </p>
-    <p>■ Note your preferences when you register an account with the site.</p>
-    <p>■ Access your account settings and update preferences.</p>
     <br />
     <p id="DNT">
       <strong>11. CONTROLS FOR DO-NOT-TRACK FEATURES</strong>
@@ -499,44 +443,8 @@
       of this Privacy Policy.
     </p>
     <br />
-    <p id="caresidents">
-      <strong>12. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</strong>
-    </p>
-    <p>
-      <strong>
-        <em>In Short:</em>
-      </strong>
-      <em
-        >Yes, if you are a resident of California, you are granted specific
-        rights regarding access to your personal information.</em
-      >
-    </p>
-    <p>
-      California Civil Code Section 1798.83, also known as the “Shine The Light”
-      law, permits our users who are California residents to request and obtain
-      from us, once a year and free of charge, information about categories of
-      personal information (if any) we disclosed to third parties for direct
-      marketing purposes and the names and addresses of all third parties with
-      which we shared personal information in the immediately preceding calendar
-      year. If you are a California resident and would like to make such a
-      request, please submit your request in writing to us using the contact
-      information provided below.
-    </p>
-    <p>
-      If you are under 18 years of age, reside in California, and have a
-      registered account with the Sites , you have the right to request removal
-      of unwanted data that you publicly post on the Sites . To request removal
-      of such data, please contact us using the contact information provided
-      below, and include the email address associated with your account and a
-      statement that you reside in California. We will make sure the data is not
-      publicly displayed on the Sites , but please be aware that the data may
-      not be completely or comprehensively removed from our systems.
-    </p>
-    <p>
-      <br />
-    </p>
     <p id="policyupdates">
-      <strong>13. DO WE MAKE UPDATES TO THIS POLICY?</strong>
+      <strong>12. DO WE MAKE UPDATES TO THIS POLICY?</strong>
     </p>
     <p>
       <strong>
@@ -560,17 +468,13 @@
       <br />
     </p>
     <p id="contact">
-      <strong>14. HOW CAN YOU CONTACT US ABOUT THIS POLICY?</strong>
+      <strong>13. HOW CAN YOU CONTACT US ABOUT THIS POLICY?</strong>
     </p>
     <p>
       If you have questions or comments about this policy, you may contact our
-      Data Protection Officer (DPO), Michael Lynch , by email at
-      michael@whatgotdone.com , or by post to:
+      Data Protection Officer (DPO), Michael Lynch, by email at
+      michael@whatgotdone.com.
     </p>
-    <div>Michael Lynch</div>
-    <div>P.O. Box 784</div>
-    South Hadley , MA 01075 <br />United States
-    <br />
   </div>
 </template>
 

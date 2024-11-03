@@ -13,10 +13,6 @@
       (You can use
       <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank"
         >Markdown</a
-      >
-      or switch to the
-      <a class="switch-mode" href="#" @click="$emit('change-mode')"
-        >rich text editor</a
       >)
     </p>
   </div>

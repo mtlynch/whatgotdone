@@ -27,22 +27,25 @@ test("uses the entry template for new drafts", async ({ page }) => {
   // Wait for page to pull down any previous entry.
   await apiDraftGet;
 
-  expect(await page.locator(".editor-content .ProseMirror")).toContainText("");
+  await expect(page.getByRole("textbox")).toContainText("");
 
-  // Set an entry template on the preferences page.
-  await page.getByTestId("account-dropdown").click();
-  await page.getByTestId("preferences-link").click();
+  // Navigate to preferences page using the navigation menu.
+  await page.getByRole("button", { name: "Account" }).click();
+  await page.getByRole("menuitem", { name: "Preferences" }).click();
   await expect(page).toHaveURL("/preferences");
 
-  await page
-    .locator("id=entry-template-input")
-    .fill("# Example project\n\n* Item A\n* Item B");
-  await page.locator(".btn-primary").click();
+  await expect(page.getByRole("textbox")).toContainText("");
 
-  await expect(page.locator(".alert-success")).toBeVisible();
+  // Set template text.
+  await page
+    .getByRole("textbox")
+    .fill("# Example project\n\n* Item A\n* Item B");
+  await page.getByRole("button", { name: /save/i }).click();
+
+  // Verify success message.
+  await expect(page.getByRole("alert")).toBeVisible();
 
   // Verify new entries start with the template.
-
   apiDraftGet = page.waitForRequest(
     (request) =>
       request.url().includes("/api/draft") && request.method() === "GET"
@@ -50,8 +53,7 @@ test("uses the entry template for new drafts", async ({ page }) => {
   await page.goto("/entry/edit/2020-03-06");
   await apiDraftGet;
 
-  await page.locator(".switch-mode .btn").click();
-  await expect(page.locator(".markdown-editor .editor-textarea")).toHaveValue(
+  await expect(page.getByRole("textbox")).toHaveValue(
     "# Example project\n\n* Item A\n* Item B"
   );
 });

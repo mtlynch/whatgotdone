@@ -10,7 +10,8 @@
         <textarea-autosize
           class="form-control"
           id="entry-template-input"
-          v-model="preferences.entryTemplate"
+          v-model="entryTemplate"
+          :disabled="entryTemplate === undefined"
           name="entry-template"
           @input="onEntryTemplateChanged"
           :min-height="250"
@@ -23,7 +24,7 @@
         <button
           type="submit"
           class="btn btn-primary"
-          :disabled="!preferencesChanged"
+          :disabled="!templateChanged"
         >
           Save
         </button>
@@ -54,12 +55,10 @@ export default {
   name: 'UserPreferencesPage',
   data() {
     return {
-      preferences: {
-        entryTemplate: '',
-      },
-      preferencesFromServer: null,
+      entryTemplate: undefined,
+      entryTemplateFromServer: undefined,
       savingPreferences: false,
-      preferencesChanged: false,
+      templateChanged: false,
       preferencesSaved: false,
     };
   },
@@ -72,27 +71,33 @@ export default {
     loadPreferences() {
       getPreferences()
         .then((preferences) => {
-          this.preferencesFromServer = Object.assign({}, preferences);
-          this.preferences = Object.assign({}, preferences);
+          this.entryTemplateFromServer = preferences.entryTemplate;
+          this.entryTemplate = preferences.entryTemplate;
         })
         // Ignore errors on pulling down preferences.
-        .catch(() => {});
+        .catch(() => {
+          this.entryTemplate = '';
+        });
     },
     onEntryTemplateChanged() {
-      if (
-        this.preferencesFromServer &&
-        this.preferencesFromServer.entryTemplate !=
-          this.preferences.entryTemplate
-      ) {
-        this.preferencesChanged = true;
-      }
+      // Template is considered changed if either:
+      //  - The server version is empty or undefined, and the local version is
+      //      non-empty.
+      //  - The server version is non-empty and it doesn't match the local
+      //      version.
+      this.templateChanged =
+        (!this.entryTemplateFromServer && this.entryTemplate) ||
+        (this.entryTemplateFromServer &&
+          this.entryTemplateFromServer !== this.entryTemplate);
     },
     handleSubmit() {
       this.savingPreferences = true;
-      savePreferences(this.preferences)
+      savePreferences({
+        entryTemplate: this.entryTemplate,
+      })
         .then(() => {
           this.preferencesSaved = true;
-          this.preferencesChanged = false;
+          this.templateChanged = false;
         })
         .finally(() => {
           this.savingPreferences = false;

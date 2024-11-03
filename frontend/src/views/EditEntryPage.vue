@@ -8,22 +8,11 @@
           <span class="end-date">{{ date | moment('dddd, ll') }}</span
           >.
         </p>
-        <template v-if="inRichEditMode">
-          <RichTextEditor
-            ref="entryText"
-            v-model="entryContent"
-            @input="debouncedSaveDraft"
-            @change-mode="onChangeMode"
-          />
-        </template>
-        <template v-else>
-          <MarkdownEditor
-            ref="entryText"
-            v-model="entryContent"
-            @input="debouncedSaveDraft"
-            @change-mode="onChangeMode"
-          />
-        </template>
+        <MarkdownEditor
+          ref="entryText"
+          v-model="entryContent"
+          @input="debouncedSaveDraft"
+        />
         <div class="d-flex justify-content-end">
           <button
             @click.prevent="handleSaveDraft"
@@ -41,10 +30,7 @@
           </button>
         </div>
       </form>
-      <JournalPreview
-        :markdown="entryContent"
-        v-if="!inRichEditMode && entryContent !== null"
-      />
+      <JournalPreview :markdown="entryContent" v-if="entryContent !== null" />
     </template>
     <template v-else-if="errorMessage">
       <b-alert show variant="warning"
@@ -71,7 +57,6 @@ import {isValidEntryDate, thisFriday} from '@/controllers/EntryDates.js';
 
 import JournalPreview from '@/components/JournalPreview.vue';
 import MarkdownEditor from '@/components/MarkdownEditor.vue';
-import RichTextEditor from '@/components/RichTextEditor.vue';
 
 Vue.use(VueTextareaAutosize);
 
@@ -80,12 +65,10 @@ export default {
   components: {
     JournalPreview,
     MarkdownEditor,
-    RichTextEditor,
   },
   data() {
     return {
       date: '',
-      inRichEditMode: this.$store.state.useRichTextEditor,
       entryContent: null,
       errorMessage: null,
       changesSaved: true,
@@ -116,10 +99,6 @@ export default {
     onContentChanged() {
       this.changesSaved = false;
       this.debouncedSaveDraft();
-    },
-    onChangeMode() {
-      this.inRichEditMode = !this.inRichEditMode;
-      this.$store.commit('setRichTextEditorChoice', this.inRichEditMode);
     },
     handleSaveDraft() {
       this.changesSaved = false;

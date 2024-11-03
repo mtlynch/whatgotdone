@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -eux
 
@@ -24,6 +24,11 @@ set +x
 # shellcheck disable=SC1091
 . .env.prod
 set -x
+
+export LITESTREAM_ENDPOINT
+export LITESTREAM_ACCESS_KEY_ID
+export LITESTREAM_SECRET_ACCESS_KEY
+export LITESTREAM_BUCKET
 
 # Retrieve production DB.
 litestream restore -v -config litestream.yml -o "${DB_COPY_PATH}" "${DB_PATH}"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Exit build script on first failure
 set -e
@@ -21,6 +21,8 @@ set +x
 # shellcheck disable=SC1091
 . .env.staging
 set -x
+
+export USERKIT_SECRET
 
 # Change directory to repository root.
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"

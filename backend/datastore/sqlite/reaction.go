@@ -8,7 +8,7 @@ import (
 
 // GetReactions retrieves reader reactions associated with a published entry.
 func (d DB) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
-	stmt, err := d.ctx.Prepare(`
+	rows, err := d.ctx.Query(`
 	SELECT
 		reacting_user,
 		reaction,
@@ -17,16 +17,15 @@ func (d DB) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) 
 		entry_reactions
 	WHERE
 		entry_author=? AND
-		entry_date=?`)
+		entry_date=?`, entryAuthor, entryDate)
 	if err != nil {
 		return []types.Reaction{}, err
 	}
-	defer stmt.Close()
-
-	rows, err := stmt.Query(entryAuthor, entryDate)
-	if err != nil {
-		return []types.Reaction{}, err
-	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Printf("failed to close SQLite rows: %v", err)
+		}
+	}()
 
 	reactions := []types.Reaction{}
 	for rows.Next() {

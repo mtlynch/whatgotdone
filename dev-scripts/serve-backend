@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Exit on first failing command.
 set -e
@@ -21,6 +21,7 @@ if [[ -f .env.dev.local ]]; then
     # shellcheck disable=SC1091
     . .env.dev.local
 fi
+export USERKIT_SECRET
 
 # Install modd if it's not present.
 MODD_PATH="$(go env GOPATH)/bin/modd"

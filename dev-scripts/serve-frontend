@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Exit on first failing command.
 set -e
@@ -16,6 +16,9 @@ cd "${SCRIPT_DIR}/.."
 
 # shellcheck disable=SC1091
 . .env.dev
+export VUE_APP_USERKIT_APP_ID
+export VUE_APP_BACKEND_URL
+
 cd frontend
 
 ./node_modules/.bin/vue-cli-service serve --port 8085

@@ -23,8 +23,8 @@ test("logs in and posts an update", async ({ page }) => {
 
   const entryText = "Posted an update at " + new Date().toISOString();
 
-  await page.locator(".editor-content .ProseMirror").clear();
-  await page.locator(".editor-content .ProseMirror").fill(entryText);
+  await page.getByRole("textbox").clear();
+  await page.getByRole("textbox").fill(entryText);
 
   await page.locator("form button[type='submit']").click();
 
@@ -62,8 +62,8 @@ test("logs in and backdates an update from a previous week", async ({
 
   const entryText = "Posted a backdated update at " + new Date().toISOString();
 
-  await page.locator(".editor-content .ProseMirror").clear();
-  await page.locator(".editor-content .ProseMirror").fill(entryText);
+  await page.getByRole("textbox").clear();
+  await page.getByRole("textbox").fill(entryText);
 
   await page.locator("form button[type='submit']").click();
 
@@ -113,10 +113,8 @@ test("posts an update and then unpublishes it", async ({ page }) => {
 
   await page.goto("/entry/edit/2019-06-28");
 
-  await page.locator(".editor-content .ProseMirror").clear();
-  await page
-    .locator(".editor-content .ProseMirror")
-    .fill("felt cute, might unpublish later");
+  await page.getByRole("textbox").clear();
+  await page.getByRole("textbox").fill("felt cute, might unpublish later");
 
   await page.locator("form button[type='submit']").click();
 

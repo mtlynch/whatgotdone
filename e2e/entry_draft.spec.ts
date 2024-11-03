@@ -24,8 +24,8 @@ test("logs in and saves a draft", async ({ page }) => {
 
   const entryText = "Saved a private draft at " + new Date().toISOString();
 
-  await page.locator(".editor-content .ProseMirror").clear();
-  await page.locator(".editor-content .ProseMirror").fill(entryText);
+  await page.getByRole("textbox").clear();
+  await page.getByRole("textbox").fill(entryText);
 
   // Wait for auto-save to complete.
   await expect(page.locator(".save-draft")).toContainText("Changes Saved");
@@ -34,7 +34,7 @@ test("logs in and saves a draft", async ({ page }) => {
   // User should stay on the same page after saving a draft.
   await expect(page).toHaveURL(/\/entry\/edit\/.+/g);
 
-  await page.getByTestId("recent-link").click();
+  await page.getByRole("link", { name: "Recent" }).click();
   await expect(page).toHaveURL("/recent");
 
   // Private drafts should not appear on the recent page
