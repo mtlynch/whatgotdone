@@ -36,9 +36,7 @@
           <b-dropdown-item :to="'/' + username" data-testid="profile-link"
             >Profile</b-dropdown-item
           >
-          <b-dropdown-item to="/preferences" data-testid="preferences-link"
-            >Preferences</b-dropdown-item
-          >
+          <b-dropdown-item to="/preferences">Preferences</b-dropdown-item>
           <b-dropdown-item to="/logout" data-testid="sign-out-link"
             >Sign Out</b-dropdown-item
           >
