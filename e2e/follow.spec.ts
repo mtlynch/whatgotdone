@@ -31,9 +31,11 @@ test("follows a user", async ({ page }) => {
 
   await page.goto("/leader_lenny");
   await apiFollowingGet;
-  await page.getByRole("button", { name: "Follow" }).click();
+  await page.getByRole("button", { name: "Follow", exact: true }).click();
   await expect(page.getByRole("button", { name: "Unfollow" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Follow" })).not.toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Follow", exact: true })
+  ).not.toBeVisible();
 
   // Verify personalized feed is non-empty
   await page.getByTestId("nav-feed-btn").click();
