@@ -92,7 +92,9 @@ export default {
     },
     handleSubmit() {
       this.savingPreferences = true;
-      savePreferences(this.preferences)
+      savePreferences({
+        entryTemplate: this.entryTemplate,
+      })
         .then(() => {
           this.preferencesSaved = true;
           this.templateChanged = false;
