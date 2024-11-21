@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/mtlynch/whatgotdone/backend/types"
@@ -9,15 +10,17 @@ import (
 // GetReactions retrieves reader reactions associated with a published entry.
 func (d DB) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) ([]types.Reaction, error) {
 	rows, err := d.ctx.Query(`
-	SELECT
-		reacting_user,
-		reaction,
-		timestamp
-	FROM
-		entry_reactions
-	WHERE
-		entry_author=? AND
-		entry_date=?`, entryAuthor, entryDate)
+		SELECT
+				reacting_user,
+				reaction,
+				timestamp
+		FROM
+				entry_reactions
+		WHERE
+				entry_author = :entry_author AND
+				entry_date = :entry_date`,
+		sql.Named("entry_author", entryAuthor),
+		sql.Named("entry_date", entryDate))
 	if err != nil {
 		return []types.Reaction{}, err
 	}
@@ -57,13 +60,17 @@ func (d DB) GetReactions(entryAuthor types.Username, entryDate types.EntryDate) 
 func (d DB) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, reaction types.Reaction) error {
 	log.Printf("saving reaction to datastore: %s to %s/%s: [%s]", reaction.Username, entryAuthor, entryDate, reaction.Symbol)
 	_, err := d.ctx.Exec(`
-	INSERT OR REPLACE INTO entry_reactions(
-		entry_author,
-		entry_date,
-		reacting_user,
-		reaction,
-		timestamp)
-	values(?,?,?,?,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, entryAuthor, entryDate, reaction.Username, reaction.Symbol)
+		INSERT OR REPLACE INTO entry_reactions(
+				entry_author,
+				entry_date,
+				reacting_user,
+				reaction,
+				timestamp)
+		values(:entry_author, :entry_date, :reacting_user, :reaction, strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`,
+		sql.Named("entry_author", entryAuthor),
+		sql.Named("entry_date", entryDate),
+		sql.Named("reacting_user", reaction.Username),
+		sql.Named("reaction", reaction.Symbol))
 	return err
 }
 
@@ -71,12 +78,14 @@ func (d DB) AddReaction(entryAuthor types.Username, entryDate types.EntryDate, r
 func (d DB) DeleteReaction(entryAuthor types.Username, entryDate types.EntryDate, reactingUser types.Username) error {
 	log.Printf("deleting reaction from datastore: %s to %s/%s", reactingUser, entryAuthor, entryDate)
 	_, err := d.ctx.Exec(`
-	DELETE FROM
-		entry_reactions
-	WHERE
-		entry_author=? AND
-		entry_date=? AND
-		reacting_user=?
-	`, entryAuthor, entryDate, reactingUser)
+		DELETE FROM
+				entry_reactions
+		WHERE
+				entry_author = :entry_author AND
+				entry_date = :entry_date AND
+				reacting_user = :reacting_user`,
+		sql.Named("entry_author", entryAuthor),
+		sql.Named("entry_date", entryDate),
+		sql.Named("reacting_user", reactingUser))
 	return err
 }
