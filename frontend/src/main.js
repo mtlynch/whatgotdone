@@ -12,12 +12,6 @@ import router from '@/router.js';
 import 'bootswatch/dist/superhero/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import './assets/css/light.css';
-import './elements/user-reactions.css';
-
-// Import custom elements
-import './elements/user-reactions.js';
-import './elements/user-avatar.js';
-import './elements/username-link.js';
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);

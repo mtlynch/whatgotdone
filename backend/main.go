@@ -32,7 +32,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "6001"
+		port = "3001"
 	}
 	log.Printf("listening on %s", port)
 

@@ -9,7 +9,6 @@ import PrivacyPolicyPage from '@/views/PrivacyPolicyPage.vue';
 import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
 import EditEntryPage from '@/views/EditEntryPage.vue';
 import ViewEntryPage from '@/views/ViewEntryPage.vue';
-import ViewEntryPageHtml from '@/views/ViewEntryPage.html.vue';
 import ViewProjectPage from '@/views/ViewProjectPage.vue';
 import EditUserProfilePage from '@/views/EditUserProfilePage.vue';
 import UserPreferencesPage from '@/views/UserPreferencesPage.vue';
@@ -43,15 +42,6 @@ const routes = [
     meta: {
       title: (route) => {
         return `${route.params.username}'s What Got Done for the week of ${route.params.date}`;
-      },
-    },
-  },
-  {
-    path: '/:username/:date/html',
-    component: ViewEntryPageHtml,
-    meta: {
-      title: (route) => {
-        return `${route.params.username}'s What Got Done for the week of ${route.params.date} (HTML)`;
       },
     },
   },

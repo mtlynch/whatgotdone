@@ -1,10 +1,8 @@
 package handlers
 
 import (
-	"html/template"
 	"log"
 	"net/http"
-	"path/filepath"
 
 	"github.com/gorilla/mux"
 
@@ -27,13 +25,6 @@ func New(store datastore.Datastore, plausibleDomain string) Server {
 		log.Printf("file upload functionality will be disabled")
 		gcsClient = nil
 	}
-
-	// Load HTML templates
-	templates, err := template.ParseGlob(filepath.Join("backend", "templates", "*.html"))
-	if err != nil {
-		log.Printf("failed to load HTML templates: %s", err)
-	}
-
 	s := defaultServer{
 		authenticator:   auth.New(),
 		datastore:       store,
@@ -41,7 +32,6 @@ func New(store datastore.Datastore, plausibleDomain string) Server {
 		router:          mux.NewRouter(),
 		csrfMiddleware:  newCsrfMiddleware(),
 		plausibleDomain: plausibleDomain,
-		templates:       templates,
 	}
 	s.routes()
 	return s
@@ -56,7 +46,6 @@ type defaultServer struct {
 	router          *mux.Router
 	csrfMiddleware  httpMiddlewareHandler
 	plausibleDomain string
-	templates       *template.Template
 }
 
 // Router returns the underlying router interface for the server.
