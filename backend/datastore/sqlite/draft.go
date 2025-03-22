@@ -19,10 +19,10 @@ func (d DB) GetDraft(username types.Username, date types.EntryDate) (types.Journ
 			FROM
 				journal_entries
 			WHERE
-				username=? AND
-				date=? AND
+				username=:username AND
+				date=:date AND
 				is_draft=1
-			`, username, date).Scan(&markdown, &lastModified)
+			`, sql.Named("username", username), sql.Named("date", date)).Scan(&markdown, &lastModified)
 
 	if err == sql.ErrNoRows {
 		return types.JournalEntry{}, datastore.DraftNotFoundError{
@@ -57,7 +57,10 @@ func (d DB) InsertDraft(username types.Username, j types.JournalEntry) error {
 		markdown,
 		is_draft,
 		last_modified)
-	values(?,?,?,1,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`, username, j.Date, j.Markdown)
+	values(:username,:date,:markdown,1,strftime('%Y-%m-%d %H:%M:%SZ', 'now', 'utc'))`,
+		sql.Named("username", username),
+		sql.Named("date", j.Date),
+		sql.Named("markdown", j.Markdown))
 	return err
 }
 
@@ -68,9 +71,9 @@ func (d DB) DeleteDraft(username types.Username, date types.EntryDate) error {
 	DELETE FROM
 		journal_entries
 	WHERE
-		username=? AND
-		date=? AND
+		username=:username AND
+		date=:date AND
 		is_draft=1
-	`, username, date)
+	`, sql.Named("username", username), sql.Named("date", date))
 	return err
 }

@@ -12,12 +12,13 @@ import (
 func (d DB) GetPreferences(username types.Username) (types.Preferences, error) {
 	var entryTemplate string
 	err := d.ctx.QueryRow(`
-	SELECT
-		entry_template
-	FROM
-		user_preferences
-	WHERE
-		username=?`, username).Scan(&entryTemplate)
+		SELECT
+				entry_template
+		FROM
+				user_preferences
+		WHERE
+				username = :username`,
+		sql.Named("username", username)).Scan(&entryTemplate)
 
 	if err == sql.ErrNoRows {
 		return types.Preferences{}, datastore.PreferencesNotFoundError{
@@ -36,9 +37,11 @@ func (d DB) GetPreferences(username types.Username) (types.Preferences, error) {
 func (d DB) SetPreferences(username types.Username, prefs types.Preferences) error {
 	log.Printf("saving preferences to datastore: %s -> %+v", username, prefs)
 	_, err := d.ctx.Exec(`
-	INSERT OR REPLACE INTO user_preferences(
-		username,
-		entry_template)
-	values(?,?)`, username, prefs.EntryTemplate)
+		INSERT OR REPLACE INTO user_preferences(
+				username,
+				entry_template)
+		values(:username, :entry_template)`,
+		sql.Named("username", username),
+		sql.Named("entry_template", prefs.EntryTemplate))
 	return err
 }
