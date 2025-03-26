@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
+	"github.com/gorilla/csrf"
 	"github.com/mtlynch/whatgotdone/backend/types"
 )
 
@@ -33,7 +35,51 @@ func (s defaultServer) reactionsGet() http.HandlerFunc {
 			return
 		}
 
-		respondOK(w, reactions)
+		// Check Accept header to determine response format
+		acceptHeader := r.Header.Get("Accept")
+		if strings.Contains(acceptHeader, "text/html") {
+			// User wants HTML response
+			var loggedInUsername types.Username
+			// Try to get the username from context, but don't fail if not available
+			if r.Context().Value(contextKeyUsername) != nil {
+				loggedInUsername = mustGetUsernameFromContext(r.Context())
+			}
+
+			data := struct {
+				EntryAuthor      string
+				EntryDate        string
+				LoggedInUsername string
+				ReactionSymbols  []string
+				Reactions        []types.Reaction
+				SelectedReaction string
+				CSRFToken        string
+			}{
+				EntryAuthor:      string(entryAuthor),
+				EntryDate:        string(date),
+				LoggedInUsername: string(loggedInUsername),
+				ReactionSymbols:  []string{"👍", "🎉", "🙁"},
+				Reactions:        reactions,
+				CSRFToken:        csrf.Token(r),
+			}
+
+			// Find if user has a reaction already
+			for _, reaction := range reactions {
+				if reaction.Username == loggedInUsername {
+					data.SelectedReaction = reaction.Symbol
+					break
+				}
+			}
+
+			// Render template
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			if err := s.templates.ExecuteTemplate(w, "reactions", data); err != nil {
+				log.Printf("error rendering reactions template: %v", err)
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			}
+		} else {
+			// Default to JSON response (backward compatibility)
+			respondOK(w, reactions)
+		}
 	}
 }
 
@@ -60,8 +106,9 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 			return
 		}
 
+		loggedInUsername := mustGetUsernameFromContext(r.Context())
 		reaction := types.Reaction{
-			Username: mustGetUsernameFromContext(r.Context()),
+			Username: loggedInUsername,
 			Symbol:   reactionSymbol,
 		}
 		err = s.datastore.AddReaction(entryAuthor, entryDate, reaction)
@@ -69,6 +116,12 @@ func (s defaultServer) reactionsPost() http.HandlerFunc {
 			log.Printf("failed to add reaction: %s", err)
 			http.Error(w, "Failed to add reaction", http.StatusInternalServerError)
 			return
+		}
+
+		// If client accepts HTML, return updated reactions HTML
+		acceptHeader := r.Header.Get("Accept")
+		if strings.Contains(acceptHeader, "text/html") {
+			s.renderReactionsHTML(w, r, string(entryAuthor), string(entryDate), string(loggedInUsername))
 		}
 	}
 }
@@ -89,12 +142,61 @@ func (s defaultServer) reactionsDelete() http.HandlerFunc {
 			return
 		}
 
-		err = s.datastore.DeleteReaction(entryAuthor, entryDate, mustGetUsernameFromContext(r.Context()))
+		loggedInUsername := mustGetUsernameFromContext(r.Context())
+		err = s.datastore.DeleteReaction(entryAuthor, entryDate, loggedInUsername)
 		if err != nil {
 			log.Printf("failed to delete reaction: %s", err)
 			http.Error(w, "Failed to delete reaction", http.StatusInternalServerError)
 			return
 		}
+
+		// If client accepts HTML, return updated reactions HTML
+		acceptHeader := r.Header.Get("Accept")
+		if strings.Contains(acceptHeader, "text/html") {
+			s.renderReactionsHTML(w, r, string(entryAuthor), string(entryDate), string(loggedInUsername))
+		}
+	}
+}
+
+// Helper function to render reactions HTML after updates
+func (s defaultServer) renderReactionsHTML(w http.ResponseWriter, r *http.Request, entryAuthor, entryDate, loggedInUsername string) {
+	reactions, err := s.datastore.GetReactions(types.Username(entryAuthor), types.EntryDate(entryDate))
+	if err != nil {
+		log.Printf("failed to retrieve reactions: %s", err)
+		http.Error(w, "Failed to retrieve reactions", http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		EntryAuthor      string
+		EntryDate        string
+		LoggedInUsername string
+		ReactionSymbols  []string
+		Reactions        []types.Reaction
+		SelectedReaction string
+		CSRFToken        string
+	}{
+		EntryAuthor:      entryAuthor,
+		EntryDate:        entryDate,
+		LoggedInUsername: loggedInUsername,
+		ReactionSymbols:  []string{"👍", "🎉", "🙁"},
+		Reactions:        reactions,
+		CSRFToken:        csrf.Token(r),
+	}
+
+	// Find if user has a reaction already
+	for _, reaction := range reactions {
+		if reaction.Username == types.Username(loggedInUsername) {
+			data.SelectedReaction = reaction.Symbol
+			break
+		}
+	}
+
+	// Render template
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := s.templates.ExecuteTemplate(w, "reactions", data); err != nil {
+		log.Printf("error rendering reactions template: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
 

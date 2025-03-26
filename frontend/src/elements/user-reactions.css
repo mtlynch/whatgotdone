@@ -1,0 +1,44 @@
+/* Styles for user-reactions custom element */
+@media screen and (min-width: 768px) {
+  user-reactions .reactions {
+    text-align: left;
+  }
+}
+
+user-reactions .reaction-buttons {
+  margin: 1rem 0;
+  clear: both;
+}
+
+@media screen and (min-width: 768px) {
+  user-reactions .reaction-buttons {
+    clear: none;
+  }
+}
+
+user-reactions .btn {
+  margin-right: 12px;
+  font-size: 24pt;
+}
+
+@media screen and (min-width: 768px) {
+  user-reactions .btn {
+    margin-right: 8px;
+    font-size: 12pt;
+  }
+}
+
+user-reactions .reaction .avatar {
+  max-width: 40px;
+  max-height: 40px;
+}
+
+user-reactions .reaction-symbol {
+  font-size: 18pt;
+}
+
+@media screen and (min-width: 768px) {
+  user-reactions .reaction-symbol {
+    font-size: 14pt;
+  }
+}
