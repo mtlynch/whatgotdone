@@ -5,7 +5,7 @@ go 1.23
 require (
 	cloud.google.com/go/storage v1.28.1
 	github.com/disintegration/imaging v1.6.2
-	github.com/gorilla/csrf v1.7.1
+	github.com/gorilla/csrf v1.7.3
 	github.com/gorilla/mux v1.8.0
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
 	github.com/mattn/go-sqlite3 v1.14.16
@@ -30,8 +30,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.1 // indirect
-	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/net v0.23.0 // indirect
