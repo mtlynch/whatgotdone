@@ -360,6 +360,7 @@ func extractFilename(url string) string {
 
 // downloadImage downloads an image from a URL and returns the image data
 func downloadImage(url string) ([]byte, error) {
+	log.Printf("downloading file from remote URL: %s", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to download image from %s: %w", url, err)
