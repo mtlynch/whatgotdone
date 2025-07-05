@@ -1,12 +1,16 @@
 package handlers
 
 import (
+	"archive/zip"
+	"bytes"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"sort"
+	"strings"
 	"sync"
+	"text/template"
 	"time"
 
 	"github.com/mtlynch/whatgotdone/backend/datastore"
@@ -42,14 +46,102 @@ func (s defaultServer) exportMarkdownGet() http.HandlerFunc {
 		if err != nil {
 			log.Printf("failed to retrieve user data: %v", err)
 			http.Error(w, fmt.Sprintf("Failed to export user data: %s", err), http.StatusInternalServerError)
+			return
 		}
 
-		// TODO: Respond OK
+		// Package entries as markdown zip file
+		zipReader := packageEntriesAsMarkdown(entries)
+
+		// Set headers to trigger download
+		filename := fmt.Sprintf("whatgotdone-%s-%s.zip", username, time.Now().Format("2006-01-02"))
+		w.Header().Set("Content-Type", "application/zip")
+		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
+
+		// Stream the zip content to the response
+		_, err = io.Copy(w, zipReader)
+		if err != nil {
+			log.Printf("failed to stream zip content: %v", err)
+			http.Error(w, "Failed to download export", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
-func packageEntriesAsMarkdown(entries export.JournalEntry) io.Reader {
+// packageEntriesAsMarkdown converts a slice of entries into a zip file containing entries
+// converted to markdown files in the following file structure:
+//
+//	./2025-07-04/index.md
+//	./2025-06-27/index.md
+//	./2025-06-20/index.md
+func packageEntriesAsMarkdown(entries []types.JournalEntry) io.Reader {
+	var buf bytes.Buffer
+	zipWriter := zip.NewWriter(&buf)
 
+	for _, entry := range entries {
+		// Create directory path based on entry date
+		dirPath := fmt.Sprintf("%s/", string(entry.Date))
+		filePath := dirPath + "index.md"
+
+		// Create the file in the zip
+		fileWriter, err := zipWriter.Create(filePath)
+		if err != nil {
+			log.Printf("failed to create file in zip: %v", err)
+			continue
+		}
+
+		// Write the markdown content
+		markdown := entryToMarkdown(entry)
+		_, err = fileWriter.Write([]byte(markdown))
+		if err != nil {
+			log.Printf("failed to write content to zip file: %v", err)
+			continue
+		}
+	}
+
+	// Close the zip writer
+	err := zipWriter.Close()
+	if err != nil {
+		log.Printf("failed to close zip writer: %v", err)
+		return strings.NewReader("")
+	}
+
+	return bytes.NewReader(buf.Bytes())
+}
+
+func entryToMarkdown(entry types.JournalEntry) string {
+	t := template.Must(template.New("entryexport").Parse(`---
+date: {{ .Date }}
+{{- if .ShowLastMod }}
+lastmod: {{ .LastModDate }}
+{{- end }}
+---
+{{ .Markdown }}`))
+
+	// Check if lastmod date is different from entry date
+	entryDate := string(entry.Date)
+	lastModDate := entry.LastModified.Format("2006-01-02")
+	showLastMod := entryDate != lastModDate
+
+	data := struct {
+		Date        types.EntryDate
+		LastModDate string
+		ShowLastMod bool
+		Markdown    types.EntryContent
+	}{
+		Date:        entry.Date,
+		LastModDate: lastModDate,
+		ShowLastMod: showLastMod,
+		Markdown:    entry.Markdown,
+	}
+
+	var buf strings.Builder
+	err := t.Execute(&buf, data)
+	if err != nil {
+		log.Printf("failed to execute template: %v", err)
+		return ""
+	}
+
+	return buf.String()
 }
 
 func (s defaultServer) exportUserData(username types.Username) (export.UserData, error) {

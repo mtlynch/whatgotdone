@@ -1,11 +1,15 @@
 package handlers
 
 import (
+	"archive/zip"
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -233,4 +237,177 @@ func TestExportUnauthenticatedAccount(t *testing.T) {
 		t.Fatalf("handler returned wrong status code: got %v want %v",
 			status, http.StatusForbidden)
 	}
+}
+
+func TestEntryToMarkdown(t *testing.T) {
+	for _, tt := range []struct {
+		explanation string
+		input       types.JournalEntry
+		expected    string
+	}{
+		{
+			"simple export when lastmod is the same as the journal date",
+			types.JournalEntry{
+				Date:         types.EntryDate("2025-07-04"),
+				LastModified: mustParseTime("2025-07-04T11:00:00Z"),
+				Markdown:     types.EntryContent("Good week!"),
+			},
+			`
+---
+date: 2025-07-04
+---
+Good week!
+			`,
+		},
+		{
+			"simple export when lastmod is different from the journal date",
+			types.JournalEntry{
+				Date:         types.EntryDate("2025-07-04"),
+				LastModified: mustParseTime("2025-07-05T09:30:00Z"),
+				Markdown:     types.EntryContent("Wrote this one a little late..."),
+			},
+			`
+---
+date: 2025-07-04
+lastmod: 2025-07-05
+---
+Wrote this one a little late...
+			`,
+		},
+	} {
+		t.Run(tt.explanation, func(t *testing.T) {
+			actual := entryToMarkdown(tt.input)
+			if got, want := actual, strings.TrimSpace(tt.expected); got != want {
+				t.Errorf("markdown=%v, want=%v", got, want)
+			}
+		})
+	}
+}
+
+func TestPackageEntriesAsMarkdown(t *testing.T) {
+	for _, tt := range []struct {
+		description string
+		entries     []types.JournalEntry
+		wantFiles   map[string]string // filepath -> expected content
+	}{
+		{
+			"single entry creates one markdown file",
+			[]types.JournalEntry{
+				{
+					Date:         types.EntryDate("2025-07-04"),
+					LastModified: mustParseTime("2025-07-04T11:00:00Z"),
+					Markdown:     types.EntryContent("Good week!"),
+				},
+			},
+			map[string]string{
+				"2025-07-04/index.md": strings.TrimSpace(`
+---
+date: 2025-07-04
+---
+Good week!
+				`),
+			},
+		},
+		{
+			"multiple entries create multiple markdown files",
+			[]types.JournalEntry{
+				{
+					Date:         types.EntryDate("2025-07-04"),
+					LastModified: mustParseTime("2025-07-04T11:00:00Z"),
+					Markdown:     types.EntryContent("Good week!"),
+				},
+				{
+					Date:         types.EntryDate("2025-06-27"),
+					LastModified: mustParseTime("2025-06-28T09:30:00Z"),
+					Markdown:     types.EntryContent("Busy week with lots of coding."),
+				},
+				{
+					Date:         types.EntryDate("2025-06-20"),
+					LastModified: mustParseTime("2025-06-20T15:45:00Z"),
+					Markdown:     types.EntryContent("Started a new project!"),
+				},
+			},
+			map[string]string{
+				"2025-07-04/index.md": strings.TrimSpace(`
+---
+date: 2025-07-04
+---
+Good week!
+				`),
+				"2025-06-27/index.md": strings.TrimSpace(`
+---
+date: 2025-06-27
+lastmod: 2025-06-28
+---
+Busy week with lots of coding.
+				`),
+				"2025-06-20/index.md": strings.TrimSpace(`
+---
+date: 2025-06-20
+---
+Started a new project!
+				`),
+			},
+		},
+	} {
+		t.Run(tt.description, func(t *testing.T) {
+			reader := packageEntriesAsMarkdown(tt.entries)
+
+			// Extract zip contents
+			zipContents := extractZipContents(t, reader)
+
+			// Verify we have the expected number of files
+			if len(zipContents) != len(tt.wantFiles) {
+				t.Errorf("expected %d files in zip, got %d", len(tt.wantFiles), len(zipContents))
+			}
+
+			// Verify each expected file exists with correct content
+			for expectedPath, expectedContent := range tt.wantFiles {
+				actualContent, exists := zipContents[expectedPath]
+				if !exists {
+					t.Errorf("expected file %s not found in zip", expectedPath)
+					continue
+				}
+
+				if actualContent != expectedContent {
+					t.Errorf("file %s content mismatch:\ngot:\n%s\nwant:\n%s",
+						expectedPath, actualContent, expectedContent)
+				}
+			}
+		})
+	}
+}
+
+// extractZipContents reads a zip file from an io.Reader and returns a map of file paths to their contents
+func extractZipContents(t *testing.T, r io.Reader) map[string]string {
+	// Read all data from the reader
+	data, err := io.ReadAll(r)
+	if err != nil {
+		t.Fatalf("failed to read zip data: %v", err)
+	}
+
+	// Create a zip reader from the data
+	zipReader, err := zip.NewReader(bytes.NewReader(data), int64(len(data)))
+	if err != nil {
+		t.Fatalf("failed to create zip reader: %v", err)
+	}
+
+	// Extract all files
+	contents := make(map[string]string)
+	for _, file := range zipReader.File {
+		fileReader, err := file.Open()
+		if err != nil {
+			t.Fatalf("failed to open file %s in zip: %v", file.Name, err)
+		}
+
+		fileData, err := io.ReadAll(fileReader)
+		if err != nil {
+			t.Fatalf("failed to read file %s content: %v", file.Name, err)
+		}
+		fileReader.Close()
+
+		contents[file.Name] = string(fileData)
+	}
+
+	return contents
 }
