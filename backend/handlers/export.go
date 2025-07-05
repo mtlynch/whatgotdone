@@ -365,7 +365,11 @@ func downloadImage(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to download image from %s: %w", url, err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Printf("failed to close response body: %v", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("failed to download image from %s: HTTP %d", url, resp.StatusCode)
