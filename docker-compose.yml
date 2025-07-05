@@ -7,8 +7,8 @@ services:
         NPM_BUILD_MODE: dev
         GO_BUILD_MODE: dev
     ports:
-      - 3001:3001
+      - 6001:6001
     environment:
-      - PORT=3001
+      - PORT=6001
       - CSRF_SECRET_SEED=dummy-dev-secret-seed
       - USERKIT_SECRET=dummy.dummy
