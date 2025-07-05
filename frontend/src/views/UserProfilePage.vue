@@ -75,9 +75,11 @@
         drafts, entries, and preferences.
       </p>
 
-      <b-button variant="primary" v-on:click="onExport">Download</b-button>
+      <b-button variant="primary" v-on:click="onExport"
+        >Download (JSON)</b-button
+      >
       <b-button variant="secondary" v-on:click="onExportMarkdown" class="ml-2"
-        >Download as Markdown</b-button
+        >Download (Markdown)</b-button
       >
       <a class="d-none" ref="file-download-helper"
         ><!-- Dummy element to allow file downloads --></a
