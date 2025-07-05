@@ -9,7 +9,7 @@ test("can export the logged-in user's data", async ({ page }) => {
 
   await expect(page).toHaveURL("/staging_jimmy");
 
-  await page.getByRole("button", { name: "Download" }).click();
+  await page.getByRole("button", { name: "Download (JSON)" }).click();
 });
 
 test("can't see an export data button for other users", async ({ page }) => {
