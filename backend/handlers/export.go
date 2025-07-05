@@ -49,16 +49,10 @@ func (s defaultServer) exportMarkdownGet() http.HandlerFunc {
 			return
 		}
 
-		// Package entries as markdown zip file
-		zipReader := packageEntriesAsMarkdown(entries)
-
-		// Set headers to trigger download
 		filename := fmt.Sprintf("whatgotdone-%s-%s.zip", username, time.Now().Format("2006-01-02"))
 		w.Header().Set("Content-Type", "application/zip")
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
-
-		// Stream the zip content to the response
-		_, err = io.Copy(w, zipReader)
+		_, err = io.Copy(w, packageEntriesAsMarkdown(entries))
 		if err != nil {
 			log.Printf("failed to stream zip content: %v", err)
 			http.Error(w, "Failed to download export", http.StatusInternalServerError)
