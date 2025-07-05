@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"sort"
@@ -27,6 +28,28 @@ func (s defaultServer) exportGet() http.HandlerFunc {
 
 		respondOK(w, d)
 	}
+}
+
+func (s defaultServer) exportMarkdownGet() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		username := mustGetUsernameFromContext(r.Context())
+
+		log.Printf("exporting(%s): published entries", username)
+		entries, err := s.datastore.ReadEntries(
+			datastore.EntryFilter{
+				ByUsers: []types.Username{username},
+			})
+		if err != nil {
+			log.Printf("failed to retrieve user data: %v", err)
+			http.Error(w, fmt.Sprintf("Failed to export user data: %s", err), http.StatusInternalServerError)
+		}
+
+		// TODO: Respond OK
+	}
+}
+
+func packageEntriesAsMarkdown(entries export.JournalEntry) io.Reader {
+
 }
 
 func (s defaultServer) exportUserData(username types.Username) (export.UserData, error) {
