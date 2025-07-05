@@ -378,6 +378,123 @@ Started a new project!
 	}
 }
 
+func TestFindMediaURLs(t *testing.T) {
+	for _, tt := range []struct {
+		description string
+		markdown    string
+		expected    []string
+	}{
+		{
+			"no media URLs",
+			"Just some regular text with no images.",
+			[]string{},
+		},
+		{
+			"single media.whatgotdone.com URL",
+			"Check out this image: https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png",
+			[]string{"https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png"},
+		},
+		{
+			"single storage.googleapis.com URL",
+			"Check out this image: https://storage.googleapis.com/media.whatgotdone.com/uploads/michael/20200501/HK5a.png",
+			[]string{"https://storage.googleapis.com/media.whatgotdone.com/uploads/michael/20200501/HK5a.png"},
+		},
+		{
+			"multiple URLs of different types",
+			"Images: https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png and https://storage.googleapis.com/media.whatgotdone.com/uploads/michael/20200501/HK5b.png",
+			[]string{
+				"https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png",
+				"https://storage.googleapis.com/media.whatgotdone.com/uploads/michael/20200501/HK5b.png",
+			},
+		},
+		{
+			"URL in markdown link syntax",
+			"* [Before](https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png)",
+			[]string{"https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png"},
+		},
+		{
+			"URL in markdown image syntax",
+			"![Screenshot](https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png)",
+			[]string{"https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png"},
+		},
+		{
+			"ignores other domains",
+			"External image: https://example.com/image.png and our image: https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png",
+			[]string{"https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png"},
+		},
+	} {
+		t.Run(tt.description, func(t *testing.T) {
+			actual := findMediaURLs(tt.markdown)
+			if !reflect.DeepEqual(actual, tt.expected) {
+				t.Errorf("findMediaURLs() = %v, want %v", actual, tt.expected)
+			}
+		})
+	}
+}
+
+func TestExtractFilename(t *testing.T) {
+	for _, tt := range []struct {
+		url      string
+		expected string
+	}{
+		{
+			"https://media.whatgotdone.com/uploads/michael/20200501/HK5a.png",
+			"HK5a.png",
+		},
+		{
+			"https://storage.googleapis.com/media.whatgotdone.com/uploads/michael/20200501/HK5b.jpg",
+			"HK5b.jpg",
+		},
+		{
+			"https://media.whatgotdone.com/simple.gif",
+			"simple.gif",
+		},
+	} {
+		t.Run(tt.url, func(t *testing.T) {
+			actual := extractFilename(tt.url)
+			if actual != tt.expected {
+				t.Errorf("extractFilename(%s) = %s, want %s", tt.url, actual, tt.expected)
+			}
+		})
+	}
+}
+
+func TestProcessMarkdownWithImages(t *testing.T) {
+	// Note: This test doesn't actually download images since that would require
+	// setting up a mock HTTP server. In a real implementation, you might want
+	// to add integration tests that use a mock server.
+
+	for _, tt := range []struct {
+		description string
+		markdown    string
+		expected    string
+	}{
+		{
+			"no media URLs - no changes",
+			"Just some regular text with no images.",
+			"Just some regular text with no images.",
+		},
+		{
+			"markdown with non-media URLs - no changes",
+			"External image: https://example.com/image.png",
+			"External image: https://example.com/image.png",
+		},
+	} {
+		t.Run(tt.description, func(t *testing.T) {
+			var buf bytes.Buffer
+			zipWriter := zip.NewWriter(&buf)
+
+			actual := processMarkdownWithImages(tt.markdown, zipWriter, "2020-04-10/")
+
+			zipWriter.Close()
+
+			if actual != tt.expected {
+				t.Errorf("processMarkdownWithImages() = %s, want %s", actual, tt.expected)
+			}
+		})
+	}
+}
+
 // extractZipContents reads a zip file from an io.Reader and returns a map of file paths to their contents
 func extractZipContents(t *testing.T, r io.Reader) map[string]string {
 	// Read all data from the reader
