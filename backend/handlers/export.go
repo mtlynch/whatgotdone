@@ -7,6 +7,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"path"
+	"regexp"
 	"sort"
 	"strings"
 	"sync"
@@ -52,7 +54,15 @@ func (s defaultServer) exportMarkdownGet() http.HandlerFunc {
 		filename := fmt.Sprintf("whatgotdone-%s-%s.zip", username, time.Now().Format("2006-01-02"))
 		w.Header().Set("Content-Type", "application/zip")
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", filename))
-		_, err = io.Copy(w, packageEntriesAsMarkdown(entries))
+
+		zipReader, err := packageEntriesAsMarkdown(entries)
+		if err != nil {
+			log.Printf("failed to package entries as markdown: %v", err)
+			http.Error(w, fmt.Sprintf("Failed to export entries: %s", err), http.StatusInternalServerError)
+			return
+		}
+
+		_, err = io.Copy(w, zipReader)
 		if err != nil {
 			log.Printf("failed to stream zip content: %v", err)
 			http.Error(w, "Failed to download export", http.StatusInternalServerError)
@@ -67,7 +77,7 @@ func (s defaultServer) exportMarkdownGet() http.HandlerFunc {
 //	./2025-07-04/index.md
 //	./2025-06-27/index.md
 //	./2025-06-20/index.md
-func packageEntriesAsMarkdown(entries []types.JournalEntry) io.Reader {
+func packageEntriesAsMarkdown(entries []types.JournalEntry) (io.Reader, error) {
 	var buf bytes.Buffer
 	zipWriter := zip.NewWriter(&buf)
 
@@ -76,30 +86,37 @@ func packageEntriesAsMarkdown(entries []types.JournalEntry) io.Reader {
 		dirPath := fmt.Sprintf("%s/", string(entry.Date))
 		filePath := dirPath + "index.md"
 
+		// Process the markdown content to download images and update URLs
+		updatedMarkdown, err := processMarkdownWithImages(string(entry.Markdown), zipWriter, dirPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to process images for entry %s: %w", entry.Date, err)
+		}
+
+		// Recreate the markdown with the updated content
+		updatedEntry := entry
+		updatedEntry.Markdown = types.EntryContent(updatedMarkdown)
+		finalMarkdown := entryToMarkdown(updatedEntry)
+
 		// Create the file in the zip
 		fileWriter, err := zipWriter.Create(filePath)
 		if err != nil {
-			log.Printf("failed to create file in zip: %v", err)
-			continue
+			return nil, fmt.Errorf("failed to create file in zip: %w", err)
 		}
 
-		// Write the markdown content
-		markdown := entryToMarkdown(entry)
-		_, err = fileWriter.Write([]byte(markdown))
+		// Write the updated markdown content
+		_, err = fileWriter.Write([]byte(finalMarkdown))
 		if err != nil {
-			log.Printf("failed to write content to zip file: %v", err)
-			continue
+			return nil, fmt.Errorf("failed to write content to zip file: %w", err)
 		}
 	}
 
 	// Close the zip writer
 	err := zipWriter.Close()
 	if err != nil {
-		log.Printf("failed to close zip writer: %v", err)
-		return strings.NewReader("")
+		return nil, fmt.Errorf("failed to close zip writer: %w", err)
 	}
 
-	return bytes.NewReader(buf.Bytes())
+	return bytes.NewReader(buf.Bytes()), nil
 }
 
 func entryToMarkdown(entry types.JournalEntry) string {
@@ -324,4 +341,78 @@ func profileToExported(p types.UserProfile) export.UserProfile {
 		EmailAddress:    p.EmailAddress,
 		MastodonAddress: p.MastodonAddress,
 	}
+}
+
+// findMediaURLs finds all URLs in the markdown content that point to WhatGotDone media
+func findMediaURLs(markdown string) []string {
+	var re = regexp.MustCompile(`https://(media\.whatgotdone\.com|storage\.googleapis\.com/media\.whatgotdone\.com)/[^\s\)]+`)
+	urls := re.FindAllString(markdown, -1)
+	if urls == nil {
+		return []string{}
+	}
+	return urls
+}
+
+// extractFilename extracts the filename from a URL path
+func extractFilename(url string) string {
+	return path.Base(url)
+}
+
+// downloadImage downloads an image from a URL and returns the image data
+func downloadImage(url string) ([]byte, error) {
+	log.Printf("downloading file from remote URL: %s", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, fmt.Errorf("failed to download image from %s: %w", url, err)
+	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Printf("failed to close response body: %v", err)
+		}
+	}()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to download image from %s: HTTP %d", url, resp.StatusCode)
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read image data from %s: %w", url, err)
+	}
+
+	return data, nil
+}
+
+// processMarkdownWithImages processes markdown content to download images and update URLs
+func processMarkdownWithImages(markdown string, zipWriter *zip.Writer, dirPath string) (string, error) {
+	urls := findMediaURLs(markdown)
+	updatedMarkdown := markdown
+
+	for _, url := range urls {
+		filename := extractFilename(url)
+
+		// Download the image
+		imageData, err := downloadImage(url)
+		if err != nil {
+			return "", fmt.Errorf("failed to download image %s: %w", url, err)
+		}
+
+		// Add the image to the zip file in the same directory as the entry
+		imagePath := dirPath + filename
+		imageWriter, err := zipWriter.Create(imagePath)
+		if err != nil {
+			return "", fmt.Errorf("failed to create image file %s in zip: %w", imagePath, err)
+		}
+
+		_, err = imageWriter.Write(imageData)
+		if err != nil {
+			return "", fmt.Errorf("failed to write image data for %s: %w", imagePath, err)
+		}
+
+		// Replace the full URL with just the filename in the markdown
+		updatedMarkdown = strings.ReplaceAll(updatedMarkdown, url, filename)
+		log.Printf("downloaded and replaced image: %s -> %s", url, filename)
+	}
+
+	return updatedMarkdown, nil
 }
