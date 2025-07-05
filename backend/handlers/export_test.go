@@ -351,7 +351,10 @@ Started a new project!
 		},
 	} {
 		t.Run(tt.description, func(t *testing.T) {
-			reader := packageEntriesAsMarkdown(tt.entries)
+			reader, err := packageEntriesAsMarkdown(tt.entries)
+			if err != nil {
+				t.Fatalf("packageEntriesAsMarkdown() failed: %v", err)
+			}
 
 			// Extract zip contents
 			zipContents := extractZipContents(t, reader)
@@ -468,23 +471,43 @@ func TestProcessMarkdownWithImages(t *testing.T) {
 		description string
 		markdown    string
 		expected    string
+		expectError bool
 	}{
 		{
 			"no media URLs - no changes",
 			"Just some regular text with no images.",
 			"Just some regular text with no images.",
+			false,
 		},
 		{
 			"markdown with non-media URLs - no changes",
 			"External image: https://example.com/image.png",
 			"External image: https://example.com/image.png",
+			false,
+		},
+		{
+			"markdown with WhatGotDone media URL - should fail to download",
+			"Check out this image: https://media.whatgotdone.com/uploads/michael/20200501/nonexistent.png",
+			"",
+			true,
 		},
 	} {
 		t.Run(tt.description, func(t *testing.T) {
 			var buf bytes.Buffer
 			zipWriter := zip.NewWriter(&buf)
 
-			actual := processMarkdownWithImages(tt.markdown, zipWriter, "2020-04-10/")
+			actual, err := processMarkdownWithImages(tt.markdown, zipWriter, "2020-04-10/")
+
+			if tt.expectError {
+				if err == nil {
+					t.Errorf("processMarkdownWithImages() expected error but got none")
+				}
+				return
+			}
+
+			if err != nil {
+				t.Fatalf("processMarkdownWithImages() failed: %v", err)
+			}
 
 			zipWriter.Close()
 
