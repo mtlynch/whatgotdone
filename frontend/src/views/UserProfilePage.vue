@@ -75,7 +75,12 @@
         drafts, entries, and preferences.
       </p>
 
-      <b-button variant="primary" v-on:click="onExport">Download</b-button>
+      <b-button variant="primary" v-on:click="onExport"
+        >Download (JSON)</b-button
+      >
+      <b-button variant="secondary" v-on:click="onExportMarkdown" class="ml-2"
+        >Download (Markdown)</b-button
+      >
       <a class="d-none" ref="file-download-helper"
         ><!-- Dummy element to allow file downloads --></a
       >
@@ -88,7 +93,7 @@ import Vue from 'vue';
 import VueMarkdown from 'vue-markdown';
 
 import {getEntriesFromUser} from '@/controllers/Entries.js';
-import {exportGet} from '@/controllers/Export.js';
+import {exportGet, exportMarkdown} from '@/controllers/Export.js';
 import {follow, unfollow} from '@/controllers/Follow.js';
 import {getUserMetadata} from '@/controllers/User.js';
 
@@ -206,6 +211,16 @@ export default {
           .replace(/:/g, '')
           .replace(/\.\d+/g, '');
         downloadHelper.download = `whatgotdone-${this.username}-${timestamp}.json`;
+        downloadHelper.click();
+      });
+    },
+    onExportMarkdown: function () {
+      exportMarkdown().then(({blob, filename}) => {
+        const blobURL = window.URL.createObjectURL(blob);
+        const downloadHelper = this.$refs['file-download-helper'];
+        downloadHelper.style = 'display: none';
+        downloadHelper.href = blobURL;
+        downloadHelper.download = filename;
         downloadHelper.click();
       });
     },

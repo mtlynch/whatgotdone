@@ -20,6 +20,7 @@ func (s *defaultServer) routes() {
 	authenticatedApis.HandleFunc("/draft/{date}", s.draftPut()).Methods(http.MethodPut)
 	authenticatedApis.HandleFunc("/draft/{date}", s.draftDelete()).Methods(http.MethodDelete)
 	authenticatedApis.HandleFunc("/export", s.exportGet()).Methods(http.MethodGet)
+	authenticatedApis.HandleFunc("/export/markdown", s.exportMarkdownGet()).Methods(http.MethodGet)
 	authenticatedApis.HandleFunc("/media", s.mediaPut()).Methods(http.MethodPut)
 	authenticatedApis.HandleFunc("/preferences", s.preferencesGet()).Methods(http.MethodGet)
 	authenticatedApis.HandleFunc("/preferences", s.preferencesPut()).Methods(http.MethodPut)
