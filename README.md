@@ -43,7 +43,7 @@ To run What Got Done in a Docker container, run
 docker-compose up
 ```
 
-What Got Done will be running at [http://localhost:3001](http://localhost:3001).
+What Got Done will be running at [http://localhost:6001](http://localhost:6001).
 
 Dev-mode authentication uses [UserKit dummy mode](https://docs.userkit.io/docs/dummy-mode). You can log in with any username using the password `password`.
 
@@ -69,7 +69,7 @@ Run the following command to start a What Got Done development server:
 1. Starts a hot reloading server for the Vue frontend.
 1. Starts a hot reloading server for the backend.
 
-* The backend server will run on [http://localhost:3001](http://localhost:3001).
+* The backend server will run on [http://localhost:6001](http://localhost:6001).
 * The frontend server will run on port [http://localhost:8085](http://localhost:8085).
 
 #### Quirks of the dev environment

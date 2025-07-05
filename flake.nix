@@ -59,6 +59,7 @@
             sqlite
             nodejs
             shellcheck
+            go-nixpkgs.legacyPackages.${system}.screen
             sqlfluff
             litestream
           ];
