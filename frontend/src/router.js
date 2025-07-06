@@ -7,6 +7,7 @@ import LogoutPage from '@/views/LogoutPage.vue';
 import PersonalizedFeedPage from '@/views/PersonalizedFeedPage.vue';
 import PrivacyPolicyPage from '@/views/PrivacyPolicyPage.vue';
 import RecentEntriesPage from '@/views/RecentEntriesPage.vue';
+import ShutdownNoticePage from '@/views/ShutdownNoticePage.vue';
 import EditEntryPage from '@/views/EditEntryPage.vue';
 import ViewEntryPage from '@/views/ViewEntryPage.vue';
 import ViewProjectPage from '@/views/ViewProjectPage.vue';
@@ -26,6 +27,7 @@ const routes = [
   {path: '/logout', component: LogoutPage},
   {path: '/preferences', component: UserPreferencesPage, name: 'Preferences'},
   {path: '/privacy-policy', component: PrivacyPolicyPage},
+  {path: '/shutdown-notice', component: ShutdownNoticePage},
   {
     path: '/:username',
     component: UserProfilePage,

@@ -18,8 +18,8 @@
         <b-nav-item to="/about">About</b-nav-item>
         <b-nav-item v-if="isLoggedIn" to="/feed">Feed</b-nav-item>
         <b-nav-item to="/recent">Recent</b-nav-item>
-        <b-nav-item href="https://github.com/mtlynch/whatgotdone"
-          >Contribute</b-nav-item
+        <b-nav-item to="/shutdown-notice" class="warning-link ml-3"
+          >Shutdown Notice</b-nav-item
         >
       </b-navbar-nav>
 
@@ -128,5 +128,17 @@ export default {
   #navbar .dropdown-item {
     font-size: 14px;
   }
+}
+
+#navbar .warning-link .nav-link {
+  background-color: #f39c12 !important;
+  color: #2c3e50 !important;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+#navbar .warning-link .nav-link:hover {
+  background-color: #e67e22 !important;
+  color: #2c3e50 !important;
 }
 </style>
