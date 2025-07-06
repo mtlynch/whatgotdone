@@ -45,7 +45,7 @@
       >
       (<a href="https://weeks.mtlynch.io/">live site</a>) and run the
       <a
-        href="https://github.com/mtlynch/weeks.mtlynch.io/blob/0d2b39c75d0fba2015fe9e2afebd59aa2cff6acc/dev-scripts/import-from-whatgotdone"
+        href="https://github.com/mtlynch/weeks.mtlynch.io/blob/master/dev-scripts/import-from-whatgotdone"
         ><code>import-from-whatgotdone</code></a
       >
       script to import your data from What Got Done.
