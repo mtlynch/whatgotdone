@@ -5,9 +5,9 @@ test("can export the logged-in user's data", async ({ page }) => {
   await mockLoginAsUser(page, "staging_jimmy");
 
   await page.getByRole("button", { name: "Account" }).click();
-  await page.getByRole("menuitem", { name: "Profile" }).click();
+  await page.getByRole("menuitem", { name: "Export" }).click();
 
-  await expect(page).toHaveURL("/staging_jimmy");
+  await expect(page).toHaveURL("/export");
 
   await page.getByRole("button", { name: "Download (JSON)" }).click();
 });

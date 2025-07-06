@@ -14,6 +14,7 @@ import ViewProjectPage from '@/views/ViewProjectPage.vue';
 import EditUserProfilePage from '@/views/EditUserProfilePage.vue';
 import UserPreferencesPage from '@/views/UserPreferencesPage.vue';
 import UserProfilePage from '@/views/UserProfilePage.vue';
+import ExportPage from '@/views/ExportPage.vue';
 import MissingPage from '@/views/404.vue';
 
 Vue.use(VueRouter);
@@ -26,6 +27,7 @@ const routes = [
   {path: '/login', component: LoginPage},
   {path: '/logout', component: LogoutPage},
   {path: '/preferences', component: UserPreferencesPage, name: 'Preferences'},
+  {path: '/export', component: ExportPage, name: 'Export'},
   {path: '/privacy-policy', component: PrivacyPolicyPage},
   {path: '/shutdown-notice', component: ShutdownNoticePage},
   {
