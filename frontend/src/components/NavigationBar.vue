@@ -28,6 +28,7 @@
         <b-nav-item-dropdown v-if="isLoggedIn" text="Account" right>
           <b-dropdown-item :to="'/' + username">Profile</b-dropdown-item>
           <b-dropdown-item to="/preferences">Preferences</b-dropdown-item>
+          <b-dropdown-item to="/export">Export</b-dropdown-item>
           <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-button

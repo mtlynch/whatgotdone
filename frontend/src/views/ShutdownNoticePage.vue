@@ -68,9 +68,9 @@
         Done.
       </li>
       <li>
-        <b>July 2025</b>: "Export as Markdown" feature
-        <a href="https://github.com/mtlynch/whatgotdone/pull/963">added</a>. You
-        can export all of your public posts as a ZIP of Markdown files.
+        <b>July 2025</b>: <a href="/export">"Export as Markdown"</a> feature
+        added. You can export all of your public posts as a ZIP of Markdown
+        files.
       </li>
       <li>
         <b>August 2025</b>: Add a redirect feature that allows you to redirect
