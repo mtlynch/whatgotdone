@@ -18,7 +18,7 @@
         <b-nav-item to="/about">About</b-nav-item>
         <b-nav-item v-if="isLoggedIn" to="/feed">Feed</b-nav-item>
         <b-nav-item to="/recent">Recent</b-nav-item>
-        <b-nav-item to="/shutdown-notice" class="warning-link"
+        <b-nav-item to="/shutdown-notice" class="warning-link ml-3"
           >Shutdown Notice</b-nav-item
         >
       </b-navbar-nav>
