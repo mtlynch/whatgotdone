@@ -75,7 +75,7 @@
       </li>
       <li>
         <b>July 2025</b>: Add support for a
-        <router-link to="/forwarding-addresss">forwarding address</router-link>
+        <router-link to="/forwarding-address">forwarding address</router-link>
         feature that allows you to redirect your What Got Done posts to a new
         URL.
       </li>
