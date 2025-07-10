@@ -21,6 +21,9 @@ func (s *defaultServer) routes() {
 	authenticatedApis.HandleFunc("/draft/{date}", s.draftDelete()).Methods(http.MethodDelete)
 	authenticatedApis.HandleFunc("/export", s.exportGet()).Methods(http.MethodGet)
 	authenticatedApis.HandleFunc("/export/markdown", s.exportMarkdownGet()).Methods(http.MethodGet)
+	authenticatedApis.HandleFunc("/forwarding-address", s.forwardingAddressGet()).Methods(http.MethodGet)
+	authenticatedApis.HandleFunc("/forwarding-address", s.forwardingAddressPut()).Methods(http.MethodPut)
+	authenticatedApis.HandleFunc("/forwarding-address", s.forwardingAddressDelete()).Methods(http.MethodDelete)
 	authenticatedApis.HandleFunc("/media", s.mediaPut()).Methods(http.MethodPut)
 	authenticatedApis.HandleFunc("/preferences", s.preferencesGet()).Methods(http.MethodGet)
 	authenticatedApis.HandleFunc("/preferences", s.preferencesPut()).Methods(http.MethodPut)
@@ -56,6 +59,7 @@ func (s *defaultServer) routes() {
 	authenticatedView.Use(s.requireAuthenticationForView)
 	authenticatedView.HandleFunc("/entry/edit/{date}", s.serveIndexPage).Methods(http.MethodGet)
 	authenticatedView.HandleFunc("/preferences", s.serveIndexPage).Methods(http.MethodGet)
+	authenticatedView.HandleFunc("/forwarding-address", s.serveIndexPage).Methods(http.MethodGet)
 	authenticatedView.HandleFunc("/feed", s.serveIndexPage).Methods(http.MethodGet)
 	authenticatedView.HandleFunc("/profile/edit", s.serveIndexPage).Methods(http.MethodGet)
 

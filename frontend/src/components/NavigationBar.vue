@@ -29,6 +29,9 @@
           <b-dropdown-item :to="'/' + username">Profile</b-dropdown-item>
           <b-dropdown-item to="/preferences">Preferences</b-dropdown-item>
           <b-dropdown-item to="/export">Export</b-dropdown-item>
+          <b-dropdown-item to="/forwarding-address"
+            >Forwarding Address</b-dropdown-item
+          >
           <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-button
