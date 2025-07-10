@@ -18,12 +18,12 @@
     <ul>
       <li>
         <code>{{ currentHostname }}/{{ loggedInUsername }}</code> will redirect
-        to <code>https://new.example.com/{{ loggedInUsername }}</code>
+        to <code>https://new.example.com/</code>
       </li>
       <li>
         <code>{{ currentHostname }}/{{ loggedInUsername }}/2025-07-11</code>
         will redirect to
-        <code>https://new.example.com/{{ loggedInUsername }}/2025-07-11</code>
+        <code>https://new.example.com/2025-07-11</code>
       </li>
     </ul>
 

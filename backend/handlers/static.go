@@ -79,6 +79,20 @@ func (s defaultServer) serveEntryOr404() http.HandlerFunc {
 			s.serve404(w, r)
 			return
 		}
+
+		// Check if user has a forwarding address and redirect if so
+		forwardingAddress, err := s.datastore.GetForwardingAddress(username)
+		if err == nil && forwardingAddress != "" {
+			redirectURL := string(forwardingAddress) + "/" + string(date)
+			// Preserve query parameters if any
+			if r.URL.RawQuery != "" {
+				redirectURL += "?" + r.URL.RawQuery
+			}
+			log.Printf("Redirecting entry %s/%s to %s", username, date, redirectURL)
+			http.Redirect(w, r, redirectURL, http.StatusMovedPermanently)
+			return
+		}
+
 		s.serveIndexPage(w, r)
 	}
 }
@@ -96,6 +110,20 @@ func (s defaultServer) serveUserProfileOr404() http.HandlerFunc {
 			s.serve404(w, r)
 			return
 		}
+
+		// Check if user has a forwarding address and redirect if so
+		forwardingAddress, err := s.datastore.GetForwardingAddress(username)
+		if err == nil && forwardingAddress != "" {
+			redirectURL := string(forwardingAddress) + "/"
+			// Preserve query parameters if any
+			if r.URL.RawQuery != "" {
+				redirectURL += "?" + r.URL.RawQuery
+			}
+			log.Printf("Redirecting user profile %s to %s", username, redirectURL)
+			http.Redirect(w, r, redirectURL, http.StatusMovedPermanently)
+			return
+		}
+
 		s.serveIndexPage(w, r)
 	}
 }
