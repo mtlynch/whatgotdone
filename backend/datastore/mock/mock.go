@@ -11,14 +11,15 @@ import (
 // MockDatastore is a mock implementation of the datstore.Datastore interface
 // for testing.
 type MockDatastore struct {
-	JournalEntries  []types.JournalEntry
-	JournalDrafts   []types.JournalEntry
-	Usernames       []types.Username
-	Reactions       map[types.Username]map[types.EntryDate][]types.Reaction
-	UserFollows     map[types.Username][]types.Username
-	UserPreferences map[types.Username]types.Preferences
-	UserProfile     types.UserProfile
-	ReadEntriesErr  error
+	JournalEntries    []types.JournalEntry
+	JournalDrafts     []types.JournalEntry
+	Usernames         []types.Username
+	Reactions         map[types.Username]map[types.EntryDate][]types.Reaction
+	UserFollows       map[types.Username][]types.Username
+	UserPreferences   map[types.Username]types.Preferences
+	ForwardingAddress map[types.Username]types.ForwardingAddress
+	UserProfile       types.UserProfile
+	ReadEntriesErr    error
 }
 
 func (ds MockDatastore) GetAvatar(username types.Username) (io.Reader, error) {
@@ -181,6 +182,31 @@ func (ds *MockDatastore) GetPreferences(username types.Username) (types.Preferen
 
 func (ds *MockDatastore) SetPreferences(username types.Username, prefs types.Preferences) error {
 	return errors.New("MockDatastore does not implement SetPreferences")
+}
+
+func (ds *MockDatastore) GetForwardingAddress(username types.Username) (types.ForwardingAddress, error) {
+	address, ok := ds.ForwardingAddress[username]
+	if !ok {
+		return types.ForwardingAddress(""), datastore.ForwardingAddressNotFoundError{
+			Username: username,
+		}
+	}
+	return address, nil
+}
+
+func (ds *MockDatastore) SetForwardingAddress(username types.Username, address types.ForwardingAddress) error {
+	if ds.ForwardingAddress == nil {
+		ds.ForwardingAddress = make(map[types.Username]types.ForwardingAddress)
+	}
+	ds.ForwardingAddress[username] = address
+	return nil
+}
+
+func (ds *MockDatastore) DeleteForwardingAddress(username types.Username) error {
+	if ds.ForwardingAddress != nil {
+		delete(ds.ForwardingAddress, username)
+	}
+	return nil
 }
 
 func (ds *MockDatastore) Close() error {

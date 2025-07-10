@@ -63,6 +63,12 @@ type Datastore interface {
 	GetPreferences(username types.Username) (types.Preferences, error)
 	// SetPreferences saves the user's preferences for using the site.
 	SetPreferences(username types.Username, prefs types.Preferences) error
+	// GetForwardingAddress retrieves the user's forwarding address.
+	GetForwardingAddress(username types.Username) (types.ForwardingAddress, error)
+	// SetForwardingAddress saves the user's forwarding address.
+	SetForwardingAddress(username types.Username, address types.ForwardingAddress) error
+	// DeleteForwardingAddress removes the user's forwarding address.
+	DeleteForwardingAddress(username types.Username) error
 }
 
 // ErrAvatarNotFound occurs when no avatar exists for a user.
@@ -112,4 +118,14 @@ type PreferencesNotFoundError struct {
 
 func (f PreferencesNotFoundError) Error() string {
 	return fmt.Sprintf("No user preferences found for username %s", f.Username)
+}
+
+// ForwardingAddressNotFoundError occurs when no forwarding address exists for the given
+// username. The user might exist, but they have not set a forwarding address.
+type ForwardingAddressNotFoundError struct {
+	Username types.Username
+}
+
+func (f ForwardingAddressNotFoundError) Error() string {
+	return fmt.Sprintf("No forwarding address found for username %s", f.Username)
 }
