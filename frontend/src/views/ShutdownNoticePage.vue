@@ -68,13 +68,16 @@
         Done.
       </li>
       <li>
-        <b>July 2025</b>: <a href="/export">"Export as Markdown"</a> feature
+        <b>July 2025</b>:
+        <router-link to="/export">"Export as Markdown"</router-link> feature
         added. You can export all of your public posts as a ZIP of Markdown
         files.
       </li>
       <li>
-        <b>August 2025</b>: Add a redirect feature that allows you to redirect
-        your What Got Done posts to a new URL.
+        <b>July 2025</b>: Add support for a
+        <router-link to="/forwarding-addresss">forwarding address</router-link>
+        feature that allows you to redirect your What Got Done posts to a new
+        URL.
       </li>
       <li>
         <b>October 2025</b>: Users will no longer be able to post new updates.
