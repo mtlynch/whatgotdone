@@ -43,8 +43,6 @@ if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
   # Let Litestream start What Got Done as a child process
   /app/litestream replicate \
     -exec "/app/bin/whatgotdone -db ${DB_PATH}"
-    "${DB_PATH}" \
-    "${LITESTREAM_ENDPOINT}"
 else
   # Start server directly.
   /app/bin/whatgotdone -db "${DB_PATH}"
