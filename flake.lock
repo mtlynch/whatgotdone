@@ -36,17 +36,17 @@
     },
     "litestream-nixpkgs": {
       "locked": {
-        "lastModified": 1647078713,
-        "narHash": "sha256-vFPXkvjND7jKxrOy/dogZRzUo9jEvsx6HNO6GYd01qA=",
+        "lastModified": 1709905912,
+        "narHash": "sha256-TofHtnlrOBCxtSZ9nnlsTybDnQXUmQrlIleXF1RQAwQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "02177737c5d977444df41e0f5d6124c48c64bba3",
+        "rev": "a343533bccc62400e8a9560423486a3b6c11a23b",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "02177737c5d977444df41e0f5d6124c48c64bba3",
+        "rev": "a343533bccc62400e8a9560423486a3b6c11a23b",
         "type": "github"
       }
     },

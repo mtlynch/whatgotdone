@@ -19,8 +19,8 @@
     # 1.2.1 release
     sqlfluff-nixpkgs.url = "github:NixOS/nixpkgs/7cf5ccf1cdb2ba5f08f0ac29fc3d04b0b59a07e4";
 
-    # 0.3.7 release
-    litestream-nixpkgs.url = "github:NixOS/nixpkgs/02177737c5d977444df41e0f5d6124c48c64bba3";
+    # 0.3.13 release
+    litestream-nixpkgs.url = "github:NixOS/nixpkgs/a343533bccc62400e8a9560423486a3b6c11a23b";
   };
 
   outputs = {
