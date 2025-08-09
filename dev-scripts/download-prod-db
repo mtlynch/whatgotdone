@@ -14,11 +14,6 @@ export DB_PATH="data/store.db"
 
 readonly DB_COPY_PATH="data/${TIMESTAMP}.db"
 
-# Delete .db, .db-shm, and .db-wal files if they exist.
-if compgen -G "${DB_PATH}*" > /dev/null; then
-  rm ${DB_PATH}*
-fi
-
 # Load production credentials.
 set +x
 # shellcheck disable=SC1091
@@ -31,5 +26,5 @@ export LITESTREAM_SECRET_ACCESS_KEY
 export LITESTREAM_BUCKET
 
 # Retrieve production DB.
-litestream restore -v -config litestream.yml -o "${DB_COPY_PATH}" "${DB_PATH}"
+litestream restore -config litestream.yml -v -o "${DB_COPY_PATH}" "${DB_PATH}"
 cp "${DB_COPY_PATH}" "${DB_PATH}"
