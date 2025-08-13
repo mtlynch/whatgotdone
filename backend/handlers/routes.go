@@ -99,6 +99,7 @@ func (s *defaultServer) routes() {
 	static.HandleFunc("/login", s.serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/logout", s.serveIndexPage).Methods(http.MethodGet)
 	static.HandleFunc("/privacy-policy", s.serveIndexPage).Methods(http.MethodGet)
+	static.HandleFunc("/shutdown-notice", s.serveIndexPage).Methods(http.MethodGet)
 
 	static.HandleFunc("/{username}", s.serveUserProfileOr404()).Methods(http.MethodGet)
 	static.HandleFunc("/", s.serveIndexPage).Methods(http.MethodGet)

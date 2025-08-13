@@ -33,6 +33,7 @@ func buildSitemap(ds datastore.Datastore) *stm.Sitemap {
 	sm.Add(stm.URL{{"loc", "/about"}, {"changefreq", "daily"}})
 	sm.Add(stm.URL{{"loc", "/recent"}, {"changefreq", "daily"}})
 	sm.Add(stm.URL{{"loc", "/privacy-policy"}, {"changefreq", "daily"}})
+	sm.Add(stm.URL{{"loc", "/shutdown-notice"}, {"changefreq", "daily"}})
 	addUsersAndEntries(sm, ds)
 
 	return sm
