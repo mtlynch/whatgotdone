@@ -40,12 +40,12 @@
       The easiest option (and what Michael is doing) is to port your data to a
       static site generator, such as Hugo, Jekyll, or Gatsby. You are welcome to
       fork
-      <a href="https://github.com/mtlynch/weeks.mtlynch.io"
+      <a href="https://github.com/mtlynch/weeks.mtlynch.io-old"
         >Michael's Hugo implementation</a
       >
       (<a href="https://weeks.mtlynch.io/">live site</a>) and run the
       <a
-        href="https://github.com/mtlynch/weeks.mtlynch.io/blob/master/dev-scripts/import-from-whatgotdone"
+        href="https://github.com/mtlynch/weeks.mtlynch.io-old/blob/master/dev-scripts/import-from-whatgotdone"
         ><code>import-from-whatgotdone</code></a
       >
       script to import your data from What Got Done.
