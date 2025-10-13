@@ -38,7 +38,7 @@ if [[ "${IS_LITESTREAM_ENABLED}" == 'true' ]]; then
   /app/litestream version
 
   # Restore database from S3.
-  /app/litestream restore "${DB_PATH}"
+  /app/litestream restore -if-replica-exists "${DB_PATH}"
 
   # Let Litestream start What Got Done as a child process
   /app/litestream replicate \
