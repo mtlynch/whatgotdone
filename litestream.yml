@@ -2,14 +2,12 @@ access-key-id: ${LITESTREAM_ACCESS_KEY_ID}
 secret-access-key: ${LITESTREAM_SECRET_ACCESS_KEY}
 dbs:
   - path: ${DB_PATH}
-    replicas:
-      - type: s3
-        bucket: ${LITESTREAM_BUCKET}
-        path: db
-        endpoint: ${LITESTREAM_ENDPOINT}
-        force-path-style: true
-        retention: 720h # 30 days
-        snapshot-interval: 24h
-        # The 13m is to prevent snapshot and validations from happening concurrently.
-        # https://github.com/benbjohnson/litestream/issues/253
-        validation-interval: 12h13m
+    replica:
+      url: s3://${LITESTREAM_BUCKET}/db
+      endpoint: ${LITESTREAM_ENDPOINT}
+      force-path-style: true
+      retention: 720h # 30 days
+      snapshot-interval: 24h
+      # The 13m is to prevent snapshot and validations from happening concurrently.
+      # https://github.com/benbjohnson/litestream/issues/253
+      validation-interval: 12h13m
