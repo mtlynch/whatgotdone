@@ -21,13 +21,24 @@ ARG GO_BUILD_MODE="dev"
 RUN echo "Go build mode: ${GO_BUILD_MODE}"
 RUN ./dev-scripts/build-backend "${GO_BUILD_MODE}"
 
+FROM golang:1.24.8 AS litestream_builder
+
+RUN apt-get update && apt-get install -y git
+
+WORKDIR /app
+
+RUN git clone https://github.com/benbjohnson/litestream.git && \
+    cd litestream && \
+    git checkout 6465f6b18bb0f87c50c4f5ea83e830f535b30618 && \
+    CGO_ENABLED=0 go build -ldflags="-s -w" ./cmd/litestream
+
 FROM alpine:3.15
 
 RUN apk add --no-cache bash
 
 COPY --from=frontend_builder /app/frontend/dist /app/frontend/dist
 COPY --from=backend_builder /app/bin/whatgotdone /app/bin/whatgotdone
-COPY --from=litestream/litestream:0.5.0 /usr/local/bin/litestream /app/litestream
+COPY --from=litestream_builder /app/litestream/litestream /app/litestream
 COPY ./creds /app/creds
 COPY ./litestream.yml /etc/litestream.yml
 COPY ./docker_entrypoint /app/docker_entrypoint
