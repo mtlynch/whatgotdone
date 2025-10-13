@@ -27,9 +27,9 @@ RUN apt-get update && apt-get install -y git
 
 WORKDIR /app
 
-RUN git clone https://github.com/benbjohnson/litestream.git && \
+RUN git clone https://github.com/mtlynch/litestream.git && \
     cd litestream && \
-    git checkout 6465f6b18bb0f87c50c4f5ea83e830f535b30618 && \
+    git checkout 489d05e8c92d014b0475604efae3771135b9151e && \
     CGO_ENABLED=0 go build -ldflags="-s -w" ./cmd/litestream
 
 FROM alpine:3.15
